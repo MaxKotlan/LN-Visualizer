@@ -14,7 +14,7 @@ export class LndApiServiceService {
 
     const headers: HttpHeaders = new HttpHeaders({'Grpc-Metadata-macaroon': macaroon});
 
-    return this.client.get('api/v1/graph/node/03fb822818be083e0a954db85257a2911a3d55458b8c1ea4124b157e865a836d12', {headers});
+    return this.client.get('https://127.0.0.1:8080/v1/graph', {headers});
   }
 
 }

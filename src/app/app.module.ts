@@ -6,11 +6,13 @@ import { AtftModule } from 'atft';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NetworkInfoComponent } from './components/network-info/network-info.component';
+import { CustomMeshTestComponent } from './components/custom-mesh-test/custom-mesh-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NetworkInfoComponent
+    NetworkInfoComponent,
+    CustomMeshTestComponent
   ],
   imports: [
     BrowserModule,
