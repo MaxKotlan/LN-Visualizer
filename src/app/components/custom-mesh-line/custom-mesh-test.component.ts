@@ -3,11 +3,11 @@ import { AbstractMesh, AbstractObject3D, provideParent, RendererService, SphereM
 import * as THREE from 'three';
 
 @Component({
-  selector: 'app-custom-mesh-test',
+  selector: 'app-custom-mesh-line',
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class CustomMeshTestComponent extends AbstractMesh {
+export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> {
 
   @Input() radius: number | undefined;
   @Input() widthSegments: number | undefined;
@@ -20,7 +20,7 @@ export class CustomMeshTestComponent extends AbstractMesh {
     super(rendererService, parent);
   }
 
-  protected newObject3DInstance(): THREE.Mesh {
+  protected newObject3DInstance(): THREE.Line {
     // console.log('SphereMeshComponent.newObject3DInstance');
     const points = [];
     points.push( new THREE.Vector3( - 10, 0, 0 ) );
@@ -29,11 +29,11 @@ export class CustomMeshTestComponent extends AbstractMesh {
 
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-
-    const material = this.getMaterial();
-    const mesh = new THREE.Mesh(geometry, material);
-    this.applyShadowProps(mesh);
-    return mesh;
+    const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    // const material = this.getMaterial();
+    const line = new THREE.Line( geometry, material );
+    // this.applyShadowProps(mesh);
+    return line;
   }
 
 }

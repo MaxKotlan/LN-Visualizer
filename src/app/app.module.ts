@@ -7,12 +7,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NetworkInfoComponent } from './components/network-info/network-info.component';
 import { CustomMeshTestComponent } from './components/custom-mesh-test/custom-mesh-test.component';
+import { CustomMeshLineComponent } from './components/custom-mesh-line/custom-mesh-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NetworkInfoComponent,
-    CustomMeshTestComponent
+    CustomMeshTestComponent,
+    CustomMeshLineComponent
   ],
   imports: [
     BrowserModule,
