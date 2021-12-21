@@ -1,5 +1,5 @@
 import { Component, Input, Optional, SkipSelf } from '@angular/core';
-import { AbstractMesh, AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
 
 @Component({
@@ -20,18 +20,20 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> {
     super(rendererService, parent);
   }
 
-  protected newObject3DInstance(): THREE.Line {
+  protected newObject3DInstance(): THREE.Points {
     // console.log('SphereMeshComponent.newObject3DInstance');
     const points = [];
-    points.push( new THREE.Vector3( - 10, 0, 0 ) );
-    points.push( new THREE.Vector3( 0, 10, 0 ) );
-    points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+    const range = 100;
+
+    for (let i = 0; i < 50186; i++)
+      points.push( new THREE.Vector3(Math.floor(i/range)*(Math.cos(Math.random()*2*Math.PI)), 0, Math.floor(i/range)*(Math.sin(Math.random()*2*Math.PI))) );
 
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-    const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    const material = new THREE.PointsMaterial( { color: 0x0000ff } );
     // const material = this.getMaterial();
-    const line = new THREE.Line( geometry, material );
+    const line = new THREE.Points( geometry, material );
     // this.applyShadowProps(mesh);
     return line;
   }
