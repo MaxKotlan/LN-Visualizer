@@ -9,11 +9,12 @@ import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
 })
 export class NetworkInfoComponent implements OnInit {
 
-  constructor(public lndApiServiceService: LndApiServiceService) { }
+   constructor(public lndApiServiceService: LndApiServiceService) { }
 
-  public lol = this.lndApiServiceService.getNetworkInfo().pipe(take(1));
+   public lol = this.lndApiServiceService.getNetworkInfo().pipe(take(1));
 
   ngOnInit(): void {
+
   }
 
 }
