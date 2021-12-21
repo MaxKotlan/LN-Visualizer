@@ -24,14 +24,14 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> {
     // console.log('SphereMeshComponent.newObject3DInstance');
     const points = [];
 
-    const range = 100;
+    const range = 1000;
 
     for (let i = 0; i < 50186; i++)
       points.push( new THREE.Vector3(Math.floor(i/range)*(Math.cos(Math.random()*2*Math.PI)), 0, Math.floor(i/range)*(Math.sin(Math.random()*2*Math.PI))) );
 
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-    const material = new THREE.PointsMaterial( { color: 0x0000ff } );
+    const material = new THREE.PointsMaterial( { color: 0x0000ff, size: 1 } );
     // const material = this.getMaterial();
     const line = new THREE.Points( geometry, material );
     // this.applyShadowProps(mesh);
