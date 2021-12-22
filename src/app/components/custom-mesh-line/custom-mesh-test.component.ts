@@ -1,5 +1,6 @@
-import { Component, Input, Optional, SkipSelf } from '@angular/core';
+import { Component, Input, OnChanges, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { LnGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
 
 @Component({
@@ -7,11 +8,9 @@ import * as THREE from 'three';
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> {
+export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges {
 
-  @Input() radius: number | undefined;
-  @Input() widthSegments: number | undefined;
-  @Input() hightSegments: number | undefined;
+  @Input() public nodes: LnGraphNode[] = [];
 
   constructor(
     protected override rendererService: RendererService,
@@ -20,18 +19,38 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> {
     super(rendererService, parent);
   }
 
+  override ngOnChanges(simpleChanges: SimpleChanges){
+    const obj = this.getObject();
+    if (obj){
+      (obj as any)['geometry'] = this.newObject3DInstance().geometry;
+      console.log(obj)
+    }
+    super.ngOnChanges(simpleChanges);
+  }
+
   protected newObject3DInstance(): THREE.Points {
-    // console.log('SphereMeshComponent.newObject3DInstance');
-    const points = [];
+    const points: THREE.Vector3[] = [];
 
-    const range = 1000;
+    const pushSpherePoint = (i: number) => {
+      let x = Math.random()-.5;
+      let y = (Math.random()-.5) / 10;
+      let z = Math.random()-.5;
+      const mag = (1/Math.floor((15*i)/1000))*Math.sqrt(x*x + y*y + z*z);
+      x /= mag; y /= mag; z /= mag;
+      points.push( new THREE.Vector3(x, y, z ));
+    }
 
-    for (let i = 0; i < 50186; i++)
-      points.push( new THREE.Vector3(Math.floor(i/range)*(Math.cos(Math.random()*2*Math.PI)), 0, Math.floor(i/range)*(Math.sin(Math.random()*2*Math.PI))) );
+    const t0 = performance.now();
+    for(let i = 0; i < this.nodes.length; i++){
+      pushSpherePoint(i);
+    }
+    const t1 = performance.now();
+    console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+
 
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-    const material = new THREE.PointsMaterial( { color: 0x0000ff, size: 1 } );
+    const material = new THREE.PointsMaterial( { color: 0x0000ff, size: 1, sizeAttenuation: true } );
     // const material = this.getMaterial();
     const line = new THREE.Points( geometry, material );
     // this.applyShadowProps(mesh);
