@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NetworkInfoComponent } from './components/network-info/network-info.component';
 import { CustomMeshTestComponent } from './components/custom-mesh-test/custom-mesh-test.component';
 import { CustomMeshLineComponent } from './components/custom-mesh-line/custom-mesh-test.component';
+import { NodePositionRegistryService } from './services/node-position-registry.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { CustomMeshLineComponent } from './components/custom-mesh-line/custom-me
     HttpClientModule,
     AtftModule,
   ],
-  providers: [],
+  providers: [NodePositionRegistryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

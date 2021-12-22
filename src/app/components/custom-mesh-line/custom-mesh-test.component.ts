@@ -25,6 +25,7 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
       (obj as any)['geometry'] = this.newObject3DInstance().geometry;
       console.log(obj)
     }
+    this.rendererService.render();
     super.ngOnChanges(simpleChanges);
   }
 
