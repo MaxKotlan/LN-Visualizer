@@ -25,7 +25,6 @@ export class NetworkInfoComponent implements AfterViewInit{
 
   ngAfterViewInit(){
     this.lol.pipe(
-      tap(this.precomputeNodeCentralizty),
       map((g: LnGraph) => this.sortLnGraphByCentrality(g)),
       map((g: LnGraph) => 
     ({
@@ -37,23 +36,43 @@ export class NetworkInfoComponent implements AfterViewInit{
     })
   }
 
-  precomputeNodeCentralizty(g: LnGraph){
-    g.edges.forEach(edge => {
-      if (!this.centralityScore[edge.node1_pub]) this.centralityScore[edge.node1_pub] = 0;
-      if (!this.centralityScore[edge.node2_pub]) this.centralityScore[edge.node2_pub] = 0;
+  precomputeNodeCentralizty(g: LnGraph): Record<string, number>{
 
-      this.centralityScore[edge.node1_pub] += 1;
-      this.centralityScore[edge.node2_pub] += 1;
+    const t0 = performance.now();
+
+    
+    const centrality: Record<string, number> = {};
+
+    g.edges.forEach(edge => {
+
+      if (!centrality[edge.node1_pub]) centrality[edge.node1_pub] = 0;
+      if (!centrality[edge.node2_pub]) centrality[edge.node2_pub] = 0;
+
+      centrality[edge.node1_pub] += 1;
+      centrality[edge.node2_pub] += 1;
     });
+
+    const t1 = performance.now();
+    console.log(`Call to compute centrality took ${t1 - t0} milliseconds.`);
+
+    return centrality;
   }
 
-  getNodeEdges(node: LnGraphNode): number{
-    return (this.centralityScore[node.pub_key] / 2);
+  getNodeEdges(node: LnGraphNode, c: Record<string, number>): number{
+    return c[node.pub_key];
   };
 
   sortLnGraphByCentrality(g: LnGraph){
 
-    g.nodes.sort((a,b) => this.getNodeEdges(b) - this.getNodeEdges(a))
+    const c = this.precomputeNodeCentralizty(g);
+
+    console.log('ZZZZAAAAMN')
+    console.log(c)
+
+    g.nodes = g.nodes.sort((a,b) => this.getNodeEdges(b, c) - this.getNodeEdges(a, c))
+
+    console.log('dayim')
+    console.log(g.nodes.map((n) => this.getNodeEdges(n, c)))
 
     return g;
   }
