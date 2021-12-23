@@ -44,10 +44,16 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
 
 
-    const largestCapacity = Math.max(...this.edges.map((e) => e.capacity));
+    const largestCapacity = Math.max(...this.edges.map((e) => parseInt(e.capacity)));
+
+    console.log('Largest Capacity', largestCapacity)
 
     const colTemp = this.edges
-      .map((edge: LnGraphEdge) => [(1-(edge.capacity / largestCapacity)) * 50,  (edge.capacity / largestCapacity) * 20000, 0])
+      .map((edge: LnGraphEdge) => [
+        (1-(parseInt(edge.capacity) / largestCapacity)) * 50000+25,  
+        (parseInt(edge.capacity) / largestCapacity) * 50000+25, 
+        40])
+      .map(a => [...a,...a])
       .flat()
     const colors = new Uint8Array(colTemp);
 

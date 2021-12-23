@@ -28,14 +28,19 @@ export class NetworkInfoComponent implements AfterViewInit{
 
   public centralityScore: Record<string, number> = {};
 
+  filterNodeView(g: LnGraph): LnGraph{
+    const nodeView =   g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) ===1)
+    return {
+      nodes: nodeView,
+      edges: g.edges.filter((e) => nodeView.some((a) => a.pub_key === e.node1_pub) && nodeView.some((a) => a.pub_key === e.node2_pub))//.slice(0,1000),
+    } as LnGraph
+  }
+
   ngAfterViewInit(){
     this.lol.pipe(
       map((g: LnGraph) => this.sortLnGraphByCentrality(g)),
-      map((g: LnGraph) => 
-    ({
-      nodes: g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) > 0),//.slice(0,8000),
-      edges: g.edges//.slice(0,1000),
-    } as LnGraph))).subscribe((x) => {
+      map((g: LnGraph) => this.filterNodeView(g)))
+      .subscribe((x) => {
       this.nodeList = x.nodes; 
       this.edgeList = x.edges;
     })
