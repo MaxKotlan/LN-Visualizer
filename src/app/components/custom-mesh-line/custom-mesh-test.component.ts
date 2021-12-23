@@ -43,7 +43,7 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
 
     const geometry = new THREE.BufferGeometry().setFromPoints( Object.values(this.nodePositionRegistryService.nodePosition) );
 
-    const material = new THREE.PointsMaterial( { color: 0x0000ff, size: 1, sizeAttenuation: true } );
+    const material = new THREE.PointsMaterial( { color: 0xffffff, size: .25, sizeAttenuation: true } );
     // const material = this.getMaterial();
     const line = new THREE.Points( geometry, material );
     // this.applyShadowProps(mesh);

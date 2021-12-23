@@ -45,10 +45,10 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
 
     
     const material = new THREE.LineBasicMaterial( {
-      color: 0x555555,
+      color: 0x222222,
       linewidth: 1,
-      linecap: 'round', //ignored by WebGLRenderer
-      linejoin:  'round' //ignored by WebGLRenderer
+      // linecap: 'round', //ignored by WebGLRenderer
+      // linejoin:  'round' //ignored by WebGLRenderer
     } );
 
     console.log('da point data', pointData)
