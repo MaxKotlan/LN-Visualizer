@@ -9,6 +9,11 @@ import { NetworkInfoComponent } from './components/network-info/network-info.com
 import { CustomMeshTestComponent } from './components/custom-mesh-test/custom-mesh-test.component';
 import { CustomMeshLineComponent } from './components/custom-mesh-line/custom-mesh-test.component';
 import { NodePositionRegistryService } from './services/node-position-registry.service';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { GraphEffects } from './effects/graph.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -22,6 +27,11 @@ import { NodePositionRegistryService } from './services/node-position-registry.s
     AppRoutingModule,
     HttpClientModule,
     AtftModule,
+    EffectsModule.forRoot([GraphEffects]),
+    StoreModule.forRoot(reducers, {
+      metaReducers
+    }),
+    StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],
   bootstrap: [AppComponent]
