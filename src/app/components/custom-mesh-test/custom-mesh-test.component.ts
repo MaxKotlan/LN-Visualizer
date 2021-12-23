@@ -43,10 +43,18 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
     const t1 = performance.now();
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
 
-    
+
+    const largestCapacity = Math.max(...this.edges.map((e) => e.capacity));
+
+    const colTemp = this.edges
+      .map((edge: LnGraphEdge) => [(1-(edge.capacity / largestCapacity)) * 50,  (edge.capacity / largestCapacity) * 20000, 0])
+      .flat()
+    const colors = new Uint8Array(colTemp);
+
     const material = new THREE.LineBasicMaterial( {
-      color: 0x222222,
+      color: 0xFFFFFF,
       linewidth: 1,
+      vertexColors: true,
       // linecap: 'round', //ignored by WebGLRenderer
       // linejoin:  'round' //ignored by WebGLRenderer
     } );
@@ -54,6 +62,7 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
     console.log('da point data', pointData)
 
     const geometry = new THREE.BufferGeometry().setFromPoints(pointData);
+    geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;
   }

@@ -33,7 +33,7 @@ export class NetworkInfoComponent implements AfterViewInit{
       map((g: LnGraph) => this.sortLnGraphByCentrality(g)),
       map((g: LnGraph) => 
     ({
-      nodes: g.nodes,//.slice(0,8000),
+      nodes: g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) > 0),//.slice(0,8000),
       edges: g.edges//.slice(0,1000),
     } as LnGraph))).subscribe((x) => {
       this.nodeList = x.nodes; 
