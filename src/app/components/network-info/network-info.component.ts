@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SceneComponent } from 'atft';
 import { map } from 'rxjs';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
-import { LnGraph, LnGraphNode } from 'src/app/types/graph.interface';
+import { LnGraph, LnGraphEdge, LnGraphNode } from 'src/app/types/graph.interface';
 
 @Component({
   selector: 'app-network-info',
@@ -19,14 +19,16 @@ export class NetworkInfoComponent implements AfterViewInit{
   public lol = this.http.get<LnGraph>('assets/graph.json')
 
   public nodeList: LnGraphNode[] = [];
+  public edgeList: LnGraphEdge[] = [];
 
   ngAfterViewInit(){
     this.lol.pipe(map((g: LnGraph) => 
     ({
       nodes: g.nodes,//.slice(0,8000),
-      edges: g.edges.slice(0,10),
+      edges: g.edges//.slice(0,10),
     } as LnGraph))).subscribe((x) => {
-      this.nodeList = x.nodes 
+      this.nodeList = x.nodes; 
+      this.edgeList = x.edges;
     })
   }
 }

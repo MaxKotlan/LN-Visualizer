@@ -8,5 +8,6 @@ export interface LnGraphNode{
 }
 
 export interface LnGraphEdge{
-
+    node1_pub: string,
+    node2_pub: string
 }
