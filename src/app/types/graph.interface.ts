@@ -5,6 +5,7 @@ export interface LnGraph{
 
 export interface LnGraphNode{
     pub_key: string
+    color: string
 }
 
 export interface LnGraphEdge{

@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SceneComponent } from 'atft';
 import { map, tap } from 'rxjs';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
+import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { LnGraph, LnGraphEdge, LnGraphNode } from 'src/app/types/graph.interface';
 
 @Component({
@@ -14,7 +15,11 @@ export class NetworkInfoComponent implements AfterViewInit{
 
   @ViewChild(SceneComponent) scene!: SceneComponent;
 
-  constructor(public lndApiServiceService: LndApiServiceService, private http: HttpClient) { }
+  constructor(
+    public lndApiServiceService: LndApiServiceService,
+    protected nodePositionRegistryService: NodePositionRegistryService,
+    private http: HttpClient
+  ) { }
 
   public lol = this.http.get<LnGraph>('assets/graph.json')
 
@@ -73,6 +78,8 @@ export class NetworkInfoComponent implements AfterViewInit{
 
     console.log('dayim')
     console.log(g.nodes.map((n) => this.getNodeEdges(n, c)))
+
+    this.nodePositionRegistryService.nodeCentrality = c;
 
     return g;
   }

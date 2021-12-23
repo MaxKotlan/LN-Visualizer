@@ -40,10 +40,24 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
     const t1 = performance.now();
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
 
+    const fromHexString = (hexString: string) => (hexString.replace('#', '').match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+
+    const colTemp = this.nodes
+      .map((node: LnGraphNode) => node.color)
+      .map(fromHexString)
+      .flat()
+      
+    console.log('COLRTEMP', colTemp)
 
     const geometry = new THREE.BufferGeometry().setFromPoints( Object.values(this.nodePositionRegistryService.nodePosition) );
 
-    const material = new THREE.PointsMaterial( { color: 0xffffff, size: .25, sizeAttenuation: true } );
+
+    const colors = new Uint8Array(colTemp);
+
+    geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
+    //geometry.colors.push(new THREE.Color(0xFF0000))
+
+    const material = new THREE.PointsMaterial( { size: 1, sizeAttenuation: true, vertexColors: true } );
     // const material = this.getMaterial();
     const line = new THREE.Points( geometry, material );
     // this.applyShadowProps(mesh);
