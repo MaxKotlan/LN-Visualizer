@@ -29,7 +29,7 @@ export class NetworkInfoComponent implements AfterViewInit{
   public centralityScore: Record<string, number> = {};
 
   filterNodeView(g: LnGraph): LnGraph{
-    const nodeView =   g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) ===1)
+    const nodeView =   g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) === 15)
     return {
       nodes: nodeView,
       edges: g.edges.filter((e) => nodeView.some((a) => a.pub_key === e.node1_pub) && nodeView.some((a) => a.pub_key === e.node2_pub))//.slice(0,1000),
@@ -79,7 +79,7 @@ export class NetworkInfoComponent implements AfterViewInit{
     console.log('ZZZZAAAAMN')
     console.log(c)
 
-    g.nodes = g.nodes.sort((a,b) => this.getNodeEdges(b, c) - this.getNodeEdges(a, c))
+    g.nodes = g.nodes.sort((a,b) => this.getNodeEdges(a, c) - this.getNodeEdges(b, c))
 
     console.log('dayim')
     console.log(g.nodes.map((n) => this.getNodeEdges(n, c)))
@@ -87,5 +87,9 @@ export class NetworkInfoComponent implements AfterViewInit{
     this.nodePositionRegistryService.nodeCentrality = c;
 
     return g;
+  }
+
+  depthFirstSearch(node: LnGraphNode){
+    //this.edgeList['']
   }
 }

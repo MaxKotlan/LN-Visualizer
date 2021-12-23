@@ -61,8 +61,6 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
       color: 0xFFFFFF,
       linewidth: 1,
       vertexColors: true,
-      // linecap: 'round', //ignored by WebGLRenderer
-      // linejoin:  'round' //ignored by WebGLRenderer
     } );
 
     console.log('da point data', pointData)

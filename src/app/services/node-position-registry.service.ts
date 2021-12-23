@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
-import { setQuaternionFromProperEuler } from 'three/src/math/MathUtils';
 
 @Injectable()
 export class NodePositionRegistryService {
