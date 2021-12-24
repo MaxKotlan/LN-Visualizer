@@ -53,7 +53,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     const colors = new Uint8Array(colTemp);
 
     const material = new THREE.LineBasicMaterial( {
-      color: 0xFFFFFF,
+      color: 0xAAAAAA,
       linewidth: 1,
       vertexColors: true,
     } );
