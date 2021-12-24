@@ -34,3 +34,8 @@ export const minEdgesRecompute = createAction(
     '[graph] setMinimumEdges',
     props<{minEdges: number}>()
 );
+
+export const sortOrderChange = createAction(
+    '[graph] setSortOrder',
+    props<{ascending: boolean}>()
+);

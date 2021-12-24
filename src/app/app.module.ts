@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {MatSliderModule} from '@angular/material/slider';
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
-    MatSliderModule
+    MatSliderModule,
+    MatSlideToggleModule
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],
