@@ -37,8 +37,12 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     const pointData: THREE.Vector3[] = []
 
     for(let i = 0; i < this.edges.length; i++){
-      pointData.push(this.nodes[this.edges[i].node1_pub].postition)
-      pointData.push(this.nodes[this.edges[i].node2_pub].postition)
+      
+      if (this.nodes[this.edges[i].node1_pub])
+        pointData.push(this.nodes[this.edges[i].node1_pub].postition)
+
+      if (this.nodes[this.edges[i].node2_pub])
+        pointData.push(this.nodes[this.edges[i].node2_pub].postition)
     };
 
     const largestCapacity = Math.max(...this.edges.map((e) => parseInt(e.capacity)));

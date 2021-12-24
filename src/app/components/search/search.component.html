@@ -15,5 +15,12 @@
         </mat-autocomplete>
         </mat-form-field>
     </form>
-    <mat-checkbox (change)="checkboxFix($event)">Render Edges</mat-checkbox>
+    <div style="display: flex; flex-direction: column;">
+        <mat-checkbox (change)="checkboxFix($event)">Render Edges</mat-checkbox>
+        <span>
+            Min  Edges
+            <mat-slider (change)="filterConnections($event)" #slider min="0" max="80" step="1" value="0"></mat-slider>
+            {{slider.value}}
+        </span>
+    </div>
 </mat-card>

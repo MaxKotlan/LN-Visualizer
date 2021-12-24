@@ -29,3 +29,8 @@ export const renderEdges = createAction(
     '[graph] renderEdges',
     props<{value: boolean}>()
 );
+
+export const minEdgesRecompute = createAction(
+    '[graph] setMinimumEdges',
+    props<{minEdges: number}>()
+);

@@ -11,6 +11,7 @@ export interface GraphState {
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>
     searchText: string,
     renderEdges: boolean,
+    minimumEdges: number;
     isLoading: boolean;
 };
 
@@ -19,6 +20,7 @@ const initialState: GraphState = {
     modifiedGraph: {},
     searchText: '',
     renderEdges: false,
+    minimumEdges: 0,
     isLoading: false
 };
 
@@ -33,11 +35,19 @@ export const reducer = createReducer(
         (state, {value}) => ({...state, renderEdges: value})
     ),
     on(
+        graphActions.minEdgesRecompute,
+        (state, {minEdges}) => ({
+            ...state, 
+            minimumEdges: minEdges,
+            modifiedGraph: getModifiedGraph(state.graphUnsorted.nodes, getNodeEdgeArray(state.graphUnsorted.edges), minEdges),
+        })
+    ),
+    on(
         graphActions.requestGraphSuccess,
         (state, {graph}) => ({
             ...state, 
             graphUnsorted: graph,
-            modifiedGraph: getModifiedGraph(graph, getNodeEdgeArray(graph.edges)),
+            modifiedGraph: getModifiedGraph(graph.nodes, getNodeEdgeArray(graph.edges), state.minimumEdges),
             isLoading: false
         })
     ),
@@ -63,12 +73,13 @@ const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]
     return precomputedNodeEdgeList;
 }
 
-const sortGraphByCentrality = (g: LnGraph,  precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
-    return [...g.nodes].sort((a, b) => precomputedNodeEdgeList[a.pub_key].length - precomputedNodeEdgeList[b.pub_key].length)
+const sortGraphByCentrality = (g: LnGraphNode[],  precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
+    return g.sort((a, b) => precomputedNodeEdgeList[a.pub_key].length - precomputedNodeEdgeList[b.pub_key].length)
 }
 
-const getModifiedGraph = (g: LnGraph, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
-    const sortedNodes = sortGraphByCentrality(g, precomputedNodeEdgeList);
+const getModifiedGraph = (g: LnGraphNode[], precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>, minEdges: number) => {
+    const filteredNodes: LnGraphNode[] = g.filter((a) => precomputedNodeEdgeList[a.pub_key].length > minEdges);
+    const sortedNodes = sortGraphByCentrality(filteredNodes, precomputedNodeEdgeList);
     return sortedNodes.reduce((acc, val, index) => {
         acc[val.pub_key] = createModifiedGraphNode(val, precomputedNodeEdgeList, index);
         return acc;
