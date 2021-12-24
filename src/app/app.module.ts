@@ -2,7 +2,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AtftModule } from 'atft';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphSceneComponent } from './components/graph-scene/graph-scene.component';
@@ -14,23 +13,37 @@ import { reducers, metaReducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatInputModule} from '@angular/material/input';
+import { SearchComponent } from './components/search/search.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FormsModule } from '@angular/forms';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphSceneComponent,
     GraphEdgeMeshComponent,
-    GraphNodeMeshComponent
+    GraphNodeMeshComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule,
     AtftModule,
     EffectsModule.forRoot([GraphEffects]),
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
+    BrowserAnimationsModule,
+    MatInputModule,
+    MatCardModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],

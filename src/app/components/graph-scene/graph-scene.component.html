@@ -1,4 +1,3 @@
-<p *ngIf="isGraphLoading$ | async" style="position: fixed; transform: translateX(-50%) translateY(-50%); top: 50%; left: 50%; z-index: 100; color: aquamarine;">Loading...</p>
 <atft-orbit-controls [rotateSpeed]=1 [zoomSpeed]=1.2>
     <atft-renderer-canvas #mainRenderer style="position: fixed; width: 100vw; height: 100vh;">
         <atft-perspective-camera
@@ -6,12 +5,10 @@
         [positionX]=20 [positionY]=50 [positionZ]=50>
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
-        <!-- <app-custom-mesh-test></app-custom-mesh-test> -->
         <app-graph-node-mesh 
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"    
         ></app-graph-node-mesh>
-        <!-- <atft-sphere-mesh></atft-sphere-mesh> -->
         <app-graph-edge-mesh 
         [edges]="(getSortedEdges$ | async) || []"
         [nodes]="(modifiedGraph$ | async) || {}"

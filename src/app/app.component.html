@@ -1,1 +1,3 @@
+<app-search  *ngIf="!(isGraphLoading$ | async)"></app-search>
 <app-graph-scene></app-graph-scene>
+<mat-spinner *ngIf="isGraphLoading$ | async"></mat-spinner>

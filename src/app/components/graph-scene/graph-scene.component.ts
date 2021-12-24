@@ -17,7 +17,6 @@ export class GraphSceneComponent{
   ) { }
 
   public modifiedGraph$ = this.store$.select(selectModifiedGraph)
-  public isGraphLoading$ = this.store$.select(selectGraphLoadingState) 
   public positions$ = this.store$.select(selectVertices);
   public colors$ = this.store$.select(selectColors);
   public getSortedEdges$ = this.store$.select(selectSortedEdges);
