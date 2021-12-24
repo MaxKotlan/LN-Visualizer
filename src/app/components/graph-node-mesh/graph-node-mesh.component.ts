@@ -5,11 +5,11 @@ import { LnGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
 
 @Component({
-  selector: 'app-custom-mesh-line',
+  selector: 'app-graph-node-mesh',
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges {
+export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges {
 
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;

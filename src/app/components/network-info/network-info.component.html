@@ -7,10 +7,10 @@
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
         <!-- <app-custom-mesh-test></app-custom-mesh-test> -->
-        <app-custom-mesh-line 
+        <app-graph-node-mesh 
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"    
-        ></app-custom-mesh-line>
+        ></app-graph-node-mesh>
         <!-- <atft-sphere-mesh></atft-sphere-mesh> -->
         <app-custom-mesh-test 
         [edges]="(getSortedEdges$ | async) || []"

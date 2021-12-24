@@ -5,11 +5,11 @@ import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/gra
 import * as THREE from 'three';
 
 @Component({
-  selector: 'app-custom-mesh-test',
+  selector: 'app-graph-edge-mesh',
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
+export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
   @Input() public edges: LnGraphEdge[] = [];
   @Input() public nodes: Record<string, LnModifiedGraphNode> = {};

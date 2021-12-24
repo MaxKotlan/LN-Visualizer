@@ -6,8 +6,8 @@ import { AtftModule } from 'atft';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NetworkInfoComponent } from './components/network-info/network-info.component';
-import { CustomMeshTestComponent } from './components/custom-mesh-test/custom-mesh-test.component';
-import { CustomMeshLineComponent } from './components/custom-mesh-line/custom-mesh-test.component';
+import { GraphEdgeMeshComponent } from './components/graph-edge-mesh/graph-edge-mesh.component';
+import { GraphNodeMeshComponent } from './components/graph-node-mesh/graph-node-mesh.component';
 import { NodePositionRegistryService } from './services/node-position-registry.service';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -19,8 +19,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   declarations: [
     AppComponent,
     NetworkInfoComponent,
-    CustomMeshTestComponent,
-    CustomMeshLineComponent
+    GraphEdgeMeshComponent,
+    GraphNodeMeshComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +31,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
-    StoreDevtoolsModule.instrument({})
+    //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],
   bootstrap: [AppComponent]
