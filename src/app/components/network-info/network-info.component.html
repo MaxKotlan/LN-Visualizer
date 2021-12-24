@@ -1,4 +1,4 @@
-<p *ngIf="isGraphLoading$ | async" style="position: fixed; top: 50%; left: 50%; z-index: 100; color: aquamarine;">LOADING DATA</p>
+<p *ngIf="isGraphLoading$ | async" style="position: fixed; transform: translateX(-50%) translateY(-50%); top: 50%; left: 50%; z-index: 100; color: aquamarine;">Loading...</p>
 <atft-orbit-controls [rotateSpeed]=1 [zoomSpeed]=1.2>
     <atft-renderer-canvas #mainRenderer style="position: fixed; width: 100vw; height: 100vh;">
         <atft-perspective-camera
