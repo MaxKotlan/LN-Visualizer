@@ -11,11 +11,11 @@ import * as THREE from 'three';
 })
 export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges {
 
-  @Input() public nodes: LnGraphNode[] = [];
+  @Input() positions: THREE.Vector3[] = [];
+  @Input() colors: any;
 
   constructor(
     protected override rendererService: RendererService,
-    protected nodePositionRegistryService: NodePositionRegistryService,
     @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>
   ) {
     super(rendererService, parent);
@@ -33,28 +33,29 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
 
   protected newObject3DInstance(): THREE.Points {
     
-    const t0 = performance.now();
-    for(let i = 0; i < this.nodes.length; i++){
-      this.nodePositionRegistryService.pushSpherePoint(i, this.nodes[i].pub_key);
-    }
-    const t1 = performance.now();
-    console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+    // const t0 = performance.now();
+    // for(let i = 0; i < this.nodes.length; i++){
+    //   this.nodePositionRegistryService.pushSpherePoint(i, this.nodes[i].pub_key);
+    // }
+    // const t1 = performance.now();
+    // console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
 
-    const fromHexString = (hexString: string) => (hexString.replace('#', '').match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+    // const fromHexString = (hexString: string) => (hexString.replace('#', '').match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
 
-    const colTemp = this.nodes
-      .map((node: LnGraphNode) => node.color)
-      .map(fromHexString)
-      .flat()
-      
-    console.log('COLRTEMP', colTemp)
+    // const colTemp = this.nodes
+    //   .map((node: LnGraphNode) => node.color)
+    //   .map(fromHexString)
+    //   .flat()
+    console.log('CHANGING')
+    console.log(this.positions)
+    // console.log('COLRTEMP', colTemp)
 
-    const geometry = new THREE.BufferGeometry().setFromPoints( Object.values(this.nodePositionRegistryService.nodePosition) );
+    const geometry = new THREE.BufferGeometry().setFromPoints( this.positions );
 
 
-    const colors = new Uint8Array(colTemp);
+    //const colors = new Uint8Array(colTemp);
 
-    geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
+    geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
     //geometry.colors.push(new THREE.Color(0xFF0000))
 
     const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, vertexColors: true } );

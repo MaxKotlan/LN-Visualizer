@@ -15,3 +15,7 @@ export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
     props<{error: HttpErrorResponse}>()
 );
+
+export const calculateGraphPosition = createAction(
+    '[graph] calculateGraphPosition'
+);

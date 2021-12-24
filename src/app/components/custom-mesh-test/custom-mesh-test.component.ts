@@ -65,7 +65,7 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
 
     console.log('da point data', pointData)
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(pointData);
+    const geometry = new THREE.BufferGeometry().setFromPoints([]);
     geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;

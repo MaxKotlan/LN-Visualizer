@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { SceneComponent } from 'atft';
 import { map, tap } from 'rxjs';
+import { GraphState } from 'src/app/reducers/graph.reducer';
+import { selectColors, selectGraphLoadingState, selectModifiedGraph, selectVertices } from 'src/app/selectors/graph.selectors';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { LnGraph, LnGraphEdge, LnGraphNode } from 'src/app/types/graph.interface';
@@ -16,80 +19,88 @@ export class NetworkInfoComponent implements AfterViewInit{
   @ViewChild(SceneComponent) scene!: SceneComponent;
 
   constructor(
-    public lndApiServiceService: LndApiServiceService,
-    protected nodePositionRegistryService: NodePositionRegistryService,
-    private http: HttpClient
+    private store$: Store<GraphState>
   ) { }
 
-  public lol = this.http.get<LnGraph>('assets/graph.json')
+  public modifiedGraph$ = this.store$.select(selectModifiedGraph)
+  public isGraphLoading$ = this.store$.select(selectGraphLoadingState) 
+  public positions$ = this.store$.select(selectVertices);
+  public colors$ = this.store$.select(selectColors);
 
-  public nodeList: LnGraphNode[] = [];
-  public edgeList: LnGraphEdge[] = [];
 
-  public centralityScore: Record<string, number> = {};
-
-  filterNodeView(g: LnGraph): LnGraph{
-    const nodeView =   g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) === 15)
-    return {
-      nodes: nodeView,
-      edges: g.edges.filter((e) => nodeView.some((a) => a.pub_key === e.node1_pub) && nodeView.some((a) => a.pub_key === e.node2_pub))//.slice(0,1000),
-    } as LnGraph
+  ngAfterViewInit(): void {
+      // this.modifiedGraph$.subscribe(console.log)
   }
 
-  ngAfterViewInit(){
-    this.lol.pipe(
-      map((g: LnGraph) => this.sortLnGraphByCentrality(g)),
-      map((g: LnGraph) => this.filterNodeView(g)))
-      .subscribe((x) => {
-      this.nodeList = x.nodes; 
-      this.edgeList = x.edges;
-    })
-  }
+  // public lol = this.http.get<LnGraph>('assets/graph.json')
 
-  precomputeNodeCentralizty(g: LnGraph): Record<string, number>{
+  // public nodeList: LnGraphNode[] = [];
+  // public edgeList: LnGraphEdge[] = [];
 
-    const t0 = performance.now();
+  // public centralityScore: Record<string, number> = {};
+
+  // filterNodeView(g: LnGraph): LnGraph{
+  //   const nodeView =   g.nodes.filter((n) => this.getNodeEdges(n, this.nodePositionRegistryService.nodeCentrality) === 15)
+  //   return {
+  //     nodes: nodeView,
+  //     edges: g.edges.filter((e) => nodeView.some((a) => a.pub_key === e.node1_pub) && nodeView.some((a) => a.pub_key === e.node2_pub))//.slice(0,1000),
+  //   } as LnGraph
+  // }
+
+  // ngAfterViewInit(){
+  //   this.lol.pipe(
+  //     map((g: LnGraph) => this.sortLnGraphByCentrality(g)),
+  //     map((g: LnGraph) => this.filterNodeView(g)))
+  //     .subscribe((x) => {
+  //     this.nodeList = x.nodes; 
+  //     this.edgeList = x.edges;
+  //   })
+  // }
+
+  // precomputeNodeCentralizty(g: LnGraph): Record<string, number>{
+
+  //   const t0 = performance.now();
 
     
-    const centrality: Record<string, number> = {};
+  //   const centrality: Record<string, number> = {};
 
-    g.edges.forEach(edge => {
+  //   g.edges.forEach(edge => {
 
-      if (!centrality[edge.node1_pub]) centrality[edge.node1_pub] = 0;
-      if (!centrality[edge.node2_pub]) centrality[edge.node2_pub] = 0;
+  //     if (!centrality[edge.node1_pub]) centrality[edge.node1_pub] = 0;
+  //     if (!centrality[edge.node2_pub]) centrality[edge.node2_pub] = 0;
 
-      centrality[edge.node1_pub] += 1;
-      centrality[edge.node2_pub] += 1;
-    });
+  //     centrality[edge.node1_pub] += 1;
+  //     centrality[edge.node2_pub] += 1;
+  //   });
 
-    const t1 = performance.now();
-    console.log(`Call to compute centrality took ${t1 - t0} milliseconds.`);
+  //   const t1 = performance.now();
+  //   console.log(`Call to compute centrality took ${t1 - t0} milliseconds.`);
 
-    return centrality;
-  }
+  //   return centrality;
+  // }
 
-  getNodeEdges(node: LnGraphNode, c: Record<string, number>): number{
-    return c[node.pub_key];
-  };
+  // getNodeEdges(node: LnGraphNode, c: Record<string, number>): number{
+  //   return c[node.pub_key];
+  // };
 
-  sortLnGraphByCentrality(g: LnGraph){
+  // sortLnGraphByCentrality(g: LnGraph){
 
-    const c = this.precomputeNodeCentralizty(g);
+  //   const c = this.precomputeNodeCentralizty(g);
 
-    console.log('ZZZZAAAAMN')
-    console.log(c)
+  //   console.log('ZZZZAAAAMN')
+  //   console.log(c)
 
-    g.nodes = g.nodes.sort((a,b) => this.getNodeEdges(a, c) - this.getNodeEdges(b, c))
+  //   g.nodes = g.nodes.sort((a,b) => this.getNodeEdges(a, c) - this.getNodeEdges(b, c))
 
-    console.log('dayim')
-    console.log(g.nodes.map((n) => this.getNodeEdges(n, c)))
+  //   console.log('dayim')
+  //   console.log(g.nodes.map((n) => this.getNodeEdges(n, c)))
 
-    this.nodePositionRegistryService.nodeCentrality = c;
+  //   this.nodePositionRegistryService.nodeCentrality = c;
 
-    return g;
-  }
+  //   return g;
+  // }
 
-  depthFirstSearch(node: LnGraphNode){
-    //this.edgeList['']
-  }
+  // depthFirstSearch(node: LnGraphNode){
+  //   //this.edgeList['']
+  // }
 }

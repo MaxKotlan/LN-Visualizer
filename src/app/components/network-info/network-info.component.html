@@ -1,4 +1,4 @@
-<p style="position: fixed; top: 10px; left: 10px; z-index: 100;">{{ 'test'}}</p>
+<p *ngIf="isGraphLoading$ | async" style="position: fixed; top: 50%; left: 50%; z-index: 100; color: aquamarine;">LOADING DATA</p>
 <atft-orbit-controls [rotateSpeed]=1 [zoomSpeed]=1.2>
     <atft-renderer-canvas #mainRenderer style="position: fixed; width: 100vw; height: 100vh;">
         <atft-perspective-camera
@@ -7,9 +7,12 @@
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
         <!-- <app-custom-mesh-test></app-custom-mesh-test> -->
-        <app-custom-mesh-line [nodes]="nodeList"></app-custom-mesh-line>
+        <app-custom-mesh-line 
+            [positions]="(positions$ | async) || []"
+            [colors]="(colors$ | async) || []"    
+        ></app-custom-mesh-line>
         <!-- <atft-sphere-mesh></atft-sphere-mesh> -->
-        <app-custom-mesh-test [edges]="edgeList"></app-custom-mesh-test>
+        <app-custom-mesh-test></app-custom-mesh-test>
         <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
         <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
         </atft-scene>
