@@ -12,10 +12,10 @@
             [colors]="(colors$ | async) || []"    
         ></app-graph-node-mesh>
         <!-- <atft-sphere-mesh></atft-sphere-mesh> -->
-        <app-custom-mesh-test 
+        <app-graph-edge-mesh 
         [edges]="(getSortedEdges$ | async) || []"
         [nodes]="(modifiedGraph$ | async) || {}"
-        ></app-custom-mesh-test>
+        ></app-graph-edge-mesh>
         <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
         <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
         </atft-scene>
