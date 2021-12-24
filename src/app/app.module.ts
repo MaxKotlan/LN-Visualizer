@@ -43,7 +43,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatInputModule,
     MatCardModule,
     MatAutocompleteModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],

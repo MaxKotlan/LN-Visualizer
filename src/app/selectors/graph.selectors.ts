@@ -48,3 +48,19 @@ export const selectSortedEdges = createSelector(
     getNodes,
     (nodeValue) => nodeValue.edges
 )
+
+export const selectSearchString = createSelector(
+    graphSelector,
+    (state) => state.searchText
+)
+
+export const selectNodesFromSearch = createSelector(
+    selectNodeValue,
+    selectSearchString,
+    (nodes, searchString) => nodes.filter((a) => a?.alias?.toUpperCase()?.includes(searchString.toUpperCase()))
+);
+
+export const selectNodesSearchResults = createSelector(
+    selectNodesFromSearch,
+    (nodes) => nodes.map((a) => a.alias).slice(0,10)
+);

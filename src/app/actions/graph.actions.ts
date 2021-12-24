@@ -19,3 +19,8 @@ export const requestGraphFailure = createAction(
 export const calculateGraphPosition = createAction(
     '[graph] calculateGraphPosition'
 );
+
+export const searchGraph = createAction(
+    '[graph] setSearchStrings',
+    props<{searchText: string}>()
+);

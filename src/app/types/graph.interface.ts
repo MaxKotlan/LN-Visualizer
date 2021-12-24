@@ -6,6 +6,7 @@ export interface LnGraph{
 
 export interface LnGraphNode{
     pub_key: string
+    alias: string
     color: string
 }
 

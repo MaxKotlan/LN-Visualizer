@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { map, Observable, startWith } from 'rxjs';
+import { searchGraph } from 'src/app/actions/graph.actions';
+import { GraphState } from 'src/app/reducers/graph.reducer';
+import { selectNodesSearchResults, selectSearchString } from 'src/app/selectors/graph.selectors';
 
 @Component({
   selector: 'app-search',
@@ -8,21 +12,19 @@ import { map, Observable, startWith } from 'rxjs';
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
-  public myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]> | undefined;
+
+  constructor(private store$: Store<GraphState>){}
+
+  public myControl: FormControl = new FormControl();
+
+  public nodeSearchResults$ = this.store$.select(selectNodesSearchResults)
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    );
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  onTextChange(event: any){
+    this.store$.dispatch(searchGraph({searchText: event.target.value}))
   }
 
 }

@@ -9,12 +9,14 @@ type PublicKey = string;
 export interface GraphState {
     graphUnsorted: LnGraph,
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>
+    searchText: string,
     isLoading: boolean;
 };
 
 const initialState: GraphState = {
     graphUnsorted: { nodes: [], edges: [] },
     modifiedGraph: {},
+    searchText: '',
     isLoading: false
 };
 
@@ -35,7 +37,11 @@ export const reducer = createReducer(
     ),
     on(
         graphActions.requestGraphFailure,
-        (state) => ({...state, isLoading: false})    
+        (state) => ({...state, isLoading: false})
+    ),
+    on(
+        graphActions.searchGraph,
+        (state, {searchText}) => ({...state, searchText })
     )
 );
 
@@ -52,7 +58,7 @@ const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]
 }
 
 const sortGraphByCentrality = (g: LnGraph,  precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
-    return [...g.nodes].sort((a, b) => precomputedNodeEdgeList[b.pub_key].length - precomputedNodeEdgeList[a.pub_key].length)
+    return [...g.nodes].sort((a, b) => precomputedNodeEdgeList[a.pub_key].length - precomputedNodeEdgeList[b.pub_key].length)
 }
 
 const getModifiedGraph = (g: LnGraph, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
@@ -68,6 +74,7 @@ const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Recor
         pub_key: g.pub_key,
         color: g.color,
         postition: createSpherePoint(index),
+        alias: g.alias,
         connectedEdges: precomputedNodeEdgeList[g.pub_key]
     } as LnModifiedGraphNode;
 }
