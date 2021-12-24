@@ -54,13 +54,19 @@ export const selectSearchString = createSelector(
     (state) => state.searchText
 )
 
-export const selectNodesFromSearch = createSelector(
+export const selectPossibleNodesFromSearch = createSelector(
     selectNodeValue,
     selectSearchString,
-    (nodes, searchString) => nodes.filter((a) => a?.alias?.toUpperCase()?.includes(searchString.toUpperCase()))
+    (nodes, searchString) => nodes.filter((a) => a.alias.toUpperCase().includes(searchString.toUpperCase()))
+);
+
+
+export const selectFinalMatcheNodesFromSearch = createSelector(
+    selectPossibleNodesFromSearch,
+    (nodes) => nodes.length === 1 ? nodes[0] : undefined
 );
 
 export const selectNodesSearchResults = createSelector(
-    selectNodesFromSearch,
+    selectPossibleNodesFromSearch,
     (nodes) => nodes.map((a) => a.alias).slice(0,10)
 );
