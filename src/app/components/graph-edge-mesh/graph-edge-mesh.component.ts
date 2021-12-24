@@ -36,18 +36,12 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
     const pointData: THREE.Vector3[] = []
 
-    const t0 = performance.now();
     for(let i = 0; i < this.edges.length; i++){
       pointData.push(this.nodes[this.edges[i].node1_pub].postition)
       pointData.push(this.nodes[this.edges[i].node2_pub].postition)
     };
-    const t1 = performance.now();
-    console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
-
 
     const largestCapacity = Math.max(...this.edges.map((e) => parseInt(e.capacity)));
-
-    console.log('Largest Capacity', largestCapacity)
 
     const colTemp = this.edges
       .map((edge: LnGraphEdge) => [
@@ -63,8 +57,6 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
       linewidth: 1,
       vertexColors: true,
     } );
-
-    console.log('da point data', pointData)
 
     const geometry = new THREE.BufferGeometry().setFromPoints(pointData);
     geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
