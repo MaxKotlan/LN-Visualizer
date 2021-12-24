@@ -31,7 +31,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
-    //StoreDevtoolsModule.instrument({})
+    StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],
   bootstrap: [AppComponent]

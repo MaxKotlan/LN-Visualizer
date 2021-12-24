@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { SceneComponent } from 'atft';
 import { map, tap } from 'rxjs';
 import { GraphState } from 'src/app/reducers/graph.reducer';
-import { selectColors, selectGraphLoadingState, selectModifiedGraph, selectVertices } from 'src/app/selectors/graph.selectors';
+import { selectColors, selectGraphLoadingState, selectModifiedGraph, selectSortedEdges, selectVertices } from 'src/app/selectors/graph.selectors';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { LnGraph, LnGraphEdge, LnGraphNode } from 'src/app/types/graph.interface';
@@ -26,6 +26,7 @@ export class NetworkInfoComponent implements AfterViewInit{
   public isGraphLoading$ = this.store$.select(selectGraphLoadingState) 
   public positions$ = this.store$.select(selectVertices);
   public colors$ = this.store$.select(selectColors);
+  public getSortedEdges$ = this.store$.select(selectSortedEdges);
 
 
   ngAfterViewInit(): void {

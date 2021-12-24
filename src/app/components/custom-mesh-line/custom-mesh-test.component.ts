@@ -25,7 +25,7 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
     const obj: THREE.Object3D = this.getObject();
     if (obj){
       (obj as any)['geometry'] = this.newObject3DInstance().geometry;
-      console.log(obj)
+      //console.log(obj)
     }
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
@@ -46,8 +46,8 @@ export class CustomMeshLineComponent extends AbstractObject3D<THREE.Object3D> im
     //   .map((node: LnGraphNode) => node.color)
     //   .map(fromHexString)
     //   .flat()
-    console.log('CHANGING')
-    console.log(this.positions)
+    //console.log('CHANGING')
+    //console.log(this.positions)
     // console.log('COLRTEMP', colTemp)
 
     const geometry = new THREE.BufferGeometry().setFromPoints( this.positions );

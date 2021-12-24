@@ -51,27 +51,32 @@ const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]
     return precomputedNodeEdgeList;
 }
 
+const sortGraphByCentrality = (g: LnGraph,  precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
+    return [...g.nodes].sort((a, b) => precomputedNodeEdgeList[b.pub_key].length - precomputedNodeEdgeList[a.pub_key].length)
+}
+
 const getModifiedGraph = (g: LnGraph, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>) => {
-    return g.nodes.reduce((acc, val) => {
-        acc[val.pub_key] = createModifiedGraphNode(val, precomputedNodeEdgeList);
+    const sortedNodes = sortGraphByCentrality(g, precomputedNodeEdgeList);
+    return sortedNodes.reduce((acc, val, index) => {
+        acc[val.pub_key] = createModifiedGraphNode(val, precomputedNodeEdgeList, index);
         return acc;
     }, {} as Record<PublicKey, LnModifiedGraphNode>)
 }
 
-const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>): LnModifiedGraphNode =>{
+const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>, index: number): LnModifiedGraphNode =>{
     return {
         pub_key: g.pub_key,
         color: g.color,
-        postition: createSpherePoint(1),
+        postition: createSpherePoint(index),
         connectedEdges: precomputedNodeEdgeList[g.pub_key]
     } as LnModifiedGraphNode;
 }
 
-  const createSpherePoint = (i: number): THREE.Vector3 => {
+const createSpherePoint = (i: number): THREE.Vector3 => {
     let x = Math.random()-.5;
     let y = (Math.random()-.5)/1;
     let z = Math.random()-.5;
     const mag = (1/Math.sqrt(i))*Math.sqrt(x*x + y*y + z*z);
     x /= mag; y /= mag; z /= mag;
     return new THREE.Vector3(x, y, z);
-  }
+}

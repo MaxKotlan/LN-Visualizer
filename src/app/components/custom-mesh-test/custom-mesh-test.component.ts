@@ -1,7 +1,7 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { AbstractMesh, AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
-import { LnGraphEdge, LnGraphNode } from 'src/app/types/graph.interface';
+import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
 
 @Component({
@@ -12,6 +12,7 @@ import * as THREE from 'three';
 export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
 
   @Input() public edges: LnGraphEdge[] = [];
+  @Input() public nodes: Record<string, LnModifiedGraphNode> = {};
 
   constructor(
     protected override rendererService: RendererService,
@@ -37,8 +38,8 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
 
     const t0 = performance.now();
     for(let i = 0; i < this.edges.length; i++){
-      pointData.push(this.nodePositionRegistryService.nodePosition[this.edges[i].node1_pub])
-      pointData.push(this.nodePositionRegistryService.nodePosition[this.edges[i].node2_pub])
+      pointData.push(this.nodes[this.edges[i].node1_pub].postition)
+      pointData.push(this.nodes[this.edges[i].node2_pub].postition)
     };
     const t1 = performance.now();
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
@@ -65,7 +66,7 @@ export class CustomMeshTestComponent extends AbstractObject3D<THREE.Object3D> {
 
     console.log('da point data', pointData)
 
-    const geometry = new THREE.BufferGeometry().setFromPoints([]);
+    const geometry = new THREE.BufferGeometry().setFromPoints(pointData);
     geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;

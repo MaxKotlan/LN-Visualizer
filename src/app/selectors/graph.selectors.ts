@@ -12,13 +12,13 @@ export const selectModifiedGraph = createSelector(
     graphSelector, (state) => state.modifiedGraph
 );
 
-export const selectPubkeysByOptimal = createSelector(
-    selectModifiedGraph, 
-    (modifiedGraph) => Object.values(modifiedGraph).sort(modifiedGraphSortingAlgo).map((a) => a.pub_key));
+// export const selectPubkeysByOptimal = createSelector(
+//     selectModifiedGraph, 
+//     (modifiedGraph) => Object.values(modifiedGraph).sort(modifiedGraphSortingAlgo).map((a) => a.pub_key));
 
-const modifiedGraphSortingAlgo = (a: LnModifiedGraphNode, b: LnModifiedGraphNode): number => {
-    return b.connectedEdges.length - a.connectedEdges.length;
-}
+// const modifiedGraphSortingAlgo = (a: LnModifiedGraphNode, b: LnModifiedGraphNode): number => {
+//     return b.connectedEdges.length - a.connectedEdges.length;
+// }
 
 export const selectNodeValue = createSelector(
     selectModifiedGraph,
@@ -42,4 +42,9 @@ export const selectColors = createSelector(
 export const getNodes = createSelector(
     graphSelector,
     (state) => state.graphUnsorted
+)
+
+export const selectSortedEdges = createSelector(
+    getNodes,
+    (nodeValue) => nodeValue.edges
 )
