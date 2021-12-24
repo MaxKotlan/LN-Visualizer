@@ -5,7 +5,7 @@ import { AtftModule } from 'atft';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NetworkInfoComponent } from './components/network-info/network-info.component';
+import { GraphSceneComponent } from './components/graph-scene/graph-scene.component';
 import { GraphEdgeMeshComponent } from './components/graph-edge-mesh/graph-edge-mesh.component';
 import { GraphNodeMeshComponent } from './components/graph-node-mesh/graph-node-mesh.component';
 import { NodePositionRegistryService } from './services/node-position-registry.service';
@@ -18,7 +18,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 @NgModule({
   declarations: [
     AppComponent,
-    NetworkInfoComponent,
+    GraphSceneComponent,
     GraphEdgeMeshComponent,
     GraphNodeMeshComponent
   ],
