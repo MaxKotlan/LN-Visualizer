@@ -24,3 +24,8 @@ export const searchGraph = createAction(
     '[graph] setSearchStrings',
     props<{searchText: string}>()
 );
+
+export const renderEdges = createAction(
+    '[graph] renderEdges',
+    props<{value: boolean}>()
+);

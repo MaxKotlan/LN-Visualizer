@@ -13,6 +13,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;
+  @Input() shouldRender: boolean = true;
 
   constructor(
     protected override rendererService: RendererService,
@@ -25,15 +26,13 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     const obj: THREE.Object3D = this.getObject();
     if (obj){
       (obj as any)['geometry'] = this.newObject3DInstance().geometry;
-      //console.log(obj)
     }
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
   }
 
   protected newObject3DInstance(): THREE.Points {
-
-    const geometry = new THREE.BufferGeometry().setFromPoints( this.positions );
+    const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] );
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
 
     const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, vertexColors: true } );

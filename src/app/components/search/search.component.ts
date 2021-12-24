@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
 import { map, Observable, startWith } from 'rxjs';
-import { searchGraph } from 'src/app/actions/graph.actions';
+import { renderEdges, searchGraph } from 'src/app/actions/graph.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectNodesSearchResults, selectSearchString } from 'src/app/selectors/graph.selectors';
 
@@ -25,6 +26,10 @@ export class SearchComponent implements OnInit {
 
   onTextChange(event: any){
     this.store$.dispatch(searchGraph({searchText: event.target.value}))
+  }
+
+  checkboxFix(event: MatCheckboxChange){
+    this.store$.dispatch(renderEdges({value: event.checked}))
   }
 
 }

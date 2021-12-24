@@ -13,6 +13,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
   @Input() public edges: LnGraphEdge[] = [];
   @Input() public nodes: Record<string, LnModifiedGraphNode> = {};
+  @Input() shouldRender: boolean = false;
 
   constructor(
     protected override rendererService: RendererService,
@@ -26,7 +27,6 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     const obj: THREE.Object3D = this.getObject();
     if (obj){
       (obj as any)['geometry'] = this.newObject3DInstance().geometry;
-      console.log(obj)
     }
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
@@ -58,7 +58,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
       vertexColors: true,
     } );
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(pointData);
+    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []);
     geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;

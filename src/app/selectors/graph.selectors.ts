@@ -1,6 +1,5 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GraphState } from "../reducers/graph.reducer";
-import { LnModifiedGraphNode } from "../types/graph.interface";
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
@@ -70,3 +69,8 @@ export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
     (nodes) => nodes.map((a) => a.alias).slice(0,10)
 );
+
+export const shouldRenderEdges = createSelector(
+    graphSelector,
+    (state) => state.renderEdges
+)

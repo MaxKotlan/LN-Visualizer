@@ -20,6 +20,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FormsModule } from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatCardModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],

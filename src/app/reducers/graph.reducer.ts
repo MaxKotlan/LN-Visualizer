@@ -10,6 +10,7 @@ export interface GraphState {
     graphUnsorted: LnGraph,
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>
     searchText: string,
+    renderEdges: boolean,
     isLoading: boolean;
 };
 
@@ -17,6 +18,7 @@ const initialState: GraphState = {
     graphUnsorted: { nodes: [], edges: [] },
     modifiedGraph: {},
     searchText: '',
+    renderEdges: false,
     isLoading: false
 };
 
@@ -25,6 +27,10 @@ export const reducer = createReducer(
     on(
         graphActions.requestGraph,
         (state) => ({...state, isLoading: true}),
+    ),
+    on(
+        graphActions.renderEdges,
+        (state, {value}) => ({...state, renderEdges: value})
     ),
     on(
         graphActions.requestGraphSuccess,
