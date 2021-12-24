@@ -32,36 +32,12 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   }
 
   protected newObject3DInstance(): THREE.Points {
-    
-    // const t0 = performance.now();
-    // for(let i = 0; i < this.nodes.length; i++){
-    //   this.nodePositionRegistryService.pushSpherePoint(i, this.nodes[i].pub_key);
-    // }
-    // const t1 = performance.now();
-    // console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
-
-    // const fromHexString = (hexString: string) => (hexString.replace('#', '').match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
-
-    // const colTemp = this.nodes
-    //   .map((node: LnGraphNode) => node.color)
-    //   .map(fromHexString)
-    //   .flat()
-    //console.log('CHANGING')
-    //console.log(this.positions)
-    // console.log('COLRTEMP', colTemp)
 
     const geometry = new THREE.BufferGeometry().setFromPoints( this.positions );
-
-
-    //const colors = new Uint8Array(colTemp);
-
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
-    //geometry.colors.push(new THREE.Color(0xFF0000))
 
     const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, vertexColors: true } );
-    // const material = this.getMaterial();
     const line = new THREE.Points( geometry, material );
-    // this.applyShadowProps(mesh);
     return line;
   }
 
