@@ -104,17 +104,21 @@ const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Recor
     return {
         pub_key: g.pub_key,
         color: g.color,
-        postition: createSpherePoint(index),
+        postition: createSpherePoint(index, precomputedNodeEdgeList[g.pub_key].length),
         alias: g.alias,
         connectedEdges: precomputedNodeEdgeList[g.pub_key]
     } as LnModifiedGraphNode;
 }
 
-const createSpherePoint = (i: number): THREE.Vector3 => {
-    let x = Math.random()-.5;
-    let y = (Math.random()-.5)/1;
-    let z = Math.random()-.5;
-    const mag = (1/Math.sqrt(i))*Math.sqrt(x*x + y*y + z*z);
-    x /= mag; y /= mag; z /= mag;
+const createSpherePoint = (i: number, edgeCount: number): THREE.Vector3 => {
+    let r = 1000/Math.sqrt(i);
+    r = r > 10 ? 10 : r;
+    const s = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i)//(i%4)*Math.PI/4;
+    const t = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i+8000/50000)
+
+    const x = r * Math.cos(s) * Math.sin(t);
+    const y = r * Math.sin(s) * Math.sin(t)*1;
+    const z = r * Math.cos(t);
+
     return new THREE.Vector3(x, y, z);
 }
