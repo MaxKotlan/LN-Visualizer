@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GraphState } from "../reducers/graph.reducer";
+import { LnGraphEdge } from "../types/graph.interface";
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
@@ -73,4 +74,38 @@ export const selectNodesSearchResults = createSelector(
 export const shouldRenderEdges = createSelector(
     graphSelector,
     (state) => state.renderEdges
+)
+
+export const selectEdgeColor = createSelector(
+    selectSortedEdges,
+    selectFinalMatcheNodesFromSearch,
+    (sortedEdges, searchResult) => {
+        console.log(searchResult);
+        if (searchResult === undefined){
+
+        const largestCapacity = Math.max(...sortedEdges.map((e) => parseInt(e.capacity)));
+        const colTemp = sortedEdges
+        .map((edge: LnGraphEdge) => [
+          (1-(parseInt(edge.capacity) / largestCapacity)) * 50000+25,  
+          (parseInt(edge.capacity) / largestCapacity) * 50000+25, 
+          40])
+        .map(a => [...a,...a])
+        .flat();
+        return new Uint8Array(colTemp);
+
+        } else {
+            const colTemp = sortedEdges.map((edge: LnGraphEdge) => {
+                if (
+                searchResult.pub_key === edge.node1_pub ||
+                searchResult.pub_key === edge.node2_pub){
+                    return [126,125,0];
+                } else {
+                    return [40,40,40];
+                }
+            })
+            .map(a => [...a,...a])
+            .flat();
+            return new Uint8Array(colTemp);
+        }
+    }
 )

@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SceneComponent } from 'atft';
 import { GraphState } from 'src/app/reducers/graph.reducer';
-import { selectColors, selectModifiedGraph, selectSortedEdges, selectVertices, shouldRenderEdges } from 'src/app/selectors/graph.selectors';
+import { selectColors, selectEdgeColor, selectModifiedGraph, selectSortedEdges, selectVertices, shouldRenderEdges } from 'src/app/selectors/graph.selectors';
 
 @Component({
   selector: 'app-graph-scene',
@@ -21,4 +21,5 @@ export class GraphSceneComponent{
   public colors$ = this.store$.select(selectColors);
   public getSortedEdges$ = this.store$.select(selectSortedEdges);
   public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
+  public selectEdgeColor$ = this.store$.select(selectEdgeColor);
 }

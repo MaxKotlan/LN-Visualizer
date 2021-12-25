@@ -14,6 +14,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
   @Input() public edges: LnGraphEdge[] = [];
   @Input() public nodes: Record<string, LnModifiedGraphNode> = {};
   @Input() shouldRender: boolean = false;
+  @Input() edgeColor: Uint8Array | null = null;
 
   constructor(
     protected override rendererService: RendererService,
@@ -37,7 +38,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     const pointData: THREE.Vector3[] = []
 
     for(let i = 0; i < this.edges.length; i++){
-      
+
       if (this.nodes[this.edges[i].node1_pub])
         pointData.push(this.nodes[this.edges[i].node1_pub].postition)
 
@@ -63,7 +64,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     } );
 
     const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []);
-    geometry.setAttribute('color', new THREE.BufferAttribute( colors, 3, true));
+    geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;
   }

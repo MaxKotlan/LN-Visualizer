@@ -13,6 +13,7 @@
         [edges]="(getSortedEdges$ | async) || []"
         [nodes]="(modifiedGraph$ | async) || {}"
         [shouldRender]="(shouldRenderEdges$ | async) || false"
+        [edgeColor]="(selectEdgeColor$ | async)"
         ></app-graph-edge-mesh>
         <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
         <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
