@@ -138,11 +138,11 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
     return new THREE.Vector3(x, y, z);
 }
 
-const calculatePositionFromParent = (n: LnModifiedGraphNode) => {
+const calculatePositionFromParent = (n: LnModifiedGraphNode, depth=1) => {
     //createSpherePoint();
     n.children.forEach((child) => {
-        child.postition = createSpherePoint(1, n.postition);
-        calculatePositionFromParent(child);
+        child.postition = createSpherePoint(depth, n.postition);
+        calculatePositionFromParent(child, depth+1);
     })
 }
 
@@ -167,8 +167,8 @@ const calculateParentChildRelationship = (n: LnModifiedGraphNode, nlist: Record<
     let maxConnNode = nlist[selecteCorrectEdgePublicKey(maxConnEdge, n.pub_key)];
 
     //less than or equal fixes null positions???
-    if (maxConnNode.connectedEdges.length <= n.connectedEdges.length) return;
-    if (!maxConnEdge || maxConnNode.pub_key === n.pub_key) return;
+    if (!maxConnNode || !maxConnEdge || maxConnNode?.connectedEdges.length <= n.connectedEdges.length) return;
+    if (maxConnNode?.pub_key === n.pub_key) return;
     // if (!maxConnNode){
     //     return new Vector3(0,0,0);
     // }
