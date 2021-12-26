@@ -15,6 +15,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
   @Input() public nodes: Record<string, LnModifiedGraphNode> = {};
   @Input() shouldRender: boolean = false;
   @Input() edgeColor: Uint8Array | null = null;
+  @Input() dashedLines: boolean = true;
 
   constructor(
     protected override rendererService: RendererService,
@@ -45,20 +46,18 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
       if (this.nodes[this.edges[i].node2_pub])
         pointData.push(this.nodes[this.edges[i].node2_pub].postition)
     };
-
-    const largestCapacity = Math.max(...this.edges.map((e) => parseInt(e.capacity)));
-
-    const colTemp = this.edges
-      .map((edge: LnGraphEdge) => [
-        (1-(parseInt(edge.capacity) / largestCapacity)) * 50000+25,  
-        (parseInt(edge.capacity) / largestCapacity) * 50000+25, 
-        40])
-      .map(a => [...a,...a])
-      .flat()
-    const colors = new Uint8Array(colTemp);
-
-    const material = new THREE.LineBasicMaterial( {
-      color: 0xAAAAAA,
+    
+    const material = this.dashedLines ? 
+    new THREE.LineDashedMaterial( {
+      color: 0xFFFFFF,
+      linewidth: 1,
+      vertexColors: true,
+      scale: 1,
+      dashSize: 1,
+      gapSize: 3,    
+    } ) :
+    new THREE.LineBasicMaterial( {
+      color: 0xFFFFFF,
       linewidth: 1,
       vertexColors: true,
     } );
@@ -66,6 +65,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
+    mesh.computeLineDistances();
     return mesh;
   }
 
