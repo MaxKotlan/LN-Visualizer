@@ -146,18 +146,28 @@ const calculatePositionFromParent = (n: LnModifiedGraphNode) => {
     })
 }
 
+const selecteCorrectEdgePublicKey = (edge1: LnGraphEdge, compare: PublicKey): PublicKey => {
+    if (edge1.node1_pub === compare) return edge1.node2_pub;
+    if (edge1.node2_pub === compare) return edge1.node1_pub;
+    console.log('Uh oh')
+    return '' as PublicKey;
+}
+
 const calculateParentChildRelationship = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnModifiedGraphNode>): void => {
 
     const maxConnEdge = n.connectedEdges.reduce((max, edge) => 
-        nlist[max.node2_pub]?.connectedEdges.length > 
-        nlist[edge.node2_pub]?.connectedEdges.length ? 
+        nlist[selecteCorrectEdgePublicKey(max, n.pub_key)]?.connectedEdges.length > 
+        nlist[selecteCorrectEdgePublicKey(edge, n.pub_key)]?.connectedEdges.length ? 
             max : 
             edge
         );
     
 
     //doesn't work if filtering nodes
-    let maxConnNode = nlist[maxConnEdge.node2_pub];
+    let maxConnNode = nlist[selecteCorrectEdgePublicKey(maxConnEdge, n.pub_key)];
+
+    //less than or equal fixes null positions???
+    if (maxConnNode.connectedEdges.length <= n.connectedEdges.length) return;
     if (!maxConnEdge || maxConnNode.pub_key === n.pub_key) return;
     // if (!maxConnNode){
     //     return new Vector3(0,0,0);
