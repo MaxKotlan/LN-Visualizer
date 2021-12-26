@@ -37,7 +37,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   protected newObject3DInstance(): THREE.Points {
     //hardcoded scale value
 
-    const sprite = new THREE.TextureLoader().load( "assets/Lightning_Network.svg" );
+    const sprite = new THREE.TextureLoader().load( "assets/Lightning_Network_dark.svg" );
     const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] ).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
 
