@@ -14,7 +14,9 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;
   @Input() shouldRender: boolean = true;
-  @Input() pointSizeAttenuation: boolean = true;
+  @Input() pointSizeAttenuation: boolean = false;
+  @Input() useSprite: boolean = false;
+  @Input() spriteSize: number = 2;
 
   constructor(
     protected override rendererService: RendererService,
@@ -34,10 +36,12 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
   protected newObject3DInstance(): THREE.Points {
     //hardcoded scale value
+
+    const sprite = new THREE.TextureLoader().load( "assets/disc.png" );
     const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] ).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
 
-    const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: this.pointSizeAttenuation, vertexColors: true } );
+    const material = new THREE.PointsMaterial( { size: this.spriteSize, sizeAttenuation: this.pointSizeAttenuation, map: this.useSprite? sprite : undefined, vertexColors: true, alphaTest: 0.5, transparent: this.useSprite? true : false } );
     const line = new THREE.Points( geometry, material );
     return line;
   }
