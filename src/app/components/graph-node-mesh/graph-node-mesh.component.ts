@@ -14,6 +14,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;
   @Input() shouldRender: boolean = true;
+  @Input() pointSizeAttenuation: boolean = true;
 
   constructor(
     protected override rendererService: RendererService,
@@ -36,7 +37,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] ).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
 
-    const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, vertexColors: true } );
+    const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: this.pointSizeAttenuation, vertexColors: true } );
     const line = new THREE.Points( geometry, material );
     return line;
   }
