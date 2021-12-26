@@ -101,7 +101,13 @@ const getModifiedGraph = (g: LnGraphNode[], precomputedNodeEdgeList : Record<Pub
     }, {} as Record<PublicKey, LnModifiedGraphNode>)
 
     Object.values(sortedNodesWithEdges).forEach(node => {
-        node.postition= calculatePosition(node, sortedNodesWithEdges)
+        calculateParentChildRelationship(node, sortedNodesWithEdges)
+    });
+    const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
+    console.log('nodesWithoutParents', nodesWithoutParents)
+    Object.values(nodesWithoutParents).forEach(node => {
+        node.postition = createSpherePoint(1, new Vector3(0,0,0));
+        calculatePositionFromParent(node)
     });
 
     return sortedNodesWithEdges;
@@ -115,7 +121,7 @@ const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Recor
         alias: g.alias,
         visited: false,
         connectedEdges: precomputedNodeEdgeList[g.pub_key],
-        children: [] as LnModifiedGraphNode[]
+        children: [] as LnModifiedGraphNode[],
     } as LnModifiedGraphNode;
 }
 
@@ -132,7 +138,15 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
     return new THREE.Vector3(x, y, z);
 }
 
-const calculatePosition = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnModifiedGraphNode>) => {
+const calculatePositionFromParent = (n: LnModifiedGraphNode) => {
+    //createSpherePoint();
+    n.children.forEach((child) => {
+        child.postition = createSpherePoint(1, n.postition);
+        calculatePositionFromParent(child);
+    })
+}
+
+const calculateParentChildRelationship = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnModifiedGraphNode>): void => {
 
     const maxConnEdge = n.connectedEdges.reduce((max, edge) => 
         nlist[max.node2_pub]?.connectedEdges.length > 
@@ -140,19 +154,22 @@ const calculatePosition = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnMo
             max : 
             edge
         );
+    
 
+    //doesn't work if filtering nodes
     let maxConnNode = nlist[maxConnEdge.node2_pub];
-    if (!maxConnNode){
-        return new Vector3(0,0,0);
-    }
+    if (!maxConnEdge || maxConnNode.pub_key === n.pub_key) return;
+    // if (!maxConnNode){
+    //     return new Vector3(0,0,0);
+    // }
 
-    if (maxConnNode !== undefined && maxConnNode.visited === false){
-        maxConnNode.postition = createSpherePoint(0, new Vector3(0,0,0));// new Vector3(0,0,0)
-        //updatePositionTransform(maxConnNode);
-        maxConnNode.visited = true;
-    }
+    // if (maxConnNode !== undefined && maxConnNode.visited === false){
+    //     maxConnNode.postition = createSpherePoint(1, new Vector3(0,0,0));// new Vector3(0,0,0)
+    //     updatePositionTransform(maxConnNode);
+    //     maxConnNode.visited = true;
+    // }
     n.parent = maxConnNode;
-    maxConnNode.children.push(n);    // maxConnNode.children.push(n);
+    n.parent.children.push(n);    // maxConnNode.children.push(n);
         // n.children.forEach((q) => q.postition.add(maxConnNode.postition))
         // n.postition = createSpherePoint(1, maxConnNode.postition)
         //n.postition = new Vector3(0,0,0)
@@ -160,34 +177,34 @@ const calculatePosition = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnMo
         //n.children.forEach((q) => q.postition.add(maxConnNode?.postition || new Vector3(0,0,0)))
 
     //if (!n) return;
-    n.postition = createSpherePoint(.1, n?.parent?.postition)
-    updatePositionTransform(n);
+   // n.postition = createSpherePoint(1, n?.parent?.postition)
+   // updatePositionTransform(n);
 
     //}
 
 
-    return n.postition
+    //return n.postition;//.distanceTo(new Vector3(0,0,0)) > 100 ? createSpherePoint(100, new Vector3(0,0,0)) : n.postition;
 }
 
-const updatePositionTransform = (node: LnModifiedGraphNode, depth=0) => {
-    //if (node.children.length === 0) return;
-    //node.postition = createSpherePoint(1, node?.parent?.postition || new Vector3(0,0,0))
+// const updatePositionTransform = (node: LnModifiedGraphNode, depth=0) => {
+//     //if (node.children.length === 0) return;
+//     //node.postition = createSpherePoint(1, node?.parent?.postition || new Vector3(0,0,0))
     
-    //let remainingChildUpdates = node.children;
+//     //let remainingChildUpdates = node.children;
 
-    //while(remainingChildUpdates.length !== 0){
-    //    remainingChildUpdates.forEach((q) => {
-            //updatePositionTransform(q);
-    //        q.postition.add(q.parent.postition || new Vector3(0,0,0));
+//     //while(remainingChildUpdates.length !== 0){
+//     //    remainingChildUpdates.forEach((q) => {
+//             //updatePositionTransform(q);
+//     //        q.postition.add(q.parent.postition || new Vector3(0,0,0));
             
-    //    })
-    //}
-    //if (true) return;
-    if (depth > 12) return;
+//     //    })
+//     //}
+//     //if (true) return;
+//     if (depth > 100) return;
 
-    node.children.forEach((q) => {
-        q.postition.add(node.parent.postition);
-        depth += 1;
-        updatePositionTransform(q, depth);
-    })
-}
+//     node.children.forEach((child) => {
+//         child.postition.add(child.parent.postition);
+//         depth += 1;
+//         updatePositionTransform(child, depth);
+//     })
+// }

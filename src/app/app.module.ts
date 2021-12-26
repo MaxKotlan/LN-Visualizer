@@ -49,7 +49,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatSliderModule,
-    MatSlideToggleModule
+    MatSlideToggleModule//,
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],
