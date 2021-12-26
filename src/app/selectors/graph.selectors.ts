@@ -44,10 +44,7 @@ export const getNodes = createSelector(
     (state) => state.graphUnsorted
 )
 
-export const selectSortedEdges = createSelector(
-    getNodes,
-    (nodeValue) => nodeValue.edges
-)
+
 
 export const selectSearchString = createSelector(
     graphSelector,
@@ -65,6 +62,15 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     selectPossibleNodesFromSearch,
     (nodes) => nodes.length === 1 ? nodes[0] : undefined
 );
+
+export const selectSortedEdges = createSelector(
+    getNodes,
+    selectFinalMatcheNodesFromSearch,
+    (nodeValue, searchResult) => nodeValue.edges.filter((edge) => searchResult === undefined ? true :
+        searchResult.pub_key === edge.node1_pub ||
+        searchResult.pub_key === edge.node2_pub
+    )
+)
 
 export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
@@ -100,7 +106,7 @@ export const selectEdgeColor = createSelector(
                 searchResult.pub_key === edge.node2_pub){
                     return [126,125,0];
                 } else {
-                    return [40,40,40];
+                    return [0,0,0];
                 }
             })
             .map(a => [...a,...a])
