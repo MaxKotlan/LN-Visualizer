@@ -16,6 +16,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
   @Input() shouldRender: boolean = false;
   @Input() edgeColor: Uint8Array | null = null;
   @Input() dashedLines: boolean = true;
+  @Input() depthTest: boolean = false;
 
   constructor(
     protected override rendererService: RendererService,
@@ -61,6 +62,8 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
       linewidth: 1,
       vertexColors: true,
     } );
+
+    material.depthTest = this.depthTest;
 
     const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
