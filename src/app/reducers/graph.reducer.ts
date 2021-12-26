@@ -106,7 +106,7 @@ const getModifiedGraph = (g: LnGraphNode[], precomputedNodeEdgeList : Record<Pub
     const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
     console.log('nodesWithoutParents', nodesWithoutParents)
     Object.values(nodesWithoutParents).forEach(node => {
-        node.postition = createSpherePoint(1, new Vector3(0,0,0));
+        node.postition = createSpherePoint(0, new Vector3(0,0,0));
         calculatePositionFromParent(node)
     });
 
@@ -117,23 +117,19 @@ const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Recor
     return {
         pub_key: g.pub_key,
         color: g.color,
-        //postition: calculatePosition(index, precomputedNodeEdgeList[g.pub_key]),
         alias: g.alias,
-        visited: false,
         connectedEdges: precomputedNodeEdgeList[g.pub_key],
         children: [] as LnModifiedGraphNode[],
     } as LnModifiedGraphNode;
 }
 
 const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
-    // let r = 1000/Math.sqrt(i);
-    // r = r > 10 ? 10 : r;
-    const s = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i)//(i%4)*Math.PI/4;
-    const t = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i+8000/50000)
+    const s = 2*Math.PI*(Math.random())
+    const t = 2*Math.PI*(Math.random())
 
-    const x = r * Math.cos(s) * Math.sin(t) + position.x;
-    const y = r * Math.sin(s) * Math.sin(t) + position.y;
-    const z = r * Math.cos(t) + position.z;
+    const x = r * Math.cos(s) * Math.sin(t) + position.x + (Math.random()-.5); //randomness to dissipate spheres
+    const y = r * Math.sin(s) * Math.sin(t) + position.y + (Math.random()-.5);
+    const z = r * Math.cos(t) + position.z + (Math.random()-.5);
 
     return new THREE.Vector3(x, y, z);
 }

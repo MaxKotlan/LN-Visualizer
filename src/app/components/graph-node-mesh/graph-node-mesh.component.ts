@@ -32,7 +32,8 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   }
 
   protected newObject3DInstance(): THREE.Points {
-    const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] );
+    //hardcoded scale value
+    const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] ).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
 
     const material = new THREE.PointsMaterial( { size: 2, sizeAttenuation: false, vertexColors: true } );

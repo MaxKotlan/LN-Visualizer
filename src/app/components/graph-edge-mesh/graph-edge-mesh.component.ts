@@ -63,7 +63,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
       vertexColors: true,
     } );
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []);
+    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     return mesh;
