@@ -27,7 +27,11 @@ export class SearchComponent implements OnInit {
   }
 
   onTextChange(event: any){
-    this.store$.dispatch(searchGraph({searchText: event.target.value}))
+    if (event?.target?.value)
+      this.store$.dispatch(searchGraph({searchText: event.target.value}))
+    if (event?.option?.value)
+      this.store$.dispatch(searchGraph({searchText: event.option.value}))
+
   }
 
   checkboxFix(event: MatCheckboxChange){

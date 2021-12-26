@@ -8,7 +8,7 @@
                 matInput
                 (input)="onTextChange($event)"
                 [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onTextChange($event)">
             <mat-option *ngFor="let option of nodeSearchResults$ | async" [value]="option.alias || option.publicKey">
                 <div style="flex-direction: column; display: flex;">
                     <div style="height: 10px">{{option.alias}}</div>
