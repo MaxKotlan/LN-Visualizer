@@ -3,6 +3,7 @@ import { LnGraph, LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from '../types
 import * as graphActions from '../actions/graph.actions';
 import { state } from '@angular/animations';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 type PublicKey = string;
 
@@ -94,31 +95,99 @@ const sortGraphByCentrality = (g: LnGraphNode[],  precomputedNodeEdgeList : Reco
 const getModifiedGraph = (g: LnGraphNode[], precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>, minEdges: number, sortAscending: boolean) => {
     const filteredNodes: LnGraphNode[] = g.filter((a) => precomputedNodeEdgeList[a.pub_key].length > minEdges);
     const sortedNodes = sortGraphByCentrality(filteredNodes, precomputedNodeEdgeList, sortAscending);
-    return sortedNodes.reduce((acc, val, index) => {
+    const sortedNodesWithEdges = sortedNodes.reduce((acc, val, index) => {
         acc[val.pub_key] = createModifiedGraphNode(val, precomputedNodeEdgeList, index);
         return acc;
     }, {} as Record<PublicKey, LnModifiedGraphNode>)
+
+    Object.values(sortedNodesWithEdges).forEach(node => {
+        node.postition= calculatePosition(node, sortedNodesWithEdges)
+    });
+
+    return sortedNodesWithEdges;
 }
 
 const createModifiedGraphNode = (g: LnGraphNode, precomputedNodeEdgeList : Record<PublicKey, LnGraphEdge[]>, index: number): LnModifiedGraphNode =>{
     return {
         pub_key: g.pub_key,
         color: g.color,
-        postition: createSpherePoint(index, precomputedNodeEdgeList[g.pub_key].length),
+        //postition: calculatePosition(index, precomputedNodeEdgeList[g.pub_key]),
         alias: g.alias,
-        connectedEdges: precomputedNodeEdgeList[g.pub_key]
+        visited: false,
+        connectedEdges: precomputedNodeEdgeList[g.pub_key],
+        children: [] as LnModifiedGraphNode[]
     } as LnModifiedGraphNode;
 }
 
-const createSpherePoint = (i: number, edgeCount: number): THREE.Vector3 => {
-    let r = 1000/Math.sqrt(i);
-    r = r > 10 ? 10 : r;
+const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
+    // let r = 1000/Math.sqrt(i);
+    // r = r > 10 ? 10 : r;
     const s = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i)//(i%4)*Math.PI/4;
     const t = 2*Math.PI*(Math.random())//*(0.1/Math.random())//(i+8000/50000)
 
-    const x = r * Math.cos(s) * Math.sin(t);
-    const y = r * Math.sin(s) * Math.sin(t)*1;
-    const z = r * Math.cos(t);
+    const x = r * Math.cos(s) * Math.sin(t) + position.x;
+    const y = r * Math.sin(s) * Math.sin(t) + position.y;
+    const z = r * Math.cos(t) + position.z;
 
     return new THREE.Vector3(x, y, z);
+}
+
+const calculatePosition = (n: LnModifiedGraphNode, nlist: Record<PublicKey, LnModifiedGraphNode>) => {
+
+    const maxConnEdge = n.connectedEdges.reduce((max, edge) => 
+        nlist[max.node2_pub]?.connectedEdges.length > 
+        nlist[edge.node2_pub]?.connectedEdges.length ? 
+            max : 
+            edge
+        );
+
+    let maxConnNode = nlist[maxConnEdge.node2_pub];
+    if (!maxConnNode){
+        return new Vector3(0,0,0);
+    }
+
+    if (maxConnNode !== undefined && maxConnNode.visited === false){
+        maxConnNode.postition = createSpherePoint(0, new Vector3(0,0,0));// new Vector3(0,0,0)
+        //updatePositionTransform(maxConnNode);
+        maxConnNode.visited = true;
+    }
+    n.parent = maxConnNode;
+    maxConnNode.children.push(n);    // maxConnNode.children.push(n);
+        // n.children.forEach((q) => q.postition.add(maxConnNode.postition))
+        // n.postition = createSpherePoint(1, maxConnNode.postition)
+        //n.postition = new Vector3(0,0,0)
+    //} else {
+        //n.children.forEach((q) => q.postition.add(maxConnNode?.postition || new Vector3(0,0,0)))
+
+    //if (!n) return;
+    n.postition = createSpherePoint(.1, n?.parent?.postition)
+    updatePositionTransform(n);
+
+    //}
+
+
+    return n.postition
+}
+
+const updatePositionTransform = (node: LnModifiedGraphNode, depth=0) => {
+    //if (node.children.length === 0) return;
+    //node.postition = createSpherePoint(1, node?.parent?.postition || new Vector3(0,0,0))
+    
+    //let remainingChildUpdates = node.children;
+
+    //while(remainingChildUpdates.length !== 0){
+    //    remainingChildUpdates.forEach((q) => {
+            //updatePositionTransform(q);
+    //        q.postition.add(q.parent.postition || new Vector3(0,0,0));
+            
+    //    })
+    //}
+    //if (true) return;
+    if (depth > 12) return;
+
+    node.children.forEach((q) => {
+        q.postition.add(node.parent.postition);
+        depth += 1;
+        updatePositionTransform(q, depth);
+    })
 }

@@ -20,4 +20,7 @@ export interface LnGraphEdge{
 export interface LnModifiedGraphNode extends LnGraphNode{
     postition: THREE.Vector3,
     connectedEdges: LnGraphEdge[]
+    visited: boolean;
+    parent: LnModifiedGraphNode;
+    children: LnModifiedGraphNode[]
 }
