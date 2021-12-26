@@ -16,7 +16,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   @Input() shouldRender: boolean = true;
   @Input() pointSizeAttenuation: boolean = true;
   @Input() useSprite: boolean = true;
-  @Input() spriteSize: number = 10;
+  @Input() spriteSize: number = 3;
 
   constructor(
     protected override rendererService: RendererService,

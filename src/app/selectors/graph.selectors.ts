@@ -54,7 +54,9 @@ export const selectSearchString = createSelector(
 export const selectPossibleNodesFromSearch = createSelector(
     selectNodeValue,
     selectSearchString,
-    (nodes, searchString) => nodes.filter((a) => a.alias.toUpperCase().includes(searchString.toUpperCase()))
+    (nodes, searchString) => nodes.filter((a) => 
+        a.pub_key.toUpperCase().includes(searchString.toUpperCase()) ||
+        a.alias.toUpperCase().includes(searchString.toUpperCase()))
 );
 
 
@@ -74,7 +76,9 @@ export const selectSortedEdges = createSelector(
 
 export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
-    (nodes) => nodes.map((a) => a.alias).slice(0,10)
+    (nodes) => nodes.map((a) => 
+        ({publicKey: a.pub_key, alias: a.alias}))
+        .slice(0,10)
 );
 
 export const shouldRenderEdges = createSelector(
