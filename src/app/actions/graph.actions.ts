@@ -39,3 +39,7 @@ export const sortOrderChange = createAction(
     '[graph] setSortOrder',
     props<{ascending: boolean}>()
 );
+
+export const gotoNode = createAction(
+    '[graph] gotoNode'
+);

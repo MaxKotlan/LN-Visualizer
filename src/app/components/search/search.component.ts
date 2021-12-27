@@ -5,7 +5,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { map, Observable, startWith } from 'rxjs';
-import { minEdgesRecompute, renderEdges, searchGraph, sortOrderChange } from 'src/app/actions/graph.actions';
+import { gotoNode, minEdgesRecompute, renderEdges, searchGraph, sortOrderChange } from 'src/app/actions/graph.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectNodesSearchResults, selectSearchString } from 'src/app/selectors/graph.selectors';
 
@@ -44,6 +44,10 @@ export class SearchComponent implements OnInit {
 
   connectionSortChanged(event: MatSlideToggleChange){    
     this.store$.dispatch(sortOrderChange({ascending: event.checked}))
+  }
+
+  gotoNode(){
+    this.store$.dispatch(gotoNode());
   }
 
 }

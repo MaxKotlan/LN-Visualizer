@@ -23,6 +23,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatSliderModule,
-    MatSlideToggleModule//,
+    MatSlideToggleModule,
+    MatButtonModule//,
     //StoreDevtoolsModule.instrument({})
   ],
   providers: [NodePositionRegistryService],

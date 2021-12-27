@@ -19,6 +19,7 @@
         </mat-form-field>
     </form>
     <div style="display: flex; flex-direction: column;">
+        <button (click)="gotoNode()" mat-button color="primary">Goto</button>
         <mat-checkbox (change)="checkboxFix($event)">Render Edges</mat-checkbox>
         <span>
             Min  Edges
