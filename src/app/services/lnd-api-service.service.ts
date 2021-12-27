@@ -19,7 +19,7 @@ export class LndApiServiceService {
   }
 
   public getGraphInfo(): Observable<LnGraph>{
-    return this.http.get<LnGraph>('assets/graph.json');
+    return this.http.get<LnGraph>('assets/graph-min.json');
   }
 
 }
