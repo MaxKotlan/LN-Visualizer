@@ -5,12 +5,12 @@
         [positionX]="20" [positionY]="50" [positionZ]="50">
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
-        <app-graph-font-mesh 
+        <app-graph-font-mesh *ngIf="false"
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"
             [aliases]="(selectAliases$ | async) || []"    
         ></app-graph-font-mesh>
-        <app-graph-node-mesh *ngIf="false"
+        <app-graph-node-mesh *ngIf="true"
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"    
         ></app-graph-node-mesh>
