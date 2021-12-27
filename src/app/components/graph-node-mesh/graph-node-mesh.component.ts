@@ -48,6 +48,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
     const material = new THREE.PointsMaterial( { size: this.spriteSize, sizeAttenuation: this.pointSizeAttenuation, map: this.useSprite? this.spriteTexture : undefined, vertexColors: true, alphaTest: 0.5, transparent: this.useSprite? true : false } );
     const line = new THREE.Points( geometry, material );
+    console.log(line)
     return line;
   }
 
