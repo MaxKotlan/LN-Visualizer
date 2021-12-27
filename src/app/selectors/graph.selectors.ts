@@ -91,6 +91,12 @@ export const shouldRenderEdges = createSelector(
     (state) => state.renderEdges
 )
 
+export const selectAliases = createSelector(
+    selectNodeValue,
+    (nodeValue) => nodeValue.map((g) => g.alias)
+)
+
+
 export const selectEdgeColor = createSelector(
     selectSortedEdges,
     selectFinalMatcheNodesFromSearch,

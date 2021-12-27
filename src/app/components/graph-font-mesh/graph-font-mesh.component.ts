@@ -10,7 +10,7 @@ import { Object3D } from 'three';
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class GraphFontMeshComponent extends AbstractObject3D<THREE.Sprite> implements OnChanges, OnInit {
+export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges, OnInit {
   // @Input() positions: THREE.Vector3[] = [];
   // @Input() colors: any;
 
@@ -141,6 +141,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Sprite> imple
   //*********************************************** */
 
   @Input() positions: THREE.Vector3[] = [];
+  @Input() aliases: string[] = [];
   @Input() colors: any;
   @Input() shouldRender: boolean = true;
   @Input() pointSizeAttenuation: boolean = true;
@@ -163,15 +164,19 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Sprite> imple
   }
 
   override ngOnChanges(simpleChanges: SimpleChanges){
-    const obj: THREE.Object3D = this.getObject();
+    // let obj: THREE.Object3D = this.getObject();
     // if (obj){
-    //   (obj as any)['geometry'] = this.newObject3DInstance().geometry;
+    //   (obj) = this.newObject3DInstance();
+    //   this.rendererService.getScene().addChild(obj);
     // }
+    super.ngOnInit();
+    super.ngAfterViewInit();
+
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
   }
 
-  protected newObject3DInstance(): THREE.Sprite {
+  protected newObject3DInstance(): THREE.Object3D {
 
       //const fontStuff = 
       //const test = new THREE.Font();
@@ -196,21 +201,35 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Sprite> imple
       //   bevelSegments: 5
       // } );
 
-      let instance = new TextSprite({
-        alignment: 'left',
-        color: '#24ff00',
-        fontFamily: '"Times New Roman", Times, serif',
-        fontSize: 8,
-        fontStyle: 'italic',
-        text: [
-          'Twinkle, twinkle, little star,',
-          'How I wonder what you are!',
-          'Up above the world so high,',
-          'Like a diamond in the sky.',
-        ].join('\n'),
-      });
+      //geomAccum = [];
 
-      console.log(instance)
+      // for (let i = 0; i < 10; i++){
+      //   geomA
+
+      let obj3d = new Object3D();
+
+      for (let i = 0; i < 100; i++){
+        const instance = new TextSprite({
+          alignment: 'left',
+          color: '#ffffff',
+          fontFamily: '"Arial", Arial, sansserif',
+          fontSize: 1,
+          // fontStyle: 'italic',
+          text: this.aliases[i],
+        });
+        instance.translateX(this.positions[i].x*100);
+        instance.translateY(this.positions[i].y*100);
+        instance.translateZ(this.positions[i].z*100);
+        obj3d = obj3d.add(instance);
+      }
+      console.log(obj3d)
+
+      //instance.geometry.translate(2,1,1);
+      //}
+
+
+
+      //console.log(instance)
 
       // const textMaterial = new THREE.MeshPhongMaterial( 
       //   { color: 0xff0000, specular: 0xffffff }
@@ -223,13 +242,13 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Sprite> imple
       // obj.
       //obj.add(instance);
 
-      const map = new THREE.TextureLoader().load( 'assets/disc.png' );
-      const material = new THREE.SpriteMaterial( { map: map } );
+      // const map = new THREE.TextureLoader().load( 'assets/disc.png' );
+      // const material = new THREE.SpriteMaterial( { map: map } );
 
-      const sprite = new THREE.Sprite( material );
-      console.log(instance)
+      // const sprite = new THREE.Sprite( material );
+      //console.log(instance)
 
-      return instance;
+      return obj3d;
     //});
     }
 }
