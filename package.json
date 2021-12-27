@@ -24,10 +24,10 @@
     "@ngrx/store": "^13.0.2",
     "@ngrx/store-devtools": "^13.0.2",
     "@seregpie/three.text-sprite": "^3.2.0",
-    "atft": "^1.5.1",
+    "atft": "^1.5.0",
     "dagre": "^0.8.5",
     "rxjs": "~7.4.0",
-    "three": "^0.135.0",
+    "three": "^0.132.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
