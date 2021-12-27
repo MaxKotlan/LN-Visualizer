@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GraphState } from "../reducers/graph.reducer";
-import { LnGraphEdge } from "../types/graph.interface";
+import { LnGraphEdge, LnModifiedGraphNode } from "../types/graph.interface";
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
@@ -62,7 +62,12 @@ export const selectPossibleNodesFromSearch = createSelector(
 
 export const selectFinalMatcheNodesFromSearch = createSelector(
     selectPossibleNodesFromSearch,
-    (nodes) => nodes.length === 1 ? nodes[0] : undefined
+    selectSearchString,
+    (nodes, searchString) => {
+        if (nodes.length === 1) return nodes[0];
+        const exactMatch = nodes.find((node: LnModifiedGraphNode) => node.alias === searchString || node.pub_key === searchString);
+        return exactMatch;
+    }
 );
 
 export const selectSortedEdges = createSelector(
