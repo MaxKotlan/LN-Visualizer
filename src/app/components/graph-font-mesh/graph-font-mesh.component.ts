@@ -3,7 +3,8 @@ import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf 
 import { AbstractLazyObject3D, AbstractObject3D, appliedMaterial, fixCenter, FontService, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
 import TextSprite from '@seregpie/three.text-sprite';
-import { Object3D } from 'three';
+import { BufferAttribute, BufferGeometry, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial } from 'three';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 @Component({
   selector: 'app-graph-font-mesh',
@@ -183,7 +184,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
 
 
-      //new THREE.TextureLoader().load( "assets/Lightning_Network_dark.svg" )
+      const test = new THREE.TextureLoader().load( "assets/disc.png" )
 
       //await http
 
@@ -206,23 +207,99 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
       // for (let i = 0; i < 10; i++){
       //   geomA
 
-      let obj3d = new Object3D();
+      //let obj3d = new Object3D();
 
-      for (let i = 0; i < 100; i++){
+      let spriteAccum = new TextSprite({text: this.aliases[0]}, new THREE.MeshBasicMaterial({ transparent: false })); 
+
+      //const buffgeom: BufferGeometry = new BufferGeometry(); 
+
+      for (let i = 0; i < 8; i++){
         const instance = new TextSprite({
           alignment: 'left',
           color: '#ffffff',
           fontFamily: '"Arial", Arial, sansserif',
           fontSize: 1,
-          // fontStyle: 'italic',
           text: this.aliases[i],
         });
-        instance.translateX(this.positions[i].x*100);
-        instance.translateY(this.positions[i].y*100);
-        instance.translateZ(this.positions[i].z*100);
-        obj3d = obj3d.add(instance);
+
+        const deserializeBufferSpriteAccumulator = spriteAccum.geometry.getAttribute('position').toJSON();
+        const deserializedArraySpriteAccumulator = (deserializeBufferSpriteAccumulator as any).array as number[];
+
+        const deserializeBufferSpriteAccumulatorUv = spriteAccum.geometry.getAttribute('uv').toJSON();
+        const deserializedArraySpriteAccumulatorUv = (deserializeBufferSpriteAccumulatorUv as any).array as number[];
+
+        const deserializeBuffer = instance.geometry.getAttribute('position').toJSON();
+        const deserializedArray = (deserializeBuffer as any).array as number[];
+
+        const deserializeBufferInstanceUv = instance.geometry.getAttribute('uv').toJSON();
+        const deserializedArrayInstanceUv = (deserializeBufferInstanceUv as any).array as number[];
+
+        console.log(spriteAccum.geometry.getAttribute('uv'))
+
+        const newPositioned = deserializedArray.map((value, index) => {
+
+          switch(index%3){
+            case 0: //console.log('Increment by X');
+              return value + this.positions[i].x * 1;
+              break;
+            case 1: //console.log('Increment by Y');
+              return value + this.positions[i].y * 1;
+              break;
+            case 2: //console.log('Increment by Z');
+              return value + this.positions[i].z * 1;
+              break;
+          }
+
+          //console.log('shouldBeX', )
+          return value + this.positions[i].x * 0
+        });
+        
+
+        let concatindatedBuffers;
+        if (i > 0)
+          concatindatedBuffers = [...deserializedArraySpriteAccumulator, ...newPositioned];
+        else
+          concatindatedBuffers = newPositioned;
+
+        let concatindatedUvBuffers;
+        //if (i > 0)
+          concatindatedUvBuffers = [...deserializedArraySpriteAccumulatorUv, ...deserializedArrayInstanceUv];
+        //else
+        //  concatindatedUvBuffers = deserializedArrayInstanceUv;
+
+        console.log('concatbuff', deserializedArrayInstanceUv)
+
+        spriteAccum.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(
+          concatindatedBuffers
+        ),3, false))
+          
+        spriteAccum.geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(
+          concatindatedUvBuffers
+        ),4, false));
+
+        (spriteAccum.geometry as THREE.BufferGeometry).attributes['position'].needsUpdate = true;
+        (spriteAccum.geometry as THREE.BufferGeometry).setDrawRange( 0, concatindatedBuffers.length);
+        //spriteAccum.geometry.ge
+
+        //spriteAccum.geometry.setAttribute('position', yooo);
+
+        //spriteAccum.geometry.setAttribute('position', instance.geometry.getAttribute('position'))
+
+        //spriteAccum.geometry.addGroup(0,20, 0);
+        
+        //spriteAccum.geometry = 
+        //BufferGeometryUtils.mergeBufferAttributes([...instance.geometry.attributes]);
+        //spriteAccum.geometry.computeVertexNormals();
+        //spriteAccum.material.
+        console.log(spriteAccum.geometry)
+        spriteAccum.material.map  = instance.material.map
+        //spriteAccum.geometry.addGroup(0, 2, 0)
+       // spriteAccum = instance;
+        //spriteAccum.geometry = geom.
+
+        //obj3d = obj3d.add(instance);
       }
-      console.log(obj3d)
+      //console.log(obj3d)
 
       //instance.geometry.translate(2,1,1);
       //}
@@ -242,13 +319,24 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
       // obj.
       //obj.add(instance);
 
-      // const map = new THREE.TextureLoader().load( 'assets/disc.png' );
+      //const map = new THREE.TextureLoader().load( 'assets/disc.png' );
       // const material = new THREE.SpriteMaterial( { map: map } );
 
       // const sprite = new THREE.Sprite( material );
       //console.log(instance)
 
-      return obj3d;
+      // const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] );//.scale(100,100,100);
+      // console.log('complex', geometry)
+
+      
+      //geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
+      //console.log(spriteAccum.material.map)
+      //const material = new THREE.PointsMaterial( { size: 10, sizeAttenuation: true, map: spriteAccum.material.map, alphaMap: spriteAccum.material.alphaMap, transparent: true, alphaTest: 0.5});//, sizeAttenuation: this.pointSizeAttenuation, map: this.useSprite? this.spriteTexture : undefined, vertexColors: true, alphaTest: 0.5, transparent: this.useSprite? true : false } );
+      //const line = new THREE.Points( geometry, material );
+      //console.log(line)
+      return spriteAccum;
+
+      //return obj3d;
     //});
     }
 }

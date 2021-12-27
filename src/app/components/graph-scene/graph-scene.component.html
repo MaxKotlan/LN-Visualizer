@@ -10,7 +10,7 @@
             [colors]="(colors$ | async) || []"
             [aliases]="(selectAliases$ | async) || []"    
         ></app-graph-font-mesh>
-        <app-graph-node-mesh 
+        <app-graph-node-mesh *ngIf="false"
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"    
         ></app-graph-node-mesh>
