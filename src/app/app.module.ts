@@ -24,6 +24,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButtonModule} from '@angular/material/button';
+import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-mesh.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {MatButtonModule} from '@angular/material/button';
     GraphSceneComponent,
     GraphEdgeMeshComponent,
     GraphNodeMeshComponent,
+    GraphFontMeshComponent,
     SearchComponent
   ],
   imports: [

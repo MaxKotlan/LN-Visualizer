@@ -5,6 +5,10 @@
         [positionX]="20" [positionY]="50" [positionZ]="50">
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
+        <app-graph-font-mesh 
+            [positions]="(positions$ | async) || []"
+            [colors]="(colors$ | async) || []"    
+        ></app-graph-font-mesh>
         <app-graph-node-mesh 
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"    
