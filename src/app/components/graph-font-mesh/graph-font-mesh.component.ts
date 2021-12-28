@@ -212,6 +212,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
     const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
 
+    
     //console.log(newCoords)
     let texture = new TextTexture({
       alignment: 'center',
@@ -222,21 +223,22 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
       text: 'Hello World',
     });
 
-		if (texture.checkFontFace()) {
-			let {
-				height,
-				width,
-			} = texture;
-			if (width && height) {
-				//texture.setX(width).setY(height);
-				//texture.setOptimalPixelRatio(this, renderer, camera);
-				texture.redraw();
-			} else {
-				//scale.setScalar(1);
-			}
-		} else {
-			texture.loadFontFace();
-		}
+		// if (texture.checkFontFace()) {
+		// 	let {
+		// 		height,
+		// 		width,
+		// 	} = texture;
+		// 	if (width && height) {
+		// 		//texture.setX(width).setY(height);
+		// 		//texture.setOptimalPixelRatio(this, renderer, camera);
+		// 		texture.redraw();
+		// 	} else {
+		// 		//scale.setScalar(1);
+		// 	}
+		// } else {
+		texture.loadFontFace();
+    texture.redraw();
+		//}
 
 
     console.log(texture)
@@ -250,14 +252,14 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
     geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
     geometry.computeVertexNormals();
-    geometry.setDrawRange(0, newCoords.length)
+    geometry.setDrawRange(0, newCoords.length);
+    geometry.addGroup(0, 3, 0);
     const material = new THREE.MeshBasicMaterial({
       map: texture,
       alphaTest: 0.5,
       transparent: false,
       color: '#FFFFFF',
       depthWrite: false,
-			side: DoubleSide
    });
     return new THREE.Mesh(geometry, material);
   }
