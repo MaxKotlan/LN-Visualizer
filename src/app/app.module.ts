@@ -53,8 +53,19 @@ import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-
     MatCheckboxModule,
     MatSliderModule,
     MatSlideToggleModule,
-    MatButtonModule//,
-    //StoreDevtoolsModule.instrument({})
+    MatButtonModule,
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: false,
+      autoPause: true,
+      features: {
+        pause: false,
+        lock: true,
+        persist: false,
+        dispatch: false,
+        reorder: false
+      }
+    })
   ],
   providers: [NodePositionRegistryService],
   bootstrap: [AppComponent]

@@ -22,6 +22,7 @@ app.use(cors());
 let networkGraphSubject$: BehaviorSubject<any> = new BehaviorSubject({});
 
 const requestAndUpdateNetworkGraph = async () => {
+    console.log('requesting update...')
     const result = await lnService.getNetworkGraph({lnd});
     networkGraphSubject$.next(result);
     return result;
@@ -58,6 +59,7 @@ app.get( "/", async ( req: any, res: any ) => {
         res.send(JSON.stringify(filteredView));
     } else {
         console.log('Using Cached');
+        requestAndUpdateNetworkGraph();
         const filteredView = mapToFilteredView(cached);
         console.log(filteredView.edges.length);
         console.log(filteredView.nodes.length);
