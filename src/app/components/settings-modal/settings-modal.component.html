@@ -1,10 +1,11 @@
 <mat-toolbar color="primary">
-    <span style="flex-grow: 1;">Settings</span>
+    <mat-icon>settings</mat-icon>
+    <span style="margin-left: .4rem; flex-grow: 1;">Settings</span>
     <button mat-icon-button aria-label="Close Dialog">
         <mat-icon (click)="dialogRef.close()">close</mat-icon>
     </button>
 </mat-toolbar>
-<section>
+<section style="display: flex; flex-direction: column; margin: 2rem;">
     <span>
         Node Size
         <mat-slider [ngModel]="selectNodeSize$ | async" (change)="setNodeSize($event)" #slider min="1" max="20" step="0.1" value="1"></mat-slider>
@@ -12,6 +13,4 @@
     </span>
     <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Point Attenuation</mat-checkbox>
     <mat-checkbox [ngModel]="selectPointUseIcon$ | async" (change)="setPointUseIcon($event)">Render Lightning Icon</mat-checkbox>
-
-    
 </section>
