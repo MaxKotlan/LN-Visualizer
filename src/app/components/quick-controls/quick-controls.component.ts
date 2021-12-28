@@ -3,7 +3,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
-import { gotoNode, minEdgesRecompute, renderEdges, searchGraph, sortOrderChange } from 'src/app/actions/graph.actions';
+import { gotoNode, minEdgesRecompute, renderEdges, searchGraph, sortOrderChange } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectNodesSearchResults } from 'src/app/selectors/graph.selectors';
 

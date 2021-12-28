@@ -77,11 +77,6 @@ export const selectNodesSearchResults = createSelector(
         .slice(0,10)
 );
 
-export const shouldRenderEdges = createSelector(
-    graphSelector,
-    (state) => state.renderEdges
-)
-
 export const selectAliases = createSelector(
     selectNodeValue,
     (nodeValue) => nodeValue.map((g) => g.alias)

@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { SceneComponent } from 'atft';
-import { combineLatest, combineLatestWith, filter, map, Observable } from 'rxjs';
-import { gotoNode } from 'src/app/actions/graph.actions';
+import { combineLatestWith, filter, map, Observable } from 'rxjs';
+import { gotoNode } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
-import { selectAliases, selectColors, selectEdgeColor, selectEdgeVertices, selectFinalMatcheNodesFromSearch, selectModifiedGraph, selectSortedEdges, selectVertices, shouldRenderEdges } from 'src/app/selectors/graph.selectors';
+import { shouldRenderEdges } from 'src/app/selectors/controls.selectors';
+import { selectAliases, selectColors, selectEdgeColor, selectEdgeVertices, selectFinalMatcheNodesFromSearch, selectModifiedGraph, selectSortedEdges, selectVertices } from 'src/app/selectors/graph.selectors';
 import * as THREE from 'three';
 
 @Component({

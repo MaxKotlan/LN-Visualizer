@@ -23,4 +23,12 @@ export const reducer = createReducer(
         controlsActions.searchGraph,
         (state, {searchText}) => ({...state, searchText })
     ),
+    on(
+        controlsActions.renderEdges,
+        (state, {value}) => ({...state, renderEdges: value })
+    ),
+    on(
+        controlsActions.minEdgesRecompute,
+        (state, {minEdges}) => ({...state, minimumEdges: minEdges })
+    ),
 );

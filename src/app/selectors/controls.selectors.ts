@@ -7,3 +7,8 @@ export const selectSearchString = createSelector(
     controlsSelector,
     (state) => state.searchText
 )
+
+export const shouldRenderEdges = createSelector(
+    controlsSelector,
+    (state) => state.renderEdges
+)

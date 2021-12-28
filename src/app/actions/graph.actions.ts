@@ -15,27 +15,3 @@ export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
     props<{error: HttpErrorResponse}>()
 );
-
-export const searchGraph = createAction(
-    '[graph] setSearchStrings',
-    props<{searchText: string}>()
-);
-
-export const renderEdges = createAction(
-    '[graph] renderEdges',
-    props<{value: boolean}>()
-);
-
-export const minEdgesRecompute = createAction(
-    '[graph] setMinimumEdges',
-    props<{minEdges: number}>()
-);
-
-export const sortOrderChange = createAction(
-    '[graph] setSortOrder',
-    props<{ascending: boolean}>()
-);
-
-export const gotoNode = createAction(
-    '[graph] gotoNode'
-);
