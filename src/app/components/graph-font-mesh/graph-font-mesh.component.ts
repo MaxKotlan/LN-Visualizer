@@ -3,8 +3,9 @@ import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf 
 import { AbstractLazyObject3D, AbstractObject3D, appliedMaterial, fixCenter, FontService, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
 import TextSprite from '@seregpie/three.text-sprite';
-import { BufferAttribute, BufferGeometry, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial } from 'three';
+import { BufferAttribute, BufferGeometry, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial, Vector3 } from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
+import TextTexture from '@seregpie/three.text-texture';
 
 @Component({
   selector: 'app-graph-font-mesh',
@@ -179,13 +180,42 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
   protected newObject3DInstance(): THREE.Object3D {
 
+    
+    const sizeX = 4;
+    const sizeY = 2;
+
+    const sizeXHalf = sizeX/2;
+    const sizeYHalf = sizeY/2;
+
+    const newCoords = this.positions.slice(0).flatMap((center: THREE.Vector3) => {
+      const centerCpy = center.clone().multiplyScalar(100);
+      return [
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf, sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
+      ]
+    });
+
+    console.log(newCoords)
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
+    geometry.computeVertexNormals();
+    geometry.setDrawRange(0, newCoords.length)
+    const material = new THREE.MeshBasicMaterial({ transparent: false, color: '#FFFFFF' });
+    return new THREE.Mesh(geometry, material);
+  }
+
+  old(): THREE.Object3D {
+
       //const fontStuff = 
       //const test = new THREE.Font();
 
 
 
       const test = new THREE.TextureLoader().load( "assets/disc.png" )
-
       //await http
 
       //loader.load( 'assets/helvetiker_regular.typeface.json');//, function ( font ) {
