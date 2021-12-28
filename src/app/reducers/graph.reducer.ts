@@ -66,10 +66,6 @@ export const reducer = createReducer(
         graphActions.requestGraphFailure,
         (state) => ({...state, isLoading: false})
     ),
-    on(
-        graphActions.searchGraph,
-        (state, {searchText}) => ({...state, searchText })
-    )
 );
 
 const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]> => {
