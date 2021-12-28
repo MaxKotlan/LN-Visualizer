@@ -141,7 +141,7 @@ export const selectEdgeColor = createSelector(
 )
 
 const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): boolean => {
-    return node.pub_key === edge.node1_pub;// || node.pub_key === edge.node2_pub
+    return node.pub_key === edge.node1_pub || node.pub_key === edge.node2_pub
 }
 
 export const selectEdgeVertices = createSelector(
