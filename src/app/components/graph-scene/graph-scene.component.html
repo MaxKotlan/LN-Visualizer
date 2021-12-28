@@ -13,7 +13,9 @@
         <app-graph-node-mesh *ngIf="true"
             [positions]="(positions$ | async) || []"
             [colors]="(colors$ | async) || []"
-            [spriteSize]="(selectNodeSize$ | async) || 0"    
+            [spriteSize]="(selectNodeSize$ | async) || 0"
+            [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"    
+            [useSprite]="(selectPointUseIcon$ | async) || false"    
         ></app-graph-node-mesh>
         <app-graph-edge-mesh 
         [edgeVertices]="(selectEdgeVertices$ | async) || []"

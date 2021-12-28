@@ -8,6 +8,8 @@ export interface ControlsState {
     renderEdges: boolean,
     minimumEdges: number;
     nodeSize: number;
+    pointAttenuation: boolean;
+    pointUseIcon: boolean;
 };
 
 const initialState: ControlsState = {
@@ -15,6 +17,8 @@ const initialState: ControlsState = {
     renderEdges: false,
     minimumEdges: 0,
     nodeSize: 3,
+    pointAttenuation: true,
+    pointUseIcon: true
 };
 
 export const reducer = createReducer(
@@ -35,4 +39,12 @@ export const reducer = createReducer(
         controlsActions.setNodeSize,
         (state, {nodeSize}) => ({...state, nodeSize: nodeSize })
     ),
+    on(
+        controlsActions.setPointAttenuation,
+        (state, {value}) => ({...state, pointAttenuation: value })
+    ),
+    on(
+        controlsActions.setPointUseIcon,
+        (state, {value}) => ({...state, pointUseIcon: value })
+    )
 );

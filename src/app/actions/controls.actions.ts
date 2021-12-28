@@ -28,3 +28,13 @@ export const setNodeSize = createAction(
     '[controls] setNodeSize',
     props<{nodeSize: number}>()
 );
+
+export const setPointAttenuation = createAction(
+    '[controls] setPointAttenuation',
+    props<{value: boolean}>()
+);
+
+export const setPointUseIcon = createAction(
+    '[controls] setPointUseIcon',
+    props<{value: boolean}>()
+);

@@ -17,3 +17,13 @@ export const selectNodeSize = createSelector(
     controlsSelector,
     (state) => state.nodeSize
 )
+
+export const selectPointAttenuation = createSelector(
+    controlsSelector,
+    (state) => state.pointAttenuation
+)
+
+export const selectPointUseIcon = createSelector(
+    controlsSelector,
+    (state) => state.pointUseIcon
+)
