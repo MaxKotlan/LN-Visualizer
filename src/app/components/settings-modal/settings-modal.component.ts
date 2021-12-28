@@ -4,6 +4,7 @@ import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { setNodeSize } from 'src/app/actions/controls.actions';
 import { ControlsState } from 'src/app/reducers/controls.reducer';
+import { selectNodeSize } from 'src/app/selectors/controls.selectors';
 
 @Component({
   selector: 'app-settings-modal',
@@ -15,6 +16,8 @@ export class SettingsModalComponent {
     public dialogRef: MatDialogRef<SettingsModalComponent>,
     private store$: Store<ControlsState>
   ) { }
+
+  public selectNodeSize$ = this.store$.select(selectNodeSize);
 
   setNodeSize(event: MatSliderChange){
     this.store$.dispatch(setNodeSize({nodeSize: event.value || 1}))

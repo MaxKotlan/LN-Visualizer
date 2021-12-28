@@ -7,7 +7,6 @@ export interface ControlsState {
     searchText: string,
     renderEdges: boolean,
     minimumEdges: number;
-    sortAscending: boolean;
     nodeSize: number;
 };
 
@@ -15,7 +14,6 @@ const initialState: ControlsState = {
     searchText: '',
     renderEdges: false,
     minimumEdges: 0,
-    sortAscending: false,
     nodeSize: 3,
 };
 
