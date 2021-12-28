@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf } from '@angular/core';
-import { AbstractLazyObject3D, AbstractObject3D, appliedMaterial, fixCenter, FontService, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
 import TextSprite from '@seregpie/three.text-sprite';
-import { BufferAttribute, BufferGeometry, DoubleSide, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial, Vector3 } from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { BufferAttribute, DoubleSide, } from 'three';
 import TextTexture from '@seregpie/three.text-texture';
+import * as SCENEUTILS from 'three/examples/jsm/utils/SceneUtils';
 
 @Component({
   selector: 'app-graph-font-mesh',
@@ -212,7 +212,11 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
     const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
 
-    
+    const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
+    geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
+    geometry.computeVertexNormals();
+    geometry.setDrawRange(0, newCoords.length);
+
     //console.log(newCoords)
     let texture = new TextTexture({
       alignment: 'center',
@@ -222,6 +226,31 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
       fontStyle: 'italic',
       text: 'Hello World',
     });
+
+    const matArray: THREE.Material[] = [];
+
+    for (let i = 0; i < 1; i++){
+      const texture = new TextTexture({
+        alignment: 'center',
+        color: '#fff',
+        fontFamily: 'sans-serif',    
+        fontSize: 32,
+        fontStyle: 'italic',
+        text: this.aliases[i],
+      });
+      texture.loadFontFace();
+      texture.redraw();
+  
+      matArray.push(new THREE.MeshBasicMaterial({
+        map: texture,
+        alphaTest: 0.5,
+        transparent: false,
+        color: '#FFFFFF',
+        depthWrite: true,
+        side: DoubleSide
+     }));
+     geometry.addGroup((i)*18, (i+1)*18, i);
+    }
 
 		// if (texture.checkFontFace()) {
 		// 	let {
@@ -236,12 +265,10 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 		// 		//scale.setScalar(1);
 		// 	}
 		// } else {
-		texture.loadFontFace();
-    texture.redraw();
 		//}
 
 
-    console.log(texture)
+    //console.log(texture)
     //texture.repeat.set(0.5, 1);
     // scale x2 vertical
     //texture.flipY = false;
@@ -249,19 +276,10 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     // scale x2 proportional
         //texture.setOptimalPixelRatio()
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
-    geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
-    geometry.computeVertexNormals();
-    geometry.setDrawRange(0, newCoords.length);
-    geometry.addGroup(0, 3, 0);
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
-      alphaTest: 0.5,
-      transparent: false,
-      color: '#FFFFFF',
-      depthWrite: false,
-   });
-    return new THREE.Mesh(geometry, material);
+
+    //TOOOO MANY DRAW CALLS
+    //return (SCENEUTILS as any).createMultiMaterialObject(geometry, matArray);
+    return new THREE.Mesh(geometry, matArray[0])
   }
 
   old(): THREE.Object3D {
