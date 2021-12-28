@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['./settings-modal.component.scss']
 })
-export class SettingsModalComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class SettingsModalComponent {
+  constructor(public dialogRef: MatDialogRef<SettingsModalComponent>) { }
 
 }

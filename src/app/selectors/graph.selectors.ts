@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GraphState, selecteCorrectEdgePublicKey, selecteOppositeCorrectEdgePublicKey } from "../reducers/graph.reducer";
 import { LnGraphEdge, LnModifiedGraphNode } from "../types/graph.interface";
+import { selectSearchString } from "./controls.selectors";
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
@@ -11,14 +12,6 @@ export const selectGraphLoadingState = createSelector(
 export const selectModifiedGraph = createSelector(
     graphSelector, (state) => state.modifiedGraph
 );
-
-// export const selectPubkeysByOptimal = createSelector(
-//     selectModifiedGraph, 
-//     (modifiedGraph) => Object.values(modifiedGraph).sort(modifiedGraphSortingAlgo).map((a) => a.pub_key));
-
-// const modifiedGraphSortingAlgo = (a: LnModifiedGraphNode, b: LnModifiedGraphNode): number => {
-//     return b.connectedEdges.length - a.connectedEdges.length;
-// }
 
 export const selectNodeValue = createSelector(
     selectModifiedGraph,
@@ -42,13 +35,6 @@ export const selectColors = createSelector(
 export const getNodes = createSelector(
     graphSelector,
     (state) => state.graphUnsorted
-)
-
-
-
-export const selectSearchString = createSelector(
-    graphSelector,
-    (state) => state.searchText
 )
 
 export const selectPossibleNodesFromSearch = createSelector(

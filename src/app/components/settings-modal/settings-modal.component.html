@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
     <span style="flex-grow: 1;">Settings</span>
     <button mat-icon-button aria-label="Close Dialog">
-        <mat-icon>close</mat-icon>
+        <mat-icon (click)="dialogRef.close()">close</mat-icon>
     </button>
 </mat-toolbar>
 <section>
