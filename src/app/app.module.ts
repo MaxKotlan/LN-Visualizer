@@ -28,6 +28,9 @@ import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-
 import { QuickControlsComponent } from './components/quick-controls/quick-controls.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import {MatIconModule} from '@angular/material/icon';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,8 @@ import {MatIconModule} from '@angular/material/icon';
     GraphFontMeshComponent,
     SearchComponent,
     QuickControlsComponent,
-    SettingsComponent
+    SettingsComponent,
+    SettingsModalComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +64,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatSlideToggleModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
+    MatToolbarModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false,

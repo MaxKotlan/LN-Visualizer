@@ -4,3 +4,7 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-pannel > mat-dialog-container{
+    padding: 0;
+}
