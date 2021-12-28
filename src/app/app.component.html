@@ -1,3 +1,6 @@
-<app-search  *ngIf="!(isGraphLoading$ | async)"></app-search>
+<ng-container *ngIf="!(isGraphLoading$ | async)">
+    <app-quick-controls></app-quick-controls>
+    <app-settings></app-settings>
+</ng-container>
 <app-graph-scene></app-graph-scene>
 <mat-spinner *ngIf="isGraphLoading$ | async"></mat-spinner>

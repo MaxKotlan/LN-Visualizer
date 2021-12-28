@@ -25,6 +25,9 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButtonModule} from '@angular/material/button';
 import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-mesh.component';
+import { QuickControlsComponent } from './components/quick-controls/quick-controls.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,9 @@ import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-
     GraphEdgeMeshComponent,
     GraphNodeMeshComponent,
     GraphFontMeshComponent,
-    SearchComponent
+    SearchComponent,
+    QuickControlsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +59,7 @@ import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-
     MatSliderModule,
     MatSlideToggleModule,
     MatButtonModule,
+    MatIconModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false,
