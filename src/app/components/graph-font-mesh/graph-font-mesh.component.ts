@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf 
 import { AbstractLazyObject3D, AbstractObject3D, appliedMaterial, fixCenter, FontService, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
 import TextSprite from '@seregpie/three.text-sprite';
-import { BufferAttribute, BufferGeometry, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial, Vector3 } from 'three';
+import { BufferAttribute, BufferGeometry, DoubleSide, MeshBasicMaterial, Object3D, PointsMaterial, SpriteMaterial, Vector3 } from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 import TextTexture from '@seregpie/three.text-texture';
 
@@ -214,19 +214,51 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
     //console.log(newCoords)
     let texture = new TextTexture({
-      alignment: 'left',
-      color: '#24ff00',
-      fontFamily: '"Times New Roman", Times, serif',
+      alignment: 'center',
+      color: '#fff',
+      fontFamily: 'sans-serif',    
       fontSize: 32,
       fontStyle: 'italic',
-      text: 'Hello World'
+      text: 'Hello World',
     });
+
+		if (texture.checkFontFace()) {
+			let {
+				height,
+				width,
+			} = texture;
+			if (width && height) {
+				//texture.setX(width).setY(height);
+				//texture.setOptimalPixelRatio(this, renderer, camera);
+				texture.redraw();
+			} else {
+				//scale.setScalar(1);
+			}
+		} else {
+			texture.loadFontFace();
+		}
+
+
+    console.log(texture)
+    //texture.repeat.set(0.5, 1);
+    // scale x2 vertical
+    //texture.flipY = false;
+    //texture.repeat.set(0.1, 0.1);
+    // scale x2 proportional
+        //texture.setOptimalPixelRatio()
 
     const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
     geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
     geometry.computeVertexNormals();
     geometry.setDrawRange(0, newCoords.length)
-    const material = new THREE.MeshBasicMaterial({ map: txtmap, transparent: true, color: '#FFFFFF' });
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      alphaTest: 0.5,
+      transparent: false,
+      color: '#FFFFFF',
+      depthWrite: false,
+			side: DoubleSide
+   });
     return new THREE.Mesh(geometry, material);
   }
 
