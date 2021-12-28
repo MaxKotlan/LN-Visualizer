@@ -28,7 +28,7 @@ app.get( "/", async ( req: any, res: any ) => {
 
         })),
         edges: channels.map((edge: any, index: any) => {
-            if (index%1000 === 0) console.log(edge);
+            if (!edge?.policies[0]?.public_key || !edge?.policies[1]?.public_key) console.log('Public key missing');
             return {
                 node1_pub: edge.policies[0].public_key,
                 node2_pub: edge.policies[1].public_key,
@@ -36,6 +36,9 @@ app.get( "/", async ( req: any, res: any ) => {
             }
         })
     }
+
+    console.log(filteredView.edges.length);
+    console.log(filteredView.nodes.length);
 
     //const mapper = {}
     console.log('reques')
