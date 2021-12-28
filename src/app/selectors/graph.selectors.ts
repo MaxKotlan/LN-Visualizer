@@ -65,7 +65,7 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     selectSearchString,
     (nodes, searchString) => {
         if (nodes.length === 1) return nodes[0];
-        const exactMatch = nodes.find((node: LnModifiedGraphNode) => node.alias === searchString || node.pub_key === searchString);
+        const exactMatch = nodes.find((node: LnModifiedGraphNode) => searchString !== '' && (node.alias === searchString || node.pub_key === searchString));
         return exactMatch;
     }
 );

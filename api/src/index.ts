@@ -5,7 +5,7 @@ import * as lightning from 'lightning';
 import { LndAuthenticationWithMacaroon } from "lightning";
 import cors from "cors";
 import { WebSocket, WebSocketServer } from 'ws';
-import { BehaviorSubject, filter, firstValueFrom, startWith, take } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, lastValueFrom, startWith, take } from 'rxjs';
 
 const wss = new WebSocketServer({ port: 8090 });
 
@@ -48,26 +48,21 @@ const mapToFilteredView = (result: any) => {
 }
 
 app.get( "/", async ( req: any, res: any ) => {
-    requestAndUpdateNetworkGraph();
-    networkGraphSubject$.asObservable().pipe(take(1), filter((a) => !a)).subscribe((request) => {
+    const cached = await lastValueFrom(networkGraphSubject$.asObservable().pipe(take(1)))
+    if (!cached?.nodes?.length){
+        console.log('Requesting new');
+        let request = await requestAndUpdateNetworkGraph();
         const filteredView = mapToFilteredView(request);
-
         console.log(filteredView.edges.length);
         console.log(filteredView.nodes.length);
-    
         res.send(JSON.stringify(filteredView));
-    });
-    // if (!request){
-    //     request = await requestAndUpdateNetworkGraph();
-    // }
-    // requestAndUpdateNetworkGraph();
-    // console.log(request);
-    // const filteredView = mapToFilteredView(request);
-
-    // console.log(filteredView.edges.length);
-    // console.log(filteredView.nodes.length);
-
-    //res.send(JSON.stringify(filteredView));
+    } else {
+        console.log('Using Cached');
+        const filteredView = mapToFilteredView(cached);
+        console.log(filteredView.edges.length);
+        console.log(filteredView.nodes.length);
+        res.send(JSON.stringify(filteredView));
+    }
 } );
 
 // start the Express server
@@ -77,7 +72,7 @@ app.listen( config.get('port'), () => {
 
 
 networkGraphSubject$.asObservable().subscribe((newValue) => {
-    //console.log('state updated', newValue)
+    console.log('state updated', newValue)
     wss.emit('graph-update', wss.clients, JSON.stringify(newValue));
 });
 
@@ -92,6 +87,10 @@ wss.on('connection', function connection(ws) {
     ws.on('message', function message(data) {
       console.log('received: %s', data);
     });
-  
+
+    ws.on('graph-update', function connection(ws, message) {
+        ws.send(message)
+    });
+
     ws.send('something');
 });
