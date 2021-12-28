@@ -187,7 +187,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     const sizeXHalf = sizeX/2;
     const sizeYHalf = sizeY/2;
 
-    const newCoords = this.positions.slice(0).flatMap((center: THREE.Vector3) => {
+    const newCoords = this.positions.flatMap((center: THREE.Vector3) => {
       const centerCpy = center.clone().multiplyScalar(100);
       return [
         centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
@@ -199,12 +199,34 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
       ]
     });
 
-    console.log(newCoords)
+    const uvCoordinates = this.positions.flatMap((center: THREE.Vector3) => {
+      return [
+         0,1,
+         0,0,
+         1,0,
+         1,0,
+         1,1,
+         0,1,
+      ]
+    });
+
+    const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
+
+    //console.log(newCoords)
+    let texture = new TextTexture({
+      alignment: 'left',
+      color: '#24ff00',
+      fontFamily: '"Times New Roman", Times, serif',
+      fontSize: 32,
+      fontStyle: 'italic',
+      text: 'Hello World'
+    });
 
     const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
+    geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
     geometry.computeVertexNormals();
     geometry.setDrawRange(0, newCoords.length)
-    const material = new THREE.MeshBasicMaterial({ transparent: false, color: '#FFFFFF' });
+    const material = new THREE.MeshBasicMaterial({ map: txtmap, transparent: true, color: '#FFFFFF' });
     return new THREE.Mesh(geometry, material);
   }
 
