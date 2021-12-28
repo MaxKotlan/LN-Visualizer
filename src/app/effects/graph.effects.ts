@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap } from 'rxjs';
+import { catchError, map, mergeMap, of } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 
@@ -14,7 +14,7 @@ export class GraphEffects {
             ofType(graphActions.requestGraph),
             mergeMap(() => this.lndApiServiceService.getGraphInfo().pipe(
                 map(graph => graphActions.requestGraphSuccess({graph})),
-           //     catchError((error: HttpErrorResponse) => graphActions.requestGraphFailure({error}))
+                catchError((error: HttpErrorResponse) => of(graphActions.requestGraphFailure({error})))
             ))
         )
     );
