@@ -4,6 +4,10 @@ import config from 'config';
 import * as lightning from 'lightning';
 import { LndAuthenticationWithMacaroon } from "lightning";
 import cors from "cors";
+import { WebSocketServer } from 'ws';
+
+const wss = new WebSocketServer({ port: 8090 });
+
 const lnService = require('ln-service');
 
 console.log(config.get('macaroon'))
@@ -50,3 +54,12 @@ app.get( "/", async ( req: any, res: any ) => {
 app.listen( config.get('port'), () => {
     console.log( `server started at http://localhost:${ config.get('port') }` );
 });
+
+
+wss.on('connection', function connection(ws) {
+    ws.on('message', function message(data) {
+      console.log('received: %s', data);
+    });
+  
+    ws.send('something');
+  });
