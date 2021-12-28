@@ -122,12 +122,11 @@ export const selectEdgeColor = createSelector(
         } else {
             const colTemp = sortedEdges.map((edge: LnGraphEdge) => {
                 if (edgeDirectlyRelated(searchResult, edge)){
-                    if (edge.node1_pub === searchResult.pub_key)
+                    if (selecteCorrectEdgePublicKey(edge, searchResult.pub_key) === edge.node1_pub)
                         return [126,125,0, 255, 0,0];
-                    if (edge.node2_pub === searchResult.pub_key)
+                    if (selecteCorrectEdgePublicKey(edge, searchResult.pub_key) === edge.node2_pub)
                         return [126,125,0, 255, 0,0];
-                    else
-                        //return blue so i can fix this
+                        //return blue so i know this is broken
                         return [0,0,255, 0, 0,255]
 
                 } else {
@@ -165,7 +164,7 @@ export const selectEdgeVertices = createSelector(
             pubkeyTest = sortedEdges[i].node1_pub;
             pubkeyTestOpposite = sortedEdges[i].node2_pub;
         }
-        
+
         if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition)
             pointData.push(modifiedGraph[pubkeyTest].postition)
 
