@@ -5,7 +5,7 @@ import { SceneComponent } from 'atft';
 import { combineLatest, combineLatestWith, filter, map, Observable } from 'rxjs';
 import { gotoNode } from 'src/app/actions/graph.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
-import { selectAliases, selectColors, selectEdgeColor, selectFinalMatcheNodesFromSearch, selectModifiedGraph, selectSortedEdges, selectVertices, shouldRenderEdges } from 'src/app/selectors/graph.selectors';
+import { selectAliases, selectColors, selectEdgeColor, selectEdgeVertices, selectFinalMatcheNodesFromSearch, selectModifiedGraph, selectSortedEdges, selectVertices, shouldRenderEdges } from 'src/app/selectors/graph.selectors';
 import * as THREE from 'three';
 
 @Component({
@@ -28,6 +28,7 @@ export class GraphSceneComponent implements OnInit{
   public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
   public selectEdgeColor$ = this.store$.select(selectEdgeColor);
   public selectAliases$ = this.store$.select(selectAliases);
+  public selectEdgeVertices$ = this.store$.select(selectEdgeVertices);
   
   public gotoCoordinates$: Observable<THREE.Vector3> = 
     this.actions$.pipe(

@@ -142,9 +142,16 @@ const calculatePositionFromParent = (n: LnModifiedGraphNode, depth=2) => {
     })
 }
 
-const selecteCorrectEdgePublicKey = (edge1: LnGraphEdge, compare: PublicKey): PublicKey => {
+export const selecteCorrectEdgePublicKey = (edge1: LnGraphEdge, compare: PublicKey): PublicKey => {
     if (edge1.node1_pub === compare) return edge1.node2_pub;
     if (edge1.node2_pub === compare) return edge1.node1_pub;
+    console.log('Uh oh')
+    return '' as PublicKey;
+}
+
+export const selecteOppositeCorrectEdgePublicKey = (edge1: LnGraphEdge, compare: PublicKey): PublicKey => {
+    if (edge1.node1_pub === compare) return edge1.node1_pub;
+    if (edge1.node2_pub === compare) return edge1.node2_pub;
     console.log('Uh oh')
     return '' as PublicKey;
 }

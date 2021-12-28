@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { GraphState } from "../reducers/graph.reducer";
+import { GraphState, selecteCorrectEdgePublicKey, selecteOppositeCorrectEdgePublicKey } from "../reducers/graph.reducer";
 import { LnGraphEdge, LnModifiedGraphNode } from "../types/graph.interface";
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
@@ -144,3 +144,34 @@ export const selectEdgeColor = createSelector(
 const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): boolean => {
     return node.pub_key === edge.node1_pub;// || node.pub_key === edge.node2_pub
 }
+
+export const selectEdgeVertices = createSelector(
+    selectSortedEdges,
+    selectModifiedGraph,
+    selectFinalMatcheNodesFromSearch,
+    (sortedEdges, modifiedGraph, searchResult) => {
+
+    const pointData: THREE.Vector3[] = []
+
+    for(let i = 0; i < sortedEdges.length; i++){
+
+        let pubkeyTest;
+        let pubkeyTestOpposite;
+
+        if (searchResult){
+            pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
+            pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
+        } else {
+            pubkeyTest = sortedEdges[i].node1_pub;
+            pubkeyTestOpposite = sortedEdges[i].node2_pub;
+        }
+        
+        if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition)
+            pointData.push(modifiedGraph[pubkeyTest].postition)
+
+        if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition)
+            pointData.push(modifiedGraph[pubkeyTestOpposite].postition)
+    }
+
+    return pointData;
+});

@@ -1,5 +1,6 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { AbstractMesh, AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { selecteCorrectEdgePublicKey } from 'src/app/reducers/graph.reducer';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
@@ -11,8 +12,7 @@ import * as THREE from 'three';
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
-  @Input() public edges: LnGraphEdge[] = [];
-  @Input() public nodes: Record<string, LnModifiedGraphNode> = {};
+  @Input() public edgeVertices: THREE.Vector3[] = [];
   @Input() shouldRender: boolean = false;
   @Input() edgeColor: Uint8Array | null = null;
   @Input() dashedLines: boolean = true;
@@ -37,16 +37,16 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
   protected newObject3DInstance(): THREE.LineSegments {
 
-    const pointData: THREE.Vector3[] = []
+    // for(let i = 0; i < this.edges.length; i++){
 
-    for(let i = 0; i < this.edges.length; i++){
+    //   const pubkeyTest = selecteCorrectEdgePublicKey(this.edges[i], )
 
-      if (this.nodes[this.edges[i].node1_pub])
-        pointData.push(this.nodes[this.edges[i].node1_pub].postition)
+    //   if (this.nodes[this.edges[i].node1_pub])
+    //     pointData.push(this.nodes[this.edges[i].node1_pub].postition)
 
-      if (this.nodes[this.edges[i].node2_pub])
-        pointData.push(this.nodes[this.edges[i].node2_pub].postition)
-    };
+    //   if (this.nodes[this.edges[i].node2_pub])
+    //     pointData.push(this.nodes[this.edges[i].node2_pub].postition)
+    // };
     
     const material = this.dashedLines ? 
     new THREE.LineDashedMaterial( {
@@ -65,7 +65,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
     material.depthTest = this.depthTest;
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? pointData : []).scale(100,100,100);
+    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender ? this.edgeVertices : []).scale(100,100,100);
     geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     mesh.computeLineDistances();

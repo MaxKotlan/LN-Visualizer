@@ -15,8 +15,7 @@
             [colors]="(colors$ | async) || []"    
         ></app-graph-node-mesh>
         <app-graph-edge-mesh 
-        [edges]="(getSortedEdges$ | async) || []"
-        [nodes]="(modifiedGraph$ | async) || {}"
+        [edgeVertices]="(selectEdgeVertices$ | async) || []"
         [shouldRender]="(shouldRenderEdges$ | async) || false"
         [edgeColor]="(selectEdgeColor$ | async)"
         [dashedLines]="false"
