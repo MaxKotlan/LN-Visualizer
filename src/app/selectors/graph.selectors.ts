@@ -65,7 +65,11 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     selectSearchString,
     (nodes, searchString) => {
         if (nodes.length === 1) return nodes[0];
-        const exactMatch = nodes.find((node: LnModifiedGraphNode) => searchString !== '' && (node.alias === searchString || node.pub_key === searchString));
+        const exactMatch = nodes.find((node: LnModifiedGraphNode) => 
+            searchString && 
+            searchString !== '' && 
+            searchString.length > 2 && 
+            (node.alias === searchString || node.pub_key === searchString));
         return exactMatch;
     }
 );
@@ -73,9 +77,10 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
 export const selectSortedEdges = createSelector(
     getNodes,
     selectFinalMatcheNodesFromSearch,
-    (nodeValue, searchResult) => nodeValue.edges.filter((edge) => searchResult === undefined ? true :
-        searchResult.pub_key === edge.node1_pub ||
-        searchResult.pub_key === edge.node2_pub
+    (nodeValue, searchResult) => nodeValue.edges.filter((edge) => 
+        searchResult === undefined ? 
+            true :
+            edgeDirectlyRelated(searchResult, edge)
     )
 )
 
@@ -116,17 +121,26 @@ export const selectEdgeColor = createSelector(
 
         } else {
             const colTemp = sortedEdges.map((edge: LnGraphEdge) => {
-                if (
-                searchResult.pub_key === edge.node1_pub ||
-                searchResult.pub_key === edge.node2_pub){
-                    return [126,125,0];
+                if (edgeDirectlyRelated(searchResult, edge)){
+                    if (edge.node1_pub === searchResult.pub_key)
+                        return [126,125,0, 255, 0,0];
+                    if (edge.node2_pub === searchResult.pub_key)
+                        return [126,125,0, 255, 0,0];
+                    else
+                        //return blue so i can fix this
+                        return [0,0,255, 0, 0,255]
+
                 } else {
-                    return [0,0,0];
+                    return [0,0,0,0,0,0];
                 }
             })
-            .map(a => [...a,...a])
+            // .map(a => [...a,...a])
             .flat();
             return new Uint8Array(colTemp);
         }
     }
 )
+
+const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): boolean => {
+    return node.pub_key === edge.node1_pub;// || node.pub_key === edge.node2_pub
+}
