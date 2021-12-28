@@ -27,11 +27,14 @@ app.get( "/", async ( req: any, res: any ) => {
             color: node.color
 
         })),
-        edges: channels.map((edge: any) => ({
-            node1_pub: edge.node1_pub,
-            node2_pub: edge.node2_pub,
-            capacity: edge.capacity
-        }))
+        edges: channels.map((edge: any, index: any) => {
+            if (index%1000 === 0) console.log(edge);
+            return {
+                node1_pub: edge.policies[0].public_key,
+                node2_pub: edge.policies[1].public_key,
+                capacity: edge.capacity
+            }
+        })
     }
 
     //const mapper = {}
