@@ -17,7 +17,8 @@
     "express": "^4.17.2",
     "inversify": "^6.0.1",
     "lightning": "^5.2.1",
-    "ln-service": "^53.2.0"
+    "ln-service": "^53.2.0",
+    "ws": "^8.4.0"
   },
   "devDependencies": {
     "@types/config": "0.0.40",
