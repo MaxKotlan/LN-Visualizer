@@ -12,3 +12,8 @@ export const shouldRenderEdges = createSelector(
     controlsSelector,
     (state) => state.renderEdges
 )
+
+export const selectNodeSize = createSelector(
+    controlsSelector,
+    (state) => state.nodeSize
+)

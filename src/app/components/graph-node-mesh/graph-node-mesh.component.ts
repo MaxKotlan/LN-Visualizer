@@ -36,6 +36,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     const obj: THREE.Object3D = this.getObject();
     if (obj){
       (obj as any)['geometry'] = this.newObject3DInstance().geometry;
+      (obj as any)['material'] = this.newObject3DInstance().material;
     }
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);

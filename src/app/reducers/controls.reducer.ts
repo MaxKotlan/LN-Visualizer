@@ -8,6 +8,7 @@ export interface ControlsState {
     renderEdges: boolean,
     minimumEdges: number;
     sortAscending: boolean;
+    nodeSize: number;
 };
 
 const initialState: ControlsState = {
@@ -15,6 +16,7 @@ const initialState: ControlsState = {
     renderEdges: false,
     minimumEdges: 0,
     sortAscending: false,
+    nodeSize: 3,
 };
 
 export const reducer = createReducer(
@@ -30,5 +32,9 @@ export const reducer = createReducer(
     on(
         controlsActions.minEdgesRecompute,
         (state, {minEdges}) => ({...state, minimumEdges: minEdges })
+    ),
+    on(
+        controlsActions.setNodeSize,
+        (state, {nodeSize}) => ({...state, nodeSize: nodeSize })
     ),
 );

@@ -23,3 +23,8 @@ export const minEdgesRecompute = createAction(
     '[controls] setMinimumEdges',
     props<{minEdges: number}>()
 );
+
+export const setNodeSize = createAction(
+    '[controls] setNodeSize',
+    props<{nodeSize: number}>()
+);
