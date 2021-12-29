@@ -10,7 +10,7 @@ export const selectSearchString = createSelector(
 
 export const shouldRenderNodes = createSelector(
     controlsSelector,
-    (state) => state.renderEdges
+    (state) => state.renderNodes
 )
 
 export const shouldRenderEdges = createSelector(
