@@ -31,6 +31,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatIconModule,
     MatDialogModule,
     MatToolbarModule,
+    MatDividerModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false,
