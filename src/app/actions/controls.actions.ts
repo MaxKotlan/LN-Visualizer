@@ -10,6 +10,10 @@ export const setSavedStateFromLocalStorage = createAction(
     props<{savedState: ControlsState}>()
 );
 
+export const resetToDefault = createAction(
+    '[controls] resetToDefault'
+);
+
 export const resetControlsToDefault = createAction(
     '[controls] resetControlsToDefault',
 );

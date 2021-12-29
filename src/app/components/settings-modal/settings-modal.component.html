@@ -23,5 +23,5 @@
     <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Render Labels</mat-checkbox>
     <mat-divider></mat-divider>
     <h2>Miscellaneous Settings</h2>
-    <button mat-raised-button color="primary">Reset Settings to Default</button>
+    <button (click)="resetSettingsToDefault()" mat-raised-button color="primary">Reset Settings to Default</button>
 </section>

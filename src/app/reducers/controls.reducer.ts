@@ -23,8 +23,13 @@ const initialState: ControlsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(controlsActions.setSavedStateFromLocalStorage,
-        (state, {savedState}) => savedState
+    on(
+        controlsActions.setSavedStateFromLocalStorage,
+        (_state, {savedState}) => savedState
+    ),
+    on(
+        controlsActions.resetControlsToDefault,
+        () => initialState
     ),
     on(
         controlsActions.searchGraph,
