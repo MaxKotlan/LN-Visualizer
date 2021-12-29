@@ -212,7 +212,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
 
     const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(newCoords);
+    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender? newCoords: []);
     geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvCoordinates), 2));
     geometry.computeVertexNormals();
     geometry.setDrawRange(0, newCoords.length);
