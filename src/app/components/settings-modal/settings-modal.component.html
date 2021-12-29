@@ -7,12 +7,12 @@
 </mat-toolbar>
 <section>
     <h2>Node Settings</h2>
+    <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="setShouldRenderNodes($event)">Render Nodes</mat-checkbox>
     <span>
-        Node Size
+        <span style="margin-right: .4rem;">Node Size</span>
         <mat-slider [ngModel]="selectNodeSize$ | async" (change)="setNodeSize($event)" #slider min="1" max="20" step="0.1" value="1"></mat-slider>
         {{slider.value}}
     </span>
-    <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="setShouldRenderNodes($event)">Render Nodes</mat-checkbox>
     <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Point Attenuation</mat-checkbox>
     <mat-checkbox [ngModel]="selectPointUseIcon$ | async" (change)="setPointUseIcon($event)">Render Lightning Icon</mat-checkbox>
     <mat-divider></mat-divider>
