@@ -75,15 +75,15 @@ app.listen( config.get('port'), () => {
 
 networkGraphSubject$.asObservable().subscribe((newValue) => {
     console.log('state updated', newValue)
-    wss.emit('graph-update', wss.clients, JSON.stringify(newValue));
+    wss.emit('graph-update', JSON.stringify(newValue));
 });
 
-wss.on('graph-update', function connection(wsClients: Set<WebSocket>, message) {
-    wsClients.forEach((w) => {
-        console.log('broadcating to ', w)
-        w.send(message)
-    })
-});
+// wss.on('graph-update', function connection(wsClients: Set<WebSocket>, message) {
+//     wsClients.forEach((w) => {
+//         console.log('broadcating to ', w)
+//         w.send(message)
+//     })
+// });
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function message(data) {
