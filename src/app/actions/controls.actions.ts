@@ -23,10 +23,21 @@ export const searchGraph = createAction(
     props<{searchText: string}>()
 );
 
+export const renderNodes = createAction(
+    '[controls] renderNodes',
+    props<{value: boolean}>()
+);
+
 export const renderEdges = createAction(
     '[controls] renderEdges',
     props<{value: boolean}>()
 );
+
+export const renderLabels = createAction(
+    '[controls] renderLabels',
+    props<{value: boolean}>()
+);
+
 
 export const sortOrderChange = createAction(
     '[controls] setSortOrder',

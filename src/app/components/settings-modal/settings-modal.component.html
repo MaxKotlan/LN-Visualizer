@@ -12,15 +12,15 @@
         <mat-slider [ngModel]="selectNodeSize$ | async" (change)="setNodeSize($event)" #slider min="1" max="20" step="0.1" value="1"></mat-slider>
         {{slider.value}}
     </span>
-    <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Render Nodes</mat-checkbox>
+    <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="setShouldRenderNodes($event)">Render Nodes</mat-checkbox>
     <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Point Attenuation</mat-checkbox>
     <mat-checkbox [ngModel]="selectPointUseIcon$ | async" (change)="setPointUseIcon($event)">Render Lightning Icon</mat-checkbox>
     <mat-divider></mat-divider>
     <h2>Channel Settings</h2>
-    <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Render Channels</mat-checkbox>
+    <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="setShouldRenderEdges($event)">Render Channels</mat-checkbox>
     <mat-divider></mat-divider>
     <h2>Label Settings (Expiremental)</h2>
-    <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)">Render Labels</mat-checkbox>
+    <mat-checkbox [ngModel]="shouldRenderLabels$ | async" (change)="setShouldRenderLabels($event)">Render Labels</mat-checkbox>
     <mat-divider></mat-divider>
     <h2>Miscellaneous Settings</h2>
     <button (click)="resetSettingsToDefault()" mat-raised-button color="primary">Reset Settings to Default</button>

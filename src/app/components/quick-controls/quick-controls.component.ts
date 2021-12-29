@@ -5,6 +5,7 @@ import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { gotoNode, minEdgesRecompute, renderEdges, searchGraph, sortOrderChange } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
+import { shouldRenderEdges } from 'src/app/selectors/controls.selectors';
 import { selectNodesSearchResults } from 'src/app/selectors/graph.selectors';
 
 @Component({
@@ -20,6 +21,7 @@ export class QuickControlsComponent implements OnInit {
 
 
   public nodeSearchResults$ = this.store$.select(selectNodesSearchResults)
+  public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
 
   ngOnInit() {
   }

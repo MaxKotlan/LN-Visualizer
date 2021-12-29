@@ -5,7 +5,9 @@ import * as controlsActions from '../actions/controls.actions';
 
 export interface ControlsState {
     searchText: string,
+    renderNodes: boolean,
     renderEdges: boolean,
+    renderLabels: boolean,
     minimumEdges: number;
     nodeSize: number;
     pointAttenuation: boolean;
@@ -14,7 +16,9 @@ export interface ControlsState {
 
 const initialState: ControlsState = {
     searchText: '',
+    renderNodes: true,
     renderEdges: false,
+    renderLabels: false,
     minimumEdges: 0,
     nodeSize: 3,
     pointAttenuation: true,
@@ -36,8 +40,16 @@ export const reducer = createReducer(
         (state, {searchText}) => ({...state, searchText })
     ),
     on(
+        controlsActions.renderNodes,
+        (state, {value}) => ({...state, renderNodes: value })
+    ),
+    on(
         controlsActions.renderEdges,
         (state, {value}) => ({...state, renderEdges: value })
+    ),
+    on(
+        controlsActions.renderLabels,
+        (state, {value}) => ({...state, renderLabels: value })
     ),
     on(
         controlsActions.minEdgesRecompute,

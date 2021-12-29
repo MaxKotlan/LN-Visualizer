@@ -8,9 +8,19 @@ export const selectSearchString = createSelector(
     (state) => state.searchText
 )
 
+export const shouldRenderNodes = createSelector(
+    controlsSelector,
+    (state) => state.renderEdges
+)
+
 export const shouldRenderEdges = createSelector(
     controlsSelector,
     (state) => state.renderEdges
+)
+
+export const shouldRenderLabels = createSelector(
+    controlsSelector,
+    (state) => state.renderLabels
 )
 
 export const selectNodeSize = createSelector(
