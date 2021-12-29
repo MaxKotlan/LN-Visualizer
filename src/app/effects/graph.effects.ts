@@ -7,7 +7,10 @@ import { LndApiServiceService } from '../services/lnd-api-service.service';
 
 @Injectable()
 export class GraphEffects {
-    constructor(private actions$: Actions, private lndApiServiceService: LndApiServiceService) {}
+    constructor(
+        private actions$: Actions, 
+        private lndApiServiceService: LndApiServiceService
+    ) {}
 
     retrieveGraph$ = createEffect(() => 
         this.actions$.pipe(

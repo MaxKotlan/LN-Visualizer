@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import * as controlsActions from './actions/controls.actions';
 import * as graphActions from './actions/graph.actions';
 import { selectGraphLoadingState } from './selectors/graph.selectors';
 
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit {
   constructor(private store$: Store){}
 
   ngOnInit(){
-    this.store$.dispatch(graphActions.requestGraph())
+    this.store$.dispatch(controlsActions.loadSavedState());
+    this.store$.dispatch(graphActions.requestGraph());
   }
 
   public isGraphLoading$ = this.store$.select(selectGraphLoadingState) 

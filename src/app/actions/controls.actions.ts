@@ -1,4 +1,18 @@
 import { createAction, props } from "@ngrx/store";
+import { ControlsState } from "../reducers/controls.reducer";
+
+export const loadSavedState = createAction(
+    '[controls] loadSavedState',
+);
+
+export const setSavedStateFromLocalStorage = createAction(
+    '[controls] setSavedStateFromLocalStorage',
+    props<{savedState: ControlsState}>()
+);
+
+export const resetControlsToDefault = createAction(
+    '[controls] resetControlsToDefault',
+);
 
 export const searchGraph = createAction(
     '[controls] setSearchString',

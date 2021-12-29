@@ -32,6 +32,7 @@ import { SettingsModalComponent } from './components/settings-modal/settings-mod
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDividerModule} from '@angular/material/divider';
+import { ControlsEffects } from './effects/controls.effects';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,10 @@ import {MatDividerModule} from '@angular/material/divider';
     FormsModule,
     HttpClientModule,
     AtftModule,
-    EffectsModule.forRoot([GraphEffects]),
+    EffectsModule.forRoot([
+      ControlsEffects,
+      GraphEffects
+    ]),
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
