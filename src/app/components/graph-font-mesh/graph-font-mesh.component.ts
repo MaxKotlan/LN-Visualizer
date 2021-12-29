@@ -145,7 +145,7 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
   @Input() positions: THREE.Vector3[] = [];
   @Input() aliases: string[] = [];
   @Input() colors: any;
-  @Input() shouldRender: boolean = true;
+  @Input() shouldRender: boolean = false;
   @Input() pointSizeAttenuation: boolean = true;
   @Input() useSprite: boolean = true;
   @Input() spriteSize: number = 3;
@@ -173,7 +173,6 @@ export class GraphFontMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     // }
     super.ngOnInit();
     super.ngAfterViewInit();
-
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
   }
