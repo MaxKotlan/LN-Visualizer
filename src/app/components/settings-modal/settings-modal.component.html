@@ -19,6 +19,13 @@
     <h2>Channel Settings</h2>
     <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="setShouldRenderEdges($event)">Render Channels</mat-checkbox>
     <mat-divider></mat-divider>
+    <h2>Camera Settings</h2>
+    <span>
+        <span style="margin-right: .4rem;">Fov</span>
+        <mat-slider [ngModel]="selectCameraFov$ | async" (change)="setCameraFov($event)" #fovSlider min="20" max="160" step="1" value="60"></mat-slider>
+        {{fovSlider.value}}
+    </span>
+    <mat-divider></mat-divider>
     <h2>Label Settings (Expiremental)</h2>
     <mat-checkbox [ngModel]="shouldRenderLabels$ | async" (change)="setShouldRenderLabels($event)">Render Labels</mat-checkbox>
     <mat-divider></mat-divider>

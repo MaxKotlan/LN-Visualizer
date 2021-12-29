@@ -67,3 +67,8 @@ export const setPointUseIcon = createAction(
     '[controls] setPointUseIcon',
     props<{value: boolean}>()
 );
+
+export const setCameraFov = createAction(
+    '[controls] setCameraFov',
+    props<{value: number}>()
+);

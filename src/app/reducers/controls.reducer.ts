@@ -12,6 +12,7 @@ export interface ControlsState {
     nodeSize: number;
     pointAttenuation: boolean;
     pointUseIcon: boolean;
+    cameraFov: number;
 };
 
 const initialState: ControlsState = {
@@ -22,7 +23,8 @@ const initialState: ControlsState = {
     minimumEdges: 0,
     nodeSize: 3,
     pointAttenuation: true,
-    pointUseIcon: true
+    pointUseIcon: true,
+    cameraFov: 60
 };
 
 export const reducer = createReducer(
@@ -66,5 +68,9 @@ export const reducer = createReducer(
     on(
         controlsActions.setPointUseIcon,
         (state, {value}) => ({...state, pointUseIcon: value })
+    ),
+    on(
+        controlsActions.setCameraFov,
+        (state, {value}) => ({...state, cameraFov: value })
     )
 );

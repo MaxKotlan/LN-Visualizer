@@ -3,9 +3,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
-import { renderEdges, renderLabels, renderNodes, resetControlsToDefault, setNodeSize, setPointAttenuation, setPointUseIcon } from 'src/app/actions/controls.actions';
+import { renderEdges, renderLabels, renderNodes, resetControlsToDefault, setCameraFov, setNodeSize, setPointAttenuation, setPointUseIcon } from 'src/app/actions/controls.actions';
 import { ControlsState } from 'src/app/reducers/controls.reducer';
-import { selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
+import { selectCameraFov, selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
 
 @Component({
   selector: 'app-settings-modal',
@@ -24,6 +24,7 @@ export class SettingsModalComponent {
   public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
   public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
   public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
+  public selectCameraFov$ = this.store$.select(selectCameraFov);
 
   setNodeSize(event: MatSliderChange){
     this.store$.dispatch(setNodeSize({nodeSize: event.value || 1}))
@@ -51,6 +52,10 @@ export class SettingsModalComponent {
 
   resetSettingsToDefault(){
     this.store$.dispatch(resetControlsToDefault())
+  }
+
+  setCameraFov(event: MatSliderChange){
+    this.store$.dispatch(setCameraFov({value: event.value || 60}))
   }
 
 }

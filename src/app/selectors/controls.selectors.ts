@@ -37,3 +37,8 @@ export const selectPointUseIcon = createSelector(
     controlsSelector,
     (state) => state.pointUseIcon
 )
+
+export const selectCameraFov = createSelector(
+    controlsSelector,
+    (state) => state.cameraFov
+)
