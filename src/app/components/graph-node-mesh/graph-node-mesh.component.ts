@@ -9,7 +9,7 @@ import * as THREE from 'three';
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> implements OnChanges, OnInit {
+export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THREE.Mesh> implements OnChanges, OnInit {
 
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;
@@ -42,7 +42,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     super.ngOnChanges(simpleChanges);
   }
 
-  protected newObject3DInstance(): THREE.Points {
+  protected newObject3DInstance(): THREE.Points | THREE.Mesh {
     return this.generatePointGeometry();
   }
 
@@ -54,4 +54,53 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Object3D> imp
     return new THREE.Points( geometry, material );
   }
 
+  protected generateSphereGeometry(): THREE.Mesh {
+    
+    const sizeX = 4;
+    const sizeY = 2;
+
+    const sizeXHalf = sizeX/2;
+    const sizeYHalf = sizeY/2;
+
+    const newCoords = this.positions.flatMap((center: THREE.Vector3) => {
+      const centerCpy = center.clone().multiplyScalar(100);
+      return [
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3( sizeXHalf, sizeYHalf, 0)),
+        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
+      ]
+    });
+
+    const uvCoordinates = this.positions.flatMap((center: THREE.Vector3) => {
+      return [
+         0,1,
+         0,0,
+         1,0,
+         1,0,
+         1,1,
+         0,1,
+      ]
+    });
+    
+    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender? newCoords: []);
+    geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
+    geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
+    geometry.computeVertexNormals();
+    geometry.setDrawRange(0, newCoords.length);
+
+    const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
+
+    const material = new THREE.MeshBasicMaterial({
+      map: txtmap,
+      alphaTest: 0.5,
+      transparent: false,
+      color: '#FFFFFF',
+      depthWrite: true,
+      side: THREE.DoubleSide
+    });
+    return new THREE.Mesh(geometry, material);
+  }
 }
