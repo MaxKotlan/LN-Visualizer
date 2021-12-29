@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, map, tap } from 'rxjs';
+import { filter, map, skipUntil, take, tap } from 'rxjs';
 import { ControlsState } from '../reducers/controls.reducer';
 import { controlsSelector } from '../selectors/controls.selectors';
 import * as controlActions from '../actions/controls.actions';
@@ -15,10 +15,10 @@ export class ControlsEffects {
 
     saveControlsState$ = createEffect(() => 
         this.store$.select(controlsSelector).pipe(
+        skipUntil(this.actions$.pipe(ofType(controlActions.loadSavedState), take(1))),
         tap((controlState) => {
-            console.log('test')
             localStorage.setItem('controlState', JSON.stringify(controlState))
-        })) 
+        }))
     , {dispatch: false});
 
     loadSavedState$ = createEffect(() =>
