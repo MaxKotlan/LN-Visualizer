@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
-import { LnGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 @Component({
   selector: 'app-graph-node-mesh',
@@ -55,52 +54,50 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   }
 
   protected generateSphereGeometry(): THREE.Mesh {
-    
-    const sizeX = 4;
-    const sizeY = 2;
+  
+    let wow: THREE.BufferGeometry = new THREE.BufferGeometry();
+    let sphereGeometries: THREE.BufferGeometry[] = [];
 
-    const sizeXHalf = sizeX/2;
-    const sizeYHalf = sizeY/2;
+    const sphere = new THREE.SphereGeometry( this.spriteSize, 8, 4 );
 
-    const newCoords = this.positions.flatMap((center: THREE.Vector3) => {
-      const centerCpy = center.clone().multiplyScalar(100);
-      return [
-        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
-        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf,-sizeYHalf, 0)),
-        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
-        centerCpy.clone().add(new THREE.Vector3( sizeXHalf,-sizeYHalf, 0)),
-        centerCpy.clone().add(new THREE.Vector3( sizeXHalf, sizeYHalf, 0)),
-        centerCpy.clone().add(new THREE.Vector3(-sizeXHalf, sizeYHalf, 0)),
-      ]
+    this.positions.forEach((center: THREE.Vector3) => {
+
+      const matrix = new THREE.Matrix4().set(
+        1,0,0,center.x*100,
+        0,1,0,center.y*100,
+        0,0,1,center.z*100,
+        0,0,0,1,
+      );
+
+      let geom = sphere.clone().applyMatrix4(matrix);
+      geom = geom.deleteAttribute('uv');
+      //wow.merge(geom);
+
+      wow = BufferGeometryUtils.mergeBufferGeometries([wow, geom], false)
+      // console.log(geom);
+
+      // sphereGeometries.push(
+      //   geom
+      // );
     });
 
-    const uvCoordinates = this.positions.flatMap((center: THREE.Vector3) => {
-      return [
-         0,1,
-         0,0,
-         1,0,
-         1,0,
-         1,1,
-         0,1,
-      ]
-    });
     
-    const geometry = new THREE.BufferGeometry().setFromPoints(this.shouldRender? newCoords: []);
-    geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
-    geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
-    geometry.computeVertexNormals();
-    geometry.setDrawRange(0, newCoords.length);
+    //const geometry = BufferGeometryUtils.mergeBufferGeometries(sphereGeometries, false);
+    //geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
+    //geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
+    //geometry.computeVertexNormals();
+    //geometry.setDrawRange(0, newCoords.length);
 
     const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
 
     const material = new THREE.MeshBasicMaterial({
-      map: txtmap,
-      alphaTest: 0.5,
+      //map: txtmap,
+      //alphaTest: 0.5,
       transparent: false,
       color: '#FFFFFF',
-      depthWrite: true,
-      side: THREE.DoubleSide
+      //depthWrite: true,
+      //side: THREE.DoubleSide
     });
-    return new THREE.Mesh(geometry, material);
+    return new THREE.Mesh(wow, material);
   }
 }
