@@ -86,7 +86,7 @@ export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
     (nodes) => nodes.map((a) => 
         ({publicKey: a.pub_key, alias: a.alias}))
-        .slice(0,10)
+        .slice(0,100)//hardcode max search for now
 );
 
 export const selectAliases = createSelector(
