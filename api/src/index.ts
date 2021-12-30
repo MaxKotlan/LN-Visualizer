@@ -1,17 +1,24 @@
 console.log('testing');
 import express from "express";
 import config from 'config';
+import dotenv from 'dotenv';
 import * as lightning from 'lightning';
+import fs from 'fs';
 import { LndAuthenticationWithMacaroon } from "lightning";
 import cors from "cors";
-import { WebSocket, WebSocketServer } from 'ws';
-import { BehaviorSubject, filter, firstValueFrom, lastValueFrom, startWith, take } from 'rxjs';
+import { WebSocketServer } from 'ws';
+import { BehaviorSubject, lastValueFrom, take } from 'rxjs';
 
 const wss = new WebSocketServer({ port: 8090 });
 
 const lnService = require('ln-service');
 
-console.log(config.get('macaroon'))
+const why = {
+    cert: fs.readFileSync(process.env.LND_CERT_FILE as string, {encoding: 'base64'}),
+    macaroon: fs.readFileSync(process.env.LND_VIEW_MACAROON_FILE as string, {encoding: 'base64'}),
+    socket: process.env.LND_ADDRESS
+}
+console.log(why)
 
 const macaroonFromConfig: LndAuthenticationWithMacaroon = config.get('macaroon');
 const {lnd} = lightning.authenticatedLndGrpc(macaroonFromConfig);

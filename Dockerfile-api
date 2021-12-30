@@ -1,13 +1,24 @@
 FROM node:14-buster-slim
 ENV NODE_ENV=production
 
+RUN apt update
+RUN apt install -y python make g++
+
 WORKDIR /usr/local/app
 
-COPY ./api /usr/local/app/
+COPY ./api/package.json ./
 
 RUN npm install
 
 RUN npm install -g rimraf typescript
+
+COPY ./api/src /usr/local/app/src
+COPY ./api/tsconfig.json ./
+COPY ./api/config ./config
+
+#for whatever reason, npm i will not install @types/config and @types/cors in the container
+COPY ./api/node_modules ./node_modules
+COPY ./api/node_modules ./node_modules
 
 RUN npm run build
 
