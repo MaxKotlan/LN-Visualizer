@@ -55,21 +55,23 @@ export class GraphSceneComponent implements AfterViewInit{
     this.animation = this.animationService.animate.subscribe(this.animate);
     this.animationService.start();
 
+    this.selectCameraFov$.subscribe((fov) => {
+      const camera: any = this.cameraComponent?.camera;//.fov = fov;
+      (camera as any).fov = fov;
+      this.cameraComponent?.camera.updateProjectionMatrix();
+    })
+
     this.gotoCoordinates$.subscribe(newCoordinates => {
       if (!this.cameraComponent) return;
       const currentCords = this.cameraComponent.camera.position;
 
       const temp = newCoordinates.clone();
       
-      const isLookingAtNewCoordinate = temp.dot(currentCords) > 0;
+        const test = temp.clone().normalize().dot(currentCords.normalize());
+        console.log(test)
 
         temp.sub(currentCords);
-
-        if (!isLookingAtNewCoordinate)
-          temp.addScalar(3);
-        else
-          temp.subScalar(3);
-
+        temp.addScalar(100*Math.abs(test));
         temp.add(currentCords);
 
       const positionKF = new THREE.VectorKeyframeTrack('.position', 
@@ -88,7 +90,6 @@ export class GraphSceneComponent implements AfterViewInit{
       this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
       const clipAction = this.mixer.clipAction(cameraMoveClip);
       clipAction.setLoop(THREE.LoopOnce, 1);
-      //clipAction.clampWhenFinished = true;
       clipAction.play();
 
     })
