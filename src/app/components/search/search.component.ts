@@ -15,8 +15,6 @@ export class SearchComponent {
 
   constructor(private store$: Store<GraphState>){}
 
-  public myControl: FormControl = new FormControl();
-
   public nodeSearchResults$ = this.store$.select(selectNodesSearchResults)
   public selectSearchString$ = this.store$.select(selectSearchString);
 
