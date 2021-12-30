@@ -49,23 +49,27 @@ const mapToFilteredView = (result: any) => {
 }
 
 app.get( "/", async ( req: any, res: any ) => {
-    const cached = await lastValueFrom(networkGraphSubject$.asObservable().pipe(take(1)))
-    if (!cached?.nodes?.length){
-        console.log('Requesting new');
-        let request = await requestAndUpdateNetworkGraph();
-        const filteredView = mapToFilteredView(request);
-        console.log(filteredView.edges.length);
-        console.log(filteredView.nodes.length);
-        res.send(JSON.stringify(filteredView));
-    } else {
-        console.log('Using Cached');
-        requestAndUpdateNetworkGraph();
-        const filteredView = mapToFilteredView(cached);
-        console.log(filteredView.edges.length);
-        console.log(filteredView.nodes.length);
-        res.send(JSON.stringify(filteredView));
-    }
-} );
+    try{
+        const cached = await lastValueFrom(networkGraphSubject$.asObservable().pipe(take(1)))
+        if (!cached?.nodes?.length){
+            console.log('Requesting new');
+            let request = await requestAndUpdateNetworkGraph();
+            const filteredView = mapToFilteredView(request);
+            console.log(filteredView.edges.length);
+            console.log(filteredView.nodes.length);
+            res.send(JSON.stringify(filteredView));
+        } else {
+            console.log('Using Cached');
+            requestAndUpdateNetworkGraph();
+            const filteredView = mapToFilteredView(cached);
+            console.log(filteredView.edges.length);
+            console.log(filteredView.nodes.length);
+            res.send(JSON.stringify(filteredView));
+        }
+    } catch(e) {
+        res.send(503, JSON.stringify(e))
+    };
+});
 
 // start the Express server
 app.listen( config.get('port'), () => {
