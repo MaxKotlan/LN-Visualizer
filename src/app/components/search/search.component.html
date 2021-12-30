@@ -5,6 +5,7 @@
             placeholder="Pick one"
             aria-label="Public Key or Alias"
             matInput
+            [ngModel]="selectSearchString$ | async"
             (input)="onTextChange($event)"
             [matAutocomplete]="auto">
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onTextChange($event)">
