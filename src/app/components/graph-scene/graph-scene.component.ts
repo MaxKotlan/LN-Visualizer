@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { PerspectiveCameraComponent, SceneComponent } from 'atft';
-import { combineLatestWith, filter, map, Observable } from 'rxjs';
+import { AnimationService, PerspectiveCameraComponent, SceneComponent } from 'atft';
+import { combineLatestWith, filter, map, Observable, Subscription } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectCameraFov, selectEdgeDepthTest, selectEdgeDottedLine, selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
@@ -20,7 +20,8 @@ export class GraphSceneComponent implements AfterViewInit{
 
   constructor(
     private store$: Store<GraphState>,
-    private actions$: Actions
+    private actions$: Actions,
+    private animationService: AnimationService
   ) { }
 
   public modifiedGraph$ = this.store$.select(selectModifiedGraph)
@@ -50,13 +51,37 @@ export class GraphSceneComponent implements AfterViewInit{
     );
 
   public ngAfterViewInit(){
-    this.gotoCoordinates$.subscribe(coordinates => {
-      if (!this.cameraComponent) return;
-      this.cameraComponent.positionX = coordinates.x;
-      this.cameraComponent.positionY = coordinates.y;
-      this.cameraComponent.positionZ = coordinates.z;
+    this.animate = this.animate.bind(this);
+    this.animation = this.animationService.animate.subscribe(this.animate);
+    this.animationService.start();
 
-      console.log(this.cameraComponent?.camera)
+    this.gotoCoordinates$.subscribe(newCoordinates => {
+      if (!this.cameraComponent) return;
+      const currentCords = this.cameraComponent.camera.position;
+      const positionKF = new THREE.VectorKeyframeTrack('.position', 
+        [0, .2], 
+        [
+          currentCords.x, currentCords.y, currentCords.z, 
+          newCoordinates.x, newCoordinates.y, newCoordinates.z
+        ]);
+      const cameraMoveClip = new THREE.AnimationClip('Hello', 20, [positionKF]);
+      this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
+      const clipAction = this.mixer.clipAction(cameraMoveClip);
+      clipAction.setLoop(THREE.LoopOnce, 1);
+      clipAction.clampWhenFinished = true;
+      clipAction.play();
+
     })
   }
+
+  public animate() {
+    if (this.mixer) {
+      this.mixer.update(this.clock.getDelta());
+    }
+  }
+
+  private mixer: THREE.AnimationMixer | undefined;
+  private clock = new THREE.Clock();
+  protected animation: Subscription | undefined;
+
 }
