@@ -13,7 +13,3 @@ services:
     stop_grace_period: 1m
     ports:
       - 8080:8080
- #   environment:
- #     LND_CERT_FILE: "/lnd/tls.cert"
-  #    LND_VIEW_MACAROON_FILE: "/lnd/data/chain/bitcoin/${BITCOIN_NETWORK}/readonly.macaroon"
-  #    LND_ADDRESS: https://$LND_IP:$LND_GRPC_PORT
