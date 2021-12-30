@@ -59,9 +59,14 @@ export class GraphSceneComponent implements AfterViewInit{
       if (!this.cameraComponent) return;
       const currentCords = this.cameraComponent.camera.position;
 
-      newCoordinates.sub(currentCords);
-      newCoordinates.addScalar(1);
-      newCoordinates.add(currentCords);
+      const temp = newCoordinates.clone();
+      
+      const isLookingAtNewCoordinate = temp.dot(currentCords) > 0;
+
+      if (isLookingAtNewCoordinate)
+        temp.sub(currentCords);
+      else
+        temp.add(currentCords);
 
       const positionKF = new THREE.VectorKeyframeTrack('.position', 
         [0, .2], 
@@ -69,7 +74,13 @@ export class GraphSceneComponent implements AfterViewInit{
           currentCords.x, currentCords.y, currentCords.z, 
           newCoordinates.x, newCoordinates.y, newCoordinates.z
         ]);
-      const cameraMoveClip = new THREE.AnimationClip('Hello', 20, [positionKF]);
+      const rotationKF = new THREE.VectorKeyframeTrack('.rotation', 
+        [0, .2], 
+        [
+          currentCords.x, currentCords.y, currentCords.z, 
+          newCoordinates.x, newCoordinates.y, newCoordinates.z
+        ]);
+      const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [positionKF, rotationKF]);
       this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
       const clipAction = this.mixer.clipAction(cameraMoveClip);
       clipAction.setLoop(THREE.LoopOnce, 1);
