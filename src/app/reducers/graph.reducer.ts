@@ -106,7 +106,7 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
 
 const calculatePositionFromParent = (n: LnModifiedGraphNode, depth=2) => {
     n.children.forEach((child) => {
-        child.postition = createSpherePoint(1, n.postition);
+        child.postition = createSpherePoint(1/depth, n.postition);
         calculatePositionFromParent(child, depth+1);
     })
 }
