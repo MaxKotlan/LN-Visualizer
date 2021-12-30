@@ -75,7 +75,8 @@ const getModifiedGraph = (g: LnGraphNode[], precomputedNodeEdgeList : Record<Pub
     const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
     console.log('nodesWithoutParents', nodesWithoutParents)
     Object.values(nodesWithoutParents).forEach(node => {
-        node.postition = createSpherePoint(1, new Vector3(0,0,0));
+        const largeClumpDistance = 1;
+        node.postition = createSpherePoint(largeClumpDistance, new Vector3(0,0,0));
         calculatePositionFromParent(node)
     });
 
@@ -105,7 +106,7 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
 
 const calculatePositionFromParent = (n: LnModifiedGraphNode, depth=2) => {
     n.children.forEach((child) => {
-        child.postition = createSpherePoint(1/depth, n.postition.clone().multiplyScalar(1/(depth-1)));
+        child.postition = createSpherePoint(1, n.postition);
         calculatePositionFromParent(child, depth+1);
     })
 }
