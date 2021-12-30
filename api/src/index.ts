@@ -1,7 +1,7 @@
 console.log('testing');
 import express from "express";
 import config from 'config';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import * as lightning from 'lightning';
 import fs from 'fs';
 import { LndAuthenticationWithMacaroon } from "lightning";
@@ -17,11 +17,27 @@ console.log('about to load from', process.env.LND_DATA_DIR);
 console.log('and connect to', process.env.LND_ADDRESS)
 
 
-const why = {
-    cert: fs.readFileSync(process.env.LND_CERT_FILE as string, {encoding: 'base64'}),
-    macaroon: fs.readFileSync(process.env.LND_VIEW_MACAROON_FILE as string, {encoding: 'base64'}),
-    socket: process.env.LND_ADDRESS
+let base64cert = process.env.LND_CERT_FILE || '';
+let macaroon = process.env.LND_VIEW_MACAROON_FILE || '';
+
+let why = {};
+if (base64cert === ''){
+    base64cert = config.get('macaroon.cert');
+    macaroon = config.get('macaroon.macaroon');
+    why = {
+        cert: base64cert,
+        macaroon: macaroon,
+        socket: config.get('macaroon.socket')
+    }
+} else {
+    why = {
+        cert: fs.readFileSync(base64cert, {encoding: 'base64'}),
+        macaroon: fs.readFileSync(macaroon, {encoding: 'base64'}),
+        socket: process.env.LND_ADDRESS
+    }
 }
+
+
 console.log(why)
 
 const macaroonFromConfig: LndAuthenticationWithMacaroon = config.get('macaroon');
