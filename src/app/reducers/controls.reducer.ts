@@ -13,6 +13,8 @@ export interface ControlsState {
     pointAttenuation: boolean;
     pointUseIcon: boolean;
     cameraFov: number;
+    edgeDepthTest: boolean;
+    edgeDottedLine: boolean;
 };
 
 const initialState: ControlsState = {
@@ -24,7 +26,9 @@ const initialState: ControlsState = {
     nodeSize: 3,
     pointAttenuation: true,
     pointUseIcon: true,
-    cameraFov: 60
+    cameraFov: 60,
+    edgeDepthTest: false,
+    edgeDottedLine: true
 };
 
 export const reducer = createReducer(
@@ -72,5 +76,13 @@ export const reducer = createReducer(
     on(
         controlsActions.setCameraFov,
         (state, {value}) => ({...state, cameraFov: value })
+    ),
+    on(
+        controlsActions.setEdgeUseDottedLine,
+        (state, {value}) => ({...state, edgeDepthTest: value })
+    ),
+    on(
+        controlsActions.setEdgeUseDepthTest,
+        (state, {value}) => ({...state, edgeDottedLine: value })
     )
 );

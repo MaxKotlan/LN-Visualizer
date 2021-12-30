@@ -72,3 +72,13 @@ export const setCameraFov = createAction(
     '[controls] setCameraFov',
     props<{value: number}>()
 );
+
+export const setEdgeUseDottedLine = createAction(
+    '[controls] setEdgeUseDottedLine',
+    props<{value: boolean}>()
+);
+
+export const setEdgeUseDepthTest = createAction(
+    '[controls] setEdgeUseDepthTest',
+    props<{value: boolean}>()
+);

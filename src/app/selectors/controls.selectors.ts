@@ -42,3 +42,13 @@ export const selectCameraFov = createSelector(
     controlsSelector,
     (state) => state.cameraFov
 )
+
+export const selectEdgeDepthTest = createSelector(
+    controlsSelector,
+    (state) => state.edgeDepthTest
+)
+
+export const selectEdgeDottedLine = createSelector(
+    controlsSelector,
+    (state) => state.edgeDottedLine
+)
