@@ -1,7 +1,9 @@
 <mat-card>
-    <app-search></app-search>
+    <span style="display: flex; align-items: center;">
+        <app-search></app-search>
+        <button style="margin-bottom: 1.34375em; height: 52.063px; margin-left: .4rem;" (click)="gotoNode()" mat-button color="primary">Goto</button>
+    </span>
     <div style="display: flex; flex-direction: column;">
-        <button (click)="gotoNode()" mat-button color="primary">Goto</button>
         <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="updateRenderNodes($event)">Render Nodes</mat-checkbox>
         <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="updateRenderEdges($event)">Render Channels</mat-checkbox>
         <!-- <span>

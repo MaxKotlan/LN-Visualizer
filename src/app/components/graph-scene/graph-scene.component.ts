@@ -58,6 +58,11 @@ export class GraphSceneComponent implements AfterViewInit{
     this.gotoCoordinates$.subscribe(newCoordinates => {
       if (!this.cameraComponent) return;
       const currentCords = this.cameraComponent.camera.position;
+
+      newCoordinates.sub(currentCords);
+      newCoordinates.addScalar(1);
+      newCoordinates.add(currentCords);
+
       const positionKF = new THREE.VectorKeyframeTrack('.position', 
         [0, .2], 
         [
