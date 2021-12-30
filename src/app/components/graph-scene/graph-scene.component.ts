@@ -80,7 +80,7 @@ export class GraphSceneComponent implements AfterViewInit{
           currentCords.x, currentCords.y, currentCords.z, 
           newCoordinates.x, newCoordinates.y, newCoordinates.z
         ]);
-      const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [positionKF, rotationKF]);
+      const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [positionKF]);
       this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
       const clipAction = this.mixer.clipAction(cameraMoveClip);
       clipAction.setLoop(THREE.LoopOnce, 1);
