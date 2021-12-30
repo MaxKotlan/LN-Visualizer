@@ -1,24 +1,11 @@
-# Stage 1: Compile and Build angular codebase
-
-# Use official node image as the base image
-FROM node:14-buster-slim as build
-
-# Set the working directory
-WORKDIR /usr/local/app
-
-# Add the source code to app
-COPY ./api /usr/local/app/
-
-# Install all the dependencies
-RUN npm install
-
-# Generate the build of the application
-RUN npm run build
-
 FROM node:14-buster-slim
 
-WORKDIR /app
+WORKDIR /usr/local/app
 
-COPY --from=build /usr/local/app/build /app
+COPY ./api /usr/local/app/
 
-CMD [ "node", "index.js" ]
+RUN npm install
+
+RUN npm run build
+
+CMD [ "node", "build/index.js" ]
