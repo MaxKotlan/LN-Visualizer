@@ -18,6 +18,8 @@
     <mat-divider></mat-divider>
     <h2>Channel Settings</h2>
     <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="setShouldRenderEdges($event)">Render Channels</mat-checkbox>
+    <mat-checkbox [ngModel]="selectEdgeDepthTest$ | async" (change)="setDepthTest($event)">Depth Test</mat-checkbox>
+    <mat-checkbox [ngModel]="selectEdgeDottedLine$ | async" (change)="setDottedLines($event)">Dashed Lines</mat-checkbox>
     <mat-divider></mat-divider>
     <h2>Camera Settings</h2>
     <span>

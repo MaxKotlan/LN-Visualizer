@@ -29,24 +29,15 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
   override ngOnChanges(simpleChanges: SimpleChanges){
     const obj: THREE.Object3D = this.getObject();
     if (obj){
-      (obj as any)['geometry'] = this.newObject3DInstance().geometry;
+      const newInstance = this.newObject3DInstance();
+      (obj as any)['geometry'] = newInstance.geometry;
+      (obj as any)['material'] = newInstance.material;
     }
     this.rendererService.render();
     super.ngOnChanges(simpleChanges);
   }
 
   protected newObject3DInstance(): THREE.LineSegments {
-
-    // for(let i = 0; i < this.edges.length; i++){
-
-    //   const pubkeyTest = selecteCorrectEdgePublicKey(this.edges[i], )
-
-    //   if (this.nodes[this.edges[i].node1_pub])
-    //     pointData.push(this.nodes[this.edges[i].node1_pub].postition)
-
-    //   if (this.nodes[this.edges[i].node2_pub])
-    //     pointData.push(this.nodes[this.edges[i].node2_pub].postition)
-    // };
     
     const material = this.dashedLines ? 
     new THREE.LineDashedMaterial( {
@@ -69,6 +60,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     geometry.setAttribute('color', new THREE.BufferAttribute( this.edgeColor || new Uint8Array(), 3, true));
     const mesh = new THREE.LineSegments(geometry, material);
     mesh.computeLineDistances();
+    mesh.renderOrder = -1;
     return mesh;
   }
 

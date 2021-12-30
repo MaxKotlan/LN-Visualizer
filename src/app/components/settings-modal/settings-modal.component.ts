@@ -3,9 +3,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
-import { renderEdges, renderLabels, renderNodes, resetControlsToDefault, setCameraFov, setNodeSize, setPointAttenuation, setPointUseIcon } from 'src/app/actions/controls.actions';
+import { renderEdges, renderLabels, renderNodes, resetControlsToDefault, setCameraFov, setEdgeUseDepthTest, setEdgeUseDottedLine, setNodeSize, setPointAttenuation, setPointUseIcon } from 'src/app/actions/controls.actions';
 import { ControlsState } from 'src/app/reducers/controls.reducer';
-import { selectCameraFov, selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
+import { selectCameraFov, selectEdgeDepthTest, selectEdgeDottedLine, selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
 
 @Component({
   selector: 'app-settings-modal',
@@ -25,6 +25,8 @@ export class SettingsModalComponent {
   public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
   public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
   public selectCameraFov$ = this.store$.select(selectCameraFov);
+  public selectEdgeDepthTest$ = this.store$.select(selectEdgeDepthTest);
+  public selectEdgeDottedLine$ = this.store$.select(selectEdgeDottedLine);
 
   setNodeSize(event: MatSliderChange){
     this.store$.dispatch(setNodeSize({nodeSize: event.value || 1}))
@@ -56,6 +58,14 @@ export class SettingsModalComponent {
 
   setCameraFov(event: MatSliderChange){
     this.store$.dispatch(setCameraFov({value: event.value || 60}))
+  }
+
+  setDepthTest(event: MatCheckboxChange){
+    this.store$.dispatch(setEdgeUseDepthTest({value: event.checked}))
+  }
+
+  setDottedLines(event: MatCheckboxChange){
+    this.store$.dispatch(setEdgeUseDottedLine({value: event.checked}))
   }
 
 }

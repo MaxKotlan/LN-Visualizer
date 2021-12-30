@@ -79,10 +79,10 @@ export const reducer = createReducer(
     ),
     on(
         controlsActions.setEdgeUseDottedLine,
-        (state, {value}) => ({...state, edgeDepthTest: value })
+        (state, {value}) => ({...state, edgeDottedLine: value })
     ),
     on(
         controlsActions.setEdgeUseDepthTest,
-        (state, {value}) => ({...state, edgeDottedLine: value })
+        (state, {value}) => ({...state, edgeDepthTest: value })
     )
 );
