@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { gotoNode, minEdgesRecompute, renderEdges, renderNodes, searchGraph, sortOrderChange } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { shouldRenderEdges, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
-import { selectNodesSearchResults } from 'src/app/selectors/graph.selectors';
+import { selectFinalMatcheNodesFromSearch, selectNodesSearchResults } from 'src/app/selectors/graph.selectors';
 
 @Component({
   selector: 'app-quick-controls',
@@ -23,6 +23,7 @@ export class QuickControlsComponent implements OnInit {
   public nodeSearchResults$ = this.store$.select(selectNodesSearchResults)
   public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
   public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
+  public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
 
   ngOnInit() {
   }
