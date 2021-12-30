@@ -9,6 +9,18 @@ export const selectGraphLoadingState = createSelector(
     graphSelector, (state) => state.isLoading
 )
 
+export const selectGraphError = createSelector(
+    graphSelector, (state) => state.error
+);
+
+export const shouldShowErrorMessage = createSelector(
+    graphSelector, (state) => !!state.error && !state.isLoading
+);
+
+export const canDismissError = createSelector(
+    graphSelector, (state) => !!state?.graphUnsorted?.nodes?.length && state.error
+);
+
 export const selectModifiedGraph = createSelector(
     graphSelector, (state) => state.modifiedGraph
 );

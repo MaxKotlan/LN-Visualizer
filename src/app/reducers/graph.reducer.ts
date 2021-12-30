@@ -3,6 +3,7 @@ import { LnGraph, LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from '../types
 import * as graphActions from '../actions/graph.actions';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type PublicKey = string;
 
@@ -10,19 +11,21 @@ export interface GraphState {
     graphUnsorted: LnGraph,
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>
     isLoading: boolean;
+    error: HttpErrorResponse | undefined;
 };
 
 const initialState: GraphState = {
     graphUnsorted: { nodes: [], edges: [] },
     modifiedGraph: {},
-    isLoading: false
+    isLoading: false,
+    error: undefined
 };
 
 export const reducer = createReducer(
     initialState,
     on(
         graphActions.requestGraph,
-        (state) => ({...state, isLoading: true}),
+        (state) => ({...state, error: undefined, isLoading: true}),
     ),
     on(
         graphActions.requestGraphSuccess,
@@ -35,8 +38,12 @@ export const reducer = createReducer(
     ),
     on(
         graphActions.requestGraphFailure,
-        (state) => ({...state, isLoading: false})
+        (state, {error}) => ({...state, error, isLoading: false})
     ),
+    on(
+        graphActions.dismissError,
+        (state) => ({...state, error: undefined})
+    )
 );
 
 const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]> => {

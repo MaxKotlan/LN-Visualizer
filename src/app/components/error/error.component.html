@@ -1,0 +1,12 @@
+<mat-card style="background-color: hsl(4, 17%, 83%)">
+    <h3>
+        Error could not load graph data
+    </h3>
+    <p *ngIf="selectGraphError$ | async as error">
+        {{error.message}}
+    </p>
+    <span style="display: flex;">
+        <button mat-button color="warn" (click)="retryRequest()">Retry</button>
+        <button mat-button color="warn" (click)="dismissError()" *ngIf="canDismissError$ | async">Dismiss</button>
+    </span>
+</mat-card>

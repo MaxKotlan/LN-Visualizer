@@ -33,6 +33,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDividerModule} from '@angular/material/divider';
 import { ControlsEffects } from './effects/controls.effects';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ControlsEffects } from './effects/controls.effects';
     SearchComponent,
     QuickControlsComponent,
     SettingsComponent,
-    SettingsModalComponent
+    SettingsModalComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
