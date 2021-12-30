@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { SceneComponent } from 'atft';
+import { PerspectiveCameraComponent, SceneComponent } from 'atft';
 import { combineLatestWith, filter, map, Observable } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
@@ -13,9 +13,10 @@ import * as THREE from 'three';
   selector: 'app-graph-scene',
   templateUrl: './graph-scene.component.html',
 })
-export class GraphSceneComponent implements OnInit{
+export class GraphSceneComponent implements AfterViewInit{
 
   @ViewChild(SceneComponent) scene!: SceneComponent;
+  @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
 
   constructor(
     private store$: Store<GraphState>,
@@ -47,11 +48,15 @@ export class GraphSceneComponent implements OnInit{
       filter((pos) => !!pos),
       map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(100)),
     );
-  
-  public gotoCoordinates: THREE.Vector3 = new THREE.Vector3(0,0,0);
 
-  ngOnInit(): void {
-    //this isnt working
-    //this.gotoCoordinates$.subscribe(coordinates => this.gotoCoordinates = coordinates);
+  public ngAfterViewInit(){
+    this.gotoCoordinates$.subscribe(coordinates => {
+      if (!this.cameraComponent) return;
+      this.cameraComponent.positionX = coordinates.x;
+      this.cameraComponent.positionY = coordinates.y;
+      this.cameraComponent.positionZ = coordinates.z;
+
+      console.log(this.cameraComponent?.camera)
+    })
   }
 }
