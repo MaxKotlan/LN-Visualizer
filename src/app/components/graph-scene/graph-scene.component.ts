@@ -67,11 +67,14 @@ export class GraphSceneComponent implements AfterViewInit{
 
       const temp = newCoordinates.clone();
       
+      console.log('cur', currentCords);
+      console.log('want', newCoordinates);
+
         const test = temp.clone().normalize().dot(currentCords.normalize());
         console.log(test)
 
         temp.sub(currentCords);
-        temp.addScalar(100*Math.abs(test));
+        temp.addScalar(3*Math.cos(Math.PI*test));
         temp.add(currentCords);
 
       const positionKF = new THREE.VectorKeyframeTrack('.position', 
