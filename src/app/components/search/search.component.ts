@@ -21,10 +21,9 @@ export class SearchComponent {
   public selectSearchString$ = this.store$.select(selectSearchString);
 
   onTextChange(event: any){
-    if (event?.target?.value)
+    if (!!event?.target?.value || event?.target?.value === '')
       this.store$.dispatch(searchGraph({searchText: event.target.value}))
-    if (event?.option?.value)
+    else if (event?.option?.value)
       this.store$.dispatch(searchGraph({searchText: event.option.value}))
-
   }
 }
