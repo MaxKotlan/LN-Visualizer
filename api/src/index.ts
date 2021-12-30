@@ -13,6 +13,10 @@ const wss = new WebSocketServer({ port: 8090 });
 
 const lnService = require('ln-service');
 
+console.log('about to load from', process.env.LND_DATA_DIR);
+console.log('and connect to', process.env.LND_ADDRESS)
+
+
 const why = {
     cert: fs.readFileSync(process.env.LND_CERT_FILE as string, {encoding: 'base64'}),
     macaroon: fs.readFileSync(process.env.LND_VIEW_MACAROON_FILE as string, {encoding: 'base64'}),
