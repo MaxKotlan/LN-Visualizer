@@ -17,8 +17,8 @@ COPY ./api/tsconfig.json ./
 COPY ./api/config ./config
 
 #for whatever reason, npm i will not install @types/config and @types/cors in the container
-COPY ./api/node_modules ./node_modules
-COPY ./api/node_modules ./node_modules
+COPY ./api/node_modules/@types/cors ./node_modules/@types/cors
+COPY ./api/node_modules/@types/config ./node_modules/@types/config
 
 RUN npm run build
 
