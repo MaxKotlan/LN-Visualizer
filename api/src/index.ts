@@ -45,7 +45,7 @@ const {lnd} = lightning.authenticatedLndGrpc(why);
   
 const app = express();
 const cors = require('cors');
-app.use(cors);
+app.use(cors());
 //app.use((cors as any)());
 
 let networkGraphSubject$: BehaviorSubject<any> = new BehaviorSubject({});
