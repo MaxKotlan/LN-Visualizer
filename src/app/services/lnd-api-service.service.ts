@@ -17,12 +17,12 @@ export class LndApiServiceService {
 
     // const headers: HttpHeaders = new HttpHeaders({'Grpc-Metadata-macaroon': macaroon});
 
-    return this.http.get('http://localhost:1678/');
+    return this.http.get('http://localhost:5647/');
   }
 
   public getGraphInfo(): Observable<LnGraph>{
     //return this.http.get<LnGraph>('assets/graph-min.json');
-    return this.http.get<LnGraph>('http://localhost:1678/');
+    return this.http.get<LnGraph>('http://localhost:5647/');
   }
   
   public webSocket(): Observable<any>{
