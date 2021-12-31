@@ -1,6 +1,5 @@
 console.log('testing');
 import express from "express";
-import config from 'config';
 // import dotenv from 'dotenv';
 import * as lightning from 'lightning';
 import fs from 'fs';
@@ -22,13 +21,14 @@ let macaroon = process.env.LND_VIEW_MACAROON_FILE || '';
 
 let why = {};
 if (base64cert === ''){
-    base64cert = config.get('macaroon.cert');
-    macaroon = config.get('macaroon.macaroon');
-    why = {
-        cert: base64cert,
-        macaroon: macaroon,
-        socket: config.get('macaroon.socket')
-    }
+    // base64cert = config.get('macaroon.cert');
+    // macaroon = config.get('macaroon.macaroon');
+    // why = {
+    //     cert: base64cert,
+    //     macaroon: macaroon,
+    //     socket: config.get('macaroon.socket')
+    // }
+    console.log('missing envs');
 } else {
     why = {
         cert: fs.readFileSync(base64cert, {encoding: 'base64'}),
@@ -40,8 +40,8 @@ if (base64cert === ''){
 
 console.log(why)
 
-const macaroonFromConfig: LndAuthenticationWithMacaroon = config.get('macaroon');
-const {lnd} = lightning.authenticatedLndGrpc(macaroonFromConfig);
+//const macaroonFromConfig: LndAuthenticationWithMacaroon = config.get('macaroon');
+const {lnd} = lightning.authenticatedLndGrpc(why);
   
 const app = express();
 app.use(cors());
@@ -99,10 +99,9 @@ app.get( "/", async ( req: any, res: any ) => {
 });
 
 // start the Express server
-app.listen( config.get('port'), () => {
-    console.log( `server started at http://localhost:${ config.get('port') }` );
+app.listen( 8080, () => {
+    console.log( `server started at http://localhost:${ 8080 }` );
 });
-
 
 networkGraphSubject$.asObservable().subscribe((newValue) => {
     console.log('state updated', newValue)
