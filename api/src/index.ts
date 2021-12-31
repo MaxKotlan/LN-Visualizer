@@ -3,8 +3,8 @@ import express from "express";
 // import dotenv from 'dotenv';
 import * as lightning from 'lightning';
 import fs from 'fs';
-import { LndAuthenticationWithMacaroon } from "lightning";
-import cors from "cors";
+//import { LndAuthenticationWithMacaroon } from "lightning";
+//import cors from "cors";
 import { WebSocketServer } from 'ws';
 import { BehaviorSubject, lastValueFrom, take } from 'rxjs';
 
