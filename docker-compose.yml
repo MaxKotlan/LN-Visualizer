@@ -12,7 +12,7 @@ services:
     restart: on-failure
     stop_grace_period: 1m
     ports:
-      - 1678:8080
+      - 5647:5647
     volumes:
       - ${LND_DATA_DIR}:/lnd:ro
     environment:

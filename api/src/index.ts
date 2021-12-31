@@ -44,6 +44,8 @@ console.log(why)
 const {lnd} = lightning.authenticatedLndGrpc(why);
   
 const app = express();
+const cors = require('cors');
+app.use(cors);
 //app.use((cors as any)());
 
 let networkGraphSubject$: BehaviorSubject<any> = new BehaviorSubject({});
@@ -99,8 +101,8 @@ app.get( "/", async ( req: any, res: any ) => {
 });
 
 // start the Express server
-app.listen( 8080, () => {
-    console.log( `server started at http://localhost:${ 8080 }` );
+app.listen( 5647, () => {
+    console.log( `server started at http://localhost:${ 5647 }` );
 });
 
 networkGraphSubject$.asObservable().subscribe((newValue) => {
