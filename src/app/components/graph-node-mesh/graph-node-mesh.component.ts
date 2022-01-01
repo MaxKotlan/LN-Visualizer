@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, SkipSelf } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { AbstractObject3D, provideParent, RaycasterEmitEvent, RaycasterEvent, RaycasterService, RendererService, SphereMeshComponent } from 'atft';
+import { take } from 'rxjs';
+import { searchGraph } from 'src/app/actions/controls.actions';
+import { GraphState } from 'src/app/reducers/graph.reducer';
+import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
@@ -25,7 +30,8 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   constructor(
     protected override rendererService: RendererService,
     @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
-    private raycasterService: LndRaycasterService
+    private raycasterService: LndRaycasterService,
+    private store$: Store<GraphState>,
   ) {
     super(rendererService, parent);
   }
@@ -37,14 +43,13 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
       super.ngOnInit();
       this.raycasterService.addGroup(this);
       this.subscribeEvents();
-  
   }
 
   private subscribeEvents() {
     const obj = this.getObject();
     obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter);
     obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit);
-    obj.addEventListener(RaycasterEvent.click, this.onClick);
+    obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
   }
 
   private onMouseExit() {
@@ -63,6 +68,16 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
 
   private onClick(event: any) {
     console.log('onClick', event);
+    const intersection = (event as THREE.Intersection);
+
+    this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
+      this.store$.dispatch(searchGraph({searchText: node.alias}));
+      console.log('Closest Node is: ', node);
+    })
+    
+    // .pipe(take(1)).subscribe((node) => {
+    //   console.log('Closest Node is: ', node);
+    // })
     // this.click.emit({
     //   component: this,
     //   face: event.face

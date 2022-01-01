@@ -167,3 +167,18 @@ export const selectEdgeVertices = createSelector(
 
     return pointData;
 });
+
+/*
+Will need to optimize with the nearest neighbor. For now ugly bruteforce search.
+*/
+export const selectClosestPoint = (point: THREE.Vector3) => createSelector(
+    selectNodeValue,
+    selectVertices,
+    (nodes, vertices) => {
+        point.divideScalar(100);
+        const distances = vertices.map((position) => position.distanceTo(point));
+        const maximum = Math.min.apply(null, distances);
+        const index = distances.indexOf(maximum);
+        return nodes[index];
+    }
+)
