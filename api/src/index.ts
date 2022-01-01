@@ -16,6 +16,9 @@ console.log('about to load from', process.env.LND_DATA_DIR);
 console.log('and connect to', process.env.LND_ADDRESS)
 
 
+const appPort = process.env.APP_LNVISUALIZER_API_PORT;
+const appIpAddress = process.env.APP_LNVISUALIZER_API_IP;
+
 let base64cert = process.env.LND_CERT_FILE || '';
 let macaroon = process.env.LND_VIEW_MACAROON_FILE || '';
 
@@ -101,8 +104,8 @@ app.get( "/", async ( req: any, res: any ) => {
 });
 
 // start the Express server
-app.listen( 5647, () => {
-    console.log( `server started at http://localhost:${ 5647 }` );
+app.listen( appPort, () => {
+    console.log( `server started at http://${appIpAddress}:${ appPort }` );
 });
 
 networkGraphSubject$.asObservable().subscribe((newValue) => {
