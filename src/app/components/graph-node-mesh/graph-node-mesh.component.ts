@@ -47,7 +47,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
 
   private subscribeEvents() {
     const obj = this.getObject();
-    obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter);
+    obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
     obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit);
     obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
   }
@@ -64,24 +64,20 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
     //   component: this,
     //   face: event.face
     // });
+    // const intersection = (event as THREE.Intersection);
+
+    // this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
+    //   this.store$.dispatch(searchGraph({searchText: node.alias}));
+    //   console.log('Closest Node is: ', node);
+    // })
+    
   }
 
   private onClick(event: any) {
-    console.log('onClick', event);
     const intersection = (event as THREE.Intersection);
-
     this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
       this.store$.dispatch(searchGraph({searchText: node.alias}));
-      console.log('Closest Node is: ', node);
     })
-    
-    // .pipe(take(1)).subscribe((node) => {
-    //   console.log('Closest Node is: ', node);
-    // })
-    // this.click.emit({
-    //   component: this,
-    //   face: event.face
-    // });
   }
 
 

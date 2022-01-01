@@ -82,7 +82,7 @@ export class LndRaycasterService implements OnDestroy {
     if (!this.isReady()) {
       return;
     }
-    event.preventDefault();
+    //event.preventDefault();
     const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
     if (!this.selected || this.selected !== i?.object) {
       if (this.selected) {
@@ -101,7 +101,7 @@ export class LndRaycasterService implements OnDestroy {
     if (!this.isReady(true)) {
       return;
     }
-    event.preventDefault();
+    //event.preventDefault();
     const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
     if (i && i.object) {
       i.object.dispatchEvent({type: RaycasterEvent.click, ...i});
@@ -113,7 +113,7 @@ export class LndRaycasterService implements OnDestroy {
     if (!this.isReady()) {
       return;
     }
-    event.preventDefault();
+    //event.preventDefault();
     const i = this.getFirstIntersectedGroup(event.touches[0].clientX, event.touches[0].clientY);
     if (i && i.object) {
       i.object.dispatchEvent({type: RaycasterEvent.click, ...i});
