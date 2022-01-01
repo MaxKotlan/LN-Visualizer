@@ -17,16 +17,16 @@ export class LndApiServiceService {
 
     // const headers: HttpHeaders = new HttpHeaders({'Grpc-Metadata-macaroon': macaroon});
 
-    return this.http.get('http://10.21.21.67:5647/');
+    return this.http.get('http://umbrel.local:5647/');
   }
 
   public getGraphInfo(): Observable<LnGraph>{
     //return this.http.get<LnGraph>('assets/graph-min.json');
-    return this.http.get<LnGraph>('http://10.21.21.67:5647/');
+    return this.http.get<LnGraph>('http://umbrel.local:5647/');
   }
   
   public webSocket(): Observable<any>{
-    const subject = webSocket('ws://10.21.21.67:8090');
+    const subject = webSocket('ws://umbrel.local:8090');
     subject.asObservable().subscribe(
       msg => console.log('message received: ' + msg), // Called whenever there is a message from the server.
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
