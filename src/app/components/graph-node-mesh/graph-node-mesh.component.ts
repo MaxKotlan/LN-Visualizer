@@ -54,7 +54,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   }
 
   private onMouseEnter(event: any) {
-    console.log('RaycasterGroupDirective.onMouseEnter', event);
+    //console.log('RaycasterGroupDirective.onMouseEnter', event);
     // this.mouseEnter.emit({
     //   component: this,
     //   face: event.face
@@ -62,7 +62,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   }
 
   private onClick(event: any) {
-    console.log('onClick', event.face);
+    console.log('onClick', event);
     // this.click.emit({
     //   component: this,
     //   face: event.face
