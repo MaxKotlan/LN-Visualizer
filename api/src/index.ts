@@ -16,8 +16,8 @@ console.log('about to load from', process.env.LND_DATA_DIR);
 console.log('and connect to', process.env.LND_ADDRESS)
 
 
-const appPort = process.env.APP_LNVISUALIZER_API_PORT;
-const appIpAddress = process.env.APP_LNVISUALIZER_API_IP;
+const appPort = process.env.APP_LNVISUALIZER_API_PORT || '0.0.0.0';
+const appIpAddress = process.env.APP_LNVISUALIZER_API_IP || '5647';
 
 let base64cert = process.env.LND_CERT_FILE || '';
 let macaroon = process.env.LND_VIEW_MACAROON_FILE || '';
