@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AnimationService, PerspectiveCameraComponent, SceneComponent } from 'atft';
-import { combineLatestWith, filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
+import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectCameraFov, selectEdgeDepthTest, selectEdgeDottedLine, selectNodeSize, selectPointAttenuation, selectPointUseIcon, shouldRenderEdges, shouldRenderLabels, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
@@ -49,6 +49,18 @@ export class GraphSceneComponent implements AfterViewInit{
       filter((pos) => !!pos),
       map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(100)),
     );
+
+    public onSelected() {
+      console.log('ServerActorComponent.onSelected');
+    }
+  
+    public onDeselected() {
+      console.log('ServerActorComponent.onDeselected');
+    }
+  
+    public onClick() {
+      console.log('ServerActorComponent.onClick');
+    }
 
   public ngAfterViewInit(){
     this.animate = this.animate.bind(this);

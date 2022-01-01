@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges, SkipSelf } from '@angular/core';
-import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, SkipSelf } from '@angular/core';
+import { AbstractObject3D, provideParent, RaycasterEmitEvent, RaycasterEvent, RaycasterService, RendererService, SphereMeshComponent } from 'atft';
+import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
@@ -17,9 +18,14 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   @Input() useSprite: boolean = true;
   @Input() spriteSize: number = 3;
 
+  @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
+  @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
+  @Output() click = new EventEmitter<RaycasterEmitEvent>();
+  
   constructor(
     protected override rendererService: RendererService,
-    @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>
+    @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
+    private raycasterService: LndRaycasterService
   ) {
     super(rendererService, parent);
   }
@@ -29,7 +35,40 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   override ngOnInit(): void {
       this.spriteTexture = new THREE.TextureLoader().load( "assets/Lightning_Network_dark.svg" );
       super.ngOnInit();
+      this.raycasterService.addGroup(this);
+      this.subscribeEvents();
+  
   }
+
+  private subscribeEvents() {
+    const obj = this.getObject();
+    obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter);
+    obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit);
+    obj.addEventListener(RaycasterEvent.click, this.onClick);
+  }
+
+  private onMouseExit() {
+    // this.mouseExit.emit({
+    //   component: this
+    // });
+  }
+
+  private onMouseEnter(event: any) {
+    console.log('RaycasterGroupDirective.onMouseEnter', event);
+    // this.mouseEnter.emit({
+    //   component: this,
+    //   face: event.face
+    // });
+  }
+
+  private onClick(event: any) {
+    console.log('onClick', event.face);
+    // this.click.emit({
+    //   component: this,
+    //   face: event.face
+    // });
+  }
+
 
   override ngOnChanges(simpleChanges: SimpleChanges){
     const obj: THREE.Object3D = this.getObject();

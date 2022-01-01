@@ -34,6 +34,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDividerModule} from '@angular/material/divider';
 import { ControlsEffects } from './effects/controls.effects';
 import { ErrorComponent } from './components/error/error.component';
+import { LndRaycasterService } from './services/lnd-raycaster-service';
+import { LndRaycasterEnableDirective } from './directives/lnd-raycaster-enable.directive';
+import { LndRaycasterCameraDirective } from './directives/lnd-raycaster-camera.directive';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,9 @@ import { ErrorComponent } from './components/error/error.component';
     QuickControlsComponent,
     SettingsComponent,
     SettingsModalComponent,
-    ErrorComponent
+    ErrorComponent,
+    LndRaycasterEnableDirective,
+    LndRaycasterCameraDirective
   ],
   imports: [
     BrowserModule,
@@ -87,7 +92,7 @@ import { ErrorComponent } from './components/error/error.component';
       }
     })
   ],
-  providers: [NodePositionRegistryService],
+  providers: [NodePositionRegistryService, LndRaycasterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
