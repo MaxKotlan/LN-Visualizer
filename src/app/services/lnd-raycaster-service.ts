@@ -84,22 +84,22 @@ export class LndRaycasterService implements OnDestroy {
     this.groups.push(group);
   }
 
-  private onMouseMove(event: any) {
-    if (!this.isReady()) {
-      return;
-    }
-    //event.preventDefault();
-    const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
-    if (!this.selected || this.selected !== i?.object) {
-      if (this.selected) {
-        this.selected.dispatchEvent({type: RaycasterEvent.mouseExit});
-        this.selected = null;
-      }
-      if (i && i.object) {
-        this.selected = i.object;
-        this.selected.dispatchEvent({type: RaycasterEvent.mouseEnter,  ...i});
-      }
-    }
+  private onMouseMove(event: any) { 
+    // if (!this.isReady()) {
+    //   return;
+    // }
+    // //event.preventDefault();
+    // const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
+    // if (!this.selected || this.selected !== i?.object) {
+    //   if (this.selected) {
+    //     this.selected.dispatchEvent({type: RaycasterEvent.mouseExit});
+    //     this.selected = null;
+    //   }
+    //   if (i && i.object) {
+    //     this.selected = i.object;
+    //     this.selected.dispatchEvent({type: RaycasterEvent.mouseEnter,  ...i});
+    //   }
+    // }
 
   }
 
@@ -145,6 +145,7 @@ export class LndRaycasterService implements OnDestroy {
     for (let k = 0; k < this.groups.length; k++) {
       const i = this.groups[k].getObject();
       const intersection = this.raycaster.intersectObject(i, true);
+      //console.log('Hit', intersection);
       if (intersection.length > 0 && (!nearestIntersection || nearestIntersection.distance > intersection[0].distance)) {
         nearestIntersection = intersection[0];
       }
