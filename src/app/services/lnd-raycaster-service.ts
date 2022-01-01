@@ -36,14 +36,14 @@ export class LndRaycasterService implements OnDestroy {
 
   private subscribe() {
     this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
-    this.canvas?.nativeElement.addEventListener('click', this.onClick);
+    this.canvas?.nativeElement.addEventListener('dblclick', this.onClick);
     this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
   }
 
   private unsubscribe() {
     // console.log('unsubscribe raycaster');
     this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
-    this.canvas?.nativeElement.removeEventListener('click', this.onClick);
+    this.canvas?.nativeElement.removeEventListener('dblclick', this.onClick);
     this.canvas?.nativeElement.removeEventListener('touchstart', this.onTouchStart);
   }
 
@@ -104,6 +104,7 @@ export class LndRaycasterService implements OnDestroy {
   }
 
   private onClick(event: any) {
+    console.log(event)
     if (!this.isReady(true)) {
       return;
     }
