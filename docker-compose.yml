@@ -7,6 +7,9 @@ services:
     stop_grace_period: 1m
     ports:
       - 3078:80
+    networks:
+      default:
+        ipv4_address: ${APP_LNVISUALIZER_WEB_IP}
   api:
     image: ln-visualizer-api:latest
     restart: on-failure
@@ -19,3 +22,6 @@ services:
       LND_CERT_FILE: "/lnd/tls.cert"
       LND_VIEW_MACAROON_FILE: "/lnd/data/chain/bitcoin/${BITCOIN_NETWORK}/readonly.macaroon"
       LND_ADDRESS: "${LND_IP}:${LND_GRPC_PORT}"
+    networks:
+      default:
+        ipv4_address: ${APP_LNVISUALIZER_API_IP}
