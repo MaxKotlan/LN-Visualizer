@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {ElementRef, Injectable, OnDestroy} from '@angular/core';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent } from 'atft';
 import * as THREE from 'three';
 
@@ -20,13 +20,13 @@ export class LndRaycasterService implements OnDestroy {
   private camera: AbstractCamera<any> | undefined;
   private groups: Array<AbstractObject3D<any>> = [];
   private paused = false;
+  private canvas: ElementRef | undefined;
 
 
   constructor() {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onClick = this.onClick.bind(this);
     this.onTouchStart = this.onTouchStart.bind(this);
-    this.subscribe();
   }
 
   ngOnDestroy() {
@@ -35,16 +35,16 @@ export class LndRaycasterService implements OnDestroy {
   }
 
   private subscribe() {
-    window.addEventListener('mousemove', this.onMouseMove);
-    window.addEventListener('click', this.onClick);
-    window.addEventListener('touchstart', this.onTouchStart);
+    this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
+    this.canvas?.nativeElement.addEventListener('click', this.onClick);
+    this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
   }
 
   private unsubscribe() {
     // console.log('unsubscribe raycaster');
-    window.removeEventListener('mousemove', this.onMouseMove);
-    window.removeEventListener('click', this.onClick);
-    window.removeEventListener('touchstart', this.onTouchStart);
+    this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
+    this.canvas?.nativeElement.removeEventListener('click', this.onClick);
+    this.canvas?.nativeElement.removeEventListener('touchstart', this.onTouchStart);
   }
 
   public enable() {
@@ -66,6 +66,12 @@ export class LndRaycasterService implements OnDestroy {
 
   get isEnabled() {
     return this.enabled;
+  }
+
+  public setCanvasObject(canvas: ElementRef) {
+    // console.log('Add camera to raycaster', camera);
+    this.canvas = canvas;
+    this.subscribe();
   }
 
   public setCamera(camera: AbstractCamera<any>) {

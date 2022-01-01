@@ -37,6 +37,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { LndRaycasterService } from './services/lnd-raycaster-service';
 import { LndRaycasterEnableDirective } from './directives/lnd-raycaster-enable.directive';
 import { LndRaycasterCameraDirective } from './directives/lnd-raycaster-camera.directive';
+import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.directive';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { LndRaycasterCameraDirective } from './directives/lnd-raycaster-camera.d
     SettingsModalComponent,
     ErrorComponent,
     LndRaycasterEnableDirective,
-    LndRaycasterCameraDirective
+    LndRaycasterCameraDirective,
+    LndRaycasterSceneDirective
   ],
   imports: [
     BrowserModule,

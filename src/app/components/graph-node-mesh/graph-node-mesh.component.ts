@@ -64,18 +64,21 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
     //   component: this,
     //   face: event.face
     // });
-    // const intersection = (event as THREE.Intersection);
-
+    
     // this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
+      //   this.store$.dispatch(searchGraph({searchText: node.alias}));
+      //   console.log('Closest Node is: ', node);
+      // })
+    // const intersection = (event as THREE.Intersection);
+    // this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
     //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-    //   console.log('Closest Node is: ', node);
     // })
     
   }
 
   private onClick(event: any) {
     const intersection = (event as THREE.Intersection);
-    this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
+    this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
       this.store$.dispatch(searchGraph({searchText: node.alias}));
     })
   }

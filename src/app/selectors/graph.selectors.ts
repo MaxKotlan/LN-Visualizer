@@ -99,7 +99,7 @@ export const selectEdgeColor = createSelector(
     selectSortedEdges,
     selectFinalMatcheNodesFromSearch,
     (sortedEdges, searchResult) => {
-        console.log(searchResult);
+        //console.log(searchResult);
         if (searchResult === undefined){
 
         const largestCapacity = Math.max(...sortedEdges.map((e) => parseInt(e.capacity)));
