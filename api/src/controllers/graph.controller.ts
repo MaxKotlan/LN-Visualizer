@@ -1,3 +1,1 @@
-class GraphController{
-    
-}
+class GraphController {}
