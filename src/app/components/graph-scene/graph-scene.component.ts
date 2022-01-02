@@ -31,6 +31,7 @@ import * as THREE from 'three';
 @Component({
   selector: 'app-graph-scene',
   templateUrl: './graph-scene.component.html',
+  styleUrls: ['graph-scene.component.scss'],
 })
 export class GraphSceneComponent implements AfterViewInit {
   @ViewChild(SceneComponent) scene!: SceneComponent;
