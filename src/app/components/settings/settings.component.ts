@@ -5,14 +5,17 @@ import { SettingsModalComponent } from '../settings-modal/settings-modal.compone
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
-
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
-    this.dialog.open(SettingsModalComponent, {width: '60vw', maxWidth: '1028px', height: '90vh', panelClass: 'custom-pannel'});
+    this.dialog.open(SettingsModalComponent, {
+      width: '60vw',
+      maxWidth: '1028px',
+      height: '90vh',
+      panelClass: 'custom-pannel',
+    });
   }
-
 }

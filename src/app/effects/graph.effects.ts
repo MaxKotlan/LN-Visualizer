@@ -7,18 +7,17 @@ import { LndApiServiceService } from '../services/lnd-api-service.service';
 
 @Injectable()
 export class GraphEffects {
-    constructor(
-        private actions$: Actions, 
-        private lndApiServiceService: LndApiServiceService
-    ) {}
+  constructor(private actions$: Actions, private lndApiServiceService: LndApiServiceService) {}
 
-    retrieveGraph$ = createEffect(() => 
-        this.actions$.pipe(
-            ofType(graphActions.requestGraph),
-            mergeMap(() => this.lndApiServiceService.getGraphInfo().pipe(
-                map(graph => graphActions.requestGraphSuccess({graph})),
-                catchError((error: HttpErrorResponse) => of(graphActions.requestGraphFailure({error})))
-            ))
-        )
-    );
+  retrieveGraph$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(graphActions.requestGraph),
+      mergeMap(() =>
+        this.lndApiServiceService.getGraphInfo().pipe(
+          map((graph) => graphActions.requestGraphSuccess({ graph })),
+          catchError((error: HttpErrorResponse) => of(graphActions.requestGraphFailure({ error }))),
+        ),
+      ),
+    ),
+  );
 }

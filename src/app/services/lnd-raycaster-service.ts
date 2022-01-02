@@ -1,4 +1,4 @@
-import {ElementRef, Injectable, OnDestroy} from '@angular/core';
+import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent } from 'atft';
 import * as THREE from 'three';
 
@@ -13,7 +13,6 @@ Need to change the behavior to get coordinates in world space
 */
 @Injectable()
 export class LndRaycasterService implements OnDestroy {
-
   private raycaster = new THREE.Raycaster();
   private selected: THREE.Object3D | undefined | null;
   private enabled = false;
@@ -21,7 +20,6 @@ export class LndRaycasterService implements OnDestroy {
   private groups: Array<AbstractObject3D<any>> = [];
   private paused = false;
   private canvas: ElementRef | undefined;
-
 
   constructor() {
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -63,7 +61,6 @@ export class LndRaycasterService implements OnDestroy {
     this.paused = false;
   }
 
-
   get isEnabled() {
     return this.enabled;
   }
@@ -84,7 +81,7 @@ export class LndRaycasterService implements OnDestroy {
     this.groups.push(group);
   }
 
-  private onMouseMove(event: any) { 
+  private onMouseMove(event: any) {
     // if (!this.isReady()) {
     //   return;
     // }
@@ -100,18 +97,17 @@ export class LndRaycasterService implements OnDestroy {
     //     this.selected.dispatchEvent({type: RaycasterEvent.mouseEnter,  ...i});
     //   }
     // }
-
   }
 
   private onClick(event: any) {
-    console.log(event)
+    console.log(event);
     if (!this.isReady(true)) {
       return;
     }
     //event.preventDefault();
     const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
     if (i && i.object) {
-      i.object.dispatchEvent({type: RaycasterEvent.click, ...i});
+      i.object.dispatchEvent({ type: RaycasterEvent.click, ...i });
     }
   }
 
@@ -123,17 +119,19 @@ export class LndRaycasterService implements OnDestroy {
     //event.preventDefault();
     const i = this.getFirstIntersectedGroup(event.touches[0].clientX, event.touches[0].clientY);
     if (i && i.object) {
-      i.object.dispatchEvent({type: RaycasterEvent.click, ...i});
+      i.object.dispatchEvent({ type: RaycasterEvent.click, ...i });
     }
   }
 
   private isReady(ignorePaused?: boolean) {
-    return this.enabled
-      && (ignorePaused || !this.paused)
-      && this.camera
-      && this.camera.camera
-      && this.groups
-      && this.groups.length > 0;
+    return (
+      this.enabled &&
+      (ignorePaused || !this.paused) &&
+      this.camera &&
+      this.camera.camera &&
+      this.groups &&
+      this.groups.length > 0
+    );
   }
 
   private getFirstIntersectedGroup(x: any, y: any): THREE.Intersection | null {
@@ -147,12 +145,14 @@ export class LndRaycasterService implements OnDestroy {
       const i = this.groups[k].getObject();
       const intersection = this.raycaster.intersectObject(i, true);
       //console.log('Hit', intersection);
-      if (intersection.length > 0 && (!nearestIntersection || nearestIntersection.distance > intersection[0].distance)) {
+      if (
+        intersection.length > 0 &&
+        (!nearestIntersection || nearestIntersection.distance > intersection[0].distance)
+      ) {
         nearestIntersection = intersection[0];
       }
     }
     if (nearestIntersection) return nearestIntersection;
     return null;
   }
-
 }

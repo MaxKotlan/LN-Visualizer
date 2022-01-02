@@ -1,6 +1,24 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, SkipSelf } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional,
+  Output,
+  SimpleChanges,
+  SkipSelf,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AbstractObject3D, provideParent, RaycasterEmitEvent, RaycasterEvent, RaycasterService, RendererService, SphereMeshComponent } from 'atft';
+import {
+  AbstractObject3D,
+  provideParent,
+  RaycasterEmitEvent,
+  RaycasterEvent,
+  RaycasterService,
+  RendererService,
+  SphereMeshComponent,
+} from 'atft';
 import { take } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
@@ -14,8 +32,10 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
   providers: [provideParent(SphereMeshComponent)],
   template: '<ng-content></ng-content>',
 })
-export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THREE.Mesh> implements OnChanges, OnInit {
-
+export class GraphNodeMeshComponent
+  extends AbstractObject3D<THREE.Points | THREE.Mesh>
+  implements OnChanges, OnInit
+{
   @Input() positions: THREE.Vector3[] = [];
   @Input() colors: any;
   @Input() shouldRender: boolean = true;
@@ -26,7 +46,7 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
   @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
   @Output() click = new EventEmitter<RaycasterEmitEvent>();
-  
+
   constructor(
     protected override rendererService: RendererService,
     @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
@@ -39,10 +59,10 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   protected spriteTexture: THREE.Texture | undefined;
 
   override ngOnInit(): void {
-      this.spriteTexture = new THREE.TextureLoader().load( "assets/Lightning_Network_dark.svg" );
-      super.ngOnInit();
-      this.raycasterService.addGroup(this);
-      this.subscribeEvents();
+    this.spriteTexture = new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg');
+    super.ngOnInit();
+    this.raycasterService.addGroup(this);
+    this.subscribeEvents();
   }
 
   private subscribeEvents() {
@@ -64,29 +84,29 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
     //   component: this,
     //   face: event.face
     // });
-    
     // this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
-      //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-      //   console.log('Closest Node is: ', node);
-      // })
+    //   this.store$.dispatch(searchGraph({searchText: node.alias}));
+    //   console.log('Closest Node is: ', node);
+    // })
     // const intersection = (event as THREE.Intersection);
     // this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
     //   this.store$.dispatch(searchGraph({searchText: node.alias}));
     // })
-    
   }
 
   private onClick(event: any) {
-    const intersection = (event as THREE.Intersection);
-    this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
-      this.store$.dispatch(searchGraph({searchText: node.alias}));
-    })
+    const intersection = event as THREE.Intersection;
+    this.store$
+      .select(selectClosestPoint(intersection.point))
+      .pipe(take(1))
+      .subscribe((node) => {
+        this.store$.dispatch(searchGraph({ searchText: node.alias }));
+      });
   }
 
-
-  override ngOnChanges(simpleChanges: SimpleChanges){
+  override ngOnChanges(simpleChanges: SimpleChanges) {
     const obj: THREE.Object3D = this.getObject();
-    if (obj){
+    if (obj) {
       const newInstance = this.newObject3DInstance();
       (obj as any)['geometry'] = newInstance.geometry;
       (obj as any)['material'] = newInstance.material;
@@ -100,34 +120,53 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
   }
 
   protected generatePointGeometry(): THREE.Points {
-    const geometry = new THREE.BufferGeometry().setFromPoints( this.shouldRender ? this.positions: [] ).scale(100,100,100);
-    geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
+    const geometry = new THREE.BufferGeometry()
+      .setFromPoints(this.shouldRender ? this.positions : [])
+      .scale(100, 100, 100);
+    geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3, true));
 
-    const material = new THREE.PointsMaterial( { size: this.spriteSize, sizeAttenuation: this.pointSizeAttenuation, map: this.useSprite? this.spriteTexture : undefined, vertexColors: true, alphaTest: 0.5, transparent: this.useSprite? true : false } );
-    return new THREE.Points( geometry, material );
+    const material = new THREE.PointsMaterial({
+      size: this.spriteSize,
+      sizeAttenuation: this.pointSizeAttenuation,
+      map: this.useSprite ? this.spriteTexture : undefined,
+      vertexColors: true,
+      alphaTest: 0.5,
+      transparent: this.useSprite ? true : false,
+    });
+    return new THREE.Points(geometry, material);
   }
 
   protected generateSphereGeometry(): THREE.Mesh {
-  
     let wow: THREE.BufferGeometry = new THREE.BufferGeometry();
     let sphereGeometries: THREE.BufferGeometry[] = [];
 
-    const sphere = new THREE.SphereGeometry( this.spriteSize, 8, 4 );
+    const sphere = new THREE.SphereGeometry(this.spriteSize, 8, 4);
 
     this.positions.forEach((center: THREE.Vector3) => {
-
       const matrix = new THREE.Matrix4().set(
-        1,0,0,center.x*100,
-        0,1,0,center.y*100,
-        0,0,1,center.z*100,
-        0,0,0,1,
+        1,
+        0,
+        0,
+        center.x * 100,
+        0,
+        1,
+        0,
+        center.y * 100,
+        0,
+        0,
+        1,
+        center.z * 100,
+        0,
+        0,
+        0,
+        1,
       );
 
       let geom = sphere.clone().applyMatrix4(matrix);
       geom = geom.deleteAttribute('uv');
       //wow.merge(geom);
 
-      wow = BufferGeometryUtils.mergeBufferGeometries([wow, geom], false)
+      wow = BufferGeometryUtils.mergeBufferGeometries([wow, geom], false);
       // console.log(geom);
 
       // sphereGeometries.push(
@@ -135,14 +174,13 @@ export class GraphNodeMeshComponent extends AbstractObject3D<THREE.Points | THRE
       // );
     });
 
-    
     //const geometry = BufferGeometryUtils.mergeBufferGeometries(sphereGeometries, false);
     //geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
     //geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
     //geometry.computeVertexNormals();
     //geometry.setDrawRange(0, newCoords.length);
 
-    const txtmap = new THREE.TextureLoader().load( 'assets/txttest.png' );
+    const txtmap = new THREE.TextureLoader().load('assets/txttest.png');
 
     const material = new THREE.MeshBasicMaterial({
       //map: txtmap,

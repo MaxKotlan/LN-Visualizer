@@ -1,19 +1,29 @@
-
 <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Public Key or Alias</mat-label>
-    <input type="text"
-            placeholder="Pick one"
-            aria-label="Public Key or Alias"
-            matInput
-            [ngModel]="selectSearchString$ | async"
-            (input)="onTextChange($event)"
-            [matAutocomplete]="auto">
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onTextChange($event)">
-        <mat-option *ngFor="let option of nodeSearchResults$ | async" [value]="option.alias || option.publicKey">
-            <div style="flex-direction: column; display: flex;">
-                <div style="height: 10px">{{option.alias}}</div>
-                <div style="margin-top: 6px; font-size: smaller; font-weight: 300; color: #333333;">{{option.publicKey}}</div>
-            </div>
-        </mat-option>
-    </mat-autocomplete>
+  <mat-label>Public Key or Alias</mat-label>
+  <input
+    type="text"
+    placeholder="Pick one"
+    aria-label="Public Key or Alias"
+    matInput
+    [ngModel]="selectSearchString$ | async"
+    (input)="onTextChange($event)"
+    [matAutocomplete]="auto"
+  />
+  <mat-autocomplete
+    autoActiveFirstOption
+    #auto="matAutocomplete"
+    (optionSelected)="onTextChange($event)"
+  >
+    <mat-option
+      *ngFor="let option of nodeSearchResults$ | async"
+      [value]="option.alias || option.publicKey"
+    >
+      <div style="flex-direction: column; display: flex">
+        <div style="height: 10px">{{ option.alias }}</div>
+        <div style="margin-top: 6px; font-size: smaller; font-weight: 300; color: #333333">
+          {{ option.publicKey }}
+        </div>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
 </mat-form-field>

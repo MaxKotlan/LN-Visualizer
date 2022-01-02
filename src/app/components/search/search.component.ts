@@ -9,19 +9,18 @@ import { selectNodesSearchResults } from 'src/app/selectors/graph.selectors';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent {
+  constructor(private store$: Store<GraphState>) {}
 
-  constructor(private store$: Store<GraphState>){}
-
-  public nodeSearchResults$ = this.store$.select(selectNodesSearchResults)
+  public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
   public selectSearchString$ = this.store$.select(selectSearchString);
 
-  onTextChange(event: any){
+  onTextChange(event: any) {
     if (!!event?.target?.value || event?.target?.value === '')
-      this.store$.dispatch(searchGraph({searchText: event.target.value}))
+      this.store$.dispatch(searchGraph({ searchText: event.target.value }));
     else if (event?.option?.value)
-      this.store$.dispatch(searchGraph({searchText: event.option.value}))
+      this.store$.dispatch(searchGraph({ searchText: event.option.value }));
   }
 }

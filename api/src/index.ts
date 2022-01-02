@@ -79,9 +79,7 @@ const mapToFilteredView = (result: any) => {
 
 app.get('/', async (req: any, res: any) => {
   try {
-    const cached = await lastValueFrom(
-      networkGraphSubject$.asObservable().pipe(take(1))
-    );
+    const cached = await lastValueFrom(networkGraphSubject$.asObservable().pipe(take(1)));
     if (!cached?.nodes?.length) {
       console.log('Requesting new');
       let request = await requestAndUpdateNetworkGraph();

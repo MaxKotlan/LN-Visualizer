@@ -7,20 +7,19 @@ import { canDismissError, selectGraphError } from 'src/app/selectors/graph.selec
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+  styleUrls: ['./error.component.scss'],
 })
 export class ErrorComponent {
-
-  constructor(private store$: Store<GraphState>) { }
+  constructor(private store$: Store<GraphState>) {}
 
   public selectGraphError$ = this.store$.select(selectGraphError);
   public canDismissError$ = this.store$.select(canDismissError);
 
-  retryRequest(){
+  retryRequest() {
     this.store$.dispatch(requestGraph());
   }
 
-  dismissError(){
+  dismissError() {
     this.store$.dispatch(dismissError());
   }
 }

@@ -3,12 +3,10 @@ import * as THREE from 'three';
 
 @Injectable()
 export class NodePositionRegistryService {
-
   public nodePosition: Record<string, THREE.Vector3> = {};
   //public nodeCentrality: Record<string, number> = {};
 
-  constructor() {
-  }
+  constructor() {}
 
   // public pushSpherePoint = (i: number, pubkey: string) => {
   //   let x = Math.random()-.5;

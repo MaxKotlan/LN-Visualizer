@@ -14,24 +14,24 @@ import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatInputModule} from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { SearchComponent } from './components/search/search.component';
-import {MatCardModule} from '@angular/material/card';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule } from '@angular/forms';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatButtonModule} from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
 import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-mesh.component';
 import { QuickControlsComponent } from './components/quick-controls/quick-controls.component';
 import { SettingsComponent } from './components/settings/settings.component';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
 import { ControlsEffects } from './effects/controls.effects';
 import { ErrorComponent } from './components/error/error.component';
 import { LndRaycasterService } from './services/lnd-raycaster-service';
@@ -53,7 +53,7 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
     ErrorComponent,
     LndRaycasterEnableDirective,
     LndRaycasterCameraDirective,
-    LndRaycasterSceneDirective
+    LndRaycasterSceneDirective,
   ],
   imports: [
     BrowserModule,
@@ -61,12 +61,9 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
     FormsModule,
     HttpClientModule,
     AtftModule,
-    EffectsModule.forRoot([
-      ControlsEffects,
-      GraphEffects
-    ]),
+    EffectsModule.forRoot([ControlsEffects, GraphEffects]),
     StoreModule.forRoot(reducers, {
-      metaReducers
+      metaReducers,
     }),
     BrowserAnimationsModule,
     MatInputModule,
@@ -90,11 +87,11 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
         lock: true,
         persist: false,
         dispatch: false,
-        reorder: false
-      }
-    })
+        reorder: false,
+      },
+    }),
   ],
   providers: [NodePositionRegistryService, LndRaycasterService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

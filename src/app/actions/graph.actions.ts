@@ -1,21 +1,17 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { createAction, props } from "@ngrx/store";
-import { LnGraph } from "../types/graph.interface";
+import { HttpErrorResponse } from '@angular/common/http';
+import { createAction, props } from '@ngrx/store';
+import { LnGraph } from '../types/graph.interface';
 
-export const requestGraph = createAction(
-    '[graph] requestGraph'
-);
+export const requestGraph = createAction('[graph] requestGraph');
 
 export const requestGraphSuccess = createAction(
-    '[graph] requestGraphSuccess',
-    props<{graph: LnGraph}>()
+  '[graph] requestGraphSuccess',
+  props<{ graph: LnGraph }>(),
 );
 
 export const requestGraphFailure = createAction(
-    '[graph] requestGraphFailure',
-    props<{error: HttpErrorResponse}>()
+  '[graph] requestGraphFailure',
+  props<{ error: HttpErrorResponse }>(),
 );
 
-export const dismissError = createAction(
-    '[graph] dismissError',
-);
+export const dismissError = createAction('[graph] dismissError');

@@ -1,54 +1,30 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { ControlsState } from "../reducers/controls.reducer";
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { ControlsState } from '../reducers/controls.reducer';
 
 export const controlsSelector = createFeatureSelector<ControlsState>('controlsState');
 
-export const selectSearchString = createSelector(
-    controlsSelector,
-    (state) => state.searchText
-)
+export const selectSearchString = createSelector(controlsSelector, (state) => state.searchText);
 
-export const shouldRenderNodes = createSelector(
-    controlsSelector,
-    (state) => state.renderNodes
-)
+export const shouldRenderNodes = createSelector(controlsSelector, (state) => state.renderNodes);
 
-export const shouldRenderEdges = createSelector(
-    controlsSelector,
-    (state) => state.renderEdges
-)
+export const shouldRenderEdges = createSelector(controlsSelector, (state) => state.renderEdges);
 
-export const shouldRenderLabels = createSelector(
-    controlsSelector,
-    (state) => state.renderLabels
-)
+export const shouldRenderLabels = createSelector(controlsSelector, (state) => state.renderLabels);
 
-export const selectNodeSize = createSelector(
-    controlsSelector,
-    (state) => state.nodeSize
-)
+export const selectNodeSize = createSelector(controlsSelector, (state) => state.nodeSize);
 
 export const selectPointAttenuation = createSelector(
-    controlsSelector,
-    (state) => state.pointAttenuation
-)
+  controlsSelector,
+  (state) => state.pointAttenuation,
+);
 
-export const selectPointUseIcon = createSelector(
-    controlsSelector,
-    (state) => state.pointUseIcon
-)
+export const selectPointUseIcon = createSelector(controlsSelector, (state) => state.pointUseIcon);
 
-export const selectCameraFov = createSelector(
-    controlsSelector,
-    (state) => state.cameraFov
-)
+export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
 
-export const selectEdgeDepthTest = createSelector(
-    controlsSelector,
-    (state) => state.edgeDepthTest
-)
+export const selectEdgeDepthTest = createSelector(controlsSelector, (state) => state.edgeDepthTest);
 
 export const selectEdgeDottedLine = createSelector(
-    controlsSelector,
-    (state) => state.edgeDottedLine
-)
+  controlsSelector,
+  (state) => state.edgeDottedLine,
+);
