@@ -1,13 +1,12 @@
 import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { LndAuthService } from './services';
+import { LndGraphStateService } from './services';
 
 @injectable()
 export class App {
-    constructor(private config: LndAuthService) {}
+    constructor(private graphStateService: LndGraphStateService) {}
 
     public init() {
-        console.log('Starting LndVisualizer API');
-        console.log('Config is: ', this.config.authenticatedLnd);
+        this.graphStateService.init();
     }
 }

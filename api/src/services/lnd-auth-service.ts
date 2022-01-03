@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import fs from 'fs';
 import { AuthenticatedLnd, LndAuthenticationWithMacaroon } from 'lightning';
 import * as lightning from 'lightning';
+import config from 'config';
 
 @injectable()
 export class LndAuthService {
@@ -12,34 +13,41 @@ export class LndAuthService {
     private lnd: AuthenticatedLnd;
 
     constructor() {
-        const config = this.getConfig();
-        const { lnd } = lightning.authenticatedLndGrpc(config);
+        const conf = this.getConfig();
+        const { lnd } = lightning.authenticatedLndGrpc(conf);
         this.lnd = lnd;
     }
 
     public getConfig(): LndAuthenticationWithMacaroon {
+        let cert = this.readCertFromFile();
+        if (!cert) cert = config.get('macaroon.cert');
+
+        let macaroon = this.readCertFromFile();
+        if (!macaroon) macaroon = config.get('macaroon.macaroon');
+
         return {
-            cert: this.readCertFromFile(),
-            macaroon: this.readMacaroonFromFile(),
+            cert,
+            macaroon,
             socket: this.getLndAddress(),
         };
     }
 
     private getLndAddress(): string {
-        const address = process.env.LND_ADDRESS;
+        let address = process.env.LND_ADDRESS;
+        if (!address) address = config.get('macaroon.socket');
         if (!address) throw new Error('Lightning address environment variable not set');
         return address;
     }
 
-    private readCertFromFile(): string {
+    private readCertFromFile(): string | undefined {
         const macaroonFile = process.env.LND_VIEW_MACAROON_FILE;
-        if (!macaroonFile) throw new Error('Macaroon file environment variable not set');
+        if (!macaroonFile) return;
         return fs.readFileSync(macaroonFile, { encoding: 'base64' });
     }
 
-    private readMacaroonFromFile(): string {
+    private readMacaroonFromFile(): string | undefined {
         const certFile = process.env.LND_CERT_FILE;
-        if (!certFile) throw new Error('Cert file environment variable not set');
+        if (!certFile) return;
         return fs.readFileSync(certFile, { encoding: 'base64' });
     }
 }
