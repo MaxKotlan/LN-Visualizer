@@ -7,7 +7,7 @@ import config from 'config';
 @injectable()
 export class LndAuthService {
     public get authenticatedLnd() {
-        return this.lnd;
+        return { lnd: this.lnd };
     }
 
     private lnd: AuthenticatedLnd;
