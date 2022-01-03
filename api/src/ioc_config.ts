@@ -1,0 +1,7 @@
+import { Container } from 'inversify';
+import { LndAuthService, LndGraphStateService } from './services';
+
+let container = new Container();
+container.bind<LndGraphStateService>(LndGraphStateService).toSelf().inSingletonScope();
+container.bind<LndAuthService>(LndAuthService).toSelf().inSingletonScope();
+export default container;

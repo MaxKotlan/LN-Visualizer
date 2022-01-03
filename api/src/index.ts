@@ -2,9 +2,9 @@ console.log('testing');
 import express from 'express';
 // import dotenv from 'dotenv';
 import * as lightning from 'lightning';
+export * from './services';
 import fs from 'fs';
-//import { LndAuthenticationWithMacaroon } from "lightning";
-//import cors from "cors";
+
 import { WebSocketServer } from 'ws';
 import { BehaviorSubject, lastValueFrom, take } from 'rxjs';
 
