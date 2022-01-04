@@ -129,7 +129,7 @@ const getModifiedGraph = (
         calculateParentChildRelationship(node, sortedNodesWithEdges);
     });
     const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
-    console.log('nodesWithoutParents', nodesWithoutParents);
+    //console.log('nodesWithoutParents', nodesWithoutParents);
     Object.values(nodesWithoutParents).forEach((node) => {
         const largeClumpDistance = 1;
         node.postition = createSpherePoint(largeClumpDistance, new Vector3(0, 0, 0));

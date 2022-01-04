@@ -28,7 +28,7 @@ export class GraphEffects {
     onNodeChunk$ = createEffect(() =>
         this.lndApiServiceService.initialChunkSync().pipe(
             filter((chunk) => chunk.type === 'node'),
-            tap((c) => console.log(c)),
+            //tap((c) => console.log(c)),
             map((chunk) => graphActions.processGraphNodeChunk({ chunk: chunk as Chunk<LndNode> })),
         ),
     );
@@ -36,7 +36,7 @@ export class GraphEffects {
     onChannelChunk$ = createEffect(() =>
         this.lndApiServiceService.initialChunkSync().pipe(
             filter((chunk) => chunk.type === 'channel'),
-            tap((c) => console.log(c)),
+            //tap((c) => console.log(c)),
             map((chunk) =>
                 graphActions.processGraphChannelChunk({ chunk: chunk as Chunk<LndChannel> }),
             ),
