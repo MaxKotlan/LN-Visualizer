@@ -12,7 +12,6 @@ export class WebSocketService {
     }
 
     public init() {
-        //const initsync = new InitialSyncService();
         this.wss.on(
             'connection',
             this.initialSyncService.performInitialSync.bind(this.initialSyncService),

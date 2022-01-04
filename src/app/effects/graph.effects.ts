@@ -23,8 +23,9 @@ export class GraphEffects {
         ),
     );
 
-    onGraphChunk$ = createEffect(
-        () => this.lndApiServiceService.initialChunkSync().pipe(tap((data) => console.log(data))),
-        { dispatch: false },
+    onGraphChunk$ = createEffect(() =>
+        this.lndApiServiceService
+            .initialChunkSync()
+            .pipe(map((chunk) => graphActions.processGraphNodeChunk({ chunk }))),
     );
 }
