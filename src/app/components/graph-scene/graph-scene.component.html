@@ -16,30 +16,30 @@
         >
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
-            <app-graph-font-mesh
+            <!-- <app-graph-font-mesh
                 *ngIf="false"
-                [positions]="(positions$ | async) || []"
+                [positions]="positions$ | async"
                 [colors]="(colors$ | async) || []"
                 [aliases]="(selectAliases$ | async) || []"
                 [shouldRender]="(shouldRenderLabels$ | async) || false"
-            ></app-graph-font-mesh>
+            ></app-graph-font-mesh> -->
             <app-graph-node-mesh
                 *ngIf="true"
-                [positions]="(positions$ | async) || []"
-                [colors]="(colors$ | async) || null"
+                [positions]="positions$ | async"
+                [colors]="colors$ | async"
                 [spriteSize]="(selectNodeSize$ | async) || 0"
                 [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
                 [useSprite]="(selectPointUseIcon$ | async) || false"
                 [shouldRender]="(shouldRenderNodes$ | async) || false"
             ></app-graph-node-mesh>
-            <app-graph-edge-mesh
+            <!-- <app-graph-edge-mesh
                 *ngIf="true"
                 [edgeVertices]="(selectEdgeVertices$ | async) || []"
                 [shouldRender]="(shouldRenderEdges$ | async) || false"
                 [edgeColor]="selectEdgeColor$ | async"
                 [dashedLines]="(selectEdgeDottedLine$ | async) || false"
                 [depthTest]="(selectEdgeDepthTest$ | async) || false"
-            ></app-graph-edge-mesh>
+            ></app-graph-edge-mesh> -->
             <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
             <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
         </atft-scene>
