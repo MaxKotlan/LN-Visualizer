@@ -6,7 +6,7 @@ import { LndNode } from '../models/node.interface';
 
 @injectable()
 export class LndChunkTrackerService {
-    public readonly chunkSize = 1024;
+    public readonly chunkSize: number = 1024;
 
     protected nodeChunks: Chunk<LndNode>[] = [];
     protected channelChunks: Chunk<LndChannel>[] = [];
@@ -15,13 +15,11 @@ export class LndChunkTrackerService {
         console.log(graph.nodes.length, ' nodes');
         console.log(graph.channels.length, ' channels');
 
-        for (let i = 0; i < graph.nodes.length / this.chunkSize; i++) {
+        for (let i = 0; i < graph.nodes.length / this.chunkSize; i++)
             this.pushNodeChunk(i, graph.nodes);
-        }
 
-        for (let i = 0; i < graph.channels.length / this.chunkSize; i++) {
+        for (let i = 0; i < graph.channels.length / this.chunkSize; i++)
             this.pushChannelChunk(i, graph.channels);
-        }
 
         console.log('Total of ', this.nodeChunks.length, ' node chunks');
         console.log('Total of ', this.channelChunks.length, ' node chunks');
