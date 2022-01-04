@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { filter, map, Observable } from 'rxjs';
 import { LnGraph } from '../types/graph.interface';
 import { webSocket } from 'rxjs/webSocket';
+import { LndNode } from 'api/src/models';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LndApiServiceService {
-    constructor(private http: HttpClient) {
-        this.webSocket();
-    }
+    constructor(private http: HttpClient) {}
 
     public getNetworkInfo(): Observable<any> {
         // const headers: HttpHeaders = new HttpHeaders({'Grpc-Metadata-macaroon': macaroon});
@@ -23,13 +22,9 @@ export class LndApiServiceService {
         return this.http.get<LnGraph>('http://umbrel.local:5647/');
     }
 
-    public webSocket(): Observable<any> {
+    public initialChunkSync(): Observable<any> {
         const subject = webSocket('ws://127.0.0.1:8090');
-        subject.asObservable().subscribe(
-            (msg) => console.log('message received: ' + msg), // Called whenever there is a message from the server.
-            (err) => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-            () => console.log('complete'), // Called when connection is closed (for whatever reason).
-        );
-        return subject;
+        subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
+        return subject as Observable<any>;
     }
 }
