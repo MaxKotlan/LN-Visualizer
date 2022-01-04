@@ -8,8 +8,8 @@ import { LndNode } from '../models/node.interface';
 export class LndChunkTrackerService {
     public readonly chunkSize: number = 1024;
 
-    protected nodeChunks: Chunk<LndNode>[] = [];
-    protected channelChunks: Chunk<LndChannel>[] = [];
+    public nodeChunks: Chunk<LndNode>[] = [];
+    public channelChunks: Chunk<LndChannel>[] = [];
 
     public splitGraphIntoChunks(graph: GetNetworkGraphResult) {
         console.log(graph.nodes.length, ' nodes');

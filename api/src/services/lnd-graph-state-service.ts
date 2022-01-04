@@ -13,9 +13,6 @@ export class LndGraphStateService {
 
     public async init() {
         await this.initialGraphSync();
-
-        //console.log('subscribing to events');
-        //this.subscribeToGraphChanges();
     }
 
     protected async initialGraphSync() {
