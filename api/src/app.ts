@@ -6,7 +6,7 @@ import { LndGraphStateService } from './services';
 export class App {
     constructor(private graphStateService: LndGraphStateService) {}
 
-    public init() {
-        this.graphStateService.init();
+    public async init() {
+        await this.graphStateService.init();
     }
 }
