@@ -119,8 +119,8 @@ const getModifiedGraph = (
     g: LnGraphNode[],
     precomputedNodeEdgeList: Record<PublicKey, LnGraphEdge[]>,
 ) => {
-    const sortedNodes = sortGraphByCentrality([...g], precomputedNodeEdgeList);
-    const sortedNodesWithEdges = sortedNodes.reduce((acc, val, index) => {
+    //const sortedNodes = sortGraphByCentrality([...g], precomputedNodeEdgeList);
+    const sortedNodesWithEdges = g.reduce((acc, val, index) => {
         acc[val.pub_key] = createModifiedGraphNode(val, precomputedNodeEdgeList, index);
         return acc;
     }, {} as Record<PublicKey, LnModifiedGraphNode>);
@@ -157,9 +157,9 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
     const s = 2 * Math.PI * Math.random();
     const t = 2 * Math.PI * Math.random();
 
-    const x = r * Math.cos(s) * Math.sin(t) + position.x + (Math.random() - 0.5); //randomness to dissipate spheres
-    const y = r * Math.sin(s) * Math.sin(t) + position.y + (Math.random() - 0.5);
-    const z = r * Math.cos(t) + position.z + (Math.random() - 0.5);
+    const x = r * Math.cos(s) * Math.sin(t) + position.x; // + (Math.random() - 0.5); //randomness to dissipate spheres
+    const y = r * Math.sin(s) * Math.sin(t) + position.y; // + (Math.random() - 0.5);
+    const z = r * Math.cos(t) + position.z; // + (Math.random() - 0.5);
 
     return new THREE.Vector3(x, y, z);
 };
