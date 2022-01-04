@@ -24,6 +24,7 @@ import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 // import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
+import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 import { BufferAttribute } from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
@@ -37,7 +38,7 @@ export class GraphNodeMeshComponent
     extends AbstractObject3D<THREE.Points | THREE.Mesh>
     implements OnChanges, OnInit
 {
-    @Input() positions!: Float32Array | null;
+    @Input() positions!: BufferRef<Float32Array> | null;
     @Input() colors!: Uint8Array | null;
     @Input() shouldRender: boolean = true;
     @Input() pointSizeAttenuation: boolean = true;
@@ -123,26 +124,28 @@ export class GraphNodeMeshComponent
     }
 
     protected newObject3DInstance(): THREE.Points | THREE.Mesh {
+        this.generatePointGeometryReal();
         return this.generatePointGeometry();
     }
 
     protected generatePointGeometryReal() {
         if (!this.positions) return;
-        this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-        this.geometry.setDrawRange(0, 6000);
-        this.geometry.attributes['position'].needsUpdate = true;
-
         if (!this.colors) return;
-        this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
-        this.geometry.setDrawRange(0, 6000);
+        this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3, true));
+        this.geometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(this.positions.bufferRef, 3),
+        );
+        this.geometry.setDrawRange(0, this.positions.size);
         this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['position'].needsUpdate = true;
 
         // this.geometry.setAttribute(
         //     'color',
         //     new BufferAttribute(this.colors || new Uint8Array([]), 3, false),
         // );
         this.geometry.computeBoundingBox();
-        //this.geometry.computeBoundingSphere();
+        this.geometry.computeBoundingSphere();
         //this.geometry.attributes['color'].needsUpdate = true;
         // this.colorData.array = this.colors || new Uint8Array([]);
         // this.colorData.itemSize = 3;
@@ -162,6 +165,13 @@ export class GraphNodeMeshComponent
                 alphaTest: 0.5,
                 transparent: this.useSprite ? true : false,
             });
+        this.material.size = this.spriteSize;
+        this.material.sizeAttenuation = this.pointSizeAttenuation;
+        (this.material.map = this.useSprite ? this.spriteTexture || null : null),
+            (this.material.vertexColors = true);
+        this.material.alphaTest = 0.5;
+        this.material.transparent = this.useSprite;
+        this.material.needsUpdate = true;
         return this.material;
     }
 

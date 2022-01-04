@@ -59,7 +59,7 @@ export const reducer = createReducer(
             ),
         };
         const t1 = performance.now();
-        console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
+        //console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
         return result;
     }),
     on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
@@ -78,7 +78,7 @@ export const reducer = createReducer(
             modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
         };
         const t1 = performance.now();
-        console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
+        //console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
         return result;
     }),
     // on(graphActions.requestGraphSuccess, (state, { graph }) => ({
@@ -137,7 +137,7 @@ const getModifiedGraph = (
         calculateParentChildRelationship(node, sortedNodesWithEdges);
     });
     const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
-    console.log('nodesWithoutParents', nodesWithoutParents.length);
+    //console.log('nodesWithoutParents', nodesWithoutParents.length);
     Object.values(nodesWithoutParents).forEach((node) => {
         const largeClumpDistance = 1;
         node.postition = createSpherePoint(

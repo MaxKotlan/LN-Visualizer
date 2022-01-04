@@ -4,6 +4,7 @@ import {
     selecteCorrectEdgePublicKey,
     selecteOppositeCorrectEdgePublicKey,
 } from '../reducers/graph.reducer';
+import { BufferRef } from '../types/bufferRef.interface';
 import { LnGraphEdge, LnModifiedGraphNode } from '../types/graph.interface';
 import { selectSearchString } from './controls.selectors';
 
@@ -43,7 +44,7 @@ export const selectVertices = createSelector(selectNodeValue, (nodeValue) => {
         nodeValue.flatMap((n) => [n.postition.x * 100, n.postition.y * 100, n.postition.z * 100]),
     );
 
-    return positions;
+    return { bufferRef: positions, size: nodeValue.length } as BufferRef<Float32Array>;
 });
 
 const fromHexString = (hexString: string) =>
