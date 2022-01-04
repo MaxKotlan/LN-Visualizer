@@ -6,6 +6,7 @@ import { Vector3 } from 'three';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LndNode } from 'api/src/models';
 import { LndChannel } from '../types/channels.interface';
+import * as seedRandom from 'seedrandom';
 
 type PublicKey = string;
 
@@ -43,8 +44,9 @@ export const reducer = createReducer(
     initialState,
     on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
+        const t0 = performance.now();
         const currentNodeState = [...state.graphUnsorted.nodes, ...chunk.data.map(hotFixMapper)];
-        return {
+        const result = {
             ...state,
             graphUnsorted: {
                 ...state.graphUnsorted,
@@ -55,13 +57,17 @@ export const reducer = createReducer(
                 getNodeEdgeArray(state.graphUnsorted.edges),
             ),
         };
+        const t1 = performance.now();
+        console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
+        return result;
     }),
     on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
+        const t0 = performance.now();
         const currentChannelState = [
             ...state.graphUnsorted.edges,
             ...chunk.data.map((chunk) => hotFixMapper2(chunk)),
         ];
-        return {
+        const result = {
             ...state,
             graphUnsorted: {
                 ...state.graphUnsorted,
@@ -72,6 +78,9 @@ export const reducer = createReducer(
                 getNodeEdgeArray(currentChannelState),
             ),
         };
+        const t1 = performance.now();
+        console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
+        return result;
     }),
     // on(graphActions.requestGraphSuccess, (state, { graph }) => ({
     //     ...state,
@@ -132,7 +141,11 @@ const getModifiedGraph = (
     //console.log('nodesWithoutParents', nodesWithoutParents);
     Object.values(nodesWithoutParents).forEach((node) => {
         const largeClumpDistance = 1;
-        node.postition = createSpherePoint(largeClumpDistance, new Vector3(0, 0, 0));
+        node.postition = createSpherePoint(
+            largeClumpDistance,
+            new Vector3(0, 0, 0),
+            node.pub_key.slice(0, 10),
+        );
         calculatePositionFromParent(node);
     });
 
@@ -153,9 +166,10 @@ const createModifiedGraphNode = (
     } as LnModifiedGraphNode;
 };
 
-const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
-    const s = 2 * Math.PI * Math.random();
-    const t = 2 * Math.PI * Math.random();
+const createSpherePoint = (r: number, position: Vector3, seed: string): THREE.Vector3 => {
+    const rng = seedRandom.xor128(seed);
+    const s = 2 * Math.PI * rng();
+    const t = 2 * Math.PI * rng();
 
     const x = r * Math.cos(s) * Math.sin(t) + position.x; // + (Math.random() - 0.5); //randomness to dissipate spheres
     const y = r * Math.sin(s) * Math.sin(t) + position.y; // + (Math.random() - 0.5);
@@ -166,7 +180,7 @@ const createSpherePoint = (r: number, position: Vector3): THREE.Vector3 => {
 
 const calculatePositionFromParent = (n: LnModifiedGraphNode, depth = 2) => {
     n.children.forEach((child) => {
-        child.postition = createSpherePoint(1 / depth, n.postition);
+        child.postition = createSpherePoint(1 / depth, n.postition, n.pub_key.slice(0, 10));
         calculatePositionFromParent(child, depth + 1);
     });
 };

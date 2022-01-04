@@ -1,46 +1,47 @@
 <atft-orbit-controls [rotateSpeed]="1" [zoomSpeed]="1.2">
-  <atft-renderer-canvas
-    #mainRenderer
-    lnd-raycaster-scene
-    style="position: fixed; width: 100vw; height: 100vh"
-  >
-    <atft-perspective-camera
-      [fov]="(selectCameraFov$ | async) || 60"
-      [near]="0.1"
-      [far]="11000"
-      [positionX]="20"
-      [positionY]="50"
-      [positionZ]="50"
-      lnd-raycaster-enable
-      lnd-raycaster-camera
+    <atft-renderer-canvas
+        #mainRenderer
+        lnd-raycaster-scene
+        style="position: fixed; width: 100vw; height: 100vh"
     >
-    </atft-perspective-camera>
-    <atft-scene [background]="'#111111'">
-      <app-graph-font-mesh
-        *ngIf="true"
-        [positions]="(positions$ | async) || []"
-        [colors]="(colors$ | async) || []"
-        [aliases]="(selectAliases$ | async) || []"
-        [shouldRender]="(shouldRenderLabels$ | async) || false"
-      ></app-graph-font-mesh>
-      <app-graph-node-mesh
-        *ngIf="true"
-        [positions]="(positions$ | async) || []"
-        [colors]="(colors$ | async) || []"
-        [spriteSize]="(selectNodeSize$ | async) || 0"
-        [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
-        [useSprite]="(selectPointUseIcon$ | async) || false"
-        [shouldRender]="(shouldRenderNodes$ | async) || false"
-      ></app-graph-node-mesh>
-      <app-graph-edge-mesh
-        [edgeVertices]="(selectEdgeVertices$ | async) || []"
-        [shouldRender]="(shouldRenderEdges$ | async) || false"
-        [edgeColor]="selectEdgeColor$ | async"
-        [dashedLines]="(selectEdgeDottedLine$ | async) || false"
-        [depthTest]="(selectEdgeDepthTest$ | async) || false"
-      ></app-graph-edge-mesh>
-      <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
-      <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
-    </atft-scene>
-  </atft-renderer-canvas>
+        <atft-perspective-camera
+            [fov]="(selectCameraFov$ | async) || 60"
+            [near]="0.1"
+            [far]="11000"
+            [positionX]="20"
+            [positionY]="50"
+            [positionZ]="50"
+            lnd-raycaster-enable
+            lnd-raycaster-camera
+        >
+        </atft-perspective-camera>
+        <atft-scene [background]="'#111111'">
+            <app-graph-font-mesh
+                *ngIf="false"
+                [positions]="(positions$ | async) || []"
+                [colors]="(colors$ | async) || []"
+                [aliases]="(selectAliases$ | async) || []"
+                [shouldRender]="(shouldRenderLabels$ | async) || false"
+            ></app-graph-font-mesh>
+            <app-graph-node-mesh
+                *ngIf="true"
+                [positions]="(positions$ | async) || []"
+                [colors]="(colors$ | async) || null"
+                [spriteSize]="(selectNodeSize$ | async) || 0"
+                [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
+                [useSprite]="(selectPointUseIcon$ | async) || false"
+                [shouldRender]="(shouldRenderNodes$ | async) || false"
+            ></app-graph-node-mesh>
+            <app-graph-edge-mesh
+                *ngIf="true"
+                [edgeVertices]="(selectEdgeVertices$ | async) || []"
+                [shouldRender]="(shouldRenderEdges$ | async) || false"
+                [edgeColor]="selectEdgeColor$ | async"
+                [dashedLines]="(selectEdgeDottedLine$ | async) || false"
+                [depthTest]="(selectEdgeDepthTest$ | async) || false"
+            ></app-graph-edge-mesh>
+            <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
+            <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
+        </atft-scene>
+    </atft-renderer-canvas>
 </atft-orbit-controls>
