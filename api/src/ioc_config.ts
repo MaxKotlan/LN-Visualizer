@@ -5,6 +5,7 @@ import {
     LndGraphStateService,
     WebSocketService,
     LndChunkTrackerService,
+    InitialSyncService,
 } from './services';
 
 let container = new Container();
@@ -13,4 +14,5 @@ container.bind<LndGraphStateService>(LndGraphStateService).toSelf().inSingletonS
 container.bind<LndChunkTrackerService>(LndChunkTrackerService).toSelf().inSingletonScope();
 container.bind<WebSocketService>(WebSocketService).toSelf().inSingletonScope();
 container.bind<LndAuthService>(LndAuthService).toSelf().inSingletonScope();
+container.bind<InitialSyncService>(InitialSyncService).toSelf().inSingletonScope();
 export default container;

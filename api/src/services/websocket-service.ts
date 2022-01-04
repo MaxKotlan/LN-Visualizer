@@ -1,15 +1,21 @@
 import { injectable } from 'inversify';
-import { fromEvent, Observable } from 'rxjs';
-import { WebSocket, WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
+import { InitialSyncService } from './initial-sync.service';
 
 @injectable()
 export class WebSocketService {
     protected wss: WebSocketServer;
 
-    public newConnection$: Observable<WebSocket>;
-
-    constructor() {
+    constructor(private initialSyncService: InitialSyncService) {
+        console.log('Initializing Websocket Server');
         this.wss = new WebSocketServer({ port: 8090 });
-        this.newConnection$ = fromEvent(this.wss, 'connection') as Observable<WebSocket>;
+    }
+
+    public init() {
+        //const initsync = new InitialSyncService();
+        this.wss.on(
+            'connection',
+            this.initialSyncService.performInitialSync.bind(this.initialSyncService),
+        );
     }
 }
