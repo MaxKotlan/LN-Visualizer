@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LndNode } from 'api/src/models';
+import { LndChannel } from '../types/channels.interface';
 
 type PublicKey = string;
 
@@ -30,35 +31,54 @@ const hotFixMapper = (node: LndNode) => {
     } as LnGraphNode;
 };
 
-const hotFixMapper2 = (node: LndNode) => {
+const hotFixMapper2 = (channel: LndChannel) => {
     return {
-        pub_key: node.public_key,
-        color: node.color,
-        alias: node.alias,
-    } as LnModifiedGraphNode;
+        node1_pub: channel.policies[0].public_key,
+        node2_pub: channel.policies[1].public_key,
+        capacity: channel.capacity.toString(),
+    } as unknown as LnGraphEdge;
 };
 
 export const reducer = createReducer(
     initialState,
     on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
-
-    // on(graphActions.processGraphNodeChunk, (state, { chunk }) => ({
+    on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
+        const currentNodeState = [...state.graphUnsorted.nodes, ...chunk.data.map(hotFixMapper)];
+        return {
+            ...state,
+            graphUnsorted: {
+                ...state.graphUnsorted,
+                nodes: currentNodeState,
+            },
+            modifiedGraph: getModifiedGraph(
+                currentNodeState,
+                getNodeEdgeArray(state.graphUnsorted.edges),
+            ),
+        };
+    }),
+    on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
+        const currentChannelState = [
+            ...state.graphUnsorted.edges,
+            ...chunk.data.map((chunk) => hotFixMapper2(chunk)),
+        ];
+        return {
+            ...state,
+            graphUnsorted: {
+                ...state.graphUnsorted,
+                edges: currentChannelState,
+            },
+            modifiedGraph: getModifiedGraph(
+                state.graphUnsorted.nodes,
+                getNodeEdgeArray(currentChannelState),
+            ),
+        };
+    }),
+    // on(graphActions.requestGraphSuccess, (state, { graph }) => ({
     //     ...state,
-    //     graphUnsorted: {
-    //         ...state.graphUnsorted,
-    //         nodes: [...state.graphUnsorted.nodes, ...chunk.data.map(hotFixMapper)],
-    //     },
-    //     // modifiedGraph: {
-    //     //     ...state.graphUnsorted,
-    //     //     nodes: {...state.modifiedGraph, ...chunk.data.map(hotFixMapper2)},
-    //     // },
+    //     graphUnsorted: graph,
+    //     modifiedGraph: getModifiedGraph(graph.nodes, getNodeEdgeArray(graph.edges)),
+    //     isLoading: false,
     // })),
-    on(graphActions.requestGraphSuccess, (state, { graph }) => ({
-        ...state,
-        graphUnsorted: graph,
-        modifiedGraph: getModifiedGraph(graph.nodes, getNodeEdgeArray(graph.edges)),
-        isLoading: false,
-    })),
     on(graphActions.requestGraphFailure, (state, { error }) => ({
         ...state,
         error,
@@ -90,7 +110,8 @@ const sortGraphByCentrality = (
 ) => {
     return g.sort(
         (a, b) =>
-            precomputedNodeEdgeList[b.pub_key].length - precomputedNodeEdgeList[a.pub_key].length,
+            (precomputedNodeEdgeList[b.pub_key] || []).length -
+            (precomputedNodeEdgeList[a.pub_key] || []).length,
     );
 };
 
@@ -171,6 +192,7 @@ const calculateParentChildRelationship = (
     n: LnModifiedGraphNode,
     nlist: Record<PublicKey, LnModifiedGraphNode>,
 ): void => {
+    if (!n.connectedEdges) return;
     const maxConnEdge = n.connectedEdges.reduce((max, edge) =>
         nlist[selecteCorrectEdgePublicKey(max, n.pub_key)]?.connectedEdges.length >
         nlist[selecteCorrectEdgePublicKey(edge, n.pub_key)]?.connectedEdges.length

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { filter, map, Observable } from 'rxjs';
 import { LnGraph } from '../types/graph.interface';
 import { webSocket } from 'rxjs/webSocket';
-import { Chunk, LndNode } from 'api/src/models';
+import { Chunk, LndChannel, LndNode } from 'api/src/models';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +22,7 @@ export class LndApiServiceService {
         return this.http.get<LnGraph>('http://umbrel.local:5647/');
     }
 
-    public initialChunkSync(): Observable<Chunk<LndNode>> {
+    public initialChunkSync(): Observable<Chunk<LndNode | LndChannel>> {
         const subject = webSocket('ws://127.0.0.1:8090');
         subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
         return subject as Observable<Chunk<LndNode>>;

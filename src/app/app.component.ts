@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store$.dispatch(controlsActions.loadSavedState());
-        this.store$.dispatch(graphActions.requestGraph());
+        //this.store$.dispatch(graphActions.requestGraph());
     }
 
     public isGraphLoading$ = this.store$.select(selectGraphLoadingState);
