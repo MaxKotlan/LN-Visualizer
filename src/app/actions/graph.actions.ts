@@ -21,4 +21,9 @@ export const processGraphNodeChunk = createAction(
     props<{ chunk: Chunk<LndNode> }>(),
 );
 
+export const processChannelNodeChunk = createAction(
+    '[graph] processChannelNodeChunk',
+    props<{ chunk: Chunk<LndNode> }>(),
+);
+
 export const dismissError = createAction('[graph] dismissError');

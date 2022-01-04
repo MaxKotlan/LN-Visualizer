@@ -1,6 +1,6 @@
 export interface Chunk<T> {
     index: number;
     data: T[];
-    keyType: string;
+    type: string;
     registry: Record<string, number>;
 }

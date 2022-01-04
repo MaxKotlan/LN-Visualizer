@@ -14,7 +14,11 @@ export class WebSocketService {
     public init() {
         this.wss.on(
             'connection',
-            this.initialSyncService.performInitialSync.bind(this.initialSyncService),
+            this.initialSyncService.performInitialNodeSync.bind(this.initialSyncService),
+        );
+        this.wss.on(
+            'connection',
+            this.initialSyncService.performInitialChannelSync.bind(this.initialSyncService),
         );
     }
 }

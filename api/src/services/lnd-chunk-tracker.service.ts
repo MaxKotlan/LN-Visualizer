@@ -28,7 +28,7 @@ export class LndChunkTrackerService {
     protected pushNodeChunk(index: number, nodes: LndNode[]) {
         const chunk: Chunk<LndNode> = {
             index,
-            keyType: 'public_key',
+            type: 'node',
             data: nodes.slice(index * this.chunkSize, (index + 1) * this.chunkSize),
             registry: {},
         };
@@ -39,7 +39,7 @@ export class LndChunkTrackerService {
     protected pushChannelChunk(index: number, channels: LndChannel[]) {
         const chunk: Chunk<LndChannel> = {
             index,
-            keyType: 'channel_id',
+            type: 'channel',
             data: channels.slice(index * this.chunkSize, (index + 1) * this.chunkSize),
             registry: {},
         };

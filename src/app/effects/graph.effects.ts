@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, filter, map, mergeMap, of, tap } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 
@@ -23,9 +23,19 @@ export class GraphEffects {
         ),
     );
 
-    onGraphChunk$ = createEffect(() =>
-        this.lndApiServiceService
-            .initialChunkSync()
-            .pipe(map((chunk) => graphActions.processGraphNodeChunk({ chunk }))),
+    onNodeChunk$ = createEffect(() =>
+        this.lndApiServiceService.initialChunkSync().pipe(
+            filter((chunk) => chunk.type === 'node'),
+            tap((c) => console.log(c)),
+            map((chunk) => graphActions.processGraphNodeChunk({ chunk })),
+        ),
+    );
+
+    onChannelChunk$ = createEffect(() =>
+        this.lndApiServiceService.initialChunkSync().pipe(
+            filter((chunk) => chunk.type === 'channel'),
+            tap((c) => console.log(c)),
+            map((chunk) => graphActions.processGraphNodeChunk({ chunk })),
+        ),
     );
 }
