@@ -12,6 +12,8 @@ type PublicKey = string;
 
 export interface GraphState {
     graphUnsorted: LnGraph;
+    nodeList: LnGraphNode[];
+    edgeList: LnGraphEdge[];
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>;
     isLoading: boolean;
     error: HttpErrorResponse | undefined;
@@ -20,6 +22,8 @@ export interface GraphState {
 const initialState: GraphState = {
     graphUnsorted: { nodes: [], edges: [] },
     modifiedGraph: {},
+    nodeList: [],
+    edgeList: [],
     isLoading: false,
     error: undefined,
 };
@@ -45,13 +49,10 @@ export const reducer = createReducer(
     on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
         const t0 = performance.now();
-        const currentNodeState = [...state.graphUnsorted.nodes, ...chunk.data.map(hotFixMapper)];
+        const currentNodeState = [...state.nodeList, ...chunk.data.map(hotFixMapper)];
         const result = {
             ...state,
-            graphUnsorted: {
-                ...state.graphUnsorted,
-                nodes: currentNodeState,
-            },
+            nodeList: currentNodeState,
             modifiedGraph: getModifiedGraph(
                 currentNodeState,
                 getNodeEdgeArray(state.graphUnsorted.edges),
@@ -64,19 +65,17 @@ export const reducer = createReducer(
     on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
         const t0 = performance.now();
         const currentChannelState = [
-            ...state.graphUnsorted.edges,
+            ...state.edgeList,
             ...chunk.data.map((chunk) => hotFixMapper2(chunk)),
         ];
         const result = {
             ...state,
-            graphUnsorted: {
-                ...state.graphUnsorted,
-                edges: currentChannelState,
-            },
-            modifiedGraph: getModifiedGraph(
-                state.graphUnsorted.nodes,
-                getNodeEdgeArray(currentChannelState),
-            ),
+            // graphUnsorted: {
+            //     ...state.graphUnsorted,
+            //     edges: currentChannelState,
+            // },
+            edgeList: currentChannelState,
+            modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
         };
         const t1 = performance.now();
         console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
@@ -138,7 +137,7 @@ const getModifiedGraph = (
         calculateParentChildRelationship(node, sortedNodesWithEdges);
     });
     const nodesWithoutParents = Object.values(sortedNodesWithEdges).filter((node) => !node.parent);
-    //console.log('nodesWithoutParents', nodesWithoutParents);
+    console.log('nodesWithoutParents', nodesWithoutParents.length);
     Object.values(nodesWithoutParents).forEach((node) => {
         const largeClumpDistance = 1;
         node.postition = createSpherePoint(
