@@ -170,9 +170,11 @@ const createSpherePoint = (r: number, position: Vector3, seed: string): THREE.Ve
     const s = 2 * Math.PI * rng();
     const t = 2 * Math.PI * rng();
 
-    const x = r * Math.cos(s) * Math.sin(t) + position.x; // + (Math.random() - 0.5); //randomness to dissipate spheres
-    const y = r * Math.sin(s) * Math.sin(t) + position.y; // + (Math.random() - 0.5);
-    const z = r * Math.cos(t) + position.z; // + (Math.random() - 0.5);
+    const randomnessFactor = 0.2;
+
+    const x = r * Math.cos(s) * Math.sin(t) + position.x + (rng() - 0.5) * randomnessFactor; //randomness to dissipate spheres
+    const y = r * Math.sin(s) * Math.sin(t) + position.y + (rng() - 0.5) * randomnessFactor;
+    const z = r * Math.cos(t) + position.z + (rng() - 0.5) * randomnessFactor;
 
     return new THREE.Vector3(x, y, z);
 };
