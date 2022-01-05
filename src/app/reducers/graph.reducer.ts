@@ -53,10 +53,7 @@ export const reducer = createReducer(
         const result = {
             ...state,
             nodeList: currentNodeState,
-            modifiedGraph: getModifiedGraph(
-                currentNodeState,
-                getNodeEdgeArray(state.graphUnsorted.edges),
-            ),
+            modifiedGraph: getModifiedGraph(currentNodeState, getNodeEdgeArray(state.edgeList)),
         };
         const t1 = performance.now();
         //console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
@@ -70,10 +67,6 @@ export const reducer = createReducer(
         ];
         const result = {
             ...state,
-            // graphUnsorted: {
-            //     ...state.graphUnsorted,
-            //     edges: currentChannelState,
-            // },
             edgeList: currentChannelState,
             modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
         };
@@ -97,6 +90,8 @@ export const reducer = createReducer(
 
 const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]> => {
     let precomputedNodeEdgeList: Record<PublicKey, LnGraphEdge[]> = {};
+
+    console.log('yopyoyoyooy', edges);
 
     edges.forEach((edge) => {
         precomputedNodeEdgeList[edge.node1_pub] = [

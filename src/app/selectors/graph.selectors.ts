@@ -28,18 +28,14 @@ export const selectModifiedGraph = createSelector(graphSelector, (state) => stat
 
 export const selectNodeValue = createSelector(selectModifiedGraph, (graph) => Object.values(graph));
 
+export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) => {
+    console.log('whut da hell', graph);
+    return graph.flatMap((mgn) => mgn.connectedEdges);
+});
+
 const positions = new Float32Array(18000 * 3);
 
 export const selectVertices = createSelector(selectNodeValue, (nodeValue) => {
-    // for (let i = 0; i < nodeValue.length * 3; i += 3) {
-    //      [i] = nodeValue[i]?.postition.x * 100;
-    //     positions[i + 1] = nodeValue[i + 1]?.postition.y * 100;
-    //     positions[i + 2] = nodeValue[i + 2]?.postition.z * 100;
-    // }
-    // return new Float32Array(
-    //     nodeValue.flatMap((n) => [n.postition.x * 100, n.postition.y * 100, n.postition.z * 100]),
-    // );
-
     positions.set(
         nodeValue.flatMap((n) => [n.postition.x * 100, n.postition.y * 100, n.postition.z * 100]),
     );
@@ -95,11 +91,11 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
 );
 
 export const selectSortedEdges = createSelector(
-    getNodes,
+    selectEdgesFromModifiedGraph,
     selectFinalMatcheNodesFromSearch,
-    (nodeValue, searchResult) =>
-        nodeValue.edges.filter((edge) =>
-            searchResult === undefined ? true : edgeDirectlyRelated(searchResult, edge),
+    (edges, searchResult) =>
+        edges.filter(
+            (edge) => (searchResult === undefined ? true : true), //edgeDirectlyRelated(searchResult, edge),
         ),
 );
 
@@ -156,39 +152,48 @@ export const selectEdgeColor = createSelector(
 );
 
 const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): boolean => {
+    //console.log('node1', edge);
     return node.pub_key === edge.node1_pub || node.pub_key === edge.node2_pub;
 };
+
+const edgeVerticies = new Float32Array(80000 * 3);
 
 export const selectEdgeVertices = createSelector(
     selectSortedEdges,
     selectModifiedGraph,
     selectFinalMatcheNodesFromSearch,
     (sortedEdges, modifiedGraph, searchResult) => {
-        const pointData: THREE.Vector3[] = [];
+        // for (let i = 0; i < sortedEdges.length * 3; i += 3) {
+        //     let pubkeyTest;
+        //     let pubkeyTestOpposite;
 
-        for (let i = 0; i < sortedEdges.length; i++) {
-            let pubkeyTest;
-            let pubkeyTestOpposite;
+        //     // if (searchResult) {
+        //     //     pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
+        //     //     pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(
+        //     //         sortedEdges[i],
+        //     //         searchResult.pub_key,
+        //     //     );
+        //     // } else {
+        //     if (!sortedEdges[i / 3]?.node1_pub) return { bufferRef: edgeVerticies, size: 0 };
+        //     if (!sortedEdges[i / 3]?.node2_pub) return { bufferRef: edgeVerticies, size: 0 };
 
-            if (searchResult) {
-                pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
-                pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(
-                    sortedEdges[i],
-                    searchResult.pub_key,
-                );
-            } else {
-                pubkeyTest = sortedEdges[i].node1_pub;
-                pubkeyTestOpposite = sortedEdges[i].node2_pub;
-            }
+        //     pubkeyTest = sortedEdges[i / 3].node1_pub;
+        //     pubkeyTestOpposite = sortedEdges[i].node2_pub;
+        //     //}
 
-            if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition)
-                pointData.push(modifiedGraph[pubkeyTest].postition);
+        //     if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition) {
+        //         edgeVerticies[i / 3] = modifiedGraph[pubkeyTest]?.postition.x;
+        //         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTest]?.postition.y;
+        //         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTest]?.postition.z;
+        //     }
 
-            if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition)
-                pointData.push(modifiedGraph[pubkeyTestOpposite].postition);
-        }
-
-        return pointData;
+        //     if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition) {
+        //         edgeVerticies[i / 3] = modifiedGraph[pubkeyTestOpposite]?.postition.x;
+        //         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTestOpposite]?.postition.y;
+        //         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTestOpposite]?.postition.z;
+        //     }
+        // }
+        return { bufferRef: edgeVerticies, size: sortedEdges.length } as BufferRef<Float32Array>;
     },
 );
 

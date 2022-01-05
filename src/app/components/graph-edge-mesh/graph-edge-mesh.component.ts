@@ -8,6 +8,7 @@ import {
 } from 'atft';
 import { selecteCorrectEdgePublicKey } from 'src/app/reducers/graph.reducer';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
+import { BufferRef } from 'src/app/types/bufferRef.interface';
 import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
 
@@ -17,7 +18,7 @@ import * as THREE from 'three';
     template: '<ng-content></ng-content>',
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
-    @Input() public edgeVertices: THREE.Vector3[] = [];
+    @Input() public edgeVertices: BufferRef<Float32Array> | null = null;
     @Input() shouldRender: boolean = false;
     @Input() edgeColor: Uint8Array | null = null;
     @Input() dashedLines: boolean = true;
@@ -35,6 +36,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.Object3D = this.getObject();
+        console.log('loledgecnt', this.edgeVertices?.size);
         if (obj) {
             //const newInstance = this.newObject3DInstance();
             (obj as any)['geometry'] = this.geometry;
@@ -45,9 +47,16 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     }
 
     protected generateGeometry() {
-        this.geometry
-            .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-            .scale(100, 100, 100);
+        // this.geometry
+        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
+        //     .scale(100, 100, 100);
+        if (!this.edgeVertices) return;
+        this.geometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(this.edgeVertices.bufferRef, 3),
+        );
+        this.geometry.setDrawRange(0, this.edgeVertices.size);
+        this.geometry.attributes['position'].needsUpdate = true;
     }
 
     protected generateMaterial() {
@@ -75,7 +84,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
             ? new THREE.LineDashedMaterial({
                   color: 0xffffff,
                   linewidth: 1,
-                  vertexColors: true,
+                  vertexColors: false,
                   scale: 1,
                   dashSize: 1,
                   gapSize: 3,
@@ -83,19 +92,21 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
             : new THREE.LineBasicMaterial({
                   color: 0xffffff,
                   linewidth: 1,
-                  vertexColors: true,
+                  vertexColors: false,
               });
 
         material.depthTest = this.depthTest;
 
-        const geometry = new THREE.BufferGeometry()
-            .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-            .scale(100, 100, 100);
-        geometry.setAttribute(
-            'color',
-            new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
-        );
-        const mesh = new THREE.LineSegments(geometry, material);
+        // const geometry = new THREE.BufferGeometry()
+        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
+        //     .scale(100, 100, 100);
+        // geometry.setAttribute(
+        //     'color',
+        //     new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
+        // );
+
+        this.generateGeometry();
+        const mesh = new THREE.LineSegments(this.geometry, material);
         mesh.computeLineDistances();
         mesh.renderOrder = -1;
         return mesh;

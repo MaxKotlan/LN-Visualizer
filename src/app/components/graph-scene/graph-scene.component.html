@@ -32,14 +32,14 @@
                 [useSprite]="(selectPointUseIcon$ | async) || false"
                 [shouldRender]="(shouldRenderNodes$ | async) || false"
             ></app-graph-node-mesh>
-            <!-- <app-graph-edge-mesh
+            <app-graph-edge-mesh
                 *ngIf="true"
-                [edgeVertices]="(selectEdgeVertices$ | async) || []"
+                [edgeVertices]="selectEdgeVertices$ | async"
                 [shouldRender]="(shouldRenderEdges$ | async) || false"
                 [edgeColor]="selectEdgeColor$ | async"
                 [dashedLines]="(selectEdgeDottedLine$ | async) || false"
                 [depthTest]="(selectEdgeDepthTest$ | async) || false"
-            ></app-graph-edge-mesh> -->
+            ></app-graph-edge-mesh>
             <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
             <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
         </atft-scene>
