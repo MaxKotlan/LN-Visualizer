@@ -11,7 +11,12 @@ import { Chunk } from '../types/chunk.interface';
 import { createSpherePoint } from '../utils';
 import * as THREE from 'three';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
-import { selectNodeSetKeyValue, selectNodeSetValue } from '../selectors/graph.selectors';
+import {
+    selectChannelSetValue,
+    selectChannelSetKeyValue,
+    selectNodeSetKeyValue,
+    selectNodeSetValue,
+} from '../selectors/graph.selectors';
 import { GraphState } from '../reducers/graph.reducer';
 import { Store } from '@ngrx/store';
 
@@ -22,9 +27,7 @@ export class GraphEffects {
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
     ) {
-        this.store$
-            .select(selectNodeSetValue)
-            .subscribe((nsv) => console.log(nsv.filter((n) => !!n.parent).length));
+        this.store$.select(selectChannelSetValue).subscribe((nsv) => console.log(nsv.length));
     }
 
     retrieveGraph$ = createEffect(() =>
@@ -218,4 +221,7 @@ export class GraphEffects {
     //         calculatePositionFromParent(child, depth + 1);
     //     });
     // };
+}
+function selectChannelValue(selectChannelValue: any) {
+    throw new Error('Function not implemented.');
 }

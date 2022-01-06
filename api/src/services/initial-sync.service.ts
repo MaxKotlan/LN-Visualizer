@@ -39,6 +39,7 @@ export class InitialSyncService {
                     data: chunk.data.map(
                         (channel) =>
                             ({
+                                id: channel.id,
                                 capacity: channel.capacity,
                                 policies: channel.policies,
                             } as Partial<LndChannel>),
