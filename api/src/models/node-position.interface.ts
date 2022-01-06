@@ -5,5 +5,10 @@ import { LndChannel } from '.';
 
 export interface LndNodeWithPosition extends LndNode {
     position: THREE.Vector3;
-    connectedChannels: MaxPriorityQueue<LndChannel>;
+    connectedChannels: MaxPriorityQueue<LndChannelWithParent>;
+    parent: LndNodeWithPosition | null;
+}
+
+export interface LndChannelWithParent extends LndChannel {
+    parent: LndNodeWithPosition;
 }

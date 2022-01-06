@@ -42,21 +42,21 @@ const initialState: GraphState = {
     nodeSet: {},
 };
 
-const hotFixMapper = (node: LndNode) => {
-    return {
-        pub_key: node.public_key,
-        color: node.color,
-        alias: node.alias,
-    } as LnGraphNode;
-};
+// const hotFixMapper = (node: LndNode) => {
+//     return {
+//         pub_key: node.public_key,
+//         color: node.color,
+//         alias: node.alias,
+//     } as LnGraphNode;
+// };
 
-const hotFixMapper2 = (channel: LndChannel) => {
-    return {
-        node1_pub: channel.policies[0].public_key,
-        node2_pub: channel.policies[1].public_key,
-        capacity: channel.capacity.toString(),
-    } as unknown as LnGraphEdge;
-};
+// const hotFixMapper2 = (channel: LndChannel) => {
+//     return {
+//         node1_pub: channel.policies[0].public_key,
+//         node2_pub: channel.policies[1].public_key,
+//         capacity: channel.capacity.toString(),
+//     } as unknown as LnGraphEdge;
+// };
 
 //Allocate 10% extra buffer space
 const bufferOverheadStorage = 1.1;
