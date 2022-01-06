@@ -36,9 +36,10 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.Object3D = this.getObject();
-        console.log('loledgecnt', this.edgeVertices);
+        //console.log('loledgecnt', this.edgeVertices);
         if (obj) {
             //const newInstance = this.newObject3DInstance();
+            this.generateGeometry();
             (obj as any)['geometry'] = this.geometry;
             (obj as any)['material'] = this.generateMaterial();
         }
@@ -106,7 +107,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
         this.generateGeometry();
         const mesh = new THREE.LineSegments(this.geometry, material);
-        mesh.computeLineDistances();
+        //mesh.computeLineDistances();
         mesh.renderOrder = -1;
         return mesh;
     }
