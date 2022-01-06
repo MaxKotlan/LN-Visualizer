@@ -182,7 +182,7 @@ export class GraphEffects {
                     ]) =>
                         from([
                             graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
-                            graphActions.cacheProcessedChannelChunk({ channelSet: chnlRegistry }),
+                            graphActions.concatinateChannelChunk({ channelSubSet: chnlRegistry }),
                         ]),
                     //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
                 ),
@@ -211,6 +211,22 @@ export class GraphEffects {
                 map((action) =>
                     graphActions.cacheProcessedGraphNodeChunk({ nodeSet: action.nodeSet }),
                 ),
+            ),
+        { dispatch: true },
+    );
+
+    concatinateChannelChunk$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.concatinateChannelChunk),
+                withLatestFrom(this.store$.select(selectChannelSetValue)),
+                map(([action, channelState]) => {
+                    const res = channelState.reduce((acc, chnl) => {
+                        acc[chnl.id] = chnl;
+                        return acc;
+                    }, action.channelSubSet);
+                    return graphActions.cacheProcessedChannelChunk({ channelSet: res });
+                }),
             ),
         { dispatch: true },
     );

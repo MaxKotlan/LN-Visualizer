@@ -29,6 +29,11 @@ export const cacheProcessedGraphNodeChunk = createAction(
     props<{ nodeSet: Record<string, LndNodeWithPosition> }>(),
 );
 
+export const concatinateChannelChunk = createAction(
+    '[graph] concatinateChannelChunk',
+    props<{ channelSubSet: Record<string, LndChannel> }>(),
+);
+
 export const cacheProcessedChannelChunk = createAction(
     '[graph] cacheProcessedChannelChunk',
     props<{ channelSet: Record<string, LndChannel> }>(),

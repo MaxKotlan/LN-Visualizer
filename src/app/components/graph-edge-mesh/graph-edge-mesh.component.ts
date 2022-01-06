@@ -42,6 +42,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             this.generateGeometry();
             (obj as any)['geometry'] = this.geometry;
             (obj as any)['material'] = this.generateMaterial();
+            obj.geometry.computeBoundingBox();
             obj.computeLineDistances();
         }
         this.rendererService.render();
