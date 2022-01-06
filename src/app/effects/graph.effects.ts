@@ -174,7 +174,32 @@ export class GraphEffects {
         { dispatch: true },
     );
 
-    positionRecalculate$ = createEffect(() =>
-        this.actions$.pipe(ofType(graphActions.processGraphChannelChunk)),
+    positionRecalculate$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.graphNodePositionRecalculate),
+                tap((action) =>
+                    Object.values(action.nodeSet).forEach((node) => {
+                        if (node.parent) {
+                            node.position = createSpherePoint(
+                                0.1,
+                                node.parent.position,
+                                node.public_key.slice(0, 10),
+                            );
+                        }
+                    }),
+                ),
+                map((action) =>
+                    graphActions.cacheProcessedGraphNodeChunk({ nodeSet: action.nodeSet }),
+                ),
+            ),
+        { dispatch: true },
     );
+
+    // private calculatePositionFromParent = (n: LnModifiedGraphNode, depth = 2) => {
+    //     n.children.forEach((child) => {
+    //         child.postition = createSpherePoint(1 / depth, n.postition, n.pub_key.slice(0, 10));
+    //         calculatePositionFromParent(child, depth + 1);
+    //     });
+    // };
 }
