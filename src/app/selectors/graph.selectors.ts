@@ -37,6 +37,11 @@ export const selectNodeVertexBuffer = createSelector(
     (state) => state.nodeVertexBuffer,
 );
 
+export const selectNodeColorBuffer = createSelector(
+    graphSelector,
+    (state) => state.nodeColorBuffer,
+);
+
 export const selectGraphError = createSelector(graphSelector, (state) => state.error);
 
 export const shouldShowErrorMessage = createSelector(
@@ -80,17 +85,20 @@ const fromHexString = (hexString: string) =>
         .match(/.{1,2}/g)!
         .map((byte) => parseInt(byte, 16));
 
-const colors = new Uint8Array(18000 * 3);
-
-export const selectColors = createSelector(selectNodeValue, (nodeValue) => {
-    colors.set(
-        nodeValue
-            .map((g) => g.color)
-            .map(fromHexString)
-            .flat(),
-    );
-    return colors;
-});
+export const selectColors = createSelector(
+    selectNodeSetValue,
+    selectNodeColorBuffer,
+    (nodeValue, colorBuffer) => {
+        if (!colorBuffer || !nodeValue) return null;
+        colorBuffer.set(
+            nodeValue
+                .map((g) => g.color)
+                .map(fromHexString)
+                .flat(),
+        );
+        return colorBuffer;
+    },
+);
 
 export const getNodes = createSelector(graphSelector, (state) => state.graphUnsorted);
 

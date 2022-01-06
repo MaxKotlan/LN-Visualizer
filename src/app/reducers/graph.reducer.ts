@@ -23,7 +23,7 @@ export interface GraphState {
     nodeChunksProcessed: number;
     channelChunksProcessed: number;
     nodeVertexBuffer: Float32Array | null;
-
+    nodeColorBuffer: Uint8Array | null;
     nodeSet: Record<string, LndNodeWithPosition>;
 }
 
@@ -38,6 +38,7 @@ const initialState: GraphState = {
     nodeChunksProcessed: 0,
     channelChunksProcessed: 0,
     nodeVertexBuffer: null,
+    nodeColorBuffer: null,
     nodeSet: {},
 };
 
@@ -66,6 +67,7 @@ export const reducer = createReducer(
         ...state,
         chunkInfo,
         nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
+        nodeColorBuffer: new Uint8Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
