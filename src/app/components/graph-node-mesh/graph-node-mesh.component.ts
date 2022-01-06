@@ -39,7 +39,7 @@ export class GraphNodeMeshComponent
     implements OnChanges, OnInit
 {
     @Input() positions!: BufferRef<Float32Array> | null;
-    @Input() colors!: Uint8Array | null;
+    @Input() colors!: BufferRef<Uint8Array> | null;
     @Input() shouldRender: boolean = true;
     @Input() pointSizeAttenuation: boolean = true;
     @Input() useSprite: boolean = true;
@@ -131,7 +131,10 @@ export class GraphNodeMeshComponent
     protected generatePointGeometryReal() {
         if (!this.positions) return;
         if (!this.colors) return;
-        this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3, true));
+        this.geometry.setAttribute(
+            'color',
+            new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
+        );
         this.geometry.setAttribute(
             'position',
             new THREE.BufferAttribute(this.positions.bufferRef, 3),

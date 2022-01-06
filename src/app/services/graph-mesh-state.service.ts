@@ -5,6 +5,7 @@ import { GraphState } from '../reducers/graph.reducer';
 import {
     selectChannelSetValue,
     selectChannelVertexBuffer,
+    selectNodeColorBuffer,
     selectNodeSetKeyValue,
     selectNodeSetValue,
     selectNodeVertexBuffer,
@@ -32,6 +33,32 @@ export class GraphMeshStateService {
         }),
     );
 
+    private fromHexString = (hexString: string) =>
+        hexString
+            .replace('#', '')
+            .match(/.{1,2}/g)!
+            .map((byte) => parseInt(byte, 16));
+
+    nodeColors$ = combineLatest([
+        this.store$.select(selectNodeSetValue),
+        this.store$.select(selectNodeColorBuffer),
+    ]).pipe(
+        map(([nodeValue, colorBuffer]) => {
+            if (!colorBuffer || !nodeValue) return null;
+
+            for (let i = 0; i < nodeValue.length; i++) {
+                if (!nodeValue[i]?.color) continue;
+
+                const color = this.fromHexString(nodeValue[i].color);
+
+                colorBuffer[i * 3] = color[0];
+                colorBuffer[i * 3 + 1] = color[1];
+                colorBuffer[i * 3 + 2] = color[2];
+            }
+            return { bufferRef: colorBuffer, size: nodeValue.length } as BufferRef<Uint8Array>;
+        }),
+    );
+
     channelVertices$ = combineLatest([
         this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelVertexBuffer),
@@ -40,22 +67,6 @@ export class GraphMeshStateService {
         //   throttleTime(250),
         map(([channelValue, vertexBuffer, nodeRegistry]) => {
             if (!vertexBuffer || !channelValue) return null;
-            // vertexBuffer.set(
-            //     channelValue.flatMap((channel) => {
-            //         const node1 = nodeRegistry[channel.policies[0].public_key];
-            //         const node2 = nodeRegistry[channel.policies[1].public_key];
-            //         if (!node1 || !node2) return [];
-            //         return [
-            //             nodeRegistry[channel.policies[0].public_key].position.x * 100,
-            //             nodeRegistry[channel.policies[0].public_key].position.y * 100,
-            //             nodeRegistry[channel.policies[0].public_key].position.z * 100,
-            //             nodeRegistry[channel.policies[1].public_key].position.x * 100,
-            //             nodeRegistry[channel.policies[1].public_key].position.y * 100,
-            //             nodeRegistry[channel.policies[1].public_key].position.z * 100,
-            //         ];
-            //     }),
-            // );
-
             for (let i = 0; i < channelValue.length; i++) {
                 const channel = channelValue[i];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
