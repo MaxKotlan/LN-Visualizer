@@ -22,22 +22,12 @@ export class GraphMeshStateService {
         // throttleTime(250),
         map(([nodeValue, vertexBuffer]) => {
             if (!vertexBuffer || !nodeValue) return null;
-            // vertexBuffer.set(
-            //     nodeValue.flatMap((n) => [
-            //         n.position.x * 100,
-            //         n.position.y * 100,
-            //         n.position.z * 100,
-            //     ]),
-            // );
-
             for (let i = 0; i < nodeValue.length; i++) {
                 if (!nodeValue[i]) continue;
                 vertexBuffer[i * 3] = nodeValue[i].position.x * 100;
                 vertexBuffer[i * 3 + 1] = nodeValue[i].position.y * 100;
                 vertexBuffer[i * 3 + 2] = nodeValue[i].position.z * 100;
             }
-            console.log(vertexBuffer);
-
             return { bufferRef: vertexBuffer, size: nodeValue.length } as BufferRef<Float32Array>;
         }),
     );
