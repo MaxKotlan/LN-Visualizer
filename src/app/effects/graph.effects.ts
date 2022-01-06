@@ -27,7 +27,16 @@ export class GraphEffects {
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
     ) {
-        //this.store$.select(selectChannelSetValue).subscribe((nsv) => console.log(nsv.length));
+        this.store$
+            .select(selectNodeSetValue)
+            .subscribe((nsv) =>
+                console.log(
+                    'noChildren: ',
+                    nsv.filter((n) => Object.values(n.children).length === 0).length,
+                    'no parent',
+                    nsv.filter((n) => !n.parent).length,
+                ),
+            );
     }
 
     retrieveGraph$ = createEffect(() =>
@@ -110,6 +119,7 @@ export class GraphEffects {
                                 this.getNodeQueueComparitor(nodeRegistry),
                             ),
                             parent: null,
+                            children: {},
                         };
                         return acc;
                     }, {} as Record<string, LndNodeWithPosition>),
@@ -150,8 +160,10 @@ export class GraphEffects {
                         if (
                             node1.connectedChannels.size() <
                             potentialParent1.connectedChannels.size()
-                        )
+                        ) {
                             node1.parent = potentialParent1;
+                            node1.parent.children[node1.public_key] = node1;
+                        }
 
                         const chn2: LndChannelWithParent =
                             node2.connectedChannels.front() as LndChannelWithParent;
@@ -161,8 +173,10 @@ export class GraphEffects {
                         if (
                             node2.connectedChannels.size() <
                             potentialParent2.connectedChannels.size()
-                        )
+                        ) {
                             node2.parent = potentialParent2;
+                            node2.parent.children[node2.public_key] = node2;
+                        }
                     }),
                 ),
                 map(([action, nodeRegistry]) => {
@@ -198,57 +212,71 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.graphNodePositionRecalculate),
                 tap((action) =>
-                    Object.values(action.nodeSet).forEach((node) => {
-                        if (node.parent) {
-                            node.position = createSpherePoint(
-                                0.1,
-                                node.parent.position,
-                                node.public_key.slice(0, 10),
-                            );
-                        }
-                    }),
+                    Object.values(action.nodeSet)
+                        .filter((node) => !node.parent)
+                        .forEach((unparentedNode) => {
+                            // node.position = createSpherePoint(
+                            //     0.1,
+                            //     node.parent.position,
+                            //     node.public_key.slice(0, 10),
+                            // );
+                            this.calculatePositionFromParent(unparentedNode);
+                        }),
                 ),
                 map((action) => graphActions.concatinateNodeChunk({ nodeSubSet: action.nodeSet })),
             ),
         { dispatch: true },
     );
 
-    concatinateNodeChunk$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.concatinateNodeChunk),
-                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                map(([action, nodeState]) => {
-                    // const res = nodeState.reduce((acc, node) => {
-                    //     acc[node.public_key] = node;
-                    //     return acc;
-                    // }, action.nodeSubSet);
-                    // console.log(action.nodeSubSet);
-                    return graphActions.cacheProcessedGraphNodeChunk({
-                        nodeSet: { ...nodeState, ...action.nodeSubSet },
-                    });
-                }),
-            ),
-        { dispatch: true },
-    );
+    public calculatePositionFromParent(node: LndNodeWithPosition, depth = 2) {
+        if (depth > 30) return;
+        Object.values(node.children).forEach((child) => {
+            child.position = createSpherePoint(
+                1 / depth,
+                node.position,
+                child.public_key.slice(0, 10),
+            );
+            this.calculatePositionFromParent(child, depth + 1);
+        });
+    }
 
-    concatinateChannelChunk$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.concatinateChannelChunk),
-                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
-                map(([action, channelState]) => {
-                    // const res = channelState.reduce((acc, chnl) => {
-                    //     acc[chnl.id] = chnl;
-                    //     return acc;
-                    // }, action.channelSubSet);
-                    return graphActions.cacheProcessedChannelChunk({
-                        channelSet: { ...action.channelSubSet, ...channelState },
-                    });
-                }),
-            ),
-        { dispatch: true },
-    );
+    //Theres something not working right with this
+    // concatinateNodeChunk$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.concatinateNodeChunk),
+    //             withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
+    //             map(([action, nodeState]) => {
+    //                 // const res = nodeState.reduce((acc, node) => {
+    //                 //     acc[node.public_key] = node;
+    //                 //     return acc;
+    //                 // }, action.nodeSubSet);
+    //                 // console.log(action.nodeSubSet);
+    //                 return graphActions.cacheProcessedGraphNodeChunk({
+    //                     nodeSet: { ...nodeState, ...action.nodeSubSet },
+    //                 });
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
+
+    // concatinateChannelChunk$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.concatinateChannelChunk),
+    //             withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
+    //             map(([action, channelState]) => {
+    //                 // const res = channelState.reduce((acc, chnl) => {
+    //                 //     acc[chnl.id] = chnl;
+    //                 //     return acc;
+    //                 // }, action.channelSubSet);
+    //                 return graphActions.cacheProcessedChannelChunk({
+    //                     channelSet: { ...action.channelSubSet, ...channelState },
+    //                 });
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
     // private calculatePositionFromParent = (n: LnModifiedGraphNode, depth = 2) => {
     //     n.children.forEach((child) => {
@@ -256,7 +284,4 @@ export class GraphEffects {
     //         calculatePositionFromParent(child, depth + 1);
     //     });
     // };
-}
-function selectChannelValue(selectChannelValue: any) {
-    throw new Error('Function not implemented.');
 }

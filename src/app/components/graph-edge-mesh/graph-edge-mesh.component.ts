@@ -55,7 +55,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             'position',
             new THREE.BufferAttribute(this.edgeVertices.bufferRef, 3),
         );
-        this.geometry.setDrawRange(0, this.edgeVertices.size);
+        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices.size : 0);
         this.geometry.attributes['position'].needsUpdate = true;
     }
 
