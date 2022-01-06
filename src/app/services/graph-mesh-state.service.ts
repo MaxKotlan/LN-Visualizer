@@ -60,7 +60,8 @@ export class GraphMeshStateService {
                 const channel = channelValue[i];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
                 const node2 = nodeRegistry[channel.policies[1].public_key];
-                if (!node1 || !node2 || channel.capacity === 0) {
+                if (!node1 || !node2) {
+                    //|| channel.capacity === 0) {
                     continue;
                 }
                 vertexBuffer[i * 6] = node1.position.x * 100;

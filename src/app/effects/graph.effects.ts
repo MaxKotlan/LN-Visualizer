@@ -136,7 +136,7 @@ export class GraphEffects {
         lndNode.connectedChannels.enqueue({ ...channel, parent: lndNode });
     }
 
-    positionChannels$ = createEffect(
+    calculateNodeHeirarchy$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.processGraphChannelChunk),
@@ -220,6 +220,13 @@ export class GraphEffects {
                             //     node.parent.position,
                             //     node.public_key.slice(0, 10),
                             // );
+
+                            unparentedNode.position = createSpherePoint(
+                                1,
+                                new THREE.Vector3(0, 0, 0),
+                                unparentedNode.public_key.slice(0, 10),
+                            );
+
                             this.calculatePositionFromParent(unparentedNode);
                         }),
                 ),
@@ -229,7 +236,9 @@ export class GraphEffects {
     );
 
     public calculatePositionFromParent(node: LndNodeWithPosition, depth = 2) {
-        if (depth > 30) return;
+        if (depth > 30) {
+            return;
+        }
         Object.values(node.children).forEach((child) => {
             child.position = createSpherePoint(
                 1 / depth,
