@@ -3,10 +3,13 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
+import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
 import { catchError, delay, filter, map, mergeMap, of, tap } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
+import { createSpherePoint } from '../utils';
+import * as THREE from 'three';
 
 @Injectable()
 export class GraphEffects {
@@ -49,5 +52,27 @@ export class GraphEffects {
                 graphActions.processGraphChannelChunk({ chunk: chunk as Chunk<LndChannel> }),
             ),
         ),
+    );
+
+    private readonly origin = new THREE.Vector3(0, 0, 0);
+
+    positionNodes$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.processGraphNodeChunk),
+                map((action) =>
+                    action.chunk.data.reduce((acc, node) => {
+                        acc[node.public_key] = {
+                            ...node,
+                            position: createSpherePoint(1, this.origin, node.public_key),
+                        };
+                        return acc;
+                    }, {} as Record<string, LndNodeWithPosition>),
+                ),
+                map((node: Record<string, LndNodeWithPosition>) =>
+                    graphActions.cacheProcessedGraphNodeChunk({ hashmap: node }),
+                ),
+            ),
+        { dispatch: true },
     );
 }
