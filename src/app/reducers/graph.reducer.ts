@@ -78,11 +78,11 @@ export const reducer = createReducer(
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
-        nodeSet: { ...state.nodeSet, ...nodeSet },
+        nodeSet,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
-        channelSet: channelSet,
+        channelSet,
     })),
     //on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     // on(graphActions.processGraphNodeChunk, (state, { chunk }) => {

@@ -114,8 +114,8 @@ export class GraphEffects {
                         return acc;
                     }, {} as Record<string, LndNodeWithPosition>),
                 ),
-                map((nodeSet: Record<string, LndNodeWithPosition>) =>
-                    graphActions.cacheProcessedGraphNodeChunk({ nodeSet }),
+                map((nodeSubSet: Record<string, LndNodeWithPosition>) =>
+                    graphActions.concatinateNodeChunk({ nodeSubSet }),
                 ),
             ),
         { dispatch: true },
@@ -208,9 +208,24 @@ export class GraphEffects {
                         }
                     }),
                 ),
-                map((action) =>
-                    graphActions.cacheProcessedGraphNodeChunk({ nodeSet: action.nodeSet }),
-                ),
+                map((action) => graphActions.concatinateNodeChunk({ nodeSubSet: action.nodeSet })),
+            ),
+        { dispatch: true },
+    );
+
+    concatinateNodeChunk$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.concatinateNodeChunk),
+                withLatestFrom(this.store$.select(selectNodeSetValue)),
+                map(([action, nodeState]) => {
+                    const res = nodeState.reduce((acc, node) => {
+                        acc[node.public_key] = node;
+                        return acc;
+                    }, action.nodeSubSet);
+                    console.log(action.nodeSubSet);
+                    return graphActions.cacheProcessedGraphNodeChunk({ nodeSet: res });
+                }),
             ),
         { dispatch: true },
     );

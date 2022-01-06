@@ -24,6 +24,11 @@ export const processGraphNodeChunk = createAction(
     props<{ chunk: Chunk<LndNode> }>(),
 );
 
+export const concatinateNodeChunk = createAction(
+    '[graph] concatinateNodeChunk',
+    props<{ nodeSubSet: Record<string, LndNodeWithPosition> }>(),
+);
+
 export const cacheProcessedGraphNodeChunk = createAction(
     '[graph] cacheProcessedGraphNodeChunk',
     props<{ nodeSet: Record<string, LndNodeWithPosition> }>(),
