@@ -217,14 +217,16 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateNodeChunk),
-                withLatestFrom(this.store$.select(selectNodeSetValue)),
+                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
                 map(([action, nodeState]) => {
-                    const res = nodeState.reduce((acc, node) => {
-                        acc[node.public_key] = node;
-                        return acc;
-                    }, action.nodeSubSet);
-                    console.log(action.nodeSubSet);
-                    return graphActions.cacheProcessedGraphNodeChunk({ nodeSet: res });
+                    // const res = nodeState.reduce((acc, node) => {
+                    //     acc[node.public_key] = node;
+                    //     return acc;
+                    // }, action.nodeSubSet);
+                    // console.log(action.nodeSubSet);
+                    return graphActions.cacheProcessedGraphNodeChunk({
+                        nodeSet: { ...nodeState, ...action.nodeSubSet },
+                    });
                 }),
             ),
         { dispatch: true },
@@ -234,13 +236,15 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateChannelChunk),
-                withLatestFrom(this.store$.select(selectChannelSetValue)),
+                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
                 map(([action, channelState]) => {
-                    const res = channelState.reduce((acc, chnl) => {
-                        acc[chnl.id] = chnl;
-                        return acc;
-                    }, action.channelSubSet);
-                    return graphActions.cacheProcessedChannelChunk({ channelSet: res });
+                    // const res = channelState.reduce((acc, chnl) => {
+                    //     acc[chnl.id] = chnl;
+                    //     return acc;
+                    // }, action.channelSubSet);
+                    return graphActions.cacheProcessedChannelChunk({
+                        channelSet: { ...action.channelSubSet, ...channelState },
+                    });
                 }),
             ),
         { dispatch: true },
