@@ -4,17 +4,24 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { catchError, delay, filter, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, filter, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
 import { createSpherePoint } from '../utils';
 import * as THREE from 'three';
-import PriorityQueue from 'ts-priority-queue';
+import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
+import { selectNodeSetKeyValue } from '../selectors/graph.selectors';
+import { GraphState } from '../reducers/graph.reducer';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class GraphEffects {
-    constructor(private actions$: Actions, private lndApiServiceService: LndApiServiceService) {}
+    constructor(
+        private actions$: Actions,
+        private store$: Store<GraphState>,
+        private lndApiServiceService: LndApiServiceService,
+    ) {}
 
     retrieveGraph$ = createEffect(() =>
         this.actions$.pipe(
@@ -58,7 +65,7 @@ export class GraphEffects {
     private readonly origin = new THREE.Vector3(0, 0, 0);
 
     private readonly nodeQueueComparitor = {
-        comparator: function (a: LndChannel, b: LndChannel): number {
+        compare: (a: LndChannel, b: LndChannel): number => {
             return a.capacity - b.capacity;
         },
     };
@@ -72,9 +79,9 @@ export class GraphEffects {
                         acc[node.public_key] = {
                             ...node,
                             position: createSpherePoint(1, this.origin, node.public_key),
-                            // connectedChannels: new PriorityQueue<LndChannel>(
-                            //     this.nodeQueueComparitor,
-                            // ),
+                            connectedChannels: new MaxPriorityQueue<LndChannel>(
+                                this.nodeQueueComparitor,
+                            ),
                         };
                         return acc;
                     }, {} as Record<string, LndNodeWithPosition>),
@@ -84,5 +91,28 @@ export class GraphEffects {
                 ),
             ),
         { dispatch: true },
+    );
+
+    positionChannels$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.processGraphChannelChunk),
+                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
+                tap(([action, nodeRegistry]) =>
+                    action.chunk.data.forEach((channel: LndChannel) => {
+                        nodeRegistry[channel.policies[0].public_key]?.connectedChannels.enqueue(
+                            channel,
+                        );
+                        nodeRegistry[channel.policies[1].public_key]?.connectedChannels.enqueue(
+                            channel,
+                        );
+                    }),
+                ),
+                //tap(([action, nodeRegistry]) => console.log(nodeRegistry)),
+                // map((nodeSet: Record<string, LndNodeWithPosition>) =>
+                //     graphActions.cacheProcessedGraphNodeChunk({ nodeSet }),
+                // ),
+            ),
+        { dispatch: false },
     );
 }
