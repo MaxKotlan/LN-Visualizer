@@ -82,9 +82,10 @@ export class GraphEffects {
                 const otherNodeBPubKey = this.selectOtherNodeInChannel(b.parent.public_key, b);
                 const a1 = nodeSet[otherNodeAPubKey]; //.connectedChannels.size();
                 const b1 = nodeSet[otherNodeBPubKey]; //.connectedChannels.size();
-                if (!a1 || !b1) {
-                    return -1;
-                }
+
+                if (!a1) return 0;
+                if (!b1) return 0;
+
                 const c = a1.connectedChannels.size();
                 const d = b1.connectedChannels.size();
                 return c - d;
@@ -173,11 +174,15 @@ export class GraphEffects {
                         // );
                     }),
                 ),
-                //tap(([action, nodeRegistry]) => console.log(nodeRegistry)),
+                map(
+                    ([, nodeRegistry]) =>
+                        graphActions.cacheProcessedGraphNodeChunk({ nodeSet: nodeRegistry }),
+                    //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
+                ),
                 // map((nodeSet: Record<string, LndNodeWithPosition>) =>
                 //     graphActions.cacheProcessedGraphNodeChunk({ nodeSet }),
                 // ),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 }
