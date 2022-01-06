@@ -26,6 +26,7 @@ import {
     selectSortedEdges,
     selectVertices,
 } from 'src/app/selectors/graph.selectors';
+import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import * as THREE from 'three';
 
 @Component({
@@ -41,16 +42,17 @@ export class GraphSceneComponent implements AfterViewInit {
         private store$: Store<GraphState>,
         private actions$: Actions,
         private animationService: AnimationService,
+        private graphMeshStateService: GraphMeshStateService,
     ) {}
 
     public modifiedGraph$ = this.store$.select(selectModifiedGraph);
-    public positions$ = this.store$.select(selectVertices);
+    public positions$ = this.graphMeshStateService.nodeVertices$; //this.store$.select(selectVertices);
     public colors$ = this.store$.select(selectColors);
     public getSortedEdges$ = this.store$.select(selectSortedEdges);
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public selectEdgeColor$ = this.store$.select(selectEdgeColor);
     public selectAliases$ = this.store$.select(selectAliases);
-    public selectEdgeVertices$ = this.store$.select(selectEdgeVertices);
+    public selectEdgeVertices$ = this.graphMeshStateService.channelVertices$; //this.store$.select(selectEdgeVertices);
     public selectNodeSize$ = this.store$.select(selectNodeSize);
     public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);

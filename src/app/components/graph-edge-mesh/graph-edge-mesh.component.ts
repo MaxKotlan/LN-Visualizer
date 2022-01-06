@@ -48,8 +48,6 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     }
 
     protected generateGeometry() {
-        console.log(this.edgeVertices);
-
         if (!this.edgeVertices) return;
         this.geometry.setAttribute(
             'position',
@@ -72,7 +70,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
             : new THREE.LineBasicMaterial({
                   color: 0xffffff,
                   linewidth: 1,
-                  vertexColors: true,
+                  vertexColors: false,
               });
 
         material.depthTest = this.depthTest;

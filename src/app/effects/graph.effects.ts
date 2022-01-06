@@ -27,7 +27,7 @@ export class GraphEffects {
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
     ) {
-        this.store$.select(selectChannelSetValue).subscribe((nsv) => console.log(nsv.length));
+        //this.store$.select(selectChannelSetValue).subscribe((nsv) => console.log(nsv.length));
     }
 
     retrieveGraph$ = createEffect(() =>

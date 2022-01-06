@@ -40,6 +40,7 @@ import { LndRaycasterCameraDirective } from './directives/lnd-raycaster-camera.d
 import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.directive';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { GraphMeshStateService } from './services/graph-mesh-state.service';
 
 @NgModule({
     declarations: [
@@ -99,7 +100,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         //   },
         // }),
     ],
-    providers: [NodePositionRegistryService, LndRaycasterService],
+    providers: [NodePositionRegistryService, LndRaycasterService, GraphMeshStateService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
