@@ -24,7 +24,7 @@ export class GraphEffects {
     ) {
         this.store$
             .select(selectNodeSetValue)
-            .subscribe((nsv) => console.log(nsv.filter((n) => !n.parent)));
+            .subscribe((nsv) => console.log(nsv.filter((n) => !!n.parent).length));
     }
 
     retrieveGraph$ = createEffect(() =>
@@ -80,9 +80,14 @@ export class GraphEffects {
             compare: (a: LndChannelWithParent, b: LndChannelWithParent): number => {
                 const otherNodeAPubKey = this.selectOtherNodeInChannel(a.parent.public_key, a);
                 const otherNodeBPubKey = this.selectOtherNodeInChannel(b.parent.public_key, b);
-                const a1 = nodeSet[otherNodeAPubKey]?.connectedChannels.size();
-                const b1 = nodeSet[otherNodeBPubKey]?.connectedChannels.size();
-                return a1 - b1;
+                const a1 = nodeSet[otherNodeAPubKey]; //.connectedChannels.size();
+                const b1 = nodeSet[otherNodeBPubKey]; //.connectedChannels.size();
+                if (!a1 || !b1) {
+                    return -1;
+                }
+                const c = a1.connectedChannels.size();
+                const d = b1.connectedChannels.size();
+                return c - d;
             },
         };
     }
@@ -140,13 +145,25 @@ export class GraphEffects {
 
                         const chnl: LndChannelWithParent =
                             node1.connectedChannels.front() as LndChannelWithParent;
-                        node1.parent =
+                        const potentialParent1 =
                             nodeRegistry[this.selectOtherNodeInChannel(node1.public_key, chnl)];
+
+                        if (
+                            node1.connectedChannels.size() <
+                            potentialParent1.connectedChannels.size()
+                        )
+                            node1.parent = potentialParent1;
 
                         const chn2: LndChannelWithParent =
                             node2.connectedChannels.front() as LndChannelWithParent;
-                        node2.parent =
+                        const potentialParent2 =
                             nodeRegistry[this.selectOtherNodeInChannel(node2.public_key, chn2)];
+
+                        if (
+                            node2.connectedChannels.size() <
+                            potentialParent2.connectedChannels.size()
+                        )
+                            node2.parent = potentialParent2;
                         // nodeRegistry[channel.policies[1].public_key]?.connectedChannels.enqueue(
                         //     {...channel, parent},
                         // );
