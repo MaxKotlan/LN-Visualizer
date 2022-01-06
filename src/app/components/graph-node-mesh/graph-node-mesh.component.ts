@@ -146,7 +146,7 @@ export class GraphNodeMeshComponent
         // );
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
-        console.log('NEW POOSS', this.positions.size);
+        //console.log('NEW POOSS', this.positions.size);
         //this.geometry.attributes['color'].needsUpdate = true;
         // this.colorData.array = this.colors || new Uint8Array([]);
         // this.colorData.itemSize = 3;

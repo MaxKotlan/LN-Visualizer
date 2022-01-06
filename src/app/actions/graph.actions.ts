@@ -26,7 +26,7 @@ export const processGraphNodeChunk = createAction(
 
 export const cacheProcessedGraphNodeChunk = createAction(
     '[graph] cacheProcessedGraphNodeChunk',
-    props<{ hashmap: Record<string, LndNodeWithPosition> }>(),
+    props<{ nodeSet: Record<string, LndNodeWithPosition> }>(),
 );
 
 export const processGraphChannelChunk = createAction(

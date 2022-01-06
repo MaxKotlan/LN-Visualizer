@@ -10,6 +10,7 @@ import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
 import { createSpherePoint } from '../utils';
 import * as THREE from 'three';
+import PriorityQueue from 'ts-priority-queue';
 
 @Injectable()
 export class GraphEffects {
@@ -56,6 +57,12 @@ export class GraphEffects {
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
 
+    private readonly nodeQueueComparitor = {
+        comparator: function (a: LndChannel, b: LndChannel): number {
+            return a.capacity - b.capacity;
+        },
+    };
+
     positionNodes$ = createEffect(
         () =>
             this.actions$.pipe(
@@ -65,12 +72,15 @@ export class GraphEffects {
                         acc[node.public_key] = {
                             ...node,
                             position: createSpherePoint(1, this.origin, node.public_key),
+                            // connectedChannels: new PriorityQueue<LndChannel>(
+                            //     this.nodeQueueComparitor,
+                            // ),
                         };
                         return acc;
                     }, {} as Record<string, LndNodeWithPosition>),
                 ),
-                map((node: Record<string, LndNodeWithPosition>) =>
-                    graphActions.cacheProcessedGraphNodeChunk({ hashmap: node }),
+                map((nodeSet: Record<string, LndNodeWithPosition>) =>
+                    graphActions.cacheProcessedGraphNodeChunk({ nodeSet }),
                 ),
             ),
         { dispatch: true },

@@ -53,21 +53,22 @@ export const selectModifiedGraph = createSelector(graphSelector, (state) => stat
 
 export const selectNodeValue = createSelector(selectModifiedGraph, (graph) => Object.values(graph));
 
+export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => state.nodeSet);
+export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) =>
+    Object.values(keyValueNodeSet),
+);
+
 export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) =>
     graph.flatMap((mgn) => mgn.connectedEdges),
 );
 
 export const selectVertices = createSelector(
-    selectNodeValue,
+    selectNodeSetValue,
     selectNodeVertexBuffer,
     (nodeValue, vertexBuffer) => {
         if (!vertexBuffer || !nodeValue) return null;
         vertexBuffer.set(
-            nodeValue.flatMap((n) => [
-                n.postition.x * 100,
-                n.postition.y * 100,
-                n.postition.z * 100,
-            ]),
+            nodeValue.flatMap((n) => [n.position.x * 100, n.position.y * 100, n.position.z * 100]),
         );
         return { bufferRef: vertexBuffer, size: nodeValue.length } as BufferRef<Float32Array>;
     },

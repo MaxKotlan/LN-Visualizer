@@ -8,6 +8,7 @@ import { LndNode } from 'api/src/models';
 import { LndChannel } from '../types/channels.interface';
 import * as seedRandom from 'seedrandom';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
+import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
 
 type PublicKey = string;
 
@@ -22,6 +23,8 @@ export interface GraphState {
     nodeChunksProcessed: number;
     channelChunksProcessed: number;
     nodeVertexBuffer: Float32Array | null;
+
+    nodeSet: Record<string, LndNodeWithPosition>;
 }
 
 const initialState: GraphState = {
@@ -35,6 +38,7 @@ const initialState: GraphState = {
     nodeChunksProcessed: 0,
     channelChunksProcessed: 0,
     nodeVertexBuffer: null,
+    nodeSet: {},
 };
 
 const hotFixMapper = (node: LndNode) => {
@@ -63,48 +67,52 @@ export const reducer = createReducer(
         chunkInfo,
         nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
     })),
+    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+        ...state,
+        nodeSet: { ...state.nodeSet, ...nodeSet },
+    })),
     on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
-    on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
-        const t0 = performance.now();
-        const currentNodeState = [...state.nodeList, ...chunk.data.map(hotFixMapper)];
-        const result = {
-            ...state,
-            nodeList: currentNodeState,
-            nodeChunksProcessed: state.nodeChunksProcessed + 1,
-            modifiedGraph: getModifiedGraph(currentNodeState, getNodeEdgeArray(state.edgeList)),
-        };
-        const t1 = performance.now();
-        //console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
-        return result;
-    }),
-    on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
-        const t0 = performance.now();
-        const currentChannelState = [
-            ...state.edgeList,
-            ...chunk.data.map((chunk) => hotFixMapper2(chunk)),
-        ];
-        const result = {
-            ...state,
-            edgeList: currentChannelState,
-            channelChunksProcessed: state.channelChunksProcessed + 1,
-            modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
-        };
-        const t1 = performance.now();
-        //console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
-        return result;
-    }),
+    // on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
+    //     const t0 = performance.now();
+    //     const currentNodeState = [...state.nodeList, ...chunk.data.map(hotFixMapper)];
+    //     const result = {
+    //         ...state,
+    //         nodeList: currentNodeState,
+    //         nodeChunksProcessed: state.nodeChunksProcessed + 1,
+    //         modifiedGraph: getModifiedGraph(currentNodeState, getNodeEdgeArray(state.edgeList)),
+    //     };
+    //     const t1 = performance.now();
+    //     //console.log(`Call to compute nodes took ${t1 - t0} milliseconds.`);
+    //     return result;
+    // }),
+    // on(graphActions.processGraphChannelChunk, (state, { chunk }) => {
+    //     const t0 = performance.now();
+    //     const currentChannelState = [
+    //         ...state.edgeList,
+    //         ...chunk.data.map((chunk) => hotFixMapper2(chunk)),
+    //     ];
+    //     const result = {
+    //         ...state,
+    //         edgeList: currentChannelState,
+    //         channelChunksProcessed: state.channelChunksProcessed + 1,
+    //         modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
+    //     };
+    //     const t1 = performance.now();
+    //     //console.log(`Call to compute edges took ${t1 - t0} milliseconds.`);
+    //     return result;
+    // }),
     // on(graphActions.requestGraphSuccess, (state, { graph }) => ({
     //     ...state,
     //     graphUnsorted: graph,
     //     modifiedGraph: getModifiedGraph(graph.nodes, getNodeEdgeArray(graph.edges)),
     //     isLoading: false,
     // })),
-    on(graphActions.requestGraphFailure, (state, { error }) => ({
-        ...state,
-        error,
-        isLoading: false,
-    })),
-    on(graphActions.dismissError, (state) => ({ ...state, error: undefined })),
+    // on(graphActions.requestGraphFailure, (state, { error }) => ({
+    //     ...state,
+    //     error,
+    //     isLoading: false,
+    // })),
+    // on(graphActions.dismissError, (state) => ({ ...state, error: undefined })),
 );
 
 const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]> => {

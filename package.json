@@ -30,6 +30,7 @@
     "rxjs": "~7.4.0",
     "seedrandom": "^3.0.5",
     "three": "^0.132.2",
+    "ts-priority-queue": "^0.1.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
