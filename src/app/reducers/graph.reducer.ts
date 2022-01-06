@@ -73,7 +73,7 @@ export const reducer = createReducer(
         nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
         nodeColorBuffer: new Uint8Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
         channelVertexBuffer: new Float32Array(
-            Math.floor(chunkInfo.edges * bufferOverheadStorage) * 3,
+            Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
         ),
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({

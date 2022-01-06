@@ -47,9 +47,8 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     }
 
     protected generateGeometry() {
-        // this.geometry
-        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-        //     .scale(100, 100, 100);
+        console.log(this.edgeVertices);
+
         if (!this.edgeVertices) return;
         this.geometry.setAttribute(
             'position',

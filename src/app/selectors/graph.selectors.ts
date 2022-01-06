@@ -211,14 +211,19 @@ export const selectEdgeVertices = createSelector(
     (channelValue, vertexBuffer, nodeRegistry) => {
         if (!vertexBuffer || !channelValue) return null;
         vertexBuffer.set(
-            channelValue.flatMap((channel) => [
-                nodeRegistry[channel.policies[0].public_key].position.x * 100,
-                nodeRegistry[channel.policies[0].public_key].position.y * 100,
-                nodeRegistry[channel.policies[0].public_key].position.z * 100,
-                nodeRegistry[channel.policies[1].public_key].position.x * 100,
-                nodeRegistry[channel.policies[1].public_key].position.y * 100,
-                nodeRegistry[channel.policies[1].public_key].position.z * 100,
-            ]),
+            channelValue.flatMap((channel) => {
+                const node1 = nodeRegistry[channel.policies[0].public_key];
+                const node2 = nodeRegistry[channel.policies[1].public_key];
+                if (!node1 || !node2) return [];
+                return [
+                    nodeRegistry[channel.policies[0].public_key].position.x * 100,
+                    nodeRegistry[channel.policies[0].public_key].position.y * 100,
+                    nodeRegistry[channel.policies[0].public_key].position.z * 100,
+                    nodeRegistry[channel.policies[1].public_key].position.x * 100,
+                    nodeRegistry[channel.policies[1].public_key].position.y * 100,
+                    nodeRegistry[channel.policies[1].public_key].position.z * 100,
+                ];
+            }),
         );
         return { bufferRef: vertexBuffer, size: channelValue.length } as BufferRef<Float32Array>;
     },
