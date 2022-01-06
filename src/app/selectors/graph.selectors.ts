@@ -67,6 +67,10 @@ export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => st
 export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) =>
     Object.values(keyValueNodeSet),
 );
+export const selectChannelSetKeyValue = createSelector(graphSelector, (state) => state.channelSet);
+export const selectChannelSetValue = createSelector(selectChannelSetKeyValue, (keyValueNodeSet) =>
+    Object.values(keyValueNodeSet),
+);
 
 export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) =>
     graph.flatMap((mgn) => mgn.connectedEdges),
