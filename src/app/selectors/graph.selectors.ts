@@ -204,46 +204,59 @@ const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): bool
     return node.pub_key === edge.node1_pub || node.pub_key === edge.node2_pub;
 };
 
-const edgeVerticies = new Float32Array(80000 * 3);
-
 export const selectEdgeVertices = createSelector(
-    selectSortedEdges,
-    selectModifiedGraph,
-    selectFinalMatcheNodesFromSearch,
-    (sortedEdges, modifiedGraph, searchResult) => {
-        // for (let i = 0; i < sortedEdges.length * 3; i += 3) {
-        //     let pubkeyTest;
-        //     let pubkeyTestOpposite;
-
-        //     // if (searchResult) {
-        //     //     pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
-        //     //     pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(
-        //     //         sortedEdges[i],
-        //     //         searchResult.pub_key,
-        //     //     );
-        //     // } else {
-        //     if (!sortedEdges[i / 3]?.node1_pub) return { bufferRef: edgeVerticies, size: 0 };
-        //     if (!sortedEdges[i / 3]?.node2_pub) return { bufferRef: edgeVerticies, size: 0 };
-
-        //     pubkeyTest = sortedEdges[i / 3].node1_pub;
-        //     pubkeyTestOpposite = sortedEdges[i].node2_pub;
-        //     //}
-
-        //     if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition) {
-        //         edgeVerticies[i / 3] = modifiedGraph[pubkeyTest]?.postition.x;
-        //         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTest]?.postition.y;
-        //         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTest]?.postition.z;
-        //     }
-
-        //     if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition) {
-        //         edgeVerticies[i / 3] = modifiedGraph[pubkeyTestOpposite]?.postition.x;
-        //         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTestOpposite]?.postition.y;
-        //         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTestOpposite]?.postition.z;
-        //     }
-        // }
-        return { bufferRef: edgeVerticies, size: sortedEdges.length } as BufferRef<Float32Array>;
+    selectChannelSetValue,
+    selectChannelVertexBuffer,
+    selectNodeSetKeyValue,
+    (channelValue, vertexBuffer, nodeRegistry) => {
+        if (!vertexBuffer || !channelValue) return null;
+        vertexBuffer.set(
+            channelValue.flatMap((channel) => [
+                nodeRegistry[channel.policies[0].public_key].position.x * 100,
+                nodeRegistry[channel.policies[0].public_key].position.y * 100,
+                nodeRegistry[channel.policies[0].public_key].position.z * 100,
+                nodeRegistry[channel.policies[1].public_key].position.x * 100,
+                nodeRegistry[channel.policies[1].public_key].position.y * 100,
+                nodeRegistry[channel.policies[1].public_key].position.z * 100,
+            ]),
+        );
+        return { bufferRef: vertexBuffer, size: channelValue.length } as BufferRef<Float32Array>;
     },
 );
+//(sortedEdges, modifiedGraph, searchResult) => {
+// for (let i = 0; i < sortedEdges.length * 3; i += 3) {
+//     let pubkeyTest;
+//     let pubkeyTestOpposite;
+
+//     // if (searchResult) {
+//     //     pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
+//     //     pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(
+//     //         sortedEdges[i],
+//     //         searchResult.pub_key,
+//     //     );
+//     // } else {
+//     if (!sortedEdges[i / 3]?.node1_pub) return { bufferRef: edgeVerticies, size: 0 };
+//     if (!sortedEdges[i / 3]?.node2_pub) return { bufferRef: edgeVerticies, size: 0 };
+
+//     pubkeyTest = sortedEdges[i / 3].node1_pub;
+//     pubkeyTestOpposite = sortedEdges[i].node2_pub;
+//     //}
+
+//     if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition) {
+//         edgeVerticies[i / 3] = modifiedGraph[pubkeyTest]?.postition.x;
+//         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTest]?.postition.y;
+//         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTest]?.postition.z;
+//     }
+
+//     if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition) {
+//         edgeVerticies[i / 3] = modifiedGraph[pubkeyTestOpposite]?.postition.x;
+//         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTestOpposite]?.postition.y;
+//         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTestOpposite]?.postition.z;
+//     }
+// }
+//         return { bufferRef: edgeVerticies, size: sortedEdges.length } as BufferRef<Float32Array>;
+//     },
+// );
 
 /*
 Will need to optimize with the nearest neighbor. For now ugly bruteforce search.
