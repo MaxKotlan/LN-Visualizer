@@ -17,7 +17,7 @@ import * as THREE from 'three';
     providers: [provideParent(SphereMeshComponent)],
     template: '<ng-content></ng-content>',
 })
-export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
+export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
     @Input() public edgeVertices: BufferRef<Float32Array> | null = null;
     @Input() shouldRender: boolean = false;
     @Input() edgeColor: Uint8Array | null = null;
@@ -35,13 +35,14 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
     }
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
-        const obj: THREE.Object3D = this.getObject();
+        const obj: THREE.LineSegments = this.getObject();
         //console.log('loledgecnt', this.edgeVertices);
         if (obj) {
             //const newInstance = this.newObject3DInstance();
             this.generateGeometry();
             (obj as any)['geometry'] = this.geometry;
             (obj as any)['material'] = this.generateMaterial();
+            obj.computeLineDistances();
         }
         this.rendererService.render();
         super.ngOnChanges(simpleChanges);
