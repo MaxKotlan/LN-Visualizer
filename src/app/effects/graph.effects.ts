@@ -130,11 +130,6 @@ export class GraphEffects {
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
                 tap(([action, nodeRegistry]) =>
                     action.chunk.data.forEach((channel: LndChannel) => {
-                        // const parent = nodeRegistry[channel.policies[0].public_key];
-                        // parent?.connectedChannels.enqueue(
-                        //     {...channel, parent},
-                        // );
-
                         const node1 = nodeRegistry[channel.policies[0].public_key];
                         const node2 = nodeRegistry[channel.policies[1].public_key];
 
@@ -165,18 +160,11 @@ export class GraphEffects {
                             potentialParent2.connectedChannels.size()
                         )
                             node2.parent = potentialParent2;
-                        // nodeRegistry[channel.policies[1].public_key]?.connectedChannels.enqueue(
-                        //     {...channel, parent},
-                        // );
-                        //nodeRegistry[channel.policies[0].public_key].parent =
-                        // console.log(
-                        //     nodeRegistry[channel.policies[0].public_key]?.connectedChannels.front(),
-                        // );
                     }),
                 ),
                 map(
                     ([, nodeRegistry]) =>
-                        graphActions.cacheProcessedGraphNodeChunk({ nodeSet: nodeRegistry }),
+                        graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
                     //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
                 ),
                 // map((nodeSet: Record<string, LndNodeWithPosition>) =>
@@ -184,5 +172,9 @@ export class GraphEffects {
                 // ),
             ),
         { dispatch: true },
+    );
+
+    positionRecalculate$ = createEffect(() =>
+        this.actions$.pipe(ofType(graphActions.processGraphChannelChunk)),
     );
 }
