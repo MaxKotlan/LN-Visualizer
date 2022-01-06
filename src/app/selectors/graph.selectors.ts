@@ -42,6 +42,11 @@ export const selectNodeColorBuffer = createSelector(
     (state) => state.nodeColorBuffer,
 );
 
+export const selectChannelVertexBuffer = createSelector(
+    graphSelector,
+    (state) => state.channelVertexBuffer,
+);
+
 export const selectGraphError = createSelector(graphSelector, (state) => state.error);
 
 export const shouldShowErrorMessage = createSelector(

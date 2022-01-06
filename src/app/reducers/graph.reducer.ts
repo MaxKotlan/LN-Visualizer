@@ -26,6 +26,7 @@ export interface GraphState {
     nodeColorBuffer: Uint8Array | null;
     channelVertexBuffer: Float32Array | null;
     nodeSet: Record<string, LndNodeWithPosition>;
+    channelSet: Record<string, LndChannel>;
 }
 
 const initialState: GraphState = {
@@ -42,6 +43,7 @@ const initialState: GraphState = {
     nodeColorBuffer: null,
     channelVertexBuffer: null,
     nodeSet: {},
+    channelSet: {},
 };
 
 // const hotFixMapper = (node: LndNode) => {
@@ -78,7 +80,11 @@ export const reducer = createReducer(
         ...state,
         nodeSet: { ...state.nodeSet, ...nodeSet },
     })),
-    on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
+    on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
+        ...state,
+        channelSet: { ...state.channelSet, ...channelSet },
+    })),
+    //on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     // on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
     //     const t0 = performance.now();
     //     const currentNodeState = [...state.nodeList, ...chunk.data.map(hotFixMapper)];

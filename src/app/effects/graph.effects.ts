@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { catchError, filter, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
+import { catchError, filter, from, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
@@ -162,9 +162,25 @@ export class GraphEffects {
                             node2.parent = potentialParent2;
                     }),
                 ),
-                map(
-                    ([, nodeRegistry]) =>
-                        graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
+                map(([action, nodeRegistry]) => {
+                    const chnlRegistry = action.chunk.data.reduce((acc, channel) => {
+                        acc[channel.id] = channel;
+                        return acc;
+                    }, {} as Record<string, LndChannel>);
+                    return [chnlRegistry, nodeRegistry] as [
+                        Record<string, LndChannel>,
+                        Record<string, LndNodeWithPosition>,
+                    ];
+                }),
+                mergeMap(
+                    ([chnlRegistry, nodeRegistry]: [
+                        Record<string, LndChannel>,
+                        Record<string, LndNodeWithPosition>,
+                    ]) =>
+                        from([
+                            graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
+                            graphActions.cacheProcessedChannelChunk({ channelSet: chnlRegistry }),
+                        ]),
                     //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
                 ),
                 // map((nodeSet: Record<string, LndNodeWithPosition>) =>
