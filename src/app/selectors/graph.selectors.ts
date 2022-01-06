@@ -1,9 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-    GraphState,
-    selecteCorrectEdgePublicKey,
-    selecteOppositeCorrectEdgePublicKey,
-} from '../reducers/graph.reducer';
+import { GraphState, selecteCorrectEdgePublicKey } from '../reducers/graph.reducer';
 import { BufferRef } from '../types/bufferRef.interface';
 import { LnGraphEdge, LnModifiedGraphNode } from '../types/graph.interface';
 import { selectSearchString } from './controls.selectors';
@@ -11,6 +7,35 @@ import { selectSearchString } from './controls.selectors';
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
 export const selectGraphLoadingState = createSelector(graphSelector, (state) => state.isLoading);
+
+export const selectNodeChunksProcessed = createSelector(
+    graphSelector,
+    (state) => state.nodeChunksProcessed,
+);
+
+export const selectChannelChunksProcessed = createSelector(
+    graphSelector,
+    (state) => state.channelChunksProcessed,
+);
+
+export const selectChunkInfo = createSelector(graphSelector, (state) => state.chunkInfo);
+
+export const selectChunkRemainingPercentage = createSelector(
+    selectNodeChunksProcessed,
+    selectChannelChunksProcessed,
+    selectChunkInfo,
+    (nodesProcessed, channelsProcessed, chunkInfo) =>
+        !chunkInfo
+            ? 0
+            : ((nodesProcessed + channelsProcessed) /
+                  (chunkInfo.nodeChunks + chunkInfo.edgeChunks)) *
+              100,
+);
+
+export const selectNodeVertexBuffer = createSelector(
+    graphSelector,
+    (state) => state.nodeVertexBuffer,
+);
 
 export const selectGraphError = createSelector(graphSelector, (state) => state.error);
 
@@ -28,20 +53,25 @@ export const selectModifiedGraph = createSelector(graphSelector, (state) => stat
 
 export const selectNodeValue = createSelector(selectModifiedGraph, (graph) => Object.values(graph));
 
-export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) => {
-    console.log('whut da hell', graph);
-    return graph.flatMap((mgn) => mgn.connectedEdges);
-});
+export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) =>
+    graph.flatMap((mgn) => mgn.connectedEdges),
+);
 
-const positions = new Float32Array(18000 * 3);
-
-export const selectVertices = createSelector(selectNodeValue, (nodeValue) => {
-    positions.set(
-        nodeValue.flatMap((n) => [n.postition.x * 100, n.postition.y * 100, n.postition.z * 100]),
-    );
-
-    return { bufferRef: positions, size: nodeValue.length } as BufferRef<Float32Array>;
-});
+export const selectVertices = createSelector(
+    selectNodeValue,
+    selectNodeVertexBuffer,
+    (nodeValue, vertexBuffer) => {
+        if (!vertexBuffer || !nodeValue) return null;
+        vertexBuffer.set(
+            nodeValue.flatMap((n) => [
+                n.postition.x * 100,
+                n.postition.y * 100,
+                n.postition.z * 100,
+            ]),
+        );
+        return { bufferRef: vertexBuffer, size: nodeValue.length } as BufferRef<Float32Array>;
+    },
+);
 
 const fromHexString = (hexString: string) =>
     hexString

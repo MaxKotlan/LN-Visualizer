@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
+import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { Chunk } from '../types/chunk.interface';
 import { LnGraph } from '../types/graph.interface';
 import { LndNode } from '../types/node.interface';
@@ -25,6 +26,11 @@ export const processGraphNodeChunk = createAction(
 export const processGraphChannelChunk = createAction(
     '[graph] processGraphChannelChunk',
     props<{ chunk: Chunk<LndChannel> }>(),
+);
+
+export const processChunkInfo = createAction(
+    '[graph] processChunkInfo',
+    props<{ chunkInfo: ChunkInfo }>(),
 );
 
 export const dismissError = createAction('[graph] dismissError');

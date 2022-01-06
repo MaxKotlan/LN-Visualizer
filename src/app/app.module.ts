@@ -38,6 +38,8 @@ import { LndRaycasterService } from './services/lnd-raycaster-service';
 import { LndRaycasterEnableDirective } from './directives/lnd-raycaster-enable.directive';
 import { LndRaycasterCameraDirective } from './directives/lnd-raycaster-camera.directive';
 import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.directive';
+import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
     declarations: [
@@ -54,6 +56,7 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
         LndRaycasterEnableDirective,
         LndRaycasterCameraDirective,
         LndRaycasterSceneDirective,
+        LoadingBarComponent,
     ],
     imports: [
         BrowserModule,
@@ -81,7 +84,8 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
         MatIconModule,
         MatDialogModule,
         MatToolbarModule,
-        MatDividerModule, //,
+        MatDividerModule,
+        MatProgressBarModule, //,
         // StoreDevtoolsModule.instrument({
         //   maxAge: 25,
         //   logOnly: false,

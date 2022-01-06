@@ -1,8 +1,15 @@
 mat-spinner {
-  position: fixed;
-  transform: translateX(-50%) translateY(-50%);
-  top: 50%;
-  left: 50%;
-  z-index: 100;
-  color: aquamarine;
+    position: fixed;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+    color: aquamarine;
+}
+
+app-loading-bar {
+    position: fixed;
+    bottom: 0;
+    z-index: 100;
+    width: 100vw;
 }

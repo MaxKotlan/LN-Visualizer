@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LndChannel, LndNode } from 'api/src/models';
+import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { catchError, delay, filter, map, mergeMap, of, tap } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
@@ -22,6 +23,15 @@ export class GraphEffects {
                     ),
                 ),
             ),
+        ),
+    );
+
+    onChunkInfo$ = createEffect(() =>
+        this.lndApiServiceService.initialChunkSync().pipe(
+            filter((chunk) => chunk.type === 'chunkInfo'),
+            map((chunk) => chunk as unknown as ChunkInfo),
+            tap(console.log),
+            map((chunkInfo) => graphActions.processChunkInfo({ chunkInfo })),
         ),
     );
 

@@ -7,16 +7,21 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LndNode } from 'api/src/models';
 import { LndChannel } from '../types/channels.interface';
 import * as seedRandom from 'seedrandom';
+import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 
 type PublicKey = string;
 
 export interface GraphState {
+    chunkInfo: ChunkInfo | null;
     graphUnsorted: LnGraph;
     nodeList: LnGraphNode[];
     edgeList: LnGraphEdge[];
     modifiedGraph: Record<PublicKey, LnModifiedGraphNode>;
     isLoading: boolean;
     error: HttpErrorResponse | undefined;
+    nodeChunksProcessed: number;
+    channelChunksProcessed: number;
+    nodeVertexBuffer: Float32Array | null;
 }
 
 const initialState: GraphState = {
@@ -26,6 +31,10 @@ const initialState: GraphState = {
     edgeList: [],
     isLoading: false,
     error: undefined,
+    chunkInfo: null,
+    nodeChunksProcessed: 0,
+    channelChunksProcessed: 0,
+    nodeVertexBuffer: null,
 };
 
 const hotFixMapper = (node: LndNode) => {
@@ -44,8 +53,16 @@ const hotFixMapper2 = (channel: LndChannel) => {
     } as unknown as LnGraphEdge;
 };
 
+//Allocate 10% extra buffer space
+const bufferOverheadStorage = 1.1;
+
 export const reducer = createReducer(
     initialState,
+    on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
+        ...state,
+        chunkInfo,
+        nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
+    })),
     on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     on(graphActions.processGraphNodeChunk, (state, { chunk }) => {
         const t0 = performance.now();
@@ -53,6 +70,7 @@ export const reducer = createReducer(
         const result = {
             ...state,
             nodeList: currentNodeState,
+            nodeChunksProcessed: state.nodeChunksProcessed + 1,
             modifiedGraph: getModifiedGraph(currentNodeState, getNodeEdgeArray(state.edgeList)),
         };
         const t1 = performance.now();
@@ -68,6 +86,7 @@ export const reducer = createReducer(
         const result = {
             ...state,
             edgeList: currentChannelState,
+            channelChunksProcessed: state.channelChunksProcessed + 1,
             modifiedGraph: getModifiedGraph(state.nodeList, getNodeEdgeArray(currentChannelState)),
         };
         const t1 = performance.now();
@@ -90,8 +109,6 @@ export const reducer = createReducer(
 
 const getNodeEdgeArray = (edges: LnGraphEdge[]): Record<PublicKey, LnGraphEdge[]> => {
     let precomputedNodeEdgeList: Record<PublicKey, LnGraphEdge[]> = {};
-
-    console.log('yopyoyoyooy', edges);
 
     edges.forEach((edge) => {
         precomputedNodeEdgeList[edge.node1_pub] = [

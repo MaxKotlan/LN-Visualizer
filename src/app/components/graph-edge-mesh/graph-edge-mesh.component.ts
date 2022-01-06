@@ -36,7 +36,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.Object3D = this.getObject();
-        console.log('loledgecnt', this.edgeVertices?.size);
+        console.log('loledgecnt', this.edgeVertices);
         if (obj) {
             //const newInstance = this.newObject3DInstance();
             (obj as any)['geometry'] = this.geometry;

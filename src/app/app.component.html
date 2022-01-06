@@ -1,7 +1,8 @@
 <ng-container *ngIf="!(isGraphLoading$ | async) && !(shouldShowErrorMessage$ | async)">
-  <app-quick-controls></app-quick-controls>
-  <app-settings></app-settings>
+    <app-quick-controls></app-quick-controls>
+    <app-settings></app-settings>
 </ng-container>
 <app-error *ngIf="shouldShowErrorMessage$ | async"></app-error>
 <app-graph-scene></app-graph-scene>
 <mat-spinner *ngIf="isGraphLoading$ | async"></mat-spinner>
+<app-loading-bar></app-loading-bar>
