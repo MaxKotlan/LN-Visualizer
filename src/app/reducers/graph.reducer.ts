@@ -25,6 +25,7 @@ export interface GraphState {
     nodeVertexBuffer: Float32Array | null;
     nodeColorBuffer: Uint8Array | null;
     channelVertexBuffer: Float32Array | null;
+    channelColorBuffer: Uint8Array | null;
     nodeSet: Record<string, LndNodeWithPosition>;
     channelSet: Record<string, LndChannel>;
 }
@@ -42,6 +43,7 @@ const initialState: GraphState = {
     nodeVertexBuffer: null,
     nodeColorBuffer: null,
     channelVertexBuffer: null,
+    channelColorBuffer: null,
     nodeSet: {},
     channelSet: {},
 };
@@ -73,6 +75,9 @@ export const reducer = createReducer(
         nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
         nodeColorBuffer: new Uint8Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
         channelVertexBuffer: new Float32Array(
+            Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
+        ),
+        channelColorBuffer: new Uint8Array(
             Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
         ),
     })),

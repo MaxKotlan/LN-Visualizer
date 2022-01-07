@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map, throttleTime } from 'rxjs';
 import { GraphState } from '../reducers/graph.reducer';
 import {
+    selectChannelColorBuffer,
     selectChannelSetValue,
     selectChannelVertexBuffer,
     selectNodeColorBuffer,
@@ -86,6 +87,40 @@ export class GraphMeshStateService {
                 bufferRef: vertexBuffer,
                 size: channelValue.length,
             } as BufferRef<Float32Array>;
+        }),
+    );
+
+    channelColors$ = combineLatest([
+        this.store$.select(selectChannelSetValue),
+        this.store$.select(selectChannelColorBuffer),
+        this.store$.select(selectNodeSetKeyValue),
+    ]).pipe(
+        //   throttleTime(250),
+        map(([channelValue, colorBuffer, nodeRegistry]) => {
+            if (!colorBuffer || !channelValue) return null;
+            for (let i = 0; i < channelValue.length; i++) {
+                const channel = channelValue[i];
+                const node1 = nodeRegistry[channel.policies[0].public_key];
+                const node2 = nodeRegistry[channel.policies[1].public_key];
+                if (!node1 || !node2) {
+                    //|| channel.capacity === 0) {
+                    continue;
+                }
+
+                const color1 = this.fromHexString(node1.color);
+                const color2 = this.fromHexString(node2.color);
+
+                colorBuffer[i * 6] = color1[0];
+                colorBuffer[i * 6 + 1] = color1[1];
+                colorBuffer[i * 6 + 2] = color1[2];
+                colorBuffer[i * 6 + 3] = color2[0];
+                colorBuffer[i * 6 + 4] = color2[1];
+                colorBuffer[i * 6 + 5] = color2[2];
+            }
+            return {
+                bufferRef: colorBuffer,
+                size: channelValue.length,
+            } as BufferRef<Uint8Array>;
         }),
     );
 }

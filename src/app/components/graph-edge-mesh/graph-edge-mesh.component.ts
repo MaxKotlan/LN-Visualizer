@@ -20,7 +20,7 @@ import * as THREE from 'three';
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
     @Input() public edgeVertices: BufferRef<Float32Array> | null = null;
     @Input() shouldRender: boolean = false;
-    @Input() edgeColor: Uint8Array | null = null;
+    @Input() edgeColor: BufferRef<Uint8Array> | null = null;
     @Input() dashedLines: boolean = true;
     @Input() depthTest: boolean = false;
 
@@ -51,11 +51,17 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
     protected generateGeometry() {
         if (!this.edgeVertices) return;
+        if (!this.edgeColor) return;
+        this.geometry.setAttribute(
+            'color',
+            new THREE.BufferAttribute(this.edgeColor.bufferRef, 3, true),
+        );
         this.geometry.setAttribute(
             'position',
             new THREE.BufferAttribute(this.edgeVertices.bufferRef, 3),
         );
         this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices.size : 0);
+        this.geometry.attributes['color'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
     }
 
@@ -72,7 +78,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             : new THREE.LineBasicMaterial({
                   color: 0xffffff,
                   linewidth: 1,
-                  vertexColors: false,
+                  vertexColors: true,
               });
 
         material.depthTest = this.depthTest;
