@@ -63,6 +63,9 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices.size : 0);
         this.geometry.attributes['color'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
+
+        this.geometry.computeBoundingBox();
+        this.geometry.computeBoundingSphere();
     }
 
     protected generateMaterial() {
