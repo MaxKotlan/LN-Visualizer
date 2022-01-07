@@ -19,7 +19,6 @@ import {
 import {
     selectAliases,
     selectColors,
-    selectEdgeColor,
     selectEdgeVertices,
     selectFinalMatcheNodesFromSearch,
     selectModifiedGraph,
@@ -65,7 +64,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public gotoCoordinates$: Observable<THREE.Vector3> = this.actions$.pipe(
         ofType(gotoNode),
         withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
-        map(([, node]) => node?.postition),
+        map(([, node]) => node?.position),
         filter((pos) => !!pos),
         map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(100)),
     );
