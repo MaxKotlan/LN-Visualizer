@@ -81,13 +81,13 @@ export const reducer = createReducer(
             Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
         ),
     })),
-    on(graphActions.concatinateNodeChunk, (state, { nodeSubSet }) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
-        nodeSet: { ...state.nodeSet, ...nodeSubSet },
+        nodeSet,
     })),
-    on(graphActions.concatinateChannelChunk, (state, { channelSubSet }) => ({
+    on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
-        channelSet: { ...state.channelSet, ...channelSubSet },
+        channelSet,
     })),
     //on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     // on(graphActions.processGraphNodeChunk, (state, { chunk }) => {

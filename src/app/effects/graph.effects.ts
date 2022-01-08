@@ -4,7 +4,20 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { catchError, filter, from, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    delay,
+    filter,
+    from,
+    map,
+    mergeMap,
+    of,
+    switchMap,
+    tap,
+    throttleTime,
+    withLatestFrom,
+} from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
@@ -195,7 +208,7 @@ export class GraphEffects {
                         Record<string, LndNodeWithPosition>,
                     ]) =>
                         from([
-                            graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
+                            //    graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
                             graphActions.concatinateChannelChunk({ channelSubSet: chnlRegistry }),
                         ]),
                     //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
@@ -250,42 +263,64 @@ export class GraphEffects {
     }
 
     //Theres something not working right with this
-    // concatinateNodeChunk$ = createEffect(
-    //     () =>
-    //         this.actions$.pipe(
-    //             ofType(graphActions.concatinateNodeChunk),
-    //             withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-    //             map(([action, nodeState]) => {
-    //                 // const res = nodeState.reduce((acc, node) => {
-    //                 //     acc[node.public_key] = node;
-    //                 //     return acc;
-    //                 // }, action.nodeSubSet);
-    //                 // console.log(action.nodeSubSet);
-    //                 return graphActions.cacheProcessedGraphNodeChunk({
-    //                     nodeSet: { ...nodeState, ...action.nodeSubSet },
-    //                 });
-    //             }),
-    //         ),
-    //     { dispatch: true },
-    // );
+    concatinateNodeChunk$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.concatinateNodeChunk),
+                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
+                map(([action, nodeState]) => {
+                    // const res = nodeState.reduce((acc, node) => {
+                    //     acc[node.public_key] = node;
+                    //     return acc;
+                    // }, action.nodeSubSet);
+                    // console.log(action.nodeSubSet);
+                    return graphActions.cacheProcessedGraphNodeChunk({
+                        nodeSet: { ...nodeState, ...action.nodeSubSet },
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
 
-    // concatinateChannelChunk$ = createEffect(
-    //     () =>
-    //         this.actions$.pipe(
-    //             ofType(graphActions.concatinateChannelChunk),
-    //             withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
-    //             map(([action, channelState]) => {
-    //                 // const res = channelState.reduce((acc, chnl) => {
-    //                 //     acc[chnl.id] = chnl;
-    //                 //     return acc;
-    //                 // }, action.channelSubSet);
-    //                 return graphActions.cacheProcessedChannelChunk({
-    //                     channelSet: { ...action.channelSubSet, ...channelState },
-    //                 });
-    //             }),
-    //         ),
-    //     { dispatch: true },
-    // );
+    concatinateChannelChunk$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.concatinateChannelChunk),
+                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
+                map(([action, channelState]) => {
+                    // const res = channelState.reduce((acc, chnl) => {
+                    //     acc[chnl.id] = chnl;
+                    //     return acc;
+                    // }, action.channelSubSet);
+                    return graphActions.cacheProcessedChannelChunk({
+                        channelSet: { ...action.channelSubSet, ...channelState },
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
+
+    recalculatePosition$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.cacheProcessedChannelChunk),
+                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
+                throttleTime(1000),
+                switchMap(([, nodeRegistry]) => {
+                    // const res = channelState.reduce((acc, chnl) => {
+                    //     acc[chnl.id] = chnl;
+                    //     return acc;
+                    // }, action.channelSubSet);
+                    // return graphActions.cacheProcessedChannelChunk({
+                    //     channelSet: { ...action.channelSubSet, ...channelState },
+                    // });
+                    return of(graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }));
+                }),
+            ),
+        { dispatch: true },
+    );
+
+    //graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry })
 
     // private calculatePositionFromParent = (n: LnModifiedGraphNode, depth = 2) => {
     //     n.children.forEach((child) => {
