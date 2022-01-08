@@ -21,7 +21,7 @@ export class GraphMeshStateService {
         this.store$.select(selectNodeSetValue),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
-        // throttleTime(250),
+        throttleTime(250),
         map(([nodeValue, vertexBuffer]) => {
             if (!vertexBuffer || !nodeValue) return null;
             for (let i = 0; i < nodeValue.length; i++) {
@@ -65,7 +65,7 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
-        //   throttleTime(250),
+        throttleTime(250),
         map(([channelValue, vertexBuffer, nodeRegistry]) => {
             if (!vertexBuffer || !channelValue) return null;
             for (let i = 0; i < channelValue.length; i++) {
@@ -95,7 +95,7 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
-        //   throttleTime(250),
+        throttleTime(250),
         map(([channelValue, colorBuffer, nodeRegistry]) => {
             if (!colorBuffer || !channelValue) return null;
             for (let i = 0; i < channelValue.length; i++) {

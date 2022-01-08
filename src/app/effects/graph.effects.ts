@@ -202,20 +202,9 @@ export class GraphEffects {
                         Record<string, LndNodeWithPosition>,
                     ];
                 }),
-                mergeMap(
-                    ([chnlRegistry, nodeRegistry]: [
-                        Record<string, LndChannel>,
-                        Record<string, LndNodeWithPosition>,
-                    ]) =>
-                        from([
-                            //    graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
-                            graphActions.concatinateChannelChunk({ channelSubSet: chnlRegistry }),
-                        ]),
-                    //console.log(Object.values(nodeRegistry).filter((n) => !n.parent).length),
+                map(([chnlRegistry]) =>
+                    graphActions.concatinateChannelChunk({ channelSubSet: chnlRegistry }),
                 ),
-                // map((nodeSet: Record<string, LndNodeWithPosition>) =>
-                //     graphActions.cacheProcessedGraphNodeChunk({ nodeSet }),
-                // ),
             ),
         { dispatch: true },
     );
@@ -236,7 +225,7 @@ export class GraphEffects {
 
                             unparentedNode.position = createSpherePoint(
                                 1,
-                                new THREE.Vector3(0, 0, 0),
+                                this.origin,
                                 unparentedNode.public_key.slice(0, 10),
                             );
 

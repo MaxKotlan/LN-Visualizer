@@ -1,7 +1,6 @@
 <ng-container *ngIf="percentageComplete$ | async as percentage">
-    <mat-progress-bar
-        *ngIf="percentage < 100"
-        mode="determinate"
-        [value]="percentage"
-    ></mat-progress-bar>
+    <ng-container *ngIf="percentage < 100">
+        <span style="color: white">Downloading Nodes...</span>
+        <mat-progress-bar mode="determinate" [value]="percentage"></mat-progress-bar>
+    </ng-container>
 </ng-container>
