@@ -21,7 +21,7 @@ export class GraphMeshStateService {
         this.store$.select(selectNodeSetValue),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
-        throttleTime(250),
+        //throttleTime(250),
         map(([nodeValue, vertexBuffer]) => {
             if (!vertexBuffer || !nodeValue) return null;
             for (let i = 0; i < nodeValue.length; i++) {
@@ -65,23 +65,24 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
-        throttleTime(250),
+        //throttleTime(250),
         map(([channelValue, vertexBuffer, nodeRegistry]) => {
             if (!vertexBuffer || !channelValue) return null;
+            let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
-                const channel = channelValue[i];
+                const channel = channelValue[i - dec];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
                 const node2 = nodeRegistry[channel.policies[1].public_key];
                 if (!node1 || !node2) {
-                    //|| channel.capacity === 0) {
+                    dec++;
                     continue;
                 }
-                vertexBuffer[i * 6] = node1.position.x * 100;
-                vertexBuffer[i * 6 + 1] = node1.position.y * 100;
-                vertexBuffer[i * 6 + 2] = node1.position.z * 100;
-                vertexBuffer[i * 6 + 3] = node2.position.x * 100;
-                vertexBuffer[i * 6 + 4] = node2.position.y * 100;
-                vertexBuffer[i * 6 + 5] = node2.position.z * 100;
+                vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
+                vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * 100;
+                vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * 100;
+                vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * 100;
+                vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
+                vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
             }
             return {
                 bufferRef: vertexBuffer,
@@ -95,27 +96,29 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
-        throttleTime(250),
+        //throttleTime(250),
         map(([channelValue, colorBuffer, nodeRegistry]) => {
             if (!colorBuffer || !channelValue) return null;
+            let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
-                const channel = channelValue[i];
+                const channel = channelValue[i - dec];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
                 const node2 = nodeRegistry[channel.policies[1].public_key];
                 if (!node1 || !node2) {
                     //|| channel.capacity === 0) {
+                    dec++;
                     continue;
                 }
 
                 const color1 = this.fromHexString(node1.color);
                 const color2 = this.fromHexString(node2.color);
 
-                colorBuffer[i * 6] = color1[0];
-                colorBuffer[i * 6 + 1] = color1[1];
-                colorBuffer[i * 6 + 2] = color1[2];
-                colorBuffer[i * 6 + 3] = color2[0];
-                colorBuffer[i * 6 + 4] = color2[1];
-                colorBuffer[i * 6 + 5] = color2[2];
+                colorBuffer[(i - dec) * 6] = color1[0];
+                colorBuffer[(i - dec) * 6 + 1] = color1[1];
+                colorBuffer[(i - dec) * 6 + 2] = color1[2];
+                colorBuffer[(i - dec) * 6 + 3] = color2[0];
+                colorBuffer[(i - dec) * 6 + 4] = color2[1];
+                colorBuffer[(i - dec) * 6 + 5] = color2[2];
             }
             return {
                 bufferRef: colorBuffer,
