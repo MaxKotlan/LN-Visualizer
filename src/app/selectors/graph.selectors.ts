@@ -80,6 +80,11 @@ export const selectChannelSetValue = createSelector(selectChannelSetKeyValue, (k
     Object.values(keyValueNodeSet),
 );
 
+export const selectFilterChannelByCapacity = createSelector(
+    selectChannelSetValue,
+    (keyValueNodeSet) => keyValueNodeSet.filter((c) => c.capacity > 0),
+);
+
 export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) =>
     graph.flatMap((mgn) => mgn.connectedEdges),
 );

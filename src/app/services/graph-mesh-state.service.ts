@@ -6,6 +6,7 @@ import {
     selectChannelColorBuffer,
     selectChannelSetValue,
     selectChannelVertexBuffer,
+    selectFilterChannelByCapacity,
     selectNodeColorBuffer,
     selectNodeSetKeyValue,
     selectNodeSetValue,
@@ -61,7 +62,8 @@ export class GraphMeshStateService {
     );
 
     channelVertices$ = combineLatest([
-        this.store$.select(selectChannelSetValue),
+        this.store$.select(selectFilterChannelByCapacity),
+        //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
@@ -86,13 +88,14 @@ export class GraphMeshStateService {
             }
             return {
                 bufferRef: vertexBuffer,
-                size: channelValue.length,
+                size: channelValue.length - dec,
             } as BufferRef<Float32Array>;
         }),
     );
 
     channelColors$ = combineLatest([
-        this.store$.select(selectChannelSetValue),
+        this.store$.select(selectFilterChannelByCapacity),
+        //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
     ]).pipe(
@@ -122,7 +125,7 @@ export class GraphMeshStateService {
             }
             return {
                 bufferRef: colorBuffer,
-                size: channelValue.length,
+                size: channelValue.length - dec,
             } as BufferRef<Uint8Array>;
         }),
     );
