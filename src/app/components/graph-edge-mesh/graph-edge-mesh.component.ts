@@ -1,15 +1,7 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
-import {
-    AbstractMesh,
-    AbstractObject3D,
-    provideParent,
-    RendererService,
-    SphereMeshComponent,
-} from 'atft';
-import { selecteCorrectEdgePublicKey } from 'src/app/reducers/graph.reducer';
+import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
-import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/graph.interface';
 import * as THREE from 'three';
 
 @Component({

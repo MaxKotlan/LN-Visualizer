@@ -1,13 +1,9 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { GraphState, selecteCorrectEdgePublicKey } from '../reducers/graph.reducer';
-import { BufferRef } from '../types/bufferRef.interface';
-import { LnGraphEdge, LnModifiedGraphNode } from '../types/graph.interface';
+import { GraphState } from '../reducers/graph.reducer';
 import { selectSearchString } from './controls.selectors';
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
-
-export const selectGraphLoadingState = createSelector(graphSelector, (state) => state.isLoading);
 
 export const selectNodeChunksProcessed = createSelector(
     graphSelector,
@@ -55,22 +51,6 @@ export const selectChannelColorBuffer = createSelector(
     (state) => state.channelColorBuffer,
 );
 
-export const selectGraphError = createSelector(graphSelector, (state) => state.error);
-
-export const shouldShowErrorMessage = createSelector(
-    graphSelector,
-    (state) => !!state.error && !state.isLoading,
-);
-
-export const canDismissError = createSelector(
-    graphSelector,
-    (state) => !!state?.graphUnsorted?.nodes?.length && state.error,
-);
-
-export const selectModifiedGraph = createSelector(graphSelector, (state) => state.modifiedGraph);
-
-export const selectNodeValue = createSelector(selectModifiedGraph, (graph) => Object.values(graph));
-
 export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => state.nodeSet);
 export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) =>
     Object.values(keyValueNodeSet),
@@ -84,45 +64,6 @@ export const selectFilterChannelByCapacity = createSelector(
     selectChannelSetValue,
     (keyValueNodeSet) => keyValueNodeSet.filter((c) => c.capacity > 0),
 );
-
-export const selectEdgesFromModifiedGraph = createSelector(selectNodeValue, (graph) =>
-    graph.flatMap((mgn) => mgn.connectedEdges),
-);
-
-export const selectVertices = createSelector(
-    selectNodeSetValue,
-    selectNodeVertexBuffer,
-    (nodeValue, vertexBuffer) => {
-        if (!vertexBuffer || !nodeValue) return null;
-        vertexBuffer.set(
-            nodeValue.flatMap((n) => [n.position.x * 100, n.position.y * 100, n.position.z * 100]),
-        );
-        return { bufferRef: vertexBuffer, size: nodeValue.length } as BufferRef<Float32Array>;
-    },
-);
-
-const fromHexString = (hexString: string) =>
-    hexString
-        .replace('#', '')
-        .match(/.{1,2}/g)!
-        .map((byte) => parseInt(byte, 16));
-
-export const selectColors = createSelector(
-    selectNodeSetValue,
-    selectNodeColorBuffer,
-    (nodeValue, colorBuffer) => {
-        if (!colorBuffer || !nodeValue) return null;
-        colorBuffer.set(
-            nodeValue
-                .map((g) => g.color)
-                .map(fromHexString)
-                .flat(),
-        );
-        return colorBuffer;
-    },
-);
-
-export const getNodes = createSelector(graphSelector, (state) => state.graphUnsorted);
 
 export const selectPossibleNodesFromSearch = createSelector(
     selectNodeSetValue,
@@ -165,21 +106,12 @@ export const selectFilterBySearchedNode = createSelector(
             : channelValues,
 );
 
-export const selectSortedEdges = createSelector(
-    selectEdgesFromModifiedGraph,
-    selectFinalMatcheNodesFromSearch,
-    (edges, searchResult) =>
-        edges.filter(
-            (edge) => (searchResult === undefined ? true : true), //edgeDirectlyRelated(searchResult, edge),
-        ),
-);
-
 export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
     (nodes) => nodes.map((a) => ({ publicKey: a.public_key, alias: a.alias })).slice(0, 100), //hardcode max search for now
 );
 
-export const selectAliases = createSelector(selectNodeValue, (nodeValue) =>
+export const selectAliases = createSelector(selectNodeSetValue, (nodeValue) =>
     nodeValue.map((g) => g.alias),
 );
 
@@ -226,87 +158,8 @@ export const selectAliases = createSelector(selectNodeValue, (nodeValue) =>
 //     },
 // );
 
-const edgeDirectlyRelated = (node: LnModifiedGraphNode, edge: LnGraphEdge): boolean => {
-    //console.log('node1', edge);
-    return node.pub_key === edge.node1_pub || node.pub_key === edge.node2_pub;
-};
-
-export const selectEdgeVertices = createSelector(
-    selectChannelSetValue,
-    selectChannelVertexBuffer,
-    selectNodeSetKeyValue,
-    (channelValue, vertexBuffer, nodeRegistry) => {
-        if (!vertexBuffer || !channelValue) return null;
-        vertexBuffer.set(
-            channelValue.flatMap((channel) => {
-                const node1 = nodeRegistry[channel.policies[0].public_key];
-                const node2 = nodeRegistry[channel.policies[1].public_key];
-                if (!node1 || !node2) return [];
-                return [
-                    nodeRegistry[channel.policies[0].public_key].position.x * 100,
-                    nodeRegistry[channel.policies[0].public_key].position.y * 100,
-                    nodeRegistry[channel.policies[0].public_key].position.z * 100,
-                    nodeRegistry[channel.policies[1].public_key].position.x * 100,
-                    nodeRegistry[channel.policies[1].public_key].position.y * 100,
-                    nodeRegistry[channel.policies[1].public_key].position.z * 100,
-                ];
-            }),
-        );
-        return { bufferRef: vertexBuffer, size: channelValue.length } as BufferRef<Float32Array>;
-    },
-);
-//(sortedEdges, modifiedGraph, searchResult) => {
-// for (let i = 0; i < sortedEdges.length * 3; i += 3) {
-//     let pubkeyTest;
-//     let pubkeyTestOpposite;
-
-//     // if (searchResult) {
-//     //     pubkeyTest = selecteCorrectEdgePublicKey(sortedEdges[i], searchResult.pub_key);
-//     //     pubkeyTestOpposite = selecteOppositeCorrectEdgePublicKey(
-//     //         sortedEdges[i],
-//     //         searchResult.pub_key,
-//     //     );
-//     // } else {
-//     if (!sortedEdges[i / 3]?.node1_pub) return { bufferRef: edgeVerticies, size: 0 };
-//     if (!sortedEdges[i / 3]?.node2_pub) return { bufferRef: edgeVerticies, size: 0 };
-
-//     pubkeyTest = sortedEdges[i / 3].node1_pub;
-//     pubkeyTestOpposite = sortedEdges[i].node2_pub;
-//     //}
-
-//     if (pubkeyTest && modifiedGraph[pubkeyTest]?.postition) {
-//         edgeVerticies[i / 3] = modifiedGraph[pubkeyTest]?.postition.x;
-//         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTest]?.postition.y;
-//         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTest]?.postition.z;
-//     }
-
-//     if (pubkeyTestOpposite && modifiedGraph[pubkeyTestOpposite]?.postition) {
-//         edgeVerticies[i / 3] = modifiedGraph[pubkeyTestOpposite]?.postition.x;
-//         edgeVerticies[i / 3 + 1] = modifiedGraph[pubkeyTestOpposite]?.postition.y;
-//         edgeVerticies[i / 3 + 2] = modifiedGraph[pubkeyTestOpposite]?.postition.z;
-//     }
-// }
-//         return { bufferRef: edgeVerticies, size: sortedEdges.length } as BufferRef<Float32Array>;
-//     },
-// );
-
-/*
-Will need to optimize with the nearest neighbor. For now ugly bruteforce search.
-*/
-// export const selectClosestPoint = (point: THREE.Vector3) =>
-//     createSelector(selectNodeSetValue, selectVertices, (nodes, vertices) => {
-//         point.divideScalar(100);
-//         const distances = vertices.map((position) => position.distanceTo(point));
-//         const maximum = Math.min.apply(null, distances);
-//         const index = distances.indexOf(maximum);
-//         return nodes[index];
-//     });
-
 export const selectClosestPoint = (point: THREE.Vector3) =>
     createSelector(selectNodeSetValue, (nodeSetValue) => {
-        // const vertexBufRef = await lastValueFrom(
-        //     this.store$.select(selectNodeSetValue).pipe(take(1)),
-        // );
         if (!nodeSetValue) return;
         point.divideScalar(100);
         let minDistance = null;
@@ -320,8 +173,5 @@ export const selectClosestPoint = (point: THREE.Vector3) =>
         }
 
         if (minDistanceIndex === null) return;
-        // const distances = vertices.map((position) => position.distanceTo(point));
-        // const maximum = Math.min.apply(null, distances);
-        //const index = distances.indexOf(minDistance);
         return nodeSetValue[minDistanceIndex];
     });

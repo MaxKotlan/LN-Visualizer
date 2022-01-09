@@ -16,15 +16,7 @@ import {
     shouldRenderLabels,
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
-import {
-    selectAliases,
-    selectColors,
-    selectEdgeVertices,
-    selectFinalMatcheNodesFromSearch,
-    selectModifiedGraph,
-    selectSortedEdges,
-    selectVertices,
-} from 'src/app/selectors/graph.selectors';
+import { selectAliases, selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
 import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import * as THREE from 'three';
 
@@ -44,14 +36,12 @@ export class GraphSceneComponent implements AfterViewInit {
         private graphMeshStateService: GraphMeshStateService,
     ) {}
 
-    public modifiedGraph$ = this.store$.select(selectModifiedGraph);
-    public positions$ = this.graphMeshStateService.nodeVertices$; //this.store$.select(selectVertices);
-    public colors$ = this.graphMeshStateService.nodeColors$; //this.store$.select(selectColors);
-    public getSortedEdges$ = this.store$.select(selectSortedEdges);
+    public positions$ = this.graphMeshStateService.nodeVertices$;
+    public colors$ = this.graphMeshStateService.nodeColors$;
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
-    public selectEdgeColor$ = this.graphMeshStateService.channelColors$; //this.store$.select(selectEdgeColor);
+    public selectEdgeColor$ = this.graphMeshStateService.channelColors$;
     public selectAliases$ = this.store$.select(selectAliases);
-    public selectEdgeVertices$ = this.graphMeshStateService.channelVertices$; //this.store$.select(selectEdgeVertices);
+    public selectEdgeVertices$ = this.graphMeshStateService.channelVertices$;
     public selectNodeSize$ = this.store$.select(selectNodeSize);
     public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
@@ -68,18 +58,6 @@ export class GraphSceneComponent implements AfterViewInit {
         filter((pos) => !!pos),
         map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(100)),
     );
-
-    public onSelected() {
-        console.log('ServerActorComponent.onSelected');
-    }
-
-    public onDeselected() {
-        console.log('ServerActorComponent.onDeselected');
-    }
-
-    public onClick() {
-        console.log('ServerActorComponent.onClick');
-    }
 
     public ngAfterViewInit() {
         this.animate = this.animate.bind(this);
