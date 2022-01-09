@@ -9,6 +9,7 @@ import { LndChannel } from '../types/channels.interface';
 import * as seedRandom from 'seedrandom';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { state } from '@angular/animations';
 
 type PublicKey = string;
 
@@ -28,6 +29,7 @@ export interface GraphState {
     channelColorBuffer: Uint8Array | null;
     nodeSet: Record<string, LndNodeWithPosition>;
     channelSet: Record<string, LndChannel>;
+    loadingText: string;
 }
 
 const initialState: GraphState = {
@@ -46,6 +48,7 @@ const initialState: GraphState = {
     channelColorBuffer: null,
     nodeSet: {},
     channelSet: {},
+    loadingText: '',
 };
 
 // const hotFixMapper = (node: LndNode) => {
@@ -81,6 +84,14 @@ export const reducer = createReducer(
             Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
         ),
     })),
+    on(graphActions.processGraphNodeChunk, (state) => ({
+        ...state,
+        loadingText: 'Downloading Nodes...',
+    })),
+    on(graphActions.processGraphChannelChunk, (state) => ({
+        ...state,
+        loadingText: 'Downloading Channels...',
+    })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
         nodeSet,
@@ -90,6 +101,10 @@ export const reducer = createReducer(
         ...state,
         channelSet,
         channelChunksProcessed: state.channelChunksProcessed + 1,
+    })),
+    on(graphActions.graphNodePositionRecalculate, (state) => ({
+        ...state,
+        loadingText: 'Downloading Channels... Done. Recomputing Graph',
     })),
     //on(graphActions.requestGraph, (state) => ({ ...state, error: undefined, isLoading: true })),
     // on(graphActions.processGraphNodeChunk, (state, { chunk }) => {

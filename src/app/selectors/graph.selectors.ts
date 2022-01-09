@@ -33,6 +33,8 @@ export const selectChunkRemainingPercentage = createSelector(
               100,
 );
 
+export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
+
 export const selectNodeVertexBuffer = createSelector(
     graphSelector,
     (state) => state.nodeVertexBuffer,
