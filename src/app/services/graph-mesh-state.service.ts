@@ -70,7 +70,7 @@ export class GraphMeshStateService {
             if (!vertexBuffer || !channelValue) return null;
             let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
-                const channel = channelValue[i - dec];
+                const channel = channelValue[i];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
                 const node2 = nodeRegistry[channel.policies[1].public_key];
                 if (!node1 || !node2) {
@@ -101,7 +101,7 @@ export class GraphMeshStateService {
             if (!colorBuffer || !channelValue) return null;
             let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
-                const channel = channelValue[i - dec];
+                const channel = channelValue[i];
                 const node1 = nodeRegistry[channel.policies[0].public_key];
                 const node2 = nodeRegistry[channel.policies[1].public_key];
                 if (!node1 || !node2) {
