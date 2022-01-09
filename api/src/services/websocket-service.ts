@@ -8,7 +8,7 @@ export class WebSocketService {
 
     constructor(private initialSyncService: InitialSyncService) {
         console.log('Initializing Websocket Server');
-        this.wss = new WebSocketServer({ port: 8090 });
+        this.wss = new WebSocketServer({ port: 5647 });
     }
 
     public init() {
