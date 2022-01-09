@@ -23,7 +23,7 @@ export class LndApiServiceService {
     }
 
     public initialChunkSync(): Observable<Chunk<LndNode | LndChannel>> {
-        const subject = webSocket('ws://umbrel.local:5647');
+        const subject = webSocket('ws://127.0.0.1:5647');
         subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
         return subject as Observable<Chunk<LndNode>>;
     }
