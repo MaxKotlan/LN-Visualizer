@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, throttleTime } from 'rxjs';
+import { combineLatest, lastValueFrom, map, take, throttleTime } from 'rxjs';
+import * as THREE from 'three';
 import { GraphState } from '../reducers/graph.reducer';
 import {
     selectChannelColorBuffer,
@@ -129,4 +130,27 @@ export class GraphMeshStateService {
             } as BufferRef<Uint8Array>;
         }),
     );
+
+    public async selectClosestPoint(point: THREE.Vector3) {
+        const vertexBufRef = await lastValueFrom(
+            this.store$.select(selectNodeSetValue).pipe(take(1)),
+        );
+        if (!vertexBufRef) return;
+
+        let minDistance = null;
+        let minDistanceIndex = null;
+        for (let i = 0; i < vertexBufRef?.length; i++) {
+            const pointDisance = vertexBufRef[i].position.distanceTo(point);
+            if (minDistance === null || pointDisance < minDistance) {
+                minDistance = pointDisance;
+                minDistanceIndex = i;
+            }
+        }
+
+        if (minDistanceIndex === null) return;
+        // const distances = vertices.map((position) => position.distanceTo(point));
+        // const maximum = Math.min.apply(null, distances);
+        //const index = distances.indexOf(minDistance);
+        return vertexBufRef[minDistanceIndex];
+    }
 }

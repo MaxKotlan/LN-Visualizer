@@ -22,6 +22,7 @@ import {
 import { take } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
+import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 // import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -100,13 +101,14 @@ export class GraphNodeMeshComponent
     }
 
     private onClick(event: any) {
-        // const intersection = event as THREE.Intersection;
-        // this.store$
-        //     .select(selectClosestPoint(intersection.point))
-        //     .pipe(take(1))
-        //     .subscribe((node) => {
-        //         this.store$.dispatch(searchGraph({ searchText: node.alias }));
-        //     });
+        const intersection = event as THREE.Intersection;
+        this.store$
+            .select(selectClosestPoint(intersection.point))
+            .pipe(take(1))
+            .subscribe((node) => {
+                if (!node) return;
+                this.store$.dispatch(searchGraph({ searchText: node.alias }));
+            });
     }
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
