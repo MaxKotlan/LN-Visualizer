@@ -36,11 +36,11 @@ export class GraphMeshStateService {
         }),
     );
 
-    private fromHexString = (hexString: string) =>
-        hexString
-            .replace('#', '')
-            .match(/.{1,2}/g)!
-            .map((byte) => parseInt(byte, 16));
+    private fromHexString = (hexString: string) => [
+        parseInt(hexString[1] + hexString[2], 16),
+        parseInt(hexString[3] + hexString[4], 16),
+        parseInt(hexString[5] + hexString[6], 16),
+    ];
 
     nodeColors$ = combineLatest([
         this.store$.select(selectNodeSetValue),
@@ -130,27 +130,4 @@ export class GraphMeshStateService {
             } as BufferRef<Uint8Array>;
         }),
     );
-
-    public async selectClosestPoint(point: THREE.Vector3) {
-        const vertexBufRef = await lastValueFrom(
-            this.store$.select(selectNodeSetValue).pipe(take(1)),
-        );
-        if (!vertexBufRef) return;
-
-        let minDistance = null;
-        let minDistanceIndex = null;
-        for (let i = 0; i < vertexBufRef?.length; i++) {
-            const pointDisance = vertexBufRef[i].position.distanceTo(point);
-            if (minDistance === null || pointDisance < minDistance) {
-                minDistance = pointDisance;
-                minDistanceIndex = i;
-            }
-        }
-
-        if (minDistanceIndex === null) return;
-        // const distances = vertices.map((position) => position.distanceTo(point));
-        // const maximum = Math.min.apply(null, distances);
-        //const index = distances.indexOf(minDistance);
-        return vertexBufRef[minDistanceIndex];
-    }
 }
