@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as controlsActions from './actions/controls.actions';
+import * as graphActions from './actions/graph.actions';
 
 @Component({
     selector: 'app-root',
@@ -14,5 +15,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store$.dispatch(controlsActions.loadSavedState());
+        this.store$.dispatch(graphActions.initializeGraphSyncProcess());
     }
 }

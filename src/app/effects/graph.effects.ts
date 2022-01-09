@@ -52,44 +52,59 @@ export class GraphEffects {
         //     );
     }
 
-    retrieveGraph$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(graphActions.requestGraph),
-            mergeMap(() =>
-                this.lndApiServiceService.getGraphInfo().pipe(
-                    map((graph) => graphActions.requestGraphSuccess({ graph })),
-                    catchError((error: HttpErrorResponse) =>
-                        of(graphActions.requestGraphFailure({ error })),
+    retrieveGraph$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.initializeGraphSyncProcess),
+                mergeMap(() =>
+                    this.lndApiServiceService.initialChunkSync().pipe(
+                        map((data) => {
+                            switch (data.type) {
+                                case 'chunkInfo':
+                                    return graphActions.processChunkInfo({
+                                        chunkInfo: data as unknown as ChunkInfo,
+                                    });
+                                case 'node':
+                                    return graphActions.processGraphNodeChunk({
+                                        chunk: data as Chunk<LndNode>,
+                                    });
+                                case 'channel':
+                                    return graphActions.processGraphChannelChunk({
+                                        chunk: data as Chunk<LndChannel>,
+                                    });
+                            }
+                            return graphActions.errorUnknownChunkDataType();
+                        }),
                     ),
                 ),
             ),
-        ),
+        { dispatch: true },
     );
 
-    onChunkInfo$ = createEffect(() =>
-        this.lndApiServiceService.initialChunkSync().pipe(
-            filter((chunk) => chunk.type === 'chunkInfo'),
-            map((chunk) => chunk as unknown as ChunkInfo),
-            tap(console.log),
-            map((chunkInfo) => graphActions.processChunkInfo({ chunkInfo })),
-        ),
-    );
+    // onChunkInfo$ = createEffect(() =>
+    //     this.lndApiServiceService.initialChunkSync().pipe(
+    //         filter((chunk) => chunk.type === 'chunkInfo'),
+    //         map((chunk) => chunk as unknown as ChunkInfo),
+    //         tap(console.log),
+    //         map((chunkInfo) => graphActions.processChunkInfo({ chunkInfo })),
+    //     ),
+    // );
 
-    onNodeChunk$ = createEffect(() =>
-        this.lndApiServiceService.initialChunkSync().pipe(
-            filter((chunk) => chunk.type === 'node'),
-            map((chunk) => graphActions.processGraphNodeChunk({ chunk: chunk as Chunk<LndNode> })),
-        ),
-    );
+    // onNodeChunk$ = createEffect(() =>
+    //     this.lndApiServiceService.initialChunkSync().pipe(
+    //         filter((chunk) => chunk.type === 'node'),
+    //         map((chunk) => graphActions.processGraphNodeChunk({ chunk: chunk as Chunk<LndNode> })),
+    //     ),
+    // );
 
-    onChannelChunk$ = createEffect(() =>
-        this.lndApiServiceService.initialChunkSync().pipe(
-            filter((chunk) => chunk.type === 'channel'),
-            map((chunk) =>
-                graphActions.processGraphChannelChunk({ chunk: chunk as Chunk<LndChannel> }),
-            ),
-        ),
-    );
+    // onChannelChunk$ = createEffect(() =>
+    //     this.lndApiServiceService.initialChunkSync().pipe(
+    //         filter((chunk) => chunk.type === 'channel'),
+    //         map((chunk) =>
+    //             graphActions.processGraphChannelChunk({ chunk: chunk as Chunk<LndChannel> }),
+    //         ),
+    //     ),
+    // );
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
 

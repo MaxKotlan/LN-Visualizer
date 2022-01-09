@@ -14,6 +14,8 @@ export const requestGraphSuccess = createAction(
     props<{ graph: LnGraph }>(),
 );
 
+export const initializeGraphSyncProcess = createAction('[graph] initializeGraphSyncProcess');
+
 export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
     props<{ error: HttpErrorResponse }>(),
@@ -58,5 +60,7 @@ export const processChunkInfo = createAction(
     '[graph] processChunkInfo',
     props<{ chunkInfo: ChunkInfo }>(),
 );
+
+export const errorUnknownChunkDataType = createAction('[graph] errorUnknownChunkDataType');
 
 export const dismissError = createAction('[graph] dismissError');
