@@ -67,6 +67,6 @@ export const reducer = createReducer(
     })),
     on(graphActions.graphNodePositionRecalculate, (state) => ({
         ...state,
-        loadingText: 'Downloading Channels... Done. Recomputing Graph',
+        loadingText: 'Recomputing Graph...',
     })),
 );
