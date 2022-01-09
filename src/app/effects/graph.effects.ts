@@ -96,8 +96,7 @@ export class GraphEffects {
     private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {
         if (channel.policies[0].public_key === selfPubkey) return channel.policies[1].public_key;
         if (channel.policies[1].public_key === selfPubkey) return channel.policies[0].public_key;
-        console.log('Uh oh');
-        return '' as string;
+        throw new Error('Public Key is not either of the nodes in the channel');
     }
 
     private getNodeQueueComparitor(nodeSet: Record<string, LndNodeWithPosition>) {
