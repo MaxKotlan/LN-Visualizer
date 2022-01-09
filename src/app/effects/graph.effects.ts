@@ -279,14 +279,14 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateChannelChunk),
-                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
+                withLatestFrom(this.store$.select(selectChannelSetValue)),
                 map(([action, channelState]) => {
-                    // const res = channelState.reduce((acc, chnl) => {
-                    //     acc[chnl.id] = chnl;
-                    //     return acc;
-                    // }, action.channelSubSet);
+                    const res = channelState.reduce((acc, chnl) => {
+                        acc[chnl.id] = chnl;
+                        return acc;
+                    }, action.channelSubSet);
                     return graphActions.cacheProcessedChannelChunk({
-                        channelSet: { ...action.channelSubSet, ...channelState },
+                        channelSet: res,
                     });
                 }),
             ),
