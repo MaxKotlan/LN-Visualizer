@@ -144,9 +144,13 @@ export class GraphEffects {
         { dispatch: true },
     );
 
-    private enqueueChannel(lndNode: LndNodeWithPosition, channel: LndChannel) {
+    private enqueueChannel(
+        lndNode: LndNodeWithPosition,
+        otherNode: LndNodeWithPosition,
+        channel: LndChannel,
+    ) {
         if (!lndNode) return;
-        lndNode.connectedChannels.enqueue({ ...channel, parent: lndNode });
+        lndNode.connectedChannels.enqueue({ ...channel, parent: otherNode });
     }
 
     calculateNodeHeirarchy$ = createEffect(
@@ -162,8 +166,8 @@ export class GraphEffects {
                         if (!node1) return;
                         if (!node2) return;
 
-                        this.enqueueChannel(node1, channel);
-                        this.enqueueChannel(node2, channel);
+                        this.enqueueChannel(node1, node2, channel);
+                        this.enqueueChannel(node2, node1, channel);
 
                         const chnl: LndChannelWithParent =
                             node1.connectedChannels.front() as LndChannelWithParent;
