@@ -312,7 +312,7 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedChannelChunk),
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                throttleTime(1000),
+                throttleTime(100),
                 switchMap(([, nodeRegistry]) => {
                     // const res = channelState.reduce((acc, chnl) => {
                     //     acc[chnl.id] = chnl;
