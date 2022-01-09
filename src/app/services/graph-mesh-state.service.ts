@@ -4,8 +4,8 @@ import { combineLatest, map, throttleTime } from 'rxjs';
 import { GraphState } from '../reducers/graph.reducer';
 import {
     selectChannelColorBuffer,
-    selectChannelSetValue,
     selectChannelVertexBuffer,
+    selectFilterBySearchedNode,
     selectFilterChannelByCapacity,
     selectNodeColorBuffer,
     selectNodeSetKeyValue,
@@ -62,7 +62,7 @@ export class GraphMeshStateService {
     );
 
     channelVertices$ = combineLatest([
-        this.store$.select(selectFilterChannelByCapacity),
+        this.store$.select(selectFilterBySearchedNode),
         //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
@@ -94,7 +94,7 @@ export class GraphMeshStateService {
     );
 
     channelColors$ = combineLatest([
-        this.store$.select(selectFilterChannelByCapacity),
+        this.store$.select(selectFilterBySearchedNode),
         //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),

@@ -151,6 +151,20 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     },
 );
 
+/*Can be optimized by using registry instead*/
+export const selectFilterBySearchedNode = createSelector(
+    selectChannelSetValue,
+    selectFinalMatcheNodesFromSearch,
+    (channelValues, searchedNode) =>
+        !!searchedNode
+            ? channelValues.filter(
+                  (n) =>
+                      n.policies[0].public_key === searchedNode?.public_key ||
+                      n.policies[1].public_key === searchedNode?.public_key,
+              )
+            : channelValues,
+);
+
 export const selectSortedEdges = createSelector(
     selectEdgesFromModifiedGraph,
     selectFinalMatcheNodesFromSearch,
