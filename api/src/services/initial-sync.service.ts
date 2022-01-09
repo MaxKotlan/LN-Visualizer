@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { delay } from 'rxjs';
 import { WebSocket } from 'ws';
 import { Chunk, LndChannel, LndNode } from '../models';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
@@ -7,6 +6,10 @@ import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 @injectable()
 export class InitialSyncService {
     constructor(private lndChunkTrackerService: LndChunkTrackerService) {}
+
+    public sendChunkInfo(ws: WebSocket) {
+        ws.send(JSON.stringify(this.lndChunkTrackerService.chunkInfo));
+    }
 
     public performInitialNodeSync(ws: WebSocket) {
         this.lndChunkTrackerService.nodeChunks.forEach(async (chunk: Chunk<LndNode>) => {
@@ -24,7 +27,6 @@ export class InitialSyncService {
                     ),
                 } as Partial<Chunk<LndNode>>),
             );
-            //await delay(1000);
         });
     }
 
@@ -37,13 +39,13 @@ export class InitialSyncService {
                     data: chunk.data.map(
                         (channel) =>
                             ({
+                                id: channel.id,
                                 capacity: channel.capacity,
                                 policies: channel.policies,
                             } as Partial<LndChannel>),
                     ),
                 } as Partial<Chunk<LndChannel>>),
             );
-            await delay(3000);
         });
     }
 }

@@ -1,75 +1,115 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
-import {
-  AbstractMesh,
-  AbstractObject3D,
-  provideParent,
-  RendererService,
-  SphereMeshComponent,
-} from 'atft';
-import { selecteCorrectEdgePublicKey } from 'src/app/reducers/graph.reducer';
+import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
-import { LnGraphEdge, LnGraphNode, LnModifiedGraphNode } from 'src/app/types/graph.interface';
+import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 
 @Component({
-  selector: 'app-graph-edge-mesh',
-  providers: [provideParent(SphereMeshComponent)],
-  template: '<ng-content></ng-content>',
+    selector: 'app-graph-edge-mesh',
+    providers: [provideParent(SphereMeshComponent)],
+    template: '<ng-content></ng-content>',
 })
-export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.Object3D> {
-  @Input() public edgeVertices: THREE.Vector3[] = [];
-  @Input() shouldRender: boolean = false;
-  @Input() edgeColor: Uint8Array | null = null;
-  @Input() dashedLines: boolean = true;
-  @Input() depthTest: boolean = false;
+export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
+    @Input() public edgeVertices: BufferRef<Float32Array> | null = null;
+    @Input() shouldRender: boolean = false;
+    @Input() edgeColor: BufferRef<Uint8Array> | null = null;
+    @Input() dashedLines: boolean = true;
+    @Input() depthTest: boolean = false;
 
-  constructor(
-    protected override rendererService: RendererService,
-    protected nodePositionRegistryService: NodePositionRegistryService,
-    @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
-  ) {
-    super(rendererService, parent);
-  }
+    private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
 
-  override ngOnChanges(simpleChanges: SimpleChanges) {
-    const obj: THREE.Object3D = this.getObject();
-    if (obj) {
-      const newInstance = this.newObject3DInstance();
-      (obj as any)['geometry'] = newInstance.geometry;
-      (obj as any)['material'] = newInstance.material;
+    constructor(
+        protected override rendererService: RendererService,
+        protected nodePositionRegistryService: NodePositionRegistryService,
+        @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
+    ) {
+        super(rendererService, parent);
     }
-    this.rendererService.render();
-    super.ngOnChanges(simpleChanges);
-  }
 
-  protected newObject3DInstance(): THREE.LineSegments {
-    const material = this.dashedLines
-      ? new THREE.LineDashedMaterial({
-          color: 0xffffff,
-          linewidth: 1,
-          vertexColors: true,
-          scale: 1,
-          dashSize: 1,
-          gapSize: 3,
-        })
-      : new THREE.LineBasicMaterial({
-          color: 0xffffff,
-          linewidth: 1,
-          vertexColors: true,
-        });
+    override ngOnChanges(simpleChanges: SimpleChanges) {
+        const obj: THREE.LineSegments = this.getObject();
+        //console.log('loledgecnt', this.edgeVertices);
+        if (obj) {
+            //const newInstance = this.newObject3DInstance();
+            this.generateGeometry();
+            (obj as any)['geometry'] = this.geometry;
+            (obj as any)['material'] = this.generateMaterial();
+            obj.geometry.computeBoundingBox();
+            obj.computeLineDistances();
+        }
+        this.rendererService.render();
+        super.ngOnChanges(simpleChanges);
+    }
 
-    material.depthTest = this.depthTest;
+    protected generateGeometry() {
+        if (!this.edgeVertices) return;
+        if (!this.edgeColor) return;
+        this.geometry.setAttribute(
+            'color',
+            new THREE.BufferAttribute(this.edgeColor.bufferRef, 3, true),
+        );
+        this.geometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(this.edgeVertices.bufferRef, 3),
+        );
+        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices.size : 0);
+        this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['position'].needsUpdate = true;
 
-    const geometry = new THREE.BufferGeometry()
-      .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-      .scale(100, 100, 100);
-    geometry.setAttribute(
-      'color',
-      new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
-    );
-    const mesh = new THREE.LineSegments(geometry, material);
-    mesh.computeLineDistances();
-    mesh.renderOrder = -1;
-    return mesh;
-  }
+        this.geometry.computeBoundingBox();
+        this.geometry.computeBoundingSphere();
+    }
+
+    protected generateMaterial() {
+        const material = this.dashedLines
+            ? new THREE.LineDashedMaterial({
+                  color: 0xffffff,
+                  linewidth: 1,
+                  vertexColors: true,
+                  scale: 1,
+                  dashSize: 1,
+                  gapSize: 3,
+              })
+            : new THREE.LineBasicMaterial({
+                  color: 0xffffff,
+                  linewidth: 10,
+                  vertexColors: true,
+              });
+
+        material.depthTest = this.depthTest;
+        return material;
+    }
+
+    protected newObject3DInstance(): THREE.LineSegments {
+        const material = this.dashedLines
+            ? new THREE.LineDashedMaterial({
+                  color: 0xffffff,
+                  linewidth: 1,
+                  vertexColors: false,
+                  scale: 1,
+                  dashSize: 1,
+                  gapSize: 3,
+              })
+            : new THREE.LineBasicMaterial({
+                  color: 0xffffff,
+                  linewidth: 1,
+                  vertexColors: false,
+              });
+
+        material.depthTest = this.depthTest;
+
+        // const geometry = new THREE.BufferGeometry()
+        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
+        //     .scale(100, 100, 100);
+        // geometry.setAttribute(
+        //     'color',
+        //     new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
+        // );
+
+        this.generateGeometry();
+        const mesh = new THREE.LineSegments(this.geometry, material);
+        //mesh.computeLineDistances();
+        mesh.renderOrder = -1;
+        return mesh;
+    }
 }

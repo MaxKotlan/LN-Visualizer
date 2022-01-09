@@ -12,13 +12,10 @@ export class WebSocketService {
     }
 
     public init() {
-        this.wss.on(
-            'connection',
-            this.initialSyncService.performInitialNodeSync.bind(this.initialSyncService),
-        );
-        this.wss.on(
-            'connection',
-            this.initialSyncService.performInitialChannelSync.bind(this.initialSyncService),
-        );
+        this.wss.on('connection', (ws) => {
+            this.initialSyncService.sendChunkInfo(ws);
+            this.initialSyncService.performInitialNodeSync(ws);
+            this.initialSyncService.performInitialChannelSync(ws);
+        });
     }
 }
