@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { dismissError, requestGraph } from 'src/app/actions/graph.actions';
+import { requestGraph } from 'src/app/actions/graph.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 
 @Component({
@@ -13,9 +13,5 @@ export class ErrorComponent {
 
     retryRequest() {
         this.store$.dispatch(requestGraph());
-    }
-
-    dismissError() {
-        this.store$.dispatch(dismissError());
     }
 }

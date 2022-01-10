@@ -41,6 +41,7 @@ import { LndRaycasterSceneDirective } from './directives/lnd-raycaster-scene.dir
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GraphMeshStateService } from './services/graph-mesh-state.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [
@@ -86,7 +87,8 @@ import { GraphMeshStateService } from './services/graph-mesh-state.service';
         MatDialogModule,
         MatToolbarModule,
         MatDividerModule,
-        MatProgressBarModule, //,
+        MatProgressBarModule,
+        MatSnackBarModule, //,
         // StoreDevtoolsModule.instrument({
         //   maxAge: 25,
         //   logOnly: false,

@@ -63,4 +63,4 @@ export const processChunkInfo = createAction(
 
 export const errorUnknownChunkDataType = createAction('[graph] errorUnknownChunkDataType');
 
-export const dismissError = createAction('[graph] dismissError');
+export const channelClosed = createAction('[graph] channelClosed', props<{ channelId: string }>());

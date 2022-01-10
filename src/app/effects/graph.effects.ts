@@ -1,37 +1,20 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { LndChannel, LndNode } from 'api/src/models';
+import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import {
-    catchError,
-    debounceTime,
-    delay,
-    filter,
-    from,
-    map,
-    mergeMap,
-    of,
-    switchMap,
-    tap,
-    throttleTime,
-    withLatestFrom,
-} from 'rxjs';
+import { map, mergeMap, of, switchMap, tap, throttleTime, withLatestFrom } from 'rxjs';
+import * as THREE from 'three';
 import * as graphActions from '../actions/graph.actions';
+import { GraphState } from '../reducers/graph.reducer';
+import { selectChannelSetValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
 import { createSpherePoint } from '../utils';
-import * as THREE from 'three';
-import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
-import {
-    selectChannelSetValue,
-    selectChannelSetKeyValue,
-    selectNodeSetKeyValue,
-    selectNodeSetValue,
-} from '../selectors/graph.selectors';
-import { GraphState } from '../reducers/graph.reducer';
-import { Store } from '@ngrx/store';
 
 @Injectable()
 export class GraphEffects {
@@ -39,6 +22,7 @@ export class GraphEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
+        private snackBar: MatSnackBar,
     ) {
         // this.store$
         //     .select(selectNodeSetValue)
@@ -72,6 +56,10 @@ export class GraphEffects {
                                     return graphActions.processGraphChannelChunk({
                                         chunk: data as Chunk<LndChannel>,
                                     });
+                                case 'channel-closed':
+                                    return graphActions.channelClosed({
+                                        channelId: (data as unknown as ChannelCloseEvent).data,
+                                    });
                             }
                             return graphActions.errorUnknownChunkDataType();
                         }),
@@ -80,31 +68,6 @@ export class GraphEffects {
             ),
         { dispatch: true },
     );
-
-    // onChunkInfo$ = createEffect(() =>
-    //     this.lndApiServiceService.initialChunkSync().pipe(
-    //         filter((chunk) => chunk.type === 'chunkInfo'),
-    //         map((chunk) => chunk as unknown as ChunkInfo),
-    //         tap(console.log),
-    //         map((chunkInfo) => graphActions.processChunkInfo({ chunkInfo })),
-    //     ),
-    // );
-
-    // onNodeChunk$ = createEffect(() =>
-    //     this.lndApiServiceService.initialChunkSync().pipe(
-    //         filter((chunk) => chunk.type === 'node'),
-    //         map((chunk) => graphActions.processGraphNodeChunk({ chunk: chunk as Chunk<LndNode> })),
-    //     ),
-    // );
-
-    // onChannelChunk$ = createEffect(() =>
-    //     this.lndApiServiceService.initialChunkSync().pipe(
-    //         filter((chunk) => chunk.type === 'channel'),
-    //         map((chunk) =>
-    //             graphActions.processGraphChannelChunk({ chunk: chunk as Chunk<LndChannel> }),
-    //         ),
-    //     ),
-    // );
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
 
@@ -335,4 +298,13 @@ export class GraphEffects {
     //         calculatePositionFromParent(child, depth + 1);
     //     });
     // };
+
+    channelClosedEvent$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.channelClosed),
+                tap((action) => this.snackBar.open(`Channel ${action.channelId} has closed`)),
+            ),
+        { dispatch: false },
+    );
 }
