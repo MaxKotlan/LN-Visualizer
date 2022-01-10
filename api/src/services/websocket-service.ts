@@ -24,6 +24,7 @@ export class WebSocketService {
     }
 
     public channelUpdated(channelId: string) {
+        console.log(`Broadcasting channel ${channelId} closed`);
         this.wss.clients.forEach((ws) =>
             this.channelCloseService.forwardChannelCloseEvent(ws, channelId),
         );
