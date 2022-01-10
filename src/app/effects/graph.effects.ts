@@ -165,7 +165,9 @@ export class GraphEffects {
         channel: LndChannel,
     ) {
         if (!lndNode) return;
-        lndNode.connectedChannels.enqueue({ ...channel, parent: otherNode });
+        const lndPar = channel as LndChannelWithParent;
+        lndPar.parent = otherNode;
+        lndNode.connectedChannels.enqueue(lndPar);
     }
 
     calculateNodeHeirarchy$ = createEffect(
