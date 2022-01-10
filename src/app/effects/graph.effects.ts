@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
+import { MaxPriorityQueue, MinPriorityQueue } from '@datastructures-js/priority-queue';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { LndChannel, LndNode } from 'api/src/models';
@@ -77,20 +77,59 @@ export class GraphEffects {
         throw new Error('Public Key is not either of the nodes in the channel');
     }
 
-    private getNodeQueueComparitor(nodeSet: Record<string, LndNodeWithPosition>) {
+    private getNodeQueueComparitor() {
         return {
             compare: (a: LndChannelWithParent, b: LndChannelWithParent): number => {
-                const otherNodeAPubKey = this.selectOtherNodeInChannel(a.parent.public_key, a);
-                const otherNodeBPubKey = this.selectOtherNodeInChannel(b.parent.public_key, b);
-                const a1 = nodeSet[otherNodeAPubKey]; //.connectedChannels.size();
-                const b1 = nodeSet[otherNodeBPubKey]; //.connectedChannels.size();
+                /*Apprantely this was not doing anything... trying to compare capacities crashes browser*/
 
-                if (!a1) return 0;
-                if (!b1) return 0;
+                // const otherNodeAPubKey = this.selectOtherNodeInChannel(a.parent.public_key, a);
+                // const otherNodeBPubKey = this.selectOtherNodeInChannel(b.parent.public_key, b);
+                // const a1 = nodeSet[otherNodeAPubKey]; //.connectedChannels.size();
+                // const b1 = nodeSet[otherNodeBPubKey]; //.connectedChannels.size();
 
-                const c = a1.connectedChannels.size();
-                const d = b1.connectedChannels.size();
-                return c - d;
+                // if (!a1) return -1;
+                // if (!b1) return -1;
+
+                // if (!a?.parent?.parent && !!b?.parent?.parent) return 1;
+                // if (!b?.parent?.parent && !!a?.parent?.parent) return -1;
+                // if (!b?.parent?.parent || !a?.parent?.parent) return 0;
+                // // if (a.parent.parent?.connectedChannels.size() > )
+                //if (!a?.parent?.parent || !b?.parent?.parent) return 0;
+                //return b.policies[0].fee_rate > a.policies[0].fee_rate;
+
+                // const alice = a.parent?.parent?.connectedChannels?.size();
+                // const bob = b.parent?.parent?.connectedChannels?.size();
+
+                // if (!alice || !bob) return -1;
+
+                // if (alice > bob) return -1;
+                // if (bob > alice) return 1;
+                return 0;
+
+                // ? return -1 : 1;
+
+                //return; //b.capacity - a.capacity;
+                // if (
+                //     b.parent.parent.connectedChannels.size() >
+                //     a.parent.parent.connectedChannels.size()
+                // )
+                //     return -1;
+                // if (
+                //     a.parent.parent.connectedChannels.size() >
+                //     b.parent.parent.connectedChannels.size()
+                // )
+                //     return 1;
+                // //return b.capacity > a.capacity ? 1 : -1;
+                //return 0;
+                // if (!a.capacity || !b.capacity) return 0;
+
+                // if (a.capacity > b.capacity) return 1;
+                // if (b.capacity > a.capacity) return -1;
+                // return 0;
+
+                // const c = a1.connectedChannels.size();
+                // const d = b1.connectedChannels.size();
+                // return c - d;
             },
         };
     }
@@ -99,14 +138,13 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.processGraphNodeChunk),
-                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                map(([action, nodeRegistry]) =>
+                map((action) =>
                     action.chunk.data.reduce((acc, node) => {
                         acc[node.public_key] = {
                             ...node,
                             position: createSpherePoint(1, this.origin, node.public_key),
-                            connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
-                                this.getNodeQueueComparitor(nodeRegistry),
+                            connectedChannels: new MinPriorityQueue<LndChannelWithParent>(
+                                this.getNodeQueueComparitor(),
                             ),
                             parent: null,
                             children: {},
