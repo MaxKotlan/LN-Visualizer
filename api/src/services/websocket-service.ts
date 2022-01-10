@@ -1,12 +1,16 @@
 import { injectable } from 'inversify';
 import { WebSocketServer } from 'ws';
+import { ChannelCloseService } from './channel-close.service';
 import { InitialSyncService } from './initial-sync.service';
 
 @injectable()
 export class WebSocketService {
     protected wss: WebSocketServer;
 
-    constructor(private initialSyncService: InitialSyncService) {
+    constructor(
+        private initialSyncService: InitialSyncService,
+        private channelCloseService: ChannelCloseService,
+    ) {
         console.log('Initializing Websocket Server');
         this.wss = new WebSocketServer({ port: 5647 });
     }
@@ -17,5 +21,11 @@ export class WebSocketService {
             this.initialSyncService.performInitialNodeSync(ws);
             this.initialSyncService.performInitialChannelSync(ws);
         });
+    }
+
+    public channelUpdated(channelId: string) {
+        this.wss.clients.forEach((ws) =>
+            this.channelCloseService.forwardChannelCloseEvent(ws, channelId),
+        );
     }
 }

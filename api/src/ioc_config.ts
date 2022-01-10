@@ -7,6 +7,7 @@ import {
     LndChunkTrackerService,
     InitialSyncService,
 } from './services';
+import { ChannelCloseService } from './services/channel-close.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -15,4 +16,5 @@ container.bind<LndChunkTrackerService>(LndChunkTrackerService).toSelf().inSingle
 container.bind<WebSocketService>(WebSocketService).toSelf().inSingletonScope();
 container.bind<LndAuthService>(LndAuthService).toSelf().inSingletonScope();
 container.bind<InitialSyncService>(InitialSyncService).toSelf().inSingletonScope();
+container.bind<ChannelCloseService>(ChannelCloseService).toSelf().inSingletonScope();
 export default container;
