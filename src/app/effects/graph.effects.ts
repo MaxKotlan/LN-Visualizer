@@ -275,7 +275,6 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedChannelChunk),
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                throttleTime(100),
                 switchMap(([, nodeRegistry]) => {
                     // const res = channelState.reduce((acc, chnl) => {
                     //     acc[chnl.id] = chnl;
@@ -284,7 +283,9 @@ export class GraphEffects {
                     // return graphActions.cacheProcessedChannelChunk({
                     //     channelSet: { ...action.channelSubSet, ...channelState },
                     // });
-                    return of(graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }));
+                    return of(
+                        graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
+                    ).pipe(throttleTime(100));
                 }),
             ),
         { dispatch: true },
