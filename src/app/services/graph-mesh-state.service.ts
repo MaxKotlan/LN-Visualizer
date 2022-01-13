@@ -38,15 +38,13 @@ export class GraphMeshStateService {
             //     vertexBuffer[i * 3 + 1] = nodeValue[i].position.y * 100;
             //     vertexBuffer[i * 3 + 2] = nodeValue[i].position.z * 100;
             // }
-            console.log(graphState.nodeSet.size);
 
             let i = 0;
-            graphState.nodeSet.forEach((currentNode) => {
-                const test = currentNode as LndNodeWithPosition;
+            graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
                 //if (!nodeValue[i]) continue;
-                vertexBuffer[i * 3] = test.position.x * 100;
-                vertexBuffer[i * 3 + 1] = test.position.y * 100;
-                vertexBuffer[i * 3 + 2] = test.position.z * 100;
+                vertexBuffer[i * 3] = currentNode.position.x * 100;
+                vertexBuffer[i * 3 + 1] = currentNode.position.y * 100;
+                vertexBuffer[i * 3 + 2] = currentNode.position.z * 100;
                 i++;
             });
             console.log();
@@ -65,22 +63,23 @@ export class GraphMeshStateService {
     ];
 
     nodeColors$ = combineLatest([
-        this.store$.select(selectNodeSetValue),
+        this.store$.select(graphSelector),
         this.store$.select(selectNodeColorBuffer),
     ]).pipe(
-        map(([nodeValue, colorBuffer]) => {
-            if (!colorBuffer || !nodeValue) return null;
-
-            for (let i = 0; i < nodeValue.length; i++) {
-                if (!nodeValue[i]?.color) continue;
-
-                const color = this.fromHexString(nodeValue[i].color);
-
+        map(([graphState, colorBuffer]) => {
+            if (!colorBuffer || !graphState.nodeSet) return null;
+            let i = 0;
+            graphState.nodeSet.forEach((currentNode) => {
+                const color = this.fromHexString(currentNode.color);
                 colorBuffer[i * 3] = color[0];
                 colorBuffer[i * 3 + 1] = color[1];
                 colorBuffer[i * 3 + 2] = color[2];
-            }
-            return { bufferRef: colorBuffer, size: nodeValue.length } as BufferRef<Uint8Array>;
+                i++;
+            });
+            return {
+                bufferRef: colorBuffer,
+                size: graphState.nodeSet.size,
+            } as BufferRef<Uint8Array>;
         }),
     );
 
