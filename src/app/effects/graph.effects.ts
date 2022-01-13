@@ -102,8 +102,21 @@ export class GraphEffects {
 
                 // if (!alice || !bob) return -1;
 
+                // const hexStringA = a.parent.color;
+                // const j = parseInt(hexStringA.slice(1, 6), 16);
+
+                // const hexStringB = b.parent.color;
+                // const m = parseInt(hexStringB.slice(1, 6), 16);
+
+                //j.
                 // if (alice > bob) return -1;
                 // if (bob > alice) return 1;
+                //retur; //Math.random() > 0.5 ? 1 : -1;
+
+                // if (j > m) return -1;
+                // if (m > j) return 1;
+                if (a.parent.children.size > b.parent.children.size) return -1;
+                if (b.parent.children.size > a.parent.children.size) return 1;
                 return 0;
 
                 // ? return -1 : 1;
@@ -144,11 +157,11 @@ export class GraphEffects {
                             ({
                                 ...lnNode,
                                 position: createSpherePoint(1, this.origin, lnNode.public_key),
-                                connectedChannels: new MinPriorityQueue<LndChannelWithParent>(
+                                connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
                                     this.getNodeQueueComparitor(),
                                 ),
                                 parent: null,
-                                children: {},
+                                children: new Map<string, LndNodeWithPosition>(),
                             } as LndNodeWithPosition),
                     );
                 }),
@@ -164,7 +177,7 @@ export class GraphEffects {
     ) {
         if (!lndNode) return;
         const lndPar = channel as LndChannelWithParent;
-        lndPar.parent = otherNode;
+        lndPar.parent = lndNode;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 
@@ -184,7 +197,7 @@ export class GraphEffects {
                         if (!node2) return;
 
                         this.enqueueChannel(node1, node2, channel);
-                        this.enqueueChannel(node2, node1, channel);
+                        //this.enqueueChannel(node2, node1, channel);
 
                         const chnl: LndChannelWithParent =
                             node1.connectedChannels.front() as LndChannelWithParent;
@@ -198,23 +211,24 @@ export class GraphEffects {
                                 potentialParent1.connectedChannels.size()
                         ) {
                             node1.parent = potentialParent1;
-                            node1.parent.children[node1.public_key] = node1;
+                            /**The issue is the children*/
+                            node1.parent.children.set(node1.public_key, node1);
                         }
 
-                        const chn2: LndChannelWithParent =
-                            node2.connectedChannels.front() as LndChannelWithParent;
-                        const potentialParent2 = nodeRegistry.nodeSet.get(
-                            this.selectOtherNodeInChannel(node2.public_key, chn2),
-                        );
+                        // const chn2: LndChannelWithParent =
+                        //     node2.connectedChannels.front() as LndChannelWithParent;
+                        // const potentialParent2 = nodeRegistry.nodeSet.get(
+                        //     this.selectOtherNodeInChannel(node2.public_key, chn2),
+                        // );
 
-                        if (
-                            potentialParent2 &&
-                            node2.connectedChannels.size() <
-                                potentialParent2.connectedChannels.size()
-                        ) {
-                            node2.parent = potentialParent2;
-                            node2.parent.children[node2.public_key] = node2;
-                        }
+                        // if (
+                        //     potentialParent2 &&
+                        //     node2.connectedChannels.size() <
+                        //         potentialParent2.connectedChannels.size()
+                        // ) {
+                        //     node2.parent = potentialParent2;
+                        //     node2.parent.children.set(node2.public_key, node2);
+                        // }
                     });
                     return graphActions.concatinateChannelChunk({
                         channelSubSet: action.chunk.data,
@@ -289,7 +303,7 @@ export class GraphEffects {
         if (depth > 30) {
             return;
         }
-        Object.values(node.children).forEach((child) => {
+        node.children.forEach((child) => {
             child.position = createSpherePoint(
                 1 / depth,
                 node.position,

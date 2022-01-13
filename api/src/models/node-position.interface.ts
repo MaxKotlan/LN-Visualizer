@@ -7,7 +7,7 @@ export interface LndNodeWithPosition extends LndNode {
     position: THREE.Vector3;
     connectedChannels: MaxPriorityQueue<LndChannelWithParent>;
     parent: LndNodeWithPosition | null;
-    children: Record<string, LndNodeWithPosition>;
+    children: Map<string, LndNodeWithPosition>;
 }
 
 export interface LndChannelWithParent extends LndChannel {

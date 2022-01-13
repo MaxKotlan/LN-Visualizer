@@ -99,7 +99,7 @@ export class GraphMeshStateService {
             graphState.channelSet.forEach((channel) => {
                 const node1 = nodeRegistry.get(channel.policies[0].public_key);
                 const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                if (!node1 || !node2) {
+                if (!node1 || !node2 || channel.capacity === 0) {
                     dec++;
                 } else {
                     vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
@@ -148,7 +148,7 @@ export class GraphMeshStateService {
             graphState.channelSet.forEach((channel) => {
                 const node1 = nodeRegistry.get(channel.policies[0].public_key);
                 const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                if (!node1 || !node2) {
+                if (!node1 || !node2 || channel.capacity === 0) {
                     dec++;
                 } else {
                     const color1 = this.fromHexString(node1.color);
