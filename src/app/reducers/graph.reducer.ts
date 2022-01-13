@@ -57,12 +57,12 @@ export const reducer = createReducer(
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
-        // nodeSet,
+        nodeSet,
         nodeChunksProcessed: state.nodeChunksProcessed + 1,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
-        //      channelSet,
+        channelSet,
         channelChunksProcessed: state.channelChunksProcessed + 1,
     })),
     // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => {

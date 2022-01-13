@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
 import { combineLatest, lastValueFrom, map, take, throttleTime } from 'rxjs';
 import * as THREE from 'three';
 import { GraphState } from '../reducers/graph.reducer';
 import {
+    graphSelector,
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
     selectFilterBySearchedNode,
@@ -20,19 +22,39 @@ export class GraphMeshStateService {
     constructor(private store$: Store<GraphState>) {}
 
     nodeVertices$ = combineLatest([
-        this.store$.select(selectNodeSetValue),
+        this.store$.select(graphSelector),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
         //throttleTime(250),
-        map(([nodeValue, vertexBuffer]) => {
-            if (!vertexBuffer || !nodeValue) return null;
-            for (let i = 0; i < nodeValue.length; i++) {
-                if (!nodeValue[i]) continue;
-                vertexBuffer[i * 3] = nodeValue[i].position.x * 100;
-                vertexBuffer[i * 3 + 1] = nodeValue[i].position.y * 100;
-                vertexBuffer[i * 3 + 2] = nodeValue[i].position.z * 100;
-            }
-            return { bufferRef: vertexBuffer, size: nodeValue.length } as BufferRef<Float32Array>;
+        // map(([nodeValue, vertexBuffer]) => [nodeValue.nodeSet, vertexBuffer]),
+        map(([graphState, vertexBuffer]) => {
+            if (!vertexBuffer || !graphState.nodeSet) return null;
+
+            // const len = Object.getOwnPropertyNames(graphState.nodeSet).length;
+            // console.log(graphState.nodeSet.size);
+            // for (let i = 0; i < len; i++) {
+            //     if (!nodeValue[i]) continue;
+            //     vertexBuffer[i * 3] = nodeValue[i].position.x * 100;
+            //     vertexBuffer[i * 3 + 1] = nodeValue[i].position.y * 100;
+            //     vertexBuffer[i * 3 + 2] = nodeValue[i].position.z * 100;
+            // }
+            console.log(graphState.nodeSet.size);
+
+            let i = 0;
+            graphState.nodeSet.forEach((currentNode) => {
+                const test = currentNode as LndNodeWithPosition;
+                //if (!nodeValue[i]) continue;
+                vertexBuffer[i * 3] = test.position.x * 100;
+                vertexBuffer[i * 3 + 1] = test.position.y * 100;
+                vertexBuffer[i * 3 + 2] = test.position.z * 100;
+                i++;
+            });
+            console.log();
+
+            return {
+                bufferRef: vertexBuffer,
+                size: graphState.nodeSet.size,
+            } as BufferRef<Float32Array>;
         }),
     );
 
