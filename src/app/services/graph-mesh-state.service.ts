@@ -74,8 +74,8 @@ export class GraphMeshStateService {
             let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
                 const channel = channelValue[i];
-                const node1 = nodeRegistry[channel.policies[0].public_key];
-                const node2 = nodeRegistry[channel.policies[1].public_key];
+                const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                const node2 = nodeRegistry.get(channel.policies[1].public_key);
                 if (!node1 || !node2) {
                     dec++;
                     continue;
@@ -106,8 +106,8 @@ export class GraphMeshStateService {
             let dec = 0;
             for (let i = 0; i < channelValue.length; i++) {
                 const channel = channelValue[i];
-                const node1 = nodeRegistry[channel.policies[0].public_key];
-                const node2 = nodeRegistry[channel.policies[1].public_key];
+                const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                const node2 = nodeRegistry.get(channel.policies[1].public_key);
                 if (!node1 || !node2) {
                     //|| channel.capacity === 0) {
                     dec++;

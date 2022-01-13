@@ -28,27 +28,27 @@ export const processGraphNodeChunk = createAction(
 
 export const concatinateNodeChunk = createAction(
     '[graph] concatinateNodeChunk',
-    props<{ nodeSubSet: Record<string, LndNodeWithPosition> }>(),
+    props<{ nodeSubSet: LndNodeWithPosition[] }>(),
 );
 
 export const cacheProcessedGraphNodeChunk = createAction(
     '[graph] cacheProcessedGraphNodeChunk',
-    props<{ nodeSet: Record<string, LndNodeWithPosition> }>(),
+    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
 export const concatinateChannelChunk = createAction(
     '[graph] concatinateChannelChunk',
-    props<{ channelSubSet: Record<string, LndChannel> }>(),
+    props<{ channelSubSet: LndChannel[] }>(),
 );
 
 export const cacheProcessedChannelChunk = createAction(
     '[graph] cacheProcessedChannelChunk',
-    props<{ channelSet: Record<string, LndChannel> }>(),
+    props<{ channelSet: Map<string, LndChannel> }>(),
 );
 
 export const graphNodePositionRecalculate = createAction(
     '[graph] graphNodePositionRecalculate',
-    props<{ nodeSet: Record<string, LndNodeWithPosition> }>(),
+    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
 export const processGraphChannelChunk = createAction(

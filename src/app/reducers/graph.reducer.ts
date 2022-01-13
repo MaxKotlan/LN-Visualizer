@@ -12,8 +12,8 @@ export interface GraphState {
     nodeColorBuffer: Uint8Array | null;
     channelVertexBuffer: Float32Array | null;
     channelColorBuffer: Uint8Array | null;
-    nodeSet: Record<string, LndNodeWithPosition>;
-    channelSet: Record<string, LndChannel>;
+    nodeSet: Map<string, LndNodeWithPosition>;
+    channelSet: Map<string, LndChannel>;
     loadingText: string;
 }
 
@@ -25,8 +25,8 @@ const initialState: GraphState = {
     nodeColorBuffer: null,
     channelVertexBuffer: null,
     channelColorBuffer: null,
-    nodeSet: {},
-    channelSet: {},
+    nodeSet: new Map<string, LndNodeWithPosition>(),
+    channelSet: new Map<string, LndChannel>(),
     loadingText: '',
 };
 
