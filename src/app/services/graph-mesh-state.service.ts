@@ -8,11 +8,9 @@ import {
     graphSelector,
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
-    selectFilterBySearchedNode,
-    selectFilterChannelByCapacity,
+    selectFinalMatcheNodesFromSearch,
     selectNodeColorBuffer,
     selectNodeSetKeyValue,
-    selectNodeSetValue,
     selectNodeVertexBuffer,
 } from '../selectors/graph.selectors';
 import { BufferRef } from '../types/bufferRef.interface';
@@ -90,24 +88,36 @@ export class GraphMeshStateService {
         //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
+        this.store$.select(selectFinalMatcheNodesFromSearch),
     ]).pipe(
         throttleTime(this.throttleTimeMs),
-        map(([graphState, vertexBuffer, nodeRegistry]) => {
+        map(([graphState, vertexBuffer, nodeRegistry, searchResult]) => {
             if (!vertexBuffer || !graphState.channelSet) return null;
             let dec = 0;
             let i = 0;
             graphState.channelSet.forEach((channel) => {
-                const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                if (!node1 || !node2 || channel.capacity === 0) {
+                if (
+                    !(
+                        !searchResult ||
+                        (searchResult &&
+                            (channel.policies[0].public_key === searchResult.public_key ||
+                                channel.policies[1].public_key === searchResult.public_key))
+                    )
+                ) {
                     dec++;
                 } else {
-                    vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
-                    vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * 100;
-                    vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * 100;
-                    vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * 100;
-                    vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
-                    vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
+                    const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                    const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                    if (!node1 || !node2 || channel.capacity === 0) {
+                        dec++;
+                    } else {
+                        vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
+                        vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * 100;
+                        vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * 100;
+                        vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * 100;
+                        vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
+                        vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
+                    }
                 }
                 i++;
             });
