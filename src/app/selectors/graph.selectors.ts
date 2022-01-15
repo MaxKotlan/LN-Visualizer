@@ -21,12 +21,12 @@ export const selectChunkRemainingPercentage = createSelector(
     selectNodeChunksProcessed,
     selectChannelChunksProcessed,
     selectChunkInfo,
-    (nodesProcessed, channelsProcessed, chunkInfo) =>
-        !chunkInfo
-            ? 0
-            : ((nodesProcessed + channelsProcessed) /
-                  (chunkInfo.nodeChunks + chunkInfo.edgeChunks)) *
-              100,
+    (nodesProcessed, channelsProcessed, chunkInfo) => {
+        if (!chunkInfo) return 0;
+        const processed = 1 / nodesProcessed + channelsProcessed;
+        const total = /*5.6 * chunkInfo.nodeChunks +*/ chunkInfo.edgeChunks;
+        return (processed / total) * 100;
+    },
 );
 
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
