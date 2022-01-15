@@ -140,7 +140,10 @@ export class GraphNodeMeshComponent
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(this.positions.bufferRef, 3),
+            new THREE.BufferAttribute(
+                this.shouldRender ? this.positions.bufferRef : new Float32Array(),
+                3,
+            ),
         );
         this.geometry.setDrawRange(0, this.positions.size);
         this.geometry.attributes['color'].needsUpdate = true;
