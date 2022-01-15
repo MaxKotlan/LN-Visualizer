@@ -49,11 +49,15 @@ export const reducer = createReducer(
     })),
     on(graphActions.processGraphNodeChunk, (state) => ({
         ...state,
-        loadingText: 'Downloading Nodes...',
+        loadingText: `Downloading Nodes ${state.nodeChunksProcessed + 1} / ${
+            state.chunkInfo?.edgeChunks
+        }`,
     })),
     on(graphActions.processGraphChannelChunk, (state) => ({
         ...state,
-        loadingText: 'Downloading Channels...',
+        loadingText: `Downloading Channels ${state.channelChunksProcessed + 1} / ${
+            state.chunkInfo?.edgeChunks
+        }`,
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
         ...state,
@@ -75,8 +79,8 @@ export const reducer = createReducer(
     //     state.channelSet = channelSet;
     //     return state;
     // }),
-    on(graphActions.graphNodePositionRecalculate, (state) => ({
-        ...state,
-        loadingText: 'Recomputing Graph...',
-    })),
+    // on(graphActions.graphNodePositionRecalculate, (state) => ({
+    //     ...state,
+    //     loadingText: 'Recomputing Graph...',
+    // })),
 );
