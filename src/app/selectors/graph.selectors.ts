@@ -165,20 +165,19 @@ export const selectNodesSearchResults = createSelector(
 //     },
 // );
 
-// export const selectClosestPoint = (point: THREE.Vector3) =>
-//     createSelector(selectNodeSetKeyValue, (nodeSetValue) => {
-//         if (!nodeSetValue) return;
-//         point.divideScalar(100);
-//         let minDistance = null;
-//         let minDistanceIndex = null;
-//         for (let i = 0; i < nodeSetValue?.length; i++) {
-//             const pointDisance = nodeSetValue[i].position.distanceTo(point);
-//             if (minDistance === null || pointDisance < minDistance) {
-//                 minDistance = pointDisance;
-//                 minDistanceIndex = i;
-//             }
-//         }
-
-//         if (minDistanceIndex === null) return;
-//         return nodeSetValue[minDistanceIndex];
-//     });
+export const selectClosestPoint = (point: THREE.Vector3) =>
+    createSelector(selectNodeSetKeyValue, (nodeSetValue) => {
+        if (!nodeSetValue) return;
+        point.divideScalar(100);
+        let minDistance: null | number = null;
+        let minDistanceIndex: null | string = null;
+        nodeSetValue.forEach((node: LndNodeWithPosition, pubkey) => {
+            const pointDisance = node.position.distanceTo(point);
+            if (minDistance === null || pointDisance < minDistance) {
+                minDistance = pointDisance;
+                minDistanceIndex = pubkey;
+            }
+        });
+        if (minDistanceIndex === null) return;
+        return nodeSetValue.get(minDistanceIndex);
+    });

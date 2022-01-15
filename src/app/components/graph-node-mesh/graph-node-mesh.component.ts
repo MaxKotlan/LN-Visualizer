@@ -22,6 +22,7 @@ import {
 import { take } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
+import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 //import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 // import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
@@ -75,7 +76,7 @@ export class GraphNodeMeshComponent
         const obj = this.getObject();
         obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
         obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit);
-        // obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
+        obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
     }
 
     private onMouseExit() {
@@ -100,17 +101,17 @@ export class GraphNodeMeshComponent
         // })
     }
 
-    // private onClick(event: any) {
-    //     const intersection = event as THREE.Intersection;
-    //     this.store$
-    //         .select(selectClosestPoint(intersection.point))
-    //         .pipe(take(1))
-    //         .subscribe((node) => {
-    //             if (!node) return;
-    //             console.log(node);
-    //             this.store$.dispatch(searchGraph({ searchText: node.alias }));
-    //         });
-    // }
+    private onClick(event: any) {
+        const intersection = event as THREE.Intersection;
+        this.store$
+            .select(selectClosestPoint(intersection.point))
+            .pipe(take(1))
+            .subscribe((node) => {
+                if (!node) return;
+                console.log(node);
+                this.store$.dispatch(searchGraph({ searchText: node.alias }));
+            });
+    }
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.Object3D = this.getObject();
