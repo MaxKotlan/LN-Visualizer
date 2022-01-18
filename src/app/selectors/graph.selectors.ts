@@ -52,28 +52,35 @@ export const selectChannelColorBuffer = createSelector(
 );
 
 export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => state.nodeSet);
-export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) =>
-    Object.values(keyValueNodeSet),
-);
+// export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) => {
+//     console.log(keyValueNodeSet);
+//     return Object.values(keyValueNodeSet);
+// });
 export const selectChannelSetKeyValue = createSelector(graphSelector, (state) => state.channelSet);
-export const selectChannelSetValue = createSelector(selectChannelSetKeyValue, (keyValueNodeSet) =>
-    Object.values(keyValueNodeSet),
-);
+// export const selectChannelSetValue = createSelector(selectChannelSetKeyValue, (keyValueNodeSet) =>
+//     Object.values(keyValueNodeSet),
+// );
 
-export const selectFilterChannelByCapacity = createSelector(
-    selectChannelSetValue,
-    (keyValueNodeSet) => keyValueNodeSet.filter((c) => c.capacity > 0),
-);
+// export const selectFilterChannelByCapacity = createSelector(
+//     selectChannelSetValue,
+//     (keyValueNodeSet) => keyValueNodeSet.filter((c) => c.capacity > 0),
+// );
 
 export const selectPossibleNodesFromSearch = createSelector(
-    selectNodeSetValue,
+    selectNodeSetKeyValue,
     selectSearchString,
-    (nodes, searchString) =>
-        nodes.filter(
-            (a) =>
+    (nodes, searchString) => {
+        let possibleResults: LndNodeWithPosition[] = [];
+        nodes.forEach((a) => {
+            if (
                 a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
-                a.alias.toUpperCase().includes(searchString.toUpperCase()),
-        ),
+                a.alias.toUpperCase().includes(searchString.toUpperCase())
+            ) {
+                possibleResults.push(a);
+            }
+        });
+        return possibleResults;
+    },
 );
 
 export const selectFinalMatcheNodesFromSearch = createSelector(
@@ -92,28 +99,28 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     },
 );
 
-/*Can be optimized by using registry instead*/
-export const selectFilterBySearchedNode = createSelector(
-    selectChannelSetValue,
-    selectFinalMatcheNodesFromSearch,
-    (channelValues, searchedNode) =>
-        !!searchedNode
-            ? channelValues.filter(
-                  (n) =>
-                      n.policies[0].public_key === searchedNode?.public_key ||
-                      n.policies[1].public_key === searchedNode?.public_key,
-              )
-            : channelValues,
-);
+// /*Can be optimized by using registry instead*/
+// export const selectFilterBySearchedNode = createSelector(
+//     selectChannelSetKeyValue,
+//     selectFinalMatcheNodesFromSearch,
+//     (channelValues, searchedNode) =>
+//         !!searchedNode
+//             ? channelValues.filter(
+//                   (n) =>
+//                       n.policies[0].public_key === searchedNode?.public_key ||
+//                       n.policies[1].public_key === searchedNode?.public_key,
+//               )
+//             : channelValues,
+// );
 
 export const selectNodesSearchResults = createSelector(
     selectPossibleNodesFromSearch,
     (nodes) => nodes.map((a) => ({ publicKey: a.public_key, alias: a.alias })).slice(0, 100), //hardcode max search for now
 );
 
-export const selectAliases = createSelector(selectNodeSetValue, (nodeValue) =>
-    nodeValue.map((g) => g.alias),
-);
+// export const selectAliases = createSelector(selectNodeSetValue, (nodeValue) =>
+//     nodeValue.map((g) => g.alias),
+// );
 
 // export const selectEdgeColor = createSelector(
 //     selectSortedEdges,
@@ -159,19 +166,18 @@ export const selectAliases = createSelector(selectNodeSetValue, (nodeValue) =>
 // );
 
 export const selectClosestPoint = (point: THREE.Vector3) =>
-    createSelector(selectNodeSetValue, (nodeSetValue) => {
+    createSelector(selectNodeSetKeyValue, (nodeSetValue) => {
         if (!nodeSetValue) return;
         point.divideScalar(100);
-        let minDistance = null;
-        let minDistanceIndex = null;
-        for (let i = 0; i < nodeSetValue?.length; i++) {
-            const pointDisance = nodeSetValue[i].position.distanceTo(point);
+        let minDistance: null | number = null;
+        let minDistanceIndex: null | string = null;
+        nodeSetValue.forEach((node: LndNodeWithPosition, pubkey) => {
+            const pointDisance = node.position.distanceTo(point);
             if (minDistance === null || pointDisance < minDistance) {
                 minDistance = pointDisance;
-                minDistanceIndex = i;
+                minDistanceIndex = pubkey;
             }
-        }
-
+        });
         if (minDistanceIndex === null) return;
-        return nodeSetValue[minDistanceIndex];
+        return nodeSetValue.get(minDistanceIndex);
     });

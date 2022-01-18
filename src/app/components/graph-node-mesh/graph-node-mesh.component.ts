@@ -23,6 +23,7 @@ import { take } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
+//import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 // import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -140,7 +141,10 @@ export class GraphNodeMeshComponent
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(this.positions.bufferRef, 3),
+            new THREE.BufferAttribute(
+                this.shouldRender ? this.positions.bufferRef : new Float32Array(),
+                3,
+            ),
         );
         this.geometry.setDrawRange(0, this.positions.size);
         this.geometry.attributes['color'].needsUpdate = true;

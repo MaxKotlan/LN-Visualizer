@@ -16,7 +16,7 @@ import {
     shouldRenderLabels,
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
-import { selectAliases, selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
+import { selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
 import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import * as THREE from 'three';
 
@@ -40,7 +40,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public colors$ = this.graphMeshStateService.nodeColors$;
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public selectEdgeColor$ = this.graphMeshStateService.channelColors$;
-    public selectAliases$ = this.store$.select(selectAliases);
+    // public selectAliases$ = this.store$.select(selectAliases);
     public selectEdgeVertices$ = this.graphMeshStateService.channelVertices$;
     public selectNodeSize$ = this.store$.select(selectNodeSize);
     public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
