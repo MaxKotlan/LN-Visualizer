@@ -83,9 +83,12 @@ export class GraphNodeMeshComponent
         // this.mouseExit.emit({
         //   component: this
         // });
+        //document.body.style.cursor = '';
+        document.body.style.cursor = null as unknown as string;
     }
 
     private onMouseEnter(event: any) {
+        document.body.style.cursor = 'pointer';
         //console.log('RaycasterGroupDirective.onMouseEnter', event);
         // this.mouseEnter.emit({
         //   component: this,

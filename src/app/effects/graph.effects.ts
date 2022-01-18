@@ -241,7 +241,7 @@ export class GraphEffects {
                             pcount++;
                         }
                     });
-                    console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
+                    //console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
                     return graphActions.concatinateChannelChunk({
                         channelSubSet: action.chunk.data,
                     });
