@@ -108,7 +108,7 @@ export class GraphMeshStateService {
                 } else {
                     const node1 = nodeRegistry.get(channel.policies[0].public_key);
                     const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                    if (!node1 || !node2 || channel.capacity === 0) {
+                    if (!node1 || !node2) {
                         dec++;
                     } else {
                         vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
@@ -137,6 +137,7 @@ export class GraphMeshStateService {
             //     vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
             //     vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
             // }
+            console.log('vertsize: ', (graphState.channelSet.size - dec) * 2);
             return {
                 bufferRef: vertexBuffer,
                 size: (graphState.channelSet.size - dec) * 2,
@@ -149,30 +150,43 @@ export class GraphMeshStateService {
         //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
+        this.store$.select(selectFinalMatcheNodesFromSearch),
     ]).pipe(
         throttleTime(this.throttleTimeMs),
-        map(([graphState, colorBuffer, nodeRegistry]) => {
+        map(([graphState, colorBuffer, nodeRegistry, searchResult]) => {
             if (!colorBuffer || !graphState.channelSet) return null;
             let dec = 0;
             let i = 0;
             graphState.channelSet.forEach((channel) => {
-                const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                if (!node1 || !node2 || channel.capacity === 0) {
+                if (
+                    !(
+                        !searchResult ||
+                        (searchResult &&
+                            (channel.policies[0].public_key === searchResult.public_key ||
+                                channel.policies[1].public_key === searchResult.public_key))
+                    )
+                ) {
                     dec++;
                 } else {
-                    const color1 = this.fromHexString(node1.color);
-                    const color2 = this.fromHexString(node2.color);
+                    const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                    const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                    if (!node1 || !node2) {
+                        dec++;
+                    } else {
+                        const color1 = this.fromHexString(node1.color);
+                        const color2 = this.fromHexString(node2.color);
 
-                    colorBuffer[(i - dec) * 6] = color1[0];
-                    colorBuffer[(i - dec) * 6 + 1] = color1[1];
-                    colorBuffer[(i - dec) * 6 + 2] = color1[2];
-                    colorBuffer[(i - dec) * 6 + 3] = color2[0];
-                    colorBuffer[(i - dec) * 6 + 4] = color2[1];
-                    colorBuffer[(i - dec) * 6 + 5] = color2[2];
+                        colorBuffer[(i - dec) * 6] = color1[0];
+                        colorBuffer[(i - dec) * 6 + 1] = color1[1];
+                        colorBuffer[(i - dec) * 6 + 2] = color1[2];
+                        colorBuffer[(i - dec) * 6 + 3] = color2[0];
+                        colorBuffer[(i - dec) * 6 + 4] = color2[1];
+                        colorBuffer[(i - dec) * 6 + 5] = color2[2];
+                    }
                 }
                 i++;
             });
+            console.log('colsize: ', (graphState.channelSet.size - dec) * 2);
             return {
                 bufferRef: colorBuffer,
                 size: (graphState.channelSet.size - dec) * 2,
