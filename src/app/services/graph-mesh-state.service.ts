@@ -137,7 +137,6 @@ export class GraphMeshStateService {
             //     vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
             //     vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
             // }
-            console.log('vertsize: ', (graphState.channelSet.size - dec) * 2);
             return {
                 bufferRef: vertexBuffer,
                 size: (graphState.channelSet.size - dec) * 2,
@@ -186,7 +185,6 @@ export class GraphMeshStateService {
                 }
                 i++;
             });
-            console.log('colsize: ', (graphState.channelSet.size - dec) * 2);
             return {
                 bufferRef: colorBuffer,
                 size: (graphState.channelSet.size - dec) * 2,
