@@ -116,7 +116,7 @@ export class GraphEffects {
                 // if (j > m) return -1;
                 // if (m > j) return 1;
 
-                if (!b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
+                if (!b.parent.parent?.children.size && !a.parent.parent?.children.size) return 0;
                 if (b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
                 if (!b.parent.parent?.children.size && a.parent.parent?.children.size) return 1;
 
