@@ -1,5 +1,6 @@
 import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent } from 'atft';
+import { debounceTime, fromEvent, sampleTime, throttleTime } from 'rxjs';
 import * as THREE from 'three';
 
 interface NearestIntersection {
@@ -32,15 +33,26 @@ export class LndRaycasterService implements OnDestroy {
         this.unsubscribe();
     }
 
+    private drag: boolean = false;
+
     private subscribe() {
-        this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
-        this.canvas?.nativeElement.addEventListener('dblclick', this.onClick);
+        //this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
         this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
+
+        fromEvent(this.canvas?.nativeElement, 'mousemove')
+            .pipe(sampleTime(100))
+            .subscribe((e) => this.onMouseMove(e));
+
+        //fromEvent(this.canvas?.nativeElement, 'dragenter').subscribe((e) => console.log('drag', e));
+
+        this.canvas?.nativeElement.addEventListener('mousedown', () => (this.drag = false));
+        this.canvas?.nativeElement.addEventListener('mousemove', () => (this.drag = true));
+        this.canvas?.nativeElement.addEventListener('mouseup', this.onClick.bind(this));
     }
 
     private unsubscribe() {
         // console.log('unsubscribe raycaster');
-        this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
+        //this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
         this.canvas?.nativeElement.removeEventListener('dblclick', this.onClick);
         this.canvas?.nativeElement.removeEventListener('touchstart', this.onTouchStart);
     }
@@ -85,7 +97,8 @@ export class LndRaycasterService implements OnDestroy {
         if (!this.isReady()) {
             return;
         }
-        //event.preventDefault();
+        event.preventDefault();
+        //console.log(event);
         const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
         if (!this.selected || this.selected !== i?.object) {
             if (this.selected) {
@@ -111,11 +124,12 @@ export class LndRaycasterService implements OnDestroy {
     }
 
     private onClick(event: any) {
-        console.log(event);
+        //console.log(event);
         if (!this.isReady(true)) {
             return;
         }
         //event.preventDefault();
+        if (this.drag) return;
         const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
         if (i && i.object) {
             i.object.dispatchEvent({ type: RaycasterEvent.click, ...i });
