@@ -115,9 +115,14 @@ export class GraphEffects {
 
                 // if (j > m) return -1;
                 // if (m > j) return 1;
-                if (a.parent.children.size > b.parent.children.size) return -1;
-                if (b.parent.children.size > a.parent.children.size) return 1;
-                return 0;
+
+                if (!b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
+                if (b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
+                if (!b.parent.parent?.children.size && a.parent.parent?.children.size) return 1;
+
+                if (b.parent.parent!.children.size > a.parent.parent!.children.size) return -1;
+                if (a.parent.parent!.children.size > b.parent.parent!.children.size) return 1;
+                return b.parent.children.size - a.parent.children.size;
 
                 // ? return -1 : 1;
 
@@ -177,7 +182,7 @@ export class GraphEffects {
     ) {
         if (!lndNode) return;
         const lndPar = channel as LndChannelWithParent;
-        lndPar.parent = lndNode;
+        lndPar.parent = otherNode;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 
@@ -196,8 +201,7 @@ export class GraphEffects {
                         if (!node1) return;
                         if (!node2) return;
 
-                        this.enqueueChannel(node1, node2, channel);
-                        //this.enqueueChannel(node2, node1, channel);
+                        this.enqueueChannel(node1, node1, channel);
 
                         const chnl: LndChannelWithParent =
                             node1.connectedChannels.front() as LndChannelWithParent;
@@ -211,25 +215,33 @@ export class GraphEffects {
                                 potentialParent1.connectedChannels.size()
                         ) {
                             node1.parent = potentialParent1;
-                            /**The issue is the children*/
                             node1.parent.children.set(node1.public_key, node1);
                         }
 
-                        // const chn2: LndChannelWithParent =
-                        //     node2.connectedChannels.front() as LndChannelWithParent;
-                        // const potentialParent2 = nodeRegistry.nodeSet.get(
-                        //     this.selectOtherNodeInChannel(node2.public_key, chn2),
-                        // );
+                        this.enqueueChannel(node2, node2, channel);
 
-                        // if (
-                        //     potentialParent2 &&
-                        //     node2.connectedChannels.size() <
-                        //         potentialParent2.connectedChannels.size()
-                        // ) {
-                        //     node2.parent = potentialParent2;
-                        //     node2.parent.children.set(node2.public_key, node2);
-                        // }
+                        const chn2: LndChannelWithParent =
+                            node2.connectedChannels.front() as LndChannelWithParent;
+                        const potentialParent2 = nodeRegistry.nodeSet.get(
+                            this.selectOtherNodeInChannel(node2.public_key, chn2),
+                        );
+
+                        if (
+                            potentialParent2 &&
+                            node2.connectedChannels.size() <
+                                potentialParent2.connectedChannels.size()
+                        ) {
+                            node2.parent = potentialParent2;
+                            node2.parent.children.set(node2.public_key, node2);
+                        }
                     });
+                    let pcount = 0;
+                    nodeRegistry.nodeSet.forEach((node) => {
+                        if (node.parent) {
+                            pcount++;
+                        }
+                    });
+                    console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
                     return graphActions.concatinateChannelChunk({
                         channelSubSet: action.chunk.data,
                     });
