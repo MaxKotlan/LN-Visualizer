@@ -1,4 +1,5 @@
 import { ElementRef, Injectable, OnDestroy } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent } from 'atft';
 import { debounceTime, fromEvent, sampleTime, throttleTime } from 'rxjs';
 import * as THREE from 'three';
@@ -12,6 +13,7 @@ interface NearestIntersection {
 /*
 Need to change the behavior to get coordinates in world space
 */
+@UntilDestroy()
 @Injectable()
 export class LndRaycasterService implements OnDestroy {
     private raycaster = new THREE.Raycaster();
@@ -30,32 +32,43 @@ export class LndRaycasterService implements OnDestroy {
 
     ngOnDestroy() {
         this.disable();
-        this.unsubscribe();
+        //this.unsubscribe();
     }
 
     private drag: boolean = false;
 
     private subscribe() {
         //this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
-        this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
+        //this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
 
         fromEvent(this.canvas?.nativeElement, 'mousemove')
-            .pipe(sampleTime(100))
-            .subscribe((e) => this.onMouseMove(e));
+            .pipe(untilDestroyed(this), sampleTime(100))
+            .subscribe((e) => {
+                this.drag = true;
+                this.onMouseMove(e);
+            });
+
+        fromEvent(this.canvas?.nativeElement, 'mousedown')
+            .pipe(untilDestroyed(this), sampleTime(100))
+            .subscribe(() => (this.drag = false));
+
+        fromEvent(this.canvas?.nativeElement, 'mouseup')
+            .pipe(untilDestroyed(this), sampleTime(100))
+            .subscribe(this.onClick.bind(this));
 
         //fromEvent(this.canvas?.nativeElement, 'dragenter').subscribe((e) => console.log('drag', e));
 
-        this.canvas?.nativeElement.addEventListener('mousedown', () => (this.drag = false));
-        this.canvas?.nativeElement.addEventListener('mousemove', () => (this.drag = true));
-        this.canvas?.nativeElement.addEventListener('mouseup', this.onClick.bind(this));
+        // this.canvas?.nativeElement.addEventListener('mousedown', () => (this.drag = false));
+        // this.canvas?.nativeElement.addEventListener('mousemove', () => (this.drag = true));
+        // this.canvas?.nativeElement.addEventListener('mouseup', this.onClick.bind(this));
     }
 
-    private unsubscribe() {
-        // console.log('unsubscribe raycaster');
-        //this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
-        this.canvas?.nativeElement.removeEventListener('dblclick', this.onClick);
-        this.canvas?.nativeElement.removeEventListener('touchstart', this.onTouchStart);
-    }
+    // private unsubscribe() {
+    //     // console.log('unsubscribe raycaster');
+    //     //this.canvas?.nativeElement.removeEventListener('mousemove', this.onMouseMove);
+    //     // this.canvas?.nativeElement.removeEventListener('dblclick', this.onClick);
+    //     // this.canvas?.nativeElement.removeEventListener('touchstart', this.onTouchStart);
+    // }
 
     public enable() {
         this.enabled = true;
