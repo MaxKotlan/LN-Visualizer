@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { combineLatest, lastValueFrom, map, take, throttleTime } from 'rxjs';
+import { combineLatest, lastValueFrom, map, sampleTime, take, throttleTime } from 'rxjs';
 import * as THREE from 'three';
 import { GraphState } from '../reducers/graph.reducer';
 import {
@@ -19,13 +19,13 @@ import { BufferRef } from '../types/bufferRef.interface';
 export class GraphMeshStateService {
     constructor(private store$: Store<GraphState>) {}
 
-    readonly throttleTimeMs: number = 0;
+    readonly throttleTimeMs: number = 500;
 
     nodeVertices$ = combineLatest([
         this.store$.select(graphSelector),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
-        throttleTime(this.throttleTimeMs),
+        sampleTime(this.throttleTimeMs),
         // map(([nodeValue, vertexBuffer]) => [nodeValue.nodeSet, vertexBuffer]),
         map(([graphState, vertexBuffer]) => {
             if (!vertexBuffer || !graphState.nodeSet) return null;
@@ -65,7 +65,7 @@ export class GraphMeshStateService {
         this.store$.select(graphSelector),
         this.store$.select(selectNodeColorBuffer),
     ]).pipe(
-        throttleTime(this.throttleTimeMs),
+        sampleTime(this.throttleTimeMs),
         map(([graphState, colorBuffer]) => {
             if (!colorBuffer || !graphState.nodeSet) return null;
             let i = 0;
@@ -90,7 +90,7 @@ export class GraphMeshStateService {
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
     ]).pipe(
-        throttleTime(this.throttleTimeMs),
+        sampleTime(this.throttleTimeMs),
         map(([graphState, vertexBuffer, nodeRegistry, searchResult]) => {
             if (!vertexBuffer || !graphState.channelSet) return null;
             let dec = 0;
@@ -151,7 +151,7 @@ export class GraphMeshStateService {
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
     ]).pipe(
-        throttleTime(this.throttleTimeMs),
+        sampleTime(this.throttleTimeMs),
         map(([graphState, colorBuffer, nodeRegistry, searchResult]) => {
             if (!colorBuffer || !graphState.channelSet) return null;
             let dec = 0;
