@@ -31,6 +31,9 @@ import * as THREE from 'three';
 import { BufferAttribute } from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
+//const extendMaterial = require('three-extend-material');
+//import * as extendMaterial from 'three-extend-material';
+
 @Component({
     selector: 'app-graph-node-mesh',
     providers: [provideParent(SphereMeshComponent)],
@@ -49,10 +52,12 @@ export class GraphNodeMeshComponent
 
     @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
     @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() click = new EventEmitter<RaycasterEmitEvent>();
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
     private material: THREE.PointsMaterial | null = null;
+    private materialMoving: any;
 
     constructor(
         protected override rendererService: RendererService,
@@ -152,7 +157,6 @@ export class GraphNodeMeshComponent
         this.geometry.setDrawRange(0, this.positions.size);
         this.geometry.attributes['color'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
-
         // this.geometry.setAttribute(
         //     'color',
         //     new BufferAttribute(this.colors || new Uint8Array([]), 3, false),
@@ -186,6 +190,12 @@ export class GraphNodeMeshComponent
         this.material.alphaTest = 0.5;
         this.material.transparent = this.useSprite;
         this.material.needsUpdate = true;
+
+        // this.materialMoving = extendMaterial.extendMaterial(this.material, {
+        //     vertexShader: '',
+        //     fragmentShader: '',
+        // });
+
         return this.material;
     }
 
