@@ -32,7 +32,7 @@ import { BufferAttribute } from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 //const extendMaterial = require('three-extend-material');
-//import * as extendMaterial from 'three-extend-material';
+import * as extendMaterial from 'three-extend-material';
 
 @Component({
     selector: 'app-graph-node-mesh',
