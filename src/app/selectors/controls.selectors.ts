@@ -14,8 +14,8 @@ export const shouldRenderLabels = createSelector(controlsSelector, (state) => st
 export const selectNodeSize = createSelector(controlsSelector, (state) => state.nodeSize);
 
 export const selectPointAttenuation = createSelector(
-  controlsSelector,
-  (state) => state.pointAttenuation,
+    controlsSelector,
+    (state) => state.pointAttenuation,
 );
 
 export const selectPointUseIcon = createSelector(controlsSelector, (state) => state.pointUseIcon);
@@ -25,6 +25,6 @@ export const selectCameraFov = createSelector(controlsSelector, (state) => state
 export const selectEdgeDepthTest = createSelector(controlsSelector, (state) => state.edgeDepthTest);
 
 export const selectEdgeDottedLine = createSelector(
-  controlsSelector,
-  (state) => state.edgeDottedLine,
+    controlsSelector,
+    (state) => state.edgeDottedLine,
 );

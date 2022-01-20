@@ -8,30 +8,30 @@ import * as controlActions from '../actions/controls.actions';
 
 @Injectable()
 export class ControlsEffects {
-  constructor(private actions$: Actions, private store$: Store<ControlsState>) {}
+    constructor(private actions$: Actions, private store$: Store<ControlsState>) {}
 
-  saveControlsState$ = createEffect(
-    () =>
-      this.store$.select(controlsSelector).pipe(
-        skipUntil(this.actions$.pipe(ofType(controlActions.loadSavedState), take(1))),
-        tap((controlState) => {
-          localStorage.setItem('controlState', JSON.stringify(controlState));
-        }),
-      ),
-    { dispatch: false },
-  );
+    saveControlsState$ = createEffect(
+        () =>
+            this.store$.select(controlsSelector).pipe(
+                skipUntil(this.actions$.pipe(ofType(controlActions.loadSavedState), take(1))),
+                tap((controlState) => {
+                    localStorage.setItem('controlState', JSON.stringify(controlState));
+                }),
+            ),
+        { dispatch: false },
+    );
 
-  loadSavedState$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(controlActions.loadSavedState),
-      map(() => localStorage.getItem('controlState')),
-      filter((controlStateStr) => !!controlStateStr),
-      map((controlStateStr) => JSON.parse(controlStateStr || '')),
-      map((savedState) =>
-        controlActions.setSavedStateFromLocalStorage({
-          savedState,
-        }),
-      ),
-    ),
-  );
+    loadSavedState$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(controlActions.loadSavedState),
+            map(() => localStorage.getItem('controlState')),
+            filter((controlStateStr) => !!controlStateStr),
+            map((controlStateStr) => JSON.parse(controlStateStr || '')),
+            map((savedState) =>
+                controlActions.setSavedStateFromLocalStorage({
+                    savedState,
+                }),
+            ),
+        ),
+    );
 }
