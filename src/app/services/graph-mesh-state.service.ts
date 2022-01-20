@@ -26,22 +26,11 @@ export class GraphMeshStateService {
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        // map(([nodeValue, vertexBuffer]) => [nodeValue.nodeSet, vertexBuffer]),
         map(([graphState, vertexBuffer]) => {
             if (!vertexBuffer || !graphState.nodeSet) return null;
 
-            // const len = Object.getOwnPropertyNames(graphState.nodeSet).length;
-            // console.log(graphState.nodeSet.size);
-            // for (let i = 0; i < len; i++) {
-            //     if (!nodeValue[i]) continue;
-            //     vertexBuffer[i * 3] = nodeValue[i].position.x * 100;
-            //     vertexBuffer[i * 3 + 1] = nodeValue[i].position.y * 100;
-            //     vertexBuffer[i * 3 + 2] = nodeValue[i].position.z * 100;
-            // }
-
             let i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                //if (!nodeValue[i]) continue;
                 vertexBuffer[i * 3] = currentNode.position.x * 100;
                 vertexBuffer[i * 3 + 1] = currentNode.position.y * 100;
                 vertexBuffer[i * 3 + 2] = currentNode.position.z * 100;
@@ -85,7 +74,6 @@ export class GraphMeshStateService {
 
     channelVertices$ = combineLatest([
         this.store$.select(graphSelector),
-        //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
@@ -121,22 +109,6 @@ export class GraphMeshStateService {
                 }
                 i++;
             });
-
-            // for (let i = 0; i < channelValue.length; i++) {
-            //     const channel = channelValue[i];
-            //     const node1 = nodeRegistry.get(channel.policies[0].public_key);
-            //     const node2 = nodeRegistry.get(channel.policies[1].public_key);
-            //     if (!node1 || !node2) {
-            //         dec++;
-            //         continue;
-            //     }
-            //     vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
-            //     vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * 100;
-            //     vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * 100;
-            //     vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * 100;
-            //     vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
-            //     vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
-            // }
             return {
                 bufferRef: vertexBuffer,
                 size: (graphState.channelSet.size - dec) * 2,
@@ -146,7 +118,6 @@ export class GraphMeshStateService {
 
     channelColors$ = combineLatest([
         this.store$.select(graphSelector),
-        //this.store$.select(selectChannelSetValue),
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
