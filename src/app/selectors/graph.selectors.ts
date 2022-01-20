@@ -79,6 +79,7 @@ export const selectPossibleNodesFromSearch = createSelector(
                 possibleResults.push(a);
             }
         });
+        possibleResults.sort((a, b) => b.children.size - a.children.size);
         return possibleResults;
     },
 );
