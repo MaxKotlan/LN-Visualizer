@@ -305,7 +305,16 @@ export class GraphEffects {
                             this.calculatePositionFromParent(node);
                         }
                     });
-                    return graphActions.cacheProcessedGraphNodeChunk({ nodeSet: action.nodeSet });
+                    return graphActions.cacheProcessedGraphNodeChunk({
+                        //do I need to sort the map?
+                        nodeSet: new Map(
+                            [...action.nodeSet.entries()].sort(
+                                (a, b) =>
+                                    b[1].connectedChannels.size() - a[1].connectedChannels.size(),
+                            ),
+                        ),
+                        //nodeSet: action.nodeSet,
+                    });
                 }),
             ),
         { dispatch: true },
