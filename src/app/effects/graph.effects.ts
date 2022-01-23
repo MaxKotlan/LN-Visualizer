@@ -403,6 +403,6 @@ export class GraphEffects {
                 ofType(graphActions.channelClosed),
                 tap((action) => this.snackBar.open(`Channel ${action.channelId} has closed`)),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 }
