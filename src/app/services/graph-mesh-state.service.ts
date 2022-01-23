@@ -96,14 +96,23 @@ export class GraphMeshStateService {
                 let dec = 0;
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
+                    // console.log(
+                    //     'chanamount',
+                    //     channel.capacity,
+                    //     'capfilter',
+                    //     capacityFilterAmount,
+                    //     'shouldRen',
+                    //     capacityFilterEnabled && channel.capacity > capacityFilterAmount,
+                    // );
+
                     if (
                         !(
                             !searchResult ||
                             (searchResult &&
                                 (channel.policies[0].public_key === searchResult.public_key ||
-                                    channel.policies[1].public_key === searchResult.public_key)) ||
-                            (capacityFilterEnabled && capacityFilterAmount > channel.capacity)
-                        )
+                                    channel.policies[1].public_key === searchResult.public_key))
+                        ) ||
+                        !(capacityFilterEnabled && channel.capacity > capacityFilterAmount)
                     ) {
                         dec++;
                     } else {

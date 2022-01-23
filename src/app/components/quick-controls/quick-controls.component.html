@@ -24,14 +24,14 @@
             >Filter Capacity</mat-checkbox
         >
         <span *ngIf="shouldFilterCapacity$ | async">
-            <span style="margin-right: 0.4rem">Node Size</span>
+            <span style="margin-right: 0.4rem">Minimum Capacity</span>
             <mat-slider
                 [ngModel]="capacityFilterAmount$ | async"
                 (change)="setCapacityFiliterAmount($event)"
                 #slider
-                min="1"
-                max="20"
-                step="0.1"
+                min="0"
+                max="1000000000"
+                step="1"
                 value="1"
             ></mat-slider>
             {{ slider.value }}
