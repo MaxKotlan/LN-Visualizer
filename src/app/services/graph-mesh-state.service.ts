@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
 import { combineLatest, lastValueFrom, map, sampleTime, take, throttleTime } from 'rxjs';
 import * as THREE from 'three';
+import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
 import {
     graphSelector,
@@ -31,9 +32,9 @@ export class GraphMeshStateService {
 
             let i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                vertexBuffer[i * 3] = currentNode.position.x * 100;
-                vertexBuffer[i * 3 + 1] = currentNode.position.y * 100;
-                vertexBuffer[i * 3 + 2] = currentNode.position.z * 100;
+                vertexBuffer[i * 3] = currentNode.position.x * meshScale;
+                vertexBuffer[i * 3 + 1] = currentNode.position.y * meshScale;
+                vertexBuffer[i * 3 + 2] = currentNode.position.z * meshScale;
                 i++;
             });
 
@@ -99,12 +100,12 @@ export class GraphMeshStateService {
                     if (!node1 || !node2) {
                         dec++;
                     } else {
-                        vertexBuffer[(i - dec) * 6] = node1.position.x * 100;
-                        vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * 100;
-                        vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * 100;
-                        vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * 100;
-                        vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * 100;
-                        vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * 100;
+                        vertexBuffer[(i - dec) * 6] = node1.position.x * meshScale;
+                        vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * meshScale;
+                        vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * meshScale;
+                        vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * meshScale;
+                        vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * meshScale;
+                        vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * meshScale;
                     }
                 }
                 i++;
