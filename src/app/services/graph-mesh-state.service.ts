@@ -112,7 +112,10 @@ export class GraphMeshStateService {
                                 (channel.policies[0].public_key === searchResult.public_key ||
                                     channel.policies[1].public_key === searchResult.public_key))
                         ) ||
-                        !(capacityFilterEnabled && channel.capacity > capacityFilterAmount)
+                        !(
+                            (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
+                            !capacityFilterEnabled
+                        )
                     ) {
                         dec++;
                     } else {
@@ -144,45 +147,60 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelColorBuffer),
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
+        this.store$.select(capacityFilterEnable),
+        this.store$.select(capacityFilterAmount),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, colorBuffer, nodeRegistry, searchResult]) => {
-            if (!colorBuffer || !graphState.channelSet) return null;
-            let dec = 0;
-            let i = 0;
-            graphState.channelSet.forEach((channel) => {
-                if (
-                    !(
-                        !searchResult ||
-                        (searchResult &&
-                            (channel.policies[0].public_key === searchResult.public_key ||
-                                channel.policies[1].public_key === searchResult.public_key))
-                    )
-                ) {
-                    dec++;
-                } else {
-                    const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                    const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                    if (!node1 || !node2) {
+        map(
+            ([
+                graphState,
+                colorBuffer,
+                nodeRegistry,
+                searchResult,
+                capacityFilterEnabled,
+                capacityFilterAmount,
+            ]) => {
+                if (!colorBuffer || !graphState.channelSet) return null;
+                let dec = 0;
+                let i = 0;
+                graphState.channelSet.forEach((channel) => {
+                    if (
+                        !(
+                            !searchResult ||
+                            (searchResult &&
+                                (channel.policies[0].public_key === searchResult.public_key ||
+                                    channel.policies[1].public_key === searchResult.public_key))
+                        ) ||
+                        !(
+                            (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
+                            !capacityFilterEnabled
+                        )
+                    ) {
                         dec++;
                     } else {
-                        const color1 = this.fromHexString(node1.color);
-                        const color2 = this.fromHexString(node2.color);
+                        const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                        const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                        if (!node1 || !node2) {
+                            dec++;
+                        } else {
+                            const color1 = this.fromHexString(node1.color);
+                            const color2 = this.fromHexString(node2.color);
 
-                        colorBuffer[(i - dec) * 6] = color1[0];
-                        colorBuffer[(i - dec) * 6 + 1] = color1[1];
-                        colorBuffer[(i - dec) * 6 + 2] = color1[2];
-                        colorBuffer[(i - dec) * 6 + 3] = color2[0];
-                        colorBuffer[(i - dec) * 6 + 4] = color2[1];
-                        colorBuffer[(i - dec) * 6 + 5] = color2[2];
+                            colorBuffer[(i - dec) * 6] = color1[0];
+                            colorBuffer[(i - dec) * 6 + 1] = color1[1];
+                            colorBuffer[(i - dec) * 6 + 2] = color1[2];
+                            colorBuffer[(i - dec) * 6 + 3] = color2[0];
+                            colorBuffer[(i - dec) * 6 + 4] = color2[1];
+                            colorBuffer[(i - dec) * 6 + 5] = color2[2];
+                        }
                     }
-                }
-                i++;
-            });
-            return {
-                bufferRef: colorBuffer,
-                size: (graphState.channelSet.size - dec) * 2,
-            } as BufferRef<Uint8Array>;
-        }),
+                    i++;
+                });
+                return {
+                    bufferRef: colorBuffer,
+                    size: (graphState.channelSet.size - dec) * 2,
+                } as BufferRef<Uint8Array>;
+            },
+        ),
     );
 }
