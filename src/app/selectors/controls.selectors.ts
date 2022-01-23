@@ -28,3 +28,13 @@ export const selectEdgeDottedLine = createSelector(
     controlsSelector,
     (state) => state.edgeDottedLine,
 );
+
+export const capacityFilterAmount = createSelector(
+    controlsSelector,
+    (state) => state.capacityFilterAmount,
+);
+
+export const capacityFilterEnable = createSelector(
+    controlsSelector,
+    (state) => state.capacityFilterEnable,
+);

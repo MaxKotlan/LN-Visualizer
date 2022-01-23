@@ -13,6 +13,8 @@ export interface ControlsState {
     cameraFov: number;
     edgeDepthTest: boolean;
     edgeDottedLine: boolean;
+    capacityFilterEnable: boolean;
+    capacityFilterAmount: number;
 }
 
 const initialState: ControlsState = {
@@ -27,6 +29,8 @@ const initialState: ControlsState = {
     cameraFov: 60,
     edgeDepthTest: false,
     edgeDottedLine: true,
+    capacityFilterEnable: true,
+    capacityFilterAmount: 8000000,
 };
 
 export const reducer = createReducer(
@@ -55,5 +59,13 @@ export const reducer = createReducer(
     on(controlsActions.setEdgeUseDepthTest, (state, { value }) => ({
         ...state,
         edgeDepthTest: value,
+    })),
+    on(controlsActions.capacityFilterEnable, (state, { value }) => ({
+        ...state,
+        capacityFilterEnable: value,
+    })),
+    on(controlsActions.capacityFilterAmount, (state, { value }) => ({
+        ...state,
+        capacityFilterAmount: value,
     })),
 );

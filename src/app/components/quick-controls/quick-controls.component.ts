@@ -12,7 +12,13 @@ import {
     sortOrderChange,
 } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
-import { shouldRenderEdges, shouldRenderNodes } from 'src/app/selectors/controls.selectors';
+import {
+    capacityFilterEnable,
+    capacityFilterAmount,
+    shouldRenderEdges,
+    shouldRenderNodes,
+} from 'src/app/selectors/controls.selectors';
+import * as controlActions from '../../actions/controls.actions';
 import {
     selectFinalMatcheNodesFromSearch,
     selectNodesSearchResults,
@@ -23,7 +29,7 @@ import {
     templateUrl: './quick-controls.component.html',
     styleUrls: ['./quick-controls.component.scss'],
 })
-export class QuickControlsComponent implements OnInit {
+export class QuickControlsComponent {
     options: string[] = ['One', 'Two', 'Three'];
 
     constructor(private store$: Store<GraphState>) {}
@@ -31,9 +37,10 @@ export class QuickControlsComponent implements OnInit {
     public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
-    public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
+    public shouldFilterCapacity$ = this.store$.select(capacityFilterEnable);
+    public capacityFilterAmount$ = this.store$.select(capacityFilterAmount);
 
-    ngOnInit() {}
+    public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
 
     onTextChange(event: any) {
         if (event?.target?.value)
@@ -56,6 +63,14 @@ export class QuickControlsComponent implements OnInit {
 
     connectionSortChanged(event: MatSlideToggleChange) {
         this.store$.dispatch(sortOrderChange({ ascending: event.checked }));
+    }
+
+    updateFilterCapacityEnable(event: MatCheckboxChange) {
+        this.store$.dispatch(controlActions.capacityFilterEnable({ value: event.checked }));
+    }
+
+    setCapacityFiliterAmount(event: MatSliderChange) {
+        this.store$.dispatch(controlActions.capacityFilterAmount({ value: event.value || 1 }));
     }
 
     gotoNode() {

@@ -5,6 +5,7 @@ import { combineLatest, lastValueFrom, map, sampleTime, take, throttleTime } fro
 import * as THREE from 'three';
 import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
+import { capacityFilterAmount, capacityFilterEnable } from '../selectors/controls.selectors';
 import {
     graphSelector,
     selectChannelColorBuffer,
@@ -78,43 +79,55 @@ export class GraphMeshStateService {
         this.store$.select(selectChannelVertexBuffer),
         this.store$.select(selectNodeSetKeyValue),
         this.store$.select(selectFinalMatcheNodesFromSearch),
+        this.store$.select(capacityFilterEnable),
+        this.store$.select(capacityFilterAmount),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, vertexBuffer, nodeRegistry, searchResult]) => {
-            if (!vertexBuffer || !graphState.channelSet) return null;
-            let dec = 0;
-            let i = 0;
-            graphState.channelSet.forEach((channel) => {
-                if (
-                    !(
-                        !searchResult ||
-                        (searchResult &&
-                            (channel.policies[0].public_key === searchResult.public_key ||
-                                channel.policies[1].public_key === searchResult.public_key))
-                    )
-                ) {
-                    dec++;
-                } else {
-                    const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                    const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                    if (!node1 || !node2) {
+        map(
+            ([
+                graphState,
+                vertexBuffer,
+                nodeRegistry,
+                searchResult,
+                capacityFilterEnabled,
+                capacityFilterAmount,
+            ]) => {
+                if (!vertexBuffer || !graphState.channelSet) return null;
+                let dec = 0;
+                let i = 0;
+                graphState.channelSet.forEach((channel) => {
+                    if (
+                        !(
+                            !searchResult ||
+                            (searchResult &&
+                                (channel.policies[0].public_key === searchResult.public_key ||
+                                    channel.policies[1].public_key === searchResult.public_key)) ||
+                            (capacityFilterEnabled && capacityFilterAmount > channel.capacity)
+                        )
+                    ) {
                         dec++;
                     } else {
-                        vertexBuffer[(i - dec) * 6] = node1.position.x * meshScale;
-                        vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * meshScale;
-                        vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * meshScale;
-                        vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * meshScale;
-                        vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * meshScale;
-                        vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * meshScale;
+                        const node1 = nodeRegistry.get(channel.policies[0].public_key);
+                        const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                        if (!node1 || !node2) {
+                            dec++;
+                        } else {
+                            vertexBuffer[(i - dec) * 6] = node1.position.x * meshScale;
+                            vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * meshScale;
+                            vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * meshScale;
+                            vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * meshScale;
+                            vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * meshScale;
+                            vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * meshScale;
+                        }
                     }
-                }
-                i++;
-            });
-            return {
-                bufferRef: vertexBuffer,
-                size: (graphState.channelSet.size - dec) * 2,
-            } as BufferRef<Float32Array>;
-        }),
+                    i++;
+                });
+                return {
+                    bufferRef: vertexBuffer,
+                    size: (graphState.channelSet.size - dec) * 2,
+                } as BufferRef<Float32Array>;
+            },
+        ),
     );
 
     channelColors$ = combineLatest([

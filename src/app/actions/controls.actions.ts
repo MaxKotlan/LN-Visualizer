@@ -58,3 +58,13 @@ export const setEdgeUseDepthTest = createAction(
     '[controls] setEdgeUseDepthTest',
     props<{ value: boolean }>(),
 );
+
+export const capacityFilterEnable = createAction(
+    '[controls] capacityFilterEnable',
+    props<{ value: boolean }>(),
+);
+
+export const capacityFilterAmount = createAction(
+    '[controls] capacityFilterAmount',
+    props<{ value: number }>(),
+);
