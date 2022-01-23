@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
 import { selectSearchString } from './controls.selectors';
 
@@ -169,7 +170,7 @@ export const selectNodesSearchResults = createSelector(
 export const selectClosestPoint = (point: THREE.Vector3) =>
     createSelector(selectNodeSetKeyValue, (nodeSetValue) => {
         if (!nodeSetValue) return;
-        point.divideScalar(100);
+        point.divideScalar(meshScale);
         let minDistance: null | number = null;
         let minDistanceIndex: null | string = null;
         nodeSetValue.forEach((node: LndNodeWithPosition, pubkey) => {
