@@ -167,6 +167,7 @@ export class GraphEffects {
                                 ),
                                 parent: null,
                                 children: new Map<string, LndNodeWithPosition>(),
+                                totalCapacity: 0,
                             } as LndNodeWithPosition),
                     );
                 }),
@@ -183,6 +184,7 @@ export class GraphEffects {
         if (!lndNode) return;
         const lndPar = channel as LndChannelWithParent;
         lndPar.parent = otherNode;
+        lndNode.totalCapacity += channel.capacity;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 
