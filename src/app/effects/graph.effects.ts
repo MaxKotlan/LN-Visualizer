@@ -157,19 +157,20 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.processGraphNodeChunk),
                 map((action) => {
-                    return action.chunk.data.map(
-                        (lnNode: LndNode) =>
-                            ({
-                                ...lnNode,
-                                position: createSpherePoint(1, this.origin, lnNode.public_key),
-                                connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
-                                    this.getNodeQueueComparitor(),
-                                ),
-                                parent: null,
-                                children: new Map<string, LndNodeWithPosition>(),
-                                totalCapacity: 0,
-                            } as LndNodeWithPosition),
-                    );
+                    return action.chunk.data.map((lnNode: LndNode) => {
+                        const initPos = new THREE.Vector3(0, 0, 0);
+                        createSpherePoint(1, this.origin, lnNode.public_key, initPos);
+                        return {
+                            ...lnNode,
+                            position: initPos,
+                            connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
+                                this.getNodeQueueComparitor(),
+                            ),
+                            parent: null,
+                            children: new Map<string, LndNodeWithPosition>(),
+                            totalCapacity: 0,
+                        } as LndNodeWithPosition;
+                    });
                 }),
                 map((nodeSubSet) => graphActions.concatinateNodeChunk({ nodeSubSet })),
             ),
@@ -299,10 +300,11 @@ export class GraphEffects {
                 map((action) => {
                     action.nodeSet.forEach((node) => {
                         if (!node.parent) {
-                            node.position = createSpherePoint(
+                            createSpherePoint(
                                 1,
                                 this.origin,
                                 node.public_key.slice(0, 10),
+                                node.position,
                             );
                             this.calculatePositionFromParent(node);
                         }
@@ -327,12 +329,13 @@ export class GraphEffects {
             return;
         }
         node.children.forEach((child) => {
-            child.position = createSpherePoint(
+            createSpherePoint(
                 1 / depth,
                 node.position
                     .clone()
                     .sub(node.parent?.position.clone().multiplyScalar(1 / depth) || this.origin),
                 child.public_key.slice(0, 10),
+                child.position,
             );
             this.calculatePositionFromParent(child, depth + 1);
         });

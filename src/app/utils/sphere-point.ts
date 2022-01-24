@@ -5,7 +5,8 @@ export const createSpherePoint = (
     radius: number,
     position: THREE.Vector3,
     seed: string,
-): THREE.Vector3 => {
+    newPosition: THREE.Vector3,
+): void => {
     const rng = seedRandom.xor128(seed);
     const s = 2 * Math.PI * rng();
     const t = 2 * Math.PI * rng();
@@ -16,5 +17,7 @@ export const createSpherePoint = (
     const y = radius * Math.sin(s) * Math.sin(t) + position.y + (rng() - 0.5) * randomnessFactor;
     const z = radius * Math.cos(t) + position.z + (rng() - 0.5) * randomnessFactor;
 
-    return new THREE.Vector3(x, y, z);
+    newPosition.set(x, y, z);
+
+    //return new THREE.Vector3(x, y, z);
 };
