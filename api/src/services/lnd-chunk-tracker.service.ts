@@ -7,7 +7,7 @@ import { LndNode } from '../models/node.interface';
 
 @injectable()
 export class LndChunkTrackerService {
-    public readonly chunkSize: number = 1024;
+    public readonly chunkSize: number = 4096;
 
     public chunkInfo: ChunkInfo | null = null;
     public nodeChunks: Chunk<LndNode>[] = [];
