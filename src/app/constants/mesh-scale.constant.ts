@@ -1,1 +1,1 @@
-export const meshScale = 500;
+export const meshScale = 100;
