@@ -1,18 +1,21 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
+import { Observable } from 'rxjs';
+import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 
+@UntilDestroy()
 @Component({
     selector: 'app-graph-edge-mesh',
     providers: [provideParent(SphereMeshComponent)],
     template: '<ng-content></ng-content>',
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
-    @Input() public edgeVertices: BufferRef<Float32Array> | null = null;
+    @Input() edgeVertices!: [BufferRef<Uint8Array>, BufferRef<Float32Array>];
     @Input() shouldRender: boolean = false;
-    @Input() edgeColor: BufferRef<Uint8Array> | null = null;
     @Input() dashedLines: boolean = true;
     @Input() depthTest: boolean = false;
 
@@ -28,9 +31,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.LineSegments = this.getObject();
-        //console.log('loledgecnt', this.edgeVertices);
         if (obj) {
-            //const newInstance = this.newObject3DInstance();
             this.generateGeometry();
             (obj as any)['geometry'] = this.geometry;
             (obj as any)['material'] = this.generateMaterial();
@@ -43,16 +44,17 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
     protected generateGeometry() {
         if (!this.edgeVertices) return;
-        if (!this.edgeColor) return;
+        if (!this.edgeVertices[1]) return;
+        if (!this.edgeVertices[0]) return;
         this.geometry.setAttribute(
             'color',
-            new THREE.BufferAttribute(this.edgeColor.bufferRef, 3, true),
+            new THREE.BufferAttribute(this.edgeVertices[0].bufferRef, 3, true),
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(this.edgeVertices.bufferRef, 3),
+            new THREE.BufferAttribute(this.edgeVertices[1].bufferRef, 3),
         );
-        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices.size : 0);
+        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices[1].size : 0);
         this.geometry.attributes['color'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
 

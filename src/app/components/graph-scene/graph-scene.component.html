@@ -34,9 +34,8 @@
             ></app-graph-node-mesh>
             <app-graph-edge-mesh
                 *ngIf="true"
-                [edgeVertices]="selectEdgeVertices$ | async"
+                [edgeVertices]="selectChannelData$ | async"
                 [shouldRender]="(shouldRenderEdges$ | async) || false"
-                [edgeColor]="selectEdgeColor$ | async"
                 [dashedLines]="(selectEdgeDottedLine$ | async) || false"
                 [depthTest]="(selectEdgeDepthTest$ | async) || false"
             ></app-graph-edge-mesh>

@@ -39,9 +39,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public positions$ = this.graphMeshStateService.nodeVertices$;
     public colors$ = this.graphMeshStateService.nodeColors$;
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
-    public selectEdgeColor$ = this.graphMeshStateService.channelColors$;
-    // public selectAliases$ = this.store$.select(selectAliases);
-    public selectEdgeVertices$ = this.graphMeshStateService.channelVertices$;
+    public selectChannelData$ = this.graphMeshStateService.channelData$;
     public selectNodeSize$ = this.store$.select(selectNodeSize);
     public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);

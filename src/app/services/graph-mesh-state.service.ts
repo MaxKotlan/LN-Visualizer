@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
-import { combineLatest, lastValueFrom, map, sampleTime, take, throttleTime } from 'rxjs';
+import {
+    combineLatest,
+    lastValueFrom,
+    map,
+    sampleTime,
+    take,
+    throttleTime,
+    withLatestFrom,
+} from 'rxjs';
 import * as THREE from 'three';
 import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
@@ -203,4 +211,6 @@ export class GraphMeshStateService {
             },
         ),
     );
+
+    channelData$ = this.channelColors$.pipe(withLatestFrom(this.channelVertices$));
 }
