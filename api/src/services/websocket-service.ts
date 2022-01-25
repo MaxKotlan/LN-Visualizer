@@ -12,7 +12,7 @@ export class WebSocketService {
         private channelCloseService: ChannelCloseService,
     ) {
         console.log('Initializing Websocket Server');
-        this.wss = new WebSocketServer({ port: 5647 });
+        this.wss = new WebSocketServer({ port: 5647, host: '0.0.0.0' });
     }
 
     public init() {
