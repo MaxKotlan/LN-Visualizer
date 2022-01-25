@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import {
     combineLatest,
     lastValueFrom,

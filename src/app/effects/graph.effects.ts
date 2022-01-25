@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { LndChannelWithParent, LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { map, mergeMap, of, switchMap, tap, throttleTime, withLatestFrom } from 'rxjs';
 import * as THREE from 'three';
 import * as graphActions from '../actions/graph.actions';

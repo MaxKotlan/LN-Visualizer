@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
 import { selectSearchString } from './controls.selectors';

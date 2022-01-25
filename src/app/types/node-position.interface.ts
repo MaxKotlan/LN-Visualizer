@@ -1,7 +1,7 @@
-import { LndNode } from './node.interface';
+import { LndNode } from '../../../api/src/models/node.interface';
 import * as THREE from 'three';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
-import { LndChannel } from '.';
+import { LndChannel } from '../../../api/src/models';
 
 export interface LndNodeWithPosition extends LndNode {
     position: THREE.Vector3;

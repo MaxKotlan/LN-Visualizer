@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { LndNodeWithPosition } from 'api/src/models/node-position.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Chunk } from '../types/chunk.interface';
 import { LnGraph } from '../types/graph.interface';
 import { LndNode } from '../types/node.interface';
