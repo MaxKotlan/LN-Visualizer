@@ -42,6 +42,7 @@ import { LoadingBarComponent } from './components/loading-bar/loading-bar.compon
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GraphMeshStateService } from './services/graph-mesh-state.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GraphStatsComponent } from './components/graph-stats/graph-stats.component';
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         LndRaycasterCameraDirective,
         LndRaycasterSceneDirective,
         LoadingBarComponent,
+        GraphStatsComponent,
     ],
     imports: [
         BrowserModule,

@@ -13,3 +13,11 @@ app-loading-bar {
     z-index: 100;
     width: 100vw;
 }
+
+app-graph-stats {
+    position: fixed;
+    top: 0;
+    right: 50px;
+    z-index: 100;
+    width: 150px;
+}

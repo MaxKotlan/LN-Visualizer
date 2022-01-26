@@ -167,6 +167,9 @@ export const selectNodesSearchResults = createSelector(
 //     },
 // );
 
+export const selectNodeCount = createSelector(graphSelector, (state) => state.nodeCount);
+export const selectChannelCount = createSelector(graphSelector, (state) => state.channelCount);
+
 export const selectClosestPoint = (point: THREE.Vector3) =>
     createSelector(selectNodeSetKeyValue, (nodeSetValue) => {
         if (!nodeSetValue) return;
