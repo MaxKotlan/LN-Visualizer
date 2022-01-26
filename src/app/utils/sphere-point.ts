@@ -8,8 +8,8 @@ export const createSpherePoint = (
     newPosition: THREE.Vector3,
 ): void => {
     const rng = seedRandom.xor128(seed);
-    const s = 2 * Math.PI * rng();
-    const t = 2 * Math.PI * rng();
+    const s = 2 * Math.PI * (rng() - 0.5);
+    const t = 2 * Math.PI * (rng() - 0.5);
 
     const randomnessFactor = 0.2;
 

@@ -14,6 +14,8 @@ export interface GraphState {
     channelColorBuffer: Uint8Array | null;
     nodeSet: Map<string, LndNodeWithPosition>;
     channelSet: Map<string, LndChannel>;
+    nodeCount: number;
+    channelCount: number;
     loadingText: string;
 }
 
@@ -27,6 +29,8 @@ const initialState: GraphState = {
     channelColorBuffer: null,
     nodeSet: new Map<string, LndNodeWithPosition>(),
     channelSet: new Map<string, LndChannel>(),
+    nodeCount: 0,
+    channelCount: 0,
     loadingText: '',
 };
 
@@ -68,5 +72,13 @@ export const reducer = createReducer(
         ...state,
         channelSet,
         channelChunksProcessed: state.channelChunksProcessed + 1,
+    })),
+    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+        ...state,
+        nodeCount: nodeSet.size,
+    })),
+    on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
+        ...state,
+        channelCount: channelSet.size,
     })),
 );

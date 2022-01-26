@@ -331,9 +331,9 @@ export class GraphEffects {
         node.children.forEach((child) => {
             createSpherePoint(
                 1 / depth,
-                node.position
-                    .clone()
-                    .sub(node.parent?.position.clone().multiplyScalar(1 / depth) || this.origin),
+                node.position,
+                // .clone()
+                // .sub(node.parent?.position.clone().multiplyScalar(1 / depth) || this.origin),
                 child.public_key.slice(0, 10),
                 child.position,
             );
