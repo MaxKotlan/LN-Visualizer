@@ -32,11 +32,13 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.LineSegments = this.getObject();
         if (obj) {
-            this.generateGeometry();
-            (obj as any)['geometry'] = this.geometry;
-            (obj as any)['material'] = this.generateMaterial();
-            obj.geometry.computeBoundingBox();
-            obj.computeLineDistances();
+            const a = this.generateGeometry();
+            if (a) {
+                (obj as any)['geometry'] = this.geometry;
+                (obj as any)['material'] = this.generateMaterial();
+                obj.geometry.computeBoundingBox();
+                obj.computeLineDistances();
+            }
         }
         this.rendererService.render();
         super.ngOnChanges(simpleChanges);
@@ -60,6 +62,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
+        return true;
     }
 
     protected generateMaterial() {
