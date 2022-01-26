@@ -229,7 +229,8 @@ export class GraphEffects {
                         if (
                             potentialParent1 &&
                             node1.connectedChannels.size() <
-                                potentialParent1.connectedChannels.size()
+                                potentialParent1.connectedChannels.size() &&
+                            !node1.parent
                         ) {
                             node1.parent = potentialParent1;
                             node1.parent.children.set(node1.public_key, node1);
@@ -246,7 +247,8 @@ export class GraphEffects {
                         if (
                             potentialParent2 &&
                             node2.connectedChannels.size() <
-                                potentialParent2.connectedChannels.size()
+                                potentialParent2.connectedChannels.size() &&
+                            !node2.parent
                         ) {
                             node2.parent = potentialParent2;
                             node2.parent.children.set(node2.public_key, node2);
@@ -258,7 +260,7 @@ export class GraphEffects {
                             pcount++;
                         }
                     });
-                    //console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
+                    console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
                     return graphActions.concatinateChannelChunk({
                         channelSubSet: action.chunk.data,
                     });
@@ -315,7 +317,7 @@ export class GraphEffects {
                     action.nodeSet.forEach((node) => {
                         if (!node.parent) {
                             createSpherePoint(
-                                1,
+                                0.1,
                                 this.origin,
                                 node.public_key.slice(0, 10),
                                 node.position,
