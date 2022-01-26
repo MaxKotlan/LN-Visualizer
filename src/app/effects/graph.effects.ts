@@ -7,7 +7,17 @@ import { LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { map, mergeMap, of, switchMap, tap, throttleTime, withLatestFrom } from 'rxjs';
+import {
+    catchError,
+    delay,
+    map,
+    mergeMap,
+    of,
+    switchMap,
+    tap,
+    throttleTime,
+    withLatestFrom,
+} from 'rxjs';
 import * as THREE from 'three';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducers/graph.reducer';
@@ -62,6 +72,10 @@ export class GraphEffects {
                                     });
                             }
                             return graphActions.errorUnknownChunkDataType();
+                        }),
+                        catchError((e: ErrorEvent) => {
+                            this.snackBar.open('Failed to connect to websocket', 'close');
+                            return of(graphActions.initializeGraphSyncProcess()).pipe(delay(1000));
                         }),
                     ),
                 ),
