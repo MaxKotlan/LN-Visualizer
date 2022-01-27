@@ -254,13 +254,13 @@ export class GraphEffects {
                             node2.parent.children.set(node2.public_key, node2);
                         }
                     });
-                    let pcount = 0;
-                    nodeRegistry.nodeSet.forEach((node) => {
-                        if (node.parent) {
-                            pcount++;
-                        }
-                    });
-                    console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
+                    // let pcount = 0;
+                    // nodeRegistry.nodeSet.forEach((node) => {
+                    //     if (node.parent) {
+                    //         pcount++;
+                    //     }
+                    // });
+                    // console.log('Parent Count: ', pcount, 'Size :', nodeRegistry.nodeSet.size);
                     return graphActions.concatinateChannelChunk({
                         channelSubSet: action.chunk.data,
                     });
