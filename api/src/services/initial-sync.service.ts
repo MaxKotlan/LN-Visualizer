@@ -2,19 +2,22 @@ import { injectable } from 'inversify';
 import { WebSocket } from 'ws';
 import { Chunk, LndChannel, LndNode } from '../models';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
+import { ChunkSerializer } from './seralizer';
 
 @injectable()
 export class InitialSyncService {
     constructor(private lndChunkTrackerService: LndChunkTrackerService) {}
 
+    private chunkSerializer = new ChunkSerializer();
+
     public sendChunkInfo(ws: WebSocket) {
-        ws.send(JSON.stringify(this.lndChunkTrackerService.chunkInfo));
+        ws.send(this.chunkSerializer.serialize(this.lndChunkTrackerService.chunkInfo));
     }
 
     public performInitialNodeSync(ws: WebSocket) {
         this.lndChunkTrackerService.nodeChunks.forEach(async (chunk: Chunk<LndNode>) => {
             ws.send(
-                JSON.stringify({
+                this.chunkSerializer.serialize({
                     index: chunk.index,
                     type: chunk.type,
                     data: chunk.data.map(
@@ -33,7 +36,7 @@ export class InitialSyncService {
     public performInitialChannelSync(ws: WebSocket) {
         this.lndChunkTrackerService.channelChunks.forEach(async (chunk) => {
             ws.send(
-                JSON.stringify({
+                this.chunkSerializer.serialize({
                     index: chunk.index,
                     type: chunk.type,
                     data: chunk.data.map(

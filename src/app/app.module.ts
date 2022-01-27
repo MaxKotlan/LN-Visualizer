@@ -43,6 +43,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GraphMeshStateService } from './services/graph-mesh-state.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GraphStatsComponent } from './components/graph-stats/graph-stats.component';
+import { ChunkSerializer } from './services/chunk-serializer.service';
 
 @NgModule({
     declarations: [
@@ -104,7 +105,12 @@ import { GraphStatsComponent } from './components/graph-stats/graph-stats.compon
         //     },
         // }),
     ],
-    providers: [NodePositionRegistryService, LndRaycasterService, GraphMeshStateService],
+    providers: [
+        NodePositionRegistryService,
+        LndRaycasterService,
+        GraphMeshStateService,
+        ChunkSerializer,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -74,6 +74,7 @@ export class GraphEffects {
                             return graphActions.errorUnknownChunkDataType();
                         }),
                         catchError((e: ErrorEvent) => {
+                            console.log(e);
                             this.snackBar.open('Failed to connect to websocket', 'close');
                             return of(graphActions.initializeGraphSyncProcess()).pipe(delay(1000));
                         }),
