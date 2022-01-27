@@ -17,11 +17,16 @@ export class LndApiServiceService {
                 return data;
             },
         });
-        return subject.asObservable().pipe(
-            mergeMap((blob: Blob) => blob.arrayBuffer()),
-            map((buffer: ArrayBuffer) => {
-                return this.chunkSerializer.deserialize(buffer as any);
-            }),
-        ) as Observable<Chunk<LndNode | LndChannel>>;
+        return subject
+            .asObservable()
+            .pipe(
+                mergeMap((blob: Blob) =>
+                    blob
+                        .arrayBuffer()
+                        .then((buffer: ArrayBuffer) =>
+                            this.chunkSerializer.deserialize(buffer as Buffer),
+                        ),
+                ),
+            ) as Observable<Chunk<LndNode | LndChannel>>;
     }
 }
