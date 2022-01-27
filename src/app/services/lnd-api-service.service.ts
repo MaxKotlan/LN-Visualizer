@@ -1,25 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {
-    asyncScheduler,
-    delay,
-    filter,
-    interval,
-    map,
-    Observable,
-    switchMap,
-    throttleTime,
-} from 'rxjs';
-import { LnGraph } from '../types/graph.interface';
-import { webSocket } from 'rxjs/webSocket';
 import { Chunk, LndChannel, LndNode } from 'api/src/models';
+import { map, mergeMap, Observable } from 'rxjs';
+import { webSocket } from 'rxjs/webSocket';
 import { ChunkSerializer } from './chunk-serializer.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LndApiServiceService {
-    constructor(private http: HttpClient, private chunkSerializer: ChunkSerializer) {}
+    constructor(private chunkSerializer: ChunkSerializer) {}
 
     public initialChunkSync(): Observable<Chunk<LndNode | LndChannel>> {
         const subject = webSocket({
@@ -29,7 +18,7 @@ export class LndApiServiceService {
             },
         });
         return subject.asObservable().pipe(
-            switchMap((blob: Blob) => blob.arrayBuffer()),
+            mergeMap((blob: Blob) => blob.arrayBuffer()),
             map((buffer: ArrayBuffer) => {
                 return this.chunkSerializer.deserialize(buffer as any);
             }),
