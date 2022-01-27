@@ -317,7 +317,7 @@ export class GraphEffects {
                     action.nodeSet.forEach((node) => {
                         if (!node.parent) {
                             createSpherePoint(
-                                0.1,
+                                1,
                                 this.origin,
                                 node.public_key.slice(0, 10),
                                 node.position,
@@ -401,7 +401,7 @@ export class GraphEffects {
                 switchMap(([, nodeRegistry]) => {
                     return of(
                         graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
-                    ).pipe(throttleTime(100));
+                    ).pipe(throttleTime(800));
                 }),
             ),
         { dispatch: true },
