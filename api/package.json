@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bson": "^4.2.0",
+    "bson": "^4.6.1",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "express": "^4.17.2",
