@@ -104,7 +104,7 @@ export class GraphMeshStateService {
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        !this.shouldNotRenderChannel(
+                        this.shouldRenderChannel(
                             searchResult,
                             channel,
                             capacityFilterAmount,
@@ -154,7 +154,7 @@ export class GraphMeshStateService {
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        !this.shouldNotRenderChannel(
+                        this.shouldRenderChannel(
                             searchResult,
                             channel,
                             capacityFilterAmount,
@@ -185,13 +185,13 @@ export class GraphMeshStateService {
         ),
     );
 
-    public shouldNotRenderChannel(
+    public shouldRenderChannel(
         searchResult: LndNodeWithPosition,
         channel,
         capacityFilterAmount: number,
         capacityFilterEnabled: boolean,
     ): boolean {
-        return (
+        return !(
             !(
                 !searchResult ||
                 (searchResult &&
