@@ -104,25 +104,12 @@ export class GraphMeshStateService {
                 let dec = 0;
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
-                    // console.log(
-                    //     'chanamount',
-                    //     channel.capacity,
-                    //     'capfilter',
-                    //     capacityFilterAmount,
-                    //     'shouldRen',
-                    //     capacityFilterEnabled && channel.capacity > capacityFilterAmount,
-                    // );
-
                     if (
-                        !(
-                            !searchResult ||
-                            (searchResult &&
-                                (channel.policies[0].public_key === searchResult.public_key ||
-                                    channel.policies[1].public_key === searchResult.public_key))
-                        ) ||
-                        !(
-                            (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
-                            !capacityFilterEnabled
+                        this.shouldRenderChannel(
+                            searchResult,
+                            channel,
+                            capacityFilterAmount,
+                            capacityFilterEnabled,
                         )
                     ) {
                         dec++;
@@ -173,15 +160,11 @@ export class GraphMeshStateService {
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        !(
-                            !searchResult ||
-                            (searchResult &&
-                                (channel.policies[0].public_key === searchResult.public_key ||
-                                    channel.policies[1].public_key === searchResult.public_key))
-                        ) ||
-                        !(
-                            (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
-                            !capacityFilterEnabled
+                        this.shouldRenderChannel(
+                            searchResult,
+                            channel,
+                            capacityFilterAmount,
+                            capacityFilterEnabled,
                         )
                     ) {
                         dec++;
@@ -211,6 +194,26 @@ export class GraphMeshStateService {
             },
         ),
     );
+
+    public shouldRenderChannel(
+        searchResult: LndNodeWithPosition,
+        channel,
+        capacityFilterAmount: number,
+        capacityFilterEnabled: boolean,
+    ): boolean {
+        return (
+            !(
+                !searchResult ||
+                (searchResult &&
+                    (channel.policies[0].public_key === searchResult.public_key ||
+                        channel.policies[1].public_key === searchResult.public_key))
+            ) ||
+            !(
+                (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
+                !capacityFilterEnabled
+            )
+        );
+    }
 
     channelData$ = this.channelColors$.pipe(withLatestFrom(this.channelVertices$));
 }
