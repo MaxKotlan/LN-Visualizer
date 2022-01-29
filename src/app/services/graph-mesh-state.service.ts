@@ -151,40 +151,35 @@ export class GraphMeshStateService {
                 capacityFilterAmount,
             ]) => {
                 if (!colorBuffer || !graphState.channelSet) return null;
-                let dec = 0;
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        this.shouldNotRenderChannel(
+                        !this.shouldNotRenderChannel(
                             searchResult,
                             channel,
                             capacityFilterAmount,
                             capacityFilterEnabled,
                         )
                     ) {
-                        dec++;
-                    } else {
                         const node1 = nodeRegistry.get(channel.policies[0].public_key);
                         const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                        if (!node1 || !node2) {
-                            dec++;
-                        } else {
+                        if (node1 && node2) {
                             const color1 = this.fromHexString(node1.color);
                             const color2 = this.fromHexString(node2.color);
 
-                            colorBuffer[(i - dec) * 6] = color1[0];
-                            colorBuffer[(i - dec) * 6 + 1] = color1[1];
-                            colorBuffer[(i - dec) * 6 + 2] = color1[2];
-                            colorBuffer[(i - dec) * 6 + 3] = color2[0];
-                            colorBuffer[(i - dec) * 6 + 4] = color2[1];
-                            colorBuffer[(i - dec) * 6 + 5] = color2[2];
+                            colorBuffer[i * 6] = color1[0];
+                            colorBuffer[i * 6 + 1] = color1[1];
+                            colorBuffer[i * 6 + 2] = color1[2];
+                            colorBuffer[i * 6 + 3] = color2[0];
+                            colorBuffer[i * 6 + 4] = color2[1];
+                            colorBuffer[i * 6 + 5] = color2[2];
+                            i++;
                         }
                     }
-                    i++;
                 });
                 return {
                     bufferRef: colorBuffer,
-                    size: (i - dec) * 2,
+                    size: i * 2,
                 } as BufferRef<Uint8Array>;
             },
         ),
