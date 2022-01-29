@@ -131,7 +131,7 @@ export class GraphMeshStateService {
                 });
                 return {
                     bufferRef: vertexBuffer,
-                    size: (graphState.channelSet.size - dec) * 2,
+                    size: (i - dec) * 2,
                 } as BufferRef<Float32Array>;
             },
         ),
@@ -189,7 +189,7 @@ export class GraphMeshStateService {
                 });
                 return {
                     bufferRef: colorBuffer,
-                    size: (graphState.channelSet.size - dec) * 2,
+                    size: (i - dec) * 2,
                 } as BufferRef<Uint8Array>;
             },
         ),
