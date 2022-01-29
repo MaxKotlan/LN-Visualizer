@@ -191,17 +191,13 @@ export class GraphMeshStateService {
         capacityFilterAmount: number,
         capacityFilterEnabled: boolean,
     ): boolean {
-        return !(
-            !(
-                !searchResult ||
+        return (
+            (!searchResult ||
                 (searchResult &&
                     (channel.policies[0].public_key === searchResult.public_key ||
-                        channel.policies[1].public_key === searchResult.public_key))
-            ) ||
-            !(
-                (capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
-                !capacityFilterEnabled
-            )
+                        channel.policies[1].public_key === searchResult.public_key))) &&
+            ((capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
+                !capacityFilterEnabled)
         );
     }
 
