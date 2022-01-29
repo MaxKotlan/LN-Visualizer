@@ -101,37 +101,32 @@ export class GraphMeshStateService {
                 capacityFilterAmount,
             ]) => {
                 if (!vertexBuffer || !graphState.channelSet) return null;
-                let dec = 0;
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        this.shouldNotRenderChannel(
+                        !this.shouldNotRenderChannel(
                             searchResult,
                             channel,
                             capacityFilterAmount,
                             capacityFilterEnabled,
                         )
                     ) {
-                        dec++;
-                    } else {
                         const node1 = nodeRegistry.get(channel.policies[0].public_key);
                         const node2 = nodeRegistry.get(channel.policies[1].public_key);
-                        if (!node1 || !node2) {
-                            dec++;
-                        } else {
-                            vertexBuffer[(i - dec) * 6] = node1.position.x * meshScale;
-                            vertexBuffer[(i - dec) * 6 + 1] = node1.position.y * meshScale;
-                            vertexBuffer[(i - dec) * 6 + 2] = node1.position.z * meshScale;
-                            vertexBuffer[(i - dec) * 6 + 3] = node2.position.x * meshScale;
-                            vertexBuffer[(i - dec) * 6 + 4] = node2.position.y * meshScale;
-                            vertexBuffer[(i - dec) * 6 + 5] = node2.position.z * meshScale;
+                        if (node1 && node2) {
+                            vertexBuffer[i * 6] = node1.position.x * meshScale;
+                            vertexBuffer[i * 6 + 1] = node1.position.y * meshScale;
+                            vertexBuffer[i * 6 + 2] = node1.position.z * meshScale;
+                            vertexBuffer[i * 6 + 3] = node2.position.x * meshScale;
+                            vertexBuffer[i * 6 + 4] = node2.position.y * meshScale;
+                            vertexBuffer[i * 6 + 5] = node2.position.z * meshScale;
+                            i++;
                         }
                     }
-                    i++;
                 });
                 return {
                     bufferRef: vertexBuffer,
-                    size: (i - dec) * 2,
+                    size: i * 2,
                 } as BufferRef<Float32Array>;
             },
         ),
