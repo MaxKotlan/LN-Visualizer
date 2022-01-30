@@ -101,6 +101,11 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
     },
 );
 
+export const selectFinalMatchAliasFromSearch = createSelector(
+    selectFinalMatcheNodesFromSearch,
+    (nodeMatch) => nodeMatch?.alias || '',
+);
+
 // /*Can be optimized by using registry instead*/
 // export const selectFilterBySearchedNode = createSelector(
 //     selectChannelSetKeyValue,
