@@ -18,4 +18,13 @@ export class RouteEffects {
             ),
         { dispatch: false },
     );
+
+    nothingSelected$ = createEffect(
+        () =>
+            this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
+                filter((node) => !node?.public_key),
+                tap(() => this.location.replaceState('')),
+            ),
+        { dispatch: false },
+    );
 }
