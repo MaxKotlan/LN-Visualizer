@@ -25,6 +25,7 @@ import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/gr
 import { LndApiServiceService } from '../services/lnd-api-service.service';
 import { Chunk } from '../types/chunk.interface';
 import { createSpherePoint } from '../utils';
+import { initialSphereSize } from '../constants/mesh-scale.constant';
 
 @Injectable()
 export class GraphEffects {
@@ -173,7 +174,12 @@ export class GraphEffects {
                 map((action) => {
                     return action.chunk.data.map((lnNode: LndNode) => {
                         const initPos = new THREE.Vector3(0, 0, 0);
-                        createSpherePoint(1, this.origin, lnNode.public_key, initPos);
+                        createSpherePoint(
+                            initialSphereSize,
+                            this.origin,
+                            lnNode.public_key,
+                            initPos,
+                        );
                         return {
                             ...lnNode,
                             position: initPos,
@@ -317,7 +323,7 @@ export class GraphEffects {
                     action.nodeSet.forEach((node) => {
                         if (!node.parent) {
                             createSpherePoint(
-                                1,
+                                initialSphereSize,
                                 this.origin,
                                 node.public_key.slice(0, 10),
                                 node.position,
@@ -346,7 +352,7 @@ export class GraphEffects {
         }
         node.children.forEach((child) => {
             createSpherePoint(
-                1 / depth,
+                initialSphereSize / depth,
                 node.position,
                 // .clone()
                 // .sub(node.parent?.position.clone().multiplyScalar(1 / depth) || this.origin),
