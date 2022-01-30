@@ -33,7 +33,7 @@ export class RouteEffects {
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
                 filter((node) => !node?.public_key),
                 //tap(() => this.location.replaceState('')),
-                tap((node) => this.router.navigate(['/'])),
+                tap(() => this.router.navigate(['/'])),
             ),
         { dispatch: false },
     );
