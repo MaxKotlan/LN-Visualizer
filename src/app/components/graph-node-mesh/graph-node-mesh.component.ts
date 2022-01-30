@@ -117,7 +117,7 @@ export class GraphNodeMeshComponent
             .subscribe((node) => {
                 if (!node) return;
                 console.log(node);
-                this.store$.dispatch(searchGraph({ searchText: node.alias }));
+                this.store$.dispatch(searchGraph({ searchText: node.public_key }));
             });
     }
 
