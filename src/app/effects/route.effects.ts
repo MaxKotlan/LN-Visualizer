@@ -10,20 +10,13 @@ import * as controlsActions from '../actions/controls.actions';
 
 @Injectable()
 export class RouteEffects {
-    constructor(
-        private store$: Store<GraphState>,
-        private location: Location,
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-    ) {}
+    constructor(private store$: Store<GraphState>, private router: Router) {}
 
     finalNodeSelected$ = createEffect(
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
                 filter((node) => !!node?.public_key),
-                //tap((node) => this.location.replaceState(node.public_key)),
                 tap((node) => this.router.navigate([node.public_key])),
-                // this.router
             ),
         { dispatch: false },
     );
@@ -32,7 +25,6 @@ export class RouteEffects {
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
                 filter((node) => !node?.public_key),
-                //tap(() => this.location.replaceState('')),
                 tap(() => this.router.navigate(['/'])),
             ),
         { dispatch: false },
