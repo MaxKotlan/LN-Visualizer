@@ -42,35 +42,14 @@ export class RouteEffects {
         () =>
             this.router.events.pipe(
                 filter((e) => e instanceof NavigationEnd),
-                map(
-                    () =>
-                        // console.log(
-                        this.router.routerState.snapshot.root?.firstChild?.params['public_key'],
-                    // ),
-                ), //this.activatedRoute.snapshot.params['public_key'])),
+                map(() => this.router.routerState.snapshot.root?.firstChild?.params['public_key']),
                 filter((a) => !!a),
-                // switchMap(() =>
-                //     this.activatedRoute.params.pipe(
-                // map((params) => params['public_key']),
-                //tap((c) => console.log(c)),
                 withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
                 filter(
                     ([routePubKey, currentSelected]) => currentSelected?.public_key !== routePubKey,
                 ),
                 map(([routePubKey]) => controlsActions.searchGraph({ searchText: routePubKey })),
-                //     ),
-                // ),
             ),
-
-        // this.activatedRoute.params.pipe(
-        //     map((params) => params['public_key']),
-        //     tap((c) => console.log(c)),
-        //     withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
-        //     filter(
-        //         ([routePubKey, currentSelected]) => currentSelected?.public_key !== routePubKey,
-        //     ),
-        //     map(([routePubKey]) => controlsActions.searchGraph({ searchText: routePubKey })),
-        // ),
         { dispatch: true },
     );
 }
