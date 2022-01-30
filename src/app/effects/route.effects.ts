@@ -13,14 +13,17 @@ export class RouteEffects {
     constructor(
         private store$: Store<GraphState>,
         private location: Location,
-        private router: ActivatedRoute,
+        private activatedRoute: ActivatedRoute,
+        private router: Router,
     ) {}
 
     finalNodeSelected$ = createEffect(
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
                 filter((node) => !!node?.public_key),
-                tap((node) => this.location.replaceState(node.public_key)),
+                //tap((node) => this.location.replaceState(node.public_key)),
+                tap((node) => this.router.navigate(['/', node.public_key])),
+                // this.router
             ),
         { dispatch: false },
     );
@@ -29,22 +32,21 @@ export class RouteEffects {
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
                 filter((node) => !node?.public_key),
-                tap(() => this.location.replaceState('')),
+                //tap(() => this.location.replaceState('')),
+                tap((node) => this.router.navigate(['/'])),
             ),
         { dispatch: false },
     );
 
     routerChange$ = createEffect(
         () =>
-            this.router.params.pipe(
+            this.activatedRoute.params.pipe(
                 map((params) => params['public_key']),
                 withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
                 filter(
                     ([routePubKey, currentSelected]) => currentSelected?.public_key !== routePubKey,
                 ),
-                map(([routePubKey, currentSelected]) =>
-                    controlsActions.searchGraph({ searchText: routePubKey }),
-                ),
+                map(([routePubKey]) => controlsActions.searchGraph({ searchText: routePubKey })),
             ),
         { dispatch: true },
     );
