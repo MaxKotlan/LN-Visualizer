@@ -43,6 +43,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GraphMeshStateService } from './services/graph-mesh-state.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GraphStatsComponent } from './components/graph-stats/graph-stats.component';
+import { RouteEffects } from './effects/route.effects';
 
 @NgModule({
     declarations: [
@@ -68,7 +69,7 @@ import { GraphStatsComponent } from './components/graph-stats/graph-stats.compon
         FormsModule,
         HttpClientModule,
         AtftModule,
-        EffectsModule.forRoot([ControlsEffects, GraphEffects]),
+        EffectsModule.forRoot([ControlsEffects, GraphEffects, RouteEffects]),
         StoreModule.forRoot(reducers, {
             metaReducers,
             runtimeChecks: {
