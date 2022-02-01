@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs';
+import { filter, map, mergeMap, skip, switchMap, tap, withLatestFrom } from 'rxjs';
 import { GraphState } from '../reducers/graph.reducer';
 import { selectFinalMatcheNodesFromSearch } from '../selectors/graph.selectors';
 import { Location } from '@angular/common';
@@ -15,6 +15,7 @@ export class RouteEffects {
     finalNodeSelected$ = createEffect(
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
+                skip(1),
                 filter((node) => !!node?.public_key),
                 tap((node) => this.router.navigate([node.public_key])),
             ),
@@ -24,6 +25,7 @@ export class RouteEffects {
     nothingSelected$ = createEffect(
         () =>
             this.store$.select(selectFinalMatcheNodesFromSearch).pipe(
+                skip(1),
                 filter((node) => !node?.public_key),
                 tap(() => this.router.navigate(['/'])),
             ),
