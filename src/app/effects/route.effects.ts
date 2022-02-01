@@ -39,9 +39,9 @@ export class RouteEffects {
                 map(() => this.router.routerState.snapshot.root?.firstChild?.params['public_key']),
                 filter((a) => !!a),
                 withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
-                filter(
-                    ([routePubKey, currentSelected]) => currentSelected?.public_key !== routePubKey,
-                ),
+                // filter(
+                //     ([routePubKey, currentSelected]) => currentSelected?.public_key !== routePubKey,
+                // ),
                 map(([routePubKey]) => controlsActions.searchGraph({ searchText: routePubKey })),
             ),
         { dispatch: true },
