@@ -1,2 +1,2 @@
-export const meshScale = 100;
-export const initialSphereSize = 1;
+export const meshScale = 400;
+export const initialSphereSize = 0.1;

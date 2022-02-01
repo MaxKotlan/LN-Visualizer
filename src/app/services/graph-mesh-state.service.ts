@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { combineLatest, map, sampleTime, withLatestFrom } from 'rxjs';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import {
-    combineLatest,
-    lastValueFrom,
-    map,
-    sampleTime,
-    take,
-    throttleTime,
-    withLatestFrom,
-} from 'rxjs';
-import * as THREE from 'three';
 import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
 import { capacityFilterAmount, capacityFilterEnable } from '../selectors/controls.selectors';
