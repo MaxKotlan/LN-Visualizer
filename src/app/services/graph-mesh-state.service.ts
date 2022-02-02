@@ -20,7 +20,7 @@ import { BufferRef } from '../types/bufferRef.interface';
 export class GraphMeshStateService {
     constructor(private store$: Store<GraphState>, private actions$: Actions) {}
 
-    readonly throttleTimeMs: number = 0;
+    readonly throttleTimeMs: number = 500;
 
     nodeVertices$ = combineLatest([
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),

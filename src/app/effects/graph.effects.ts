@@ -404,10 +404,11 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedChannelChunk),
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                switchMap(([, nodeRegistry]) => {
-                    return of(
-                        graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry }),
-                    ).pipe(throttleTime(800));
+                throttleTime(200),
+                map(([, nodeRegistry]) => {
+                    // return of(
+                    return graphActions.graphNodePositionRecalculate({ nodeSet: nodeRegistry });
+                    //)
                 }),
             ),
         { dispatch: true },
