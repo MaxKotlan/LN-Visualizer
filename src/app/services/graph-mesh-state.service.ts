@@ -1,29 +1,29 @@
 import { Injectable } from '@angular/core';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, sampleTime, withLatestFrom } from 'rxjs';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { cacheProcessedChannelChunk, cacheProcessedGraphNodeChunk } from '../actions/graph.actions';
 import { meshScale } from '../constants/mesh-scale.constant';
 import { GraphState } from '../reducers/graph.reducer';
 import { capacityFilterAmount, capacityFilterEnable } from '../selectors/controls.selectors';
 import {
-    graphSelector,
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
     selectFinalMatcheNodesFromSearch,
     selectNodeColorBuffer,
-    selectNodeSetKeyValue,
     selectNodeVertexBuffer,
 } from '../selectors/graph.selectors';
 import { BufferRef } from '../types/bufferRef.interface';
 
 @Injectable()
 export class GraphMeshStateService {
-    constructor(private store$: Store<GraphState>) {}
+    constructor(private store$: Store<GraphState>, private actions$: Actions) {}
 
-    readonly throttleTimeMs: number = 500;
+    readonly throttleTimeMs: number = 0;
 
     nodeVertices$ = combineLatest([
-        this.store$.select(graphSelector),
+        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
@@ -52,7 +52,7 @@ export class GraphMeshStateService {
     ];
 
     nodeColors$ = combineLatest([
-        this.store$.select(graphSelector),
+        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(selectNodeColorBuffer),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
@@ -74,9 +74,9 @@ export class GraphMeshStateService {
     );
 
     channelVertices$ = combineLatest([
-        this.store$.select(graphSelector),
+        this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelVertexBuffer),
-        this.store$.select(selectNodeSetKeyValue),
+        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(selectFinalMatcheNodesFromSearch),
         this.store$.select(capacityFilterEnable),
         this.store$.select(capacityFilterAmount),
@@ -102,8 +102,8 @@ export class GraphMeshStateService {
                             capacityFilterEnabled,
                         )
                     ) {
-                        const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                        const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                        const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
+                        const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
                         if (node1 && node2) {
                             vertexBuffer[i * 6] = node1.position.x * meshScale;
                             vertexBuffer[i * 6 + 1] = node1.position.y * meshScale;
@@ -124,9 +124,9 @@ export class GraphMeshStateService {
     );
 
     channelColors$ = combineLatest([
-        this.store$.select(graphSelector),
+        this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelColorBuffer),
-        this.store$.select(selectNodeSetKeyValue),
+        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(selectFinalMatcheNodesFromSearch),
         this.store$.select(capacityFilterEnable),
         this.store$.select(capacityFilterAmount),
@@ -152,8 +152,8 @@ export class GraphMeshStateService {
                             capacityFilterEnabled,
                         )
                     ) {
-                        const node1 = nodeRegistry.get(channel.policies[0].public_key);
-                        const node2 = nodeRegistry.get(channel.policies[1].public_key);
+                        const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
+                        const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
                         if (node1 && node2) {
                             const color1 = this.fromHexString(node1.color);
                             const color2 = this.fromHexString(node2.color);
