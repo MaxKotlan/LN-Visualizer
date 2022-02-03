@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AnimationService, PerspectiveCameraComponent, SceneComponent } from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
+import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import {
     selectCameraFov,
@@ -54,7 +55,7 @@ export class GraphSceneComponent implements AfterViewInit {
         withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
         map(([, node]) => node?.position),
         filter((pos) => !!pos),
-        map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(100)),
+        map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(meshScale)),
     );
 
     public ngAfterViewInit() {
