@@ -93,21 +93,17 @@ export class GraphSceneComponent implements AfterViewInit {
             // const test = temp.clone();//.normalize().dot(currentCords.normalize());
             //console.log(test);
 
-            newCoordinates.sub(currentCords);
-
-            const newRot = newCoordinates.clone().normalize();
-            const newEuler = new THREE.Vector3(
-                newRot.x * Math.PI,
-                newRot.y * Math.PI,
-                newRot.z * Math.PI,
-            );
-
             const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
-            camMat.lookAt(currentCords, newCoordinates, new Vector3(0, 1, 0));
+            camMat.lookAt(
+                currentCords, //new THREE.Vector3(0, 0, 0),
+                newCoordinates.clone(), //.normalize(),
+                new Vector3(0, 1, 0),
+            );
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
 
-            newCoordinates.add(new THREE.Vector3(0, 0, 5));
-            newCoordinates.add(currentCords);
+            //newCoordinates.sub(currentCords);
+            newCoordinates.add(new THREE.Vector3(0, 0, 0));
+            //newCoordinates.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
