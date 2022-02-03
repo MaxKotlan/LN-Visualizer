@@ -1,7 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { AnimationService, PerspectiveCameraComponent, SceneComponent } from 'atft';
+import {
+    AnimationService,
+    OrbitControlsComponent,
+    PerspectiveCameraComponent,
+    SceneComponent,
+} from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
@@ -20,6 +25,8 @@ import {
 import { selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
 import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 @Component({
     selector: 'app-graph-scene',
@@ -29,6 +36,7 @@ import * as THREE from 'three';
 export class GraphSceneComponent implements AfterViewInit {
     @ViewChild(SceneComponent) scene!: SceneComponent;
     @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
+    @ViewChild(OrbitControlsComponent) orbitControlsComponent: OrbitControlsComponent | undefined;
 
     constructor(
         private store$: Store<GraphState>,
@@ -70,45 +78,90 @@ export class GraphSceneComponent implements AfterViewInit {
         });
 
         this.gotoCoordinates$.subscribe((newCoordinates) => {
-            if (!this.cameraComponent) return;
-            const currentCords = this.cameraComponent.camera.position;
+            if (!this.cameraComponent || !this.orbitControlsComponent) return;
+            console.log(this.orbitControlsComponent);
 
-            const temp = newCoordinates.clone();
+            const currentCords = this.cameraComponent.camera.position.clone();
+            const currentRot = this.cameraComponent.camera.quaternion.clone();
+            //currentRot.setFromAxisAngle
 
-            console.log('cur', currentCords);
-            console.log('want', newCoordinates);
+            // const temp = newCoordinates.clone();
 
-            const test = temp.clone().normalize().dot(currentCords.normalize());
-            console.log(test);
+            // console.log('cur', currentCords);
+            // console.log('want', newCoordinates);
 
-            temp.sub(currentCords);
-            temp.addScalar(3 * Math.cos(Math.PI * test));
-            temp.add(currentCords);
+            // const test = temp.clone();//.normalize().dot(currentCords.normalize());
+            //console.log(test);
+
+            newCoordinates.sub(currentCords);
+
+            const newRot = newCoordinates.clone().normalize();
+            const newEuler = new THREE.Vector3(
+                newRot.x * Math.PI,
+                newRot.y * Math.PI,
+                newRot.z * Math.PI,
+            );
+
+            const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
+            camMat.lookAt(currentCords, newCoordinates, new Vector3(0, 1, 0));
+            const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
+
+            newCoordinates.add(new THREE.Vector3(0, 0, 5));
+            newCoordinates.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
-                [0, 0.2],
-                [currentCords.x, currentCords.y, currentCords.z, temp.x, temp.y, temp.z],
-            );
-            const rotationKF = new THREE.VectorKeyframeTrack(
-                '.rotation',
-                [0, 0.2],
+                [0, 10],
                 [
-                    currentCords.x,
-                    currentCords.y,
-                    currentCords.z,
+                    this.cameraComponent.camera.position.x,
+                    this.cameraComponent.camera.position.y,
+                    this.cameraComponent.camera.position.z,
                     newCoordinates.x,
                     newCoordinates.y,
                     newCoordinates.z,
                 ],
             );
+
+            const rotationKF = new THREE.VectorKeyframeTrack(
+                '.quaternion',
+                [0, 10],
+                [
+                    currentRot.x,
+                    currentRot.y,
+                    currentRot.z,
+                    currentRot.w,
+                    newQuat.x,
+                    newQuat.y,
+                    newQuat.z,
+                    newQuat.w,
+                ],
+            );
             const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [
                 positionKF,
+                rotationKF,
             ]);
             this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
             const clipAction = this.mixer.clipAction(cameraMoveClip);
             clipAction.setLoop(THREE.LoopOnce, 1);
             clipAction.play();
+            (this.orbitControlsComponent as any).controls.reset();
+            (this.orbitControlsComponent as any).controls.target.set(
+                newCoordinates.x,
+                newCoordinates.y,
+                newCoordinates.z,
+            );
+            // (this.orbitControlsComponent as any).controls.center.set(
+            //     newCoordinates.x,
+            //     newCoordinates.y,
+            //     newCoordinates.z,
+            // );
+
+            // this.cameraComponent.camera.position.set(
+            //     newCoordinates.x,
+            //     newCoordinates.y,
+            //     newCoordinates.z,
+            // );
+            // this.cameraComponent.camera.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
         });
     }
 
