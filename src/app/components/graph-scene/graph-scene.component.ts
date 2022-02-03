@@ -77,7 +77,7 @@ export class GraphSceneComponent implements AfterViewInit {
             this.cameraComponent?.camera.updateProjectionMatrix();
         });
 
-        this.gotoCoordinates$.subscribe((newCoordinates) => {
+        this.gotoCoordinates$.subscribe((newTarget) => {
             if (!this.cameraComponent || !this.orbitControlsComponent) return;
             console.log(this.orbitControlsComponent);
 
@@ -96,14 +96,16 @@ export class GraphSceneComponent implements AfterViewInit {
             const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
             camMat.lookAt(
                 currentCords, //new THREE.Vector3(0, 0, 0),
-                newCoordinates.clone(), //.normalize(),
+                newTarget.clone(), //.normalize(),
                 new Vector3(0, 1, 0),
             );
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
 
-            //newCoordinates.sub(currentCords);
-            newCoordinates.add(new THREE.Vector3(0, 0, 0));
-            //newCoordinates.add(currentCords);
+            const newCoordinate = newTarget.clone();
+
+            newCoordinate.sub(currentCords);
+            newCoordinate.multiplyScalar(0.95);
+            newCoordinate.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
@@ -112,9 +114,9 @@ export class GraphSceneComponent implements AfterViewInit {
                     this.cameraComponent.camera.position.x,
                     this.cameraComponent.camera.position.y,
                     this.cameraComponent.camera.position.z,
-                    newCoordinates.x,
-                    newCoordinates.y,
-                    newCoordinates.z,
+                    newCoordinate.x,
+                    newCoordinate.y,
+                    newCoordinate.z,
                 ],
             );
 
@@ -142,9 +144,9 @@ export class GraphSceneComponent implements AfterViewInit {
             clipAction.play();
             (this.orbitControlsComponent as any).controls.reset();
             (this.orbitControlsComponent as any).controls.target.set(
-                newCoordinates.x,
-                newCoordinates.y,
-                newCoordinates.z,
+                newTarget.x,
+                newTarget.y,
+                newTarget.z,
             );
             // (this.orbitControlsComponent as any).controls.center.set(
             //     newCoordinates.x,
