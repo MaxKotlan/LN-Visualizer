@@ -77,6 +77,15 @@ export class GraphSceneComponent implements AfterViewInit {
             this.cameraComponent?.camera.updateProjectionMatrix();
         });
 
+        this.store$.select(selectFinalMatcheNodesFromSearch).subscribe((newTarget) => {
+            //(this.orbitControlsComponent as any).controls.reset();
+            (this.orbitControlsComponent as any).controls.target.set(
+                newTarget.position.x * meshScale,
+                newTarget.position.y * meshScale,
+                newTarget.position.z * meshScale,
+            );
+        });
+
         this.gotoCoordinates$.subscribe((newTarget) => {
             if (!this.cameraComponent || !this.orbitControlsComponent) return;
             console.log(this.orbitControlsComponent);
@@ -103,13 +112,13 @@ export class GraphSceneComponent implements AfterViewInit {
 
             const newCoordinate = newTarget.clone();
 
-            newCoordinate.sub(currentCords);
-            newCoordinate.multiplyScalar(0.95);
-            newCoordinate.add(currentCords);
+            // newCoordinate.sub(currentCords);
+            // newCoordinate.addScalar(currentCords.dot(newTarget) / newTarget.lengthSq());
+            // newCoordinate.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
-                [0, 10],
+                [0, 0.8],
                 [
                     this.cameraComponent.camera.position.x,
                     this.cameraComponent.camera.position.y,
@@ -122,7 +131,7 @@ export class GraphSceneComponent implements AfterViewInit {
 
             const rotationKF = new THREE.VectorKeyframeTrack(
                 '.quaternion',
-                [0, 10],
+                [0, 0.8],
                 [
                     currentRot.x,
                     currentRot.y,
@@ -142,12 +151,7 @@ export class GraphSceneComponent implements AfterViewInit {
             const clipAction = this.mixer.clipAction(cameraMoveClip);
             clipAction.setLoop(THREE.LoopOnce, 1);
             clipAction.play();
-            (this.orbitControlsComponent as any).controls.reset();
-            (this.orbitControlsComponent as any).controls.target.set(
-                newTarget.x,
-                newTarget.y,
-                newTarget.z,
-            );
+
             // (this.orbitControlsComponent as any).controls.center.set(
             //     newCoordinates.x,
             //     newCoordinates.y,
