@@ -24,7 +24,8 @@ export class SearchComponent {
     }
 
     onOptionSelected(event: any) {
-        if (event?.option?.value?.publicKey)
-            this.store$.dispatch(searchGraph({ searchText: event.option.value.publicKey }));
+        if (event?.option?.value) {
+            this.store$.dispatch(searchGraph({ searchText: event.option.value }));
+        }
     }
 }
