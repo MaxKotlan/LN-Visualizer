@@ -78,7 +78,36 @@ export class GraphSceneComponent implements AfterViewInit {
         });
 
         this.store$.select(selectFinalMatcheNodesFromSearch).subscribe((newTarget) => {
-            //(this.orbitControlsComponent as any).controls.reset();
+            const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
+            const currentRot = this.cameraComponent.camera.quaternion.clone();
+            camMat.lookAt(
+                this.cameraComponent.camera.position, //new THREE.Vector3(0, 0, 0),
+                newTarget.position.clone().multiplyScalar(meshScale), //.normalize(),
+                new Vector3(0, 1, 0),
+            );
+            const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
+            const rotationKF = new THREE.VectorKeyframeTrack(
+                '.quaternion',
+                [0, 0.2],
+                [
+                    currentRot.x,
+                    currentRot.y,
+                    currentRot.z,
+                    currentRot.w,
+                    newQuat.x,
+                    newQuat.y,
+                    newQuat.z,
+                    newQuat.w,
+                ],
+            );
+            const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [
+                rotationKF,
+            ]);
+            this.mixer = new THREE.AnimationMixer(this.cameraComponent.camera);
+            const clipAction = this.mixer.clipAction(cameraMoveClip);
+            clipAction.setLoop(THREE.LoopOnce, 1);
+            clipAction.play();
+
             (this.orbitControlsComponent as any).controls.target.set(
                 newTarget.position.x * meshScale,
                 newTarget.position.y * meshScale,
