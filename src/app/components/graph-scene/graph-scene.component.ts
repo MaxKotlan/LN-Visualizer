@@ -99,6 +99,7 @@ export class GraphSceneComponent implements AfterViewInit {
                     newQuat.z,
                     newQuat.w,
                 ],
+                THREE.InterpolateSmooth,
             );
             const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [
                 rotationKF,
