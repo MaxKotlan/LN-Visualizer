@@ -1,6 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlsActions from '../actions/controls.actions';
 
+export const enum CameraFocusMode {
+    None,
+    FocusOnly,
+    Goto,
+}
+
 export interface ControlsState {
     searchText: string;
     renderNodes: boolean;
@@ -11,6 +17,7 @@ export interface ControlsState {
     pointAttenuation: boolean;
     pointUseIcon: boolean;
     cameraFov: number;
+    cameraFocusMode: CameraFocusMode;
     edgeDepthTest: boolean;
     edgeDottedLine: boolean;
     capacityFilterEnable: boolean;
@@ -27,6 +34,7 @@ const initialState: ControlsState = {
     pointAttenuation: true,
     pointUseIcon: true,
     cameraFov: 60,
+    cameraFocusMode: CameraFocusMode.FocusOnly,
     edgeDepthTest: false,
     edgeDottedLine: true,
     capacityFilterEnable: true,
