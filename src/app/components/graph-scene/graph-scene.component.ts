@@ -78,6 +78,8 @@ export class GraphSceneComponent implements AfterViewInit {
         });
 
         this.store$.select(selectFinalMatcheNodesFromSearch).subscribe((newTarget) => {
+            if (!newTarget?.position) return;
+
             const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
             const currentRot = this.cameraComponent.camera.quaternion.clone();
             camMat.lookAt(
@@ -140,7 +142,11 @@ export class GraphSceneComponent implements AfterViewInit {
             );
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
 
-            const newCoordinate = newTarget.clone();
+            const newCoordinate = newTarget.clone().sub(currentCords); //.multiplyScalar(0.9);
+
+            newCoordinate.multiplyScalar(1 - 30 / newCoordinate.length());
+
+            newCoordinate.add(currentCords);
 
             // newCoordinate.sub(currentCords);
             // newCoordinate.addScalar(currentCords.dot(newTarget) / newTarget.lengthSq());
