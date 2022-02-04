@@ -143,6 +143,7 @@ export class GraphSceneComponent implements AfterViewInit {
                     newCoordinate.y,
                     newCoordinate.z,
                 ],
+                THREE.InterpolateSmooth,
             );
 
             const rotationKF = new THREE.VectorKeyframeTrack(
@@ -158,6 +159,7 @@ export class GraphSceneComponent implements AfterViewInit {
                     newQuat.z,
                     newQuat.w,
                 ],
+                THREE.InterpolateSmooth,
             );
             const cameraMoveClip = new THREE.AnimationClip('NewLocationAnimation', 20, [
                 positionKF,
@@ -167,6 +169,12 @@ export class GraphSceneComponent implements AfterViewInit {
             const clipAction = this.mixer.clipAction(cameraMoveClip);
             clipAction.setLoop(THREE.LoopOnce, 1);
             clipAction.play();
+
+            (this.orbitControlsComponent as any).controls.target.set(
+                newTarget.x,
+                newTarget.y,
+                newTarget.z,
+            );
         });
     }
 
