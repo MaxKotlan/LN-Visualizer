@@ -72,19 +72,20 @@ export class GraphSceneComponent implements AfterViewInit {
         this.animationService.start();
 
         this.selectCameraFov$.subscribe((fov) => {
-            const camera: any = this.cameraComponent?.camera; //.fov = fov;
+            const camera: any = this.cameraComponent?.camera;
             (camera as any).fov = fov;
             this.cameraComponent?.camera.updateProjectionMatrix();
         });
 
         this.store$.select(selectFinalMatcheNodesFromSearch).subscribe((newTarget) => {
+            if (!this.cameraComponent || !this.orbitControlsComponent) return;
             if (!newTarget?.position) return;
 
-            const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
+            const camMat = this.cameraComponent.camera.matrix.clone();
             const currentRot = this.cameraComponent.camera.quaternion.clone();
             camMat.lookAt(
-                this.cameraComponent.camera.position, //new THREE.Vector3(0, 0, 0),
-                newTarget.position.clone().multiplyScalar(meshScale), //.normalize(),
+                this.cameraComponent.camera.position,
+                newTarget.position.clone().multiplyScalar(meshScale),
                 new Vector3(0, 1, 0),
             );
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
@@ -124,37 +125,17 @@ export class GraphSceneComponent implements AfterViewInit {
 
             const currentCords = this.cameraComponent.camera.position.clone();
             const currentRot = this.cameraComponent.camera.quaternion.clone();
-            //currentRot.setFromAxisAngle
 
-            // const temp = newCoordinates.clone();
-
-            // console.log('cur', currentCords);
-            // console.log('want', newCoordinates);
-
-            // const test = temp.clone();//.normalize().dot(currentCords.normalize());
-            //console.log(test);
-
-            const camMat = new THREE.Matrix4(); //. this.cameraComponent.camera.matrix.clone();
-            camMat.lookAt(
-                currentCords, //new THREE.Vector3(0, 0, 0),
-                newTarget.clone(), //.normalize(),
-                new Vector3(0, 1, 0),
-            );
+            const camMat = new THREE.Matrix4();
+            camMat.lookAt(currentCords, newTarget.clone(), new Vector3(0, 1, 0));
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
-
-            const newCoordinate = newTarget.clone().sub(currentCords); //.multiplyScalar(0.9);
-
+            const newCoordinate = newTarget.clone().sub(currentCords);
             newCoordinate.multiplyScalar(1 - 30 / newCoordinate.length());
-
             newCoordinate.add(currentCords);
-
-            // newCoordinate.sub(currentCords);
-            // newCoordinate.addScalar(currentCords.dot(newTarget) / newTarget.lengthSq());
-            // newCoordinate.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
-                [0, 0.8],
+                [0, 0.2],
                 [
                     this.cameraComponent.camera.position.x,
                     this.cameraComponent.camera.position.y,
@@ -167,7 +148,7 @@ export class GraphSceneComponent implements AfterViewInit {
 
             const rotationKF = new THREE.VectorKeyframeTrack(
                 '.quaternion',
-                [0, 0.8],
+                [0, 0.2],
                 [
                     currentRot.x,
                     currentRot.y,
@@ -187,19 +168,6 @@ export class GraphSceneComponent implements AfterViewInit {
             const clipAction = this.mixer.clipAction(cameraMoveClip);
             clipAction.setLoop(THREE.LoopOnce, 1);
             clipAction.play();
-
-            // (this.orbitControlsComponent as any).controls.center.set(
-            //     newCoordinates.x,
-            //     newCoordinates.y,
-            //     newCoordinates.z,
-            // );
-
-            // this.cameraComponent.camera.position.set(
-            //     newCoordinates.x,
-            //     newCoordinates.y,
-            //     newCoordinates.z,
-            // );
-            // this.cameraComponent.camera.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
         });
     }
 
