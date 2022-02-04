@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
@@ -9,6 +9,7 @@ import {
 } from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
+import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import {
@@ -26,7 +27,6 @@ import { selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.select
 import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 @Component({
     selector: 'app-graph-scene',
@@ -91,7 +91,7 @@ export class GraphSceneComponent implements AfterViewInit {
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
             const rotationKF = new THREE.VectorKeyframeTrack(
                 '.quaternion',
-                [0, 0.2],
+                [0, zoomTiming],
                 [
                     currentRot.x,
                     currentRot.y,
@@ -121,7 +121,6 @@ export class GraphSceneComponent implements AfterViewInit {
 
         this.gotoCoordinates$.subscribe((newTarget) => {
             if (!this.cameraComponent || !this.orbitControlsComponent) return;
-            console.log(this.orbitControlsComponent);
 
             const currentCords = this.cameraComponent.camera.position.clone();
             const currentRot = this.cameraComponent.camera.quaternion.clone();
@@ -130,12 +129,12 @@ export class GraphSceneComponent implements AfterViewInit {
             camMat.lookAt(currentCords, newTarget.clone(), new Vector3(0, 1, 0));
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
             const newCoordinate = newTarget.clone().sub(currentCords);
-            newCoordinate.multiplyScalar(1 - 30 / newCoordinate.length());
+            newCoordinate.multiplyScalar(1 - gotodistance / newCoordinate.length());
             newCoordinate.add(currentCords);
 
             const positionKF = new THREE.VectorKeyframeTrack(
                 '.position',
-                [0, 0.2],
+                [0, zoomTiming],
                 [
                     this.cameraComponent.camera.position.x,
                     this.cameraComponent.camera.position.y,
@@ -148,7 +147,7 @@ export class GraphSceneComponent implements AfterViewInit {
 
             const rotationKF = new THREE.VectorKeyframeTrack(
                 '.quaternion',
-                [0, 0.2],
+                [0, zoomTiming],
                 [
                     currentRot.x,
                     currentRot.y,
