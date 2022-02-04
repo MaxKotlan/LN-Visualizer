@@ -125,7 +125,7 @@ export class GraphSceneComponent implements AfterViewInit {
             const currentCords = this.cameraComponent.camera.position.clone();
             const currentRot = this.cameraComponent.camera.quaternion.clone();
 
-            const camMat = new THREE.Matrix4();
+            const camMat = this.cameraComponent.camera.matrix.clone();
             camMat.lookAt(currentCords, newTarget.clone(), new Vector3(0, 1, 0));
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
             const newCoordinate = newTarget.clone().sub(currentCords);
