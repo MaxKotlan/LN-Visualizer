@@ -34,19 +34,7 @@ import {
     styleUrls: ['./settings-modal.component.scss'],
 })
 export class SettingsModalComponent {
-    constructor(
-        public dialogRef: MatDialogRef<SettingsModalComponent>,
-        private store$: Store<ControlsState>,
-    ) {}
+    constructor(public dialogRef: MatDialogRef<SettingsModalComponent>) {}
 
-    public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
-    public selectCameraFov$ = this.store$.select(selectCameraFov);
-
-    resetSettingsToDefault() {
-        this.store$.dispatch(resetControlsToDefault());
-    }
-
-    setCameraFov(event: MatSliderChange) {
-        this.store$.dispatch(setCameraFov({ value: event.value || 60 }));
-    }
+    // public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
 }
