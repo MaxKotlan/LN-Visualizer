@@ -22,6 +22,11 @@ export const selectPointUseIcon = createSelector(controlsSelector, (state) => st
 
 export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
 
+export const selectCameraFocusMode = createSelector(
+    controlsSelector,
+    (state) => state.cameraFocusMode,
+);
+
 export const selectEdgeDepthTest = createSelector(controlsSelector, (state) => state.edgeDepthTest);
 
 export const selectEdgeDottedLine = createSelector(

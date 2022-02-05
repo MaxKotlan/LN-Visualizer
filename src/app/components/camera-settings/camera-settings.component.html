@@ -1,0 +1,23 @@
+<h2>Camera Settings</h2>
+<section class="settings-section">
+    <span>
+        <span style="margin-right: 0.4rem">Fov</span>
+        <mat-slider
+            [ngModel]="selectCameraFov$ | async"
+            (change)="setCameraFov($event)"
+            #fovSlider
+            min="20"
+            max="160"
+            step="1"
+            value="60"
+        ></mat-slider>
+        {{ fovSlider.value }}
+    </span>
+    <mat-form-field appearance="fill">
+        <mat-label>Favorite food</mat-label>
+        <mat-select>
+            <mat-option>Hello</mat-option>
+            <mat-option>Hello</mat-option>
+        </mat-select>
+    </mat-form-field>
+</section>

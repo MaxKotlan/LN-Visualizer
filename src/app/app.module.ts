@@ -44,6 +44,11 @@ import { GraphMeshStateService } from './services/graph-mesh-state.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GraphStatsComponent } from './components/graph-stats/graph-stats.component';
 import { RouteEffects } from './effects/route.effects';
+import { MatSelectModule } from '@angular/material/select';
+import { CameraSettingsComponent } from './components/camera-settings/camera-settings.component';
+import { ChannelSettingsComponent } from './components/channel-settings/channel-settings.component';
+import { NodeSettingsComponent } from './components/node-settings/node-settings.component';
+import { MiscSettingsComponent } from './components/misc-settings/misc-settings.component';
 
 @NgModule({
     declarations: [
@@ -62,6 +67,10 @@ import { RouteEffects } from './effects/route.effects';
         LndRaycasterSceneDirective,
         LoadingBarComponent,
         GraphStatsComponent,
+        CameraSettingsComponent,
+        ChannelSettingsComponent,
+        NodeSettingsComponent,
+        MiscSettingsComponent,
     ],
     imports: [
         BrowserModule,
@@ -92,6 +101,7 @@ import { RouteEffects } from './effects/route.effects';
         MatDividerModule,
         MatProgressBarModule,
         MatSnackBarModule,
+        MatSelectModule,
         // StoreDevtoolsModule.instrument({
         //     maxAge: 25,
         //     logOnly: true,

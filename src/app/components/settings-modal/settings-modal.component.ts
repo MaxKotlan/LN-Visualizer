@@ -39,39 +39,8 @@ export class SettingsModalComponent {
         private store$: Store<ControlsState>,
     ) {}
 
-    public selectNodeSize$ = this.store$.select(selectNodeSize);
-    public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
-    public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
-    public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
-    public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
     public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
     public selectCameraFov$ = this.store$.select(selectCameraFov);
-    public selectEdgeDepthTest$ = this.store$.select(selectEdgeDepthTest);
-    public selectEdgeDottedLine$ = this.store$.select(selectEdgeDottedLine);
-
-    setNodeSize(event: MatSliderChange) {
-        this.store$.dispatch(setNodeSize({ nodeSize: event.value || 1 }));
-    }
-
-    setShouldRenderNodes(event: MatCheckboxChange) {
-        this.store$.dispatch(renderNodes({ value: event.checked }));
-    }
-
-    setShouldRenderEdges(event: MatCheckboxChange) {
-        this.store$.dispatch(renderEdges({ value: event.checked }));
-    }
-
-    setShouldRenderLabels(event: MatCheckboxChange) {
-        this.store$.dispatch(renderLabels({ value: event.checked }));
-    }
-
-    setPointAttenuation(event: MatCheckboxChange) {
-        this.store$.dispatch(setPointAttenuation({ value: event.checked }));
-    }
-
-    setPointUseIcon(event: MatCheckboxChange) {
-        this.store$.dispatch(setPointUseIcon({ value: event.checked }));
-    }
 
     resetSettingsToDefault() {
         this.store$.dispatch(resetControlsToDefault());
@@ -79,13 +48,5 @@ export class SettingsModalComponent {
 
     setCameraFov(event: MatSliderChange) {
         this.store$.dispatch(setCameraFov({ value: event.value || 60 }));
-    }
-
-    setDepthTest(event: MatCheckboxChange) {
-        this.store$.dispatch(setEdgeUseDepthTest({ value: event.checked }));
-    }
-
-    setDottedLines(event: MatCheckboxChange) {
-        this.store$.dispatch(setEdgeUseDottedLine({ value: event.checked }));
     }
 }

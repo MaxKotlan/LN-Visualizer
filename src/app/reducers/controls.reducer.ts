@@ -60,6 +60,10 @@ export const reducer = createReducer(
     })),
     on(controlsActions.setPointUseIcon, (state, { value }) => ({ ...state, pointUseIcon: value })),
     on(controlsActions.setCameraFov, (state, { value }) => ({ ...state, cameraFov: value })),
+    on(controlsActions.setCameraFocusMode, (state, { value }) => ({
+        ...state,
+        cameraFocusMode: value,
+    })),
     on(controlsActions.setEdgeUseDottedLine, (state, { value }) => ({
         ...state,
         edgeDottedLine: value,

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ControlsState } from '../reducers/controls.reducer';
+import { CameraFocusMode, ControlsState } from '../reducers/controls.reducer';
 
 export const loadSavedState = createAction('[controls] loadSavedState');
 
@@ -48,6 +48,11 @@ export const setPointUseIcon = createAction(
 );
 
 export const setCameraFov = createAction('[controls] setCameraFov', props<{ value: number }>());
+
+export const setCameraFocusMode = createAction(
+    '[controls] setCameraFocusMode',
+    props<{ value: CameraFocusMode }>(),
+);
 
 export const setEdgeUseDottedLine = createAction(
     '[controls] setEdgeUseDottedLine',
