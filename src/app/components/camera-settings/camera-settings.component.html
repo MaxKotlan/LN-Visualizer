@@ -14,10 +14,14 @@
         {{ fovSlider.value }}
     </span>
     <mat-form-field appearance="fill">
-        <mat-label>Favorite food</mat-label>
-        <mat-select>
-            <mat-option>Hello</mat-option>
-            <mat-option>Hello</mat-option>
+        <mat-label>Camera Mode</mat-label>
+        <mat-select
+            [value]="selectCameraFocusMode$ | async"
+            (selectionChange)="setCameraFocusMode($event)"
+        >
+            <mat-option *ngFor="let mode of cameraFocusModeList; let focusIndex = index">
+                <mat-option [value]="focusIndex">{{ mode }}</mat-option>
+            </mat-option>
         </mat-select>
     </mat-form-field>
 </section>
