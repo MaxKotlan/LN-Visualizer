@@ -325,6 +325,7 @@ export class GraphEffects {
                     const queue: LndNodeWithPosition[] = [];
 
                     action.nodeSet.forEach((node) => {
+                        node.visited = false;
                         if (!node.parent) {
                             createSpherePoint(
                                 initialSphereSize,
@@ -338,7 +339,7 @@ export class GraphEffects {
                     });
 
                     while (queue.length > 0) {
-                        const v = queue.shift();
+                        const v = queue.pop();
 
                         v.children.forEach((w) => {
                             if (!w.visited) {
