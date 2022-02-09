@@ -189,6 +189,8 @@ export class GraphEffects {
                             parent: null,
                             children: new Map<string, LndNodeWithPosition>(),
                             totalCapacity: 0,
+                            visited: false,
+                            depth: 1,
                         } as LndNodeWithPosition;
                     });
                 }),
@@ -320,6 +322,8 @@ export class GraphEffects {
                 //     }),
                 // ),
                 map((action) => {
+                    const queue: LndNodeWithPosition[] = [];
+
                     action.nodeSet.forEach((node) => {
                         if (!node.parent) {
                             createSpherePoint(
@@ -328,9 +332,31 @@ export class GraphEffects {
                                 node.public_key.slice(0, 10),
                                 node.position,
                             );
-                            this.calculatePositionFromParent(node);
+                            //this.calculatePositionFromParent(node);
+                            queue.push(node);
                         }
                     });
+
+                    while (queue.length > 0) {
+                        const v = queue.shift();
+
+                        v.children.forEach((w) => {
+                            if (!w.visited) {
+                                w.depth = v.depth + 1;
+                                createSpherePoint(
+                                    initialSphereSize / w.depth,
+                                    v.position,
+                                    // .clone()
+                                    // .sub(node.parent?.position.clone().multiplyScalar(1 / depth) || this.origin),
+                                    w.public_key.slice(0, 10),
+                                    w.position,
+                                );
+                                queue.push(w);
+                                w.visited = true;
+                            }
+                        });
+                    }
+
                     return graphActions.cacheProcessedGraphNodeChunk({
                         //do I need to sort the map?
                         nodeSet: new Map(
