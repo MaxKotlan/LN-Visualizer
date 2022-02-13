@@ -17,9 +17,11 @@ RUN npm run build
 
 COPY ./nginx.conf /usr/local/app/nginx.conf
 
-FROM nginx:latest
+FROM nginx:latest as lnvisualizercontainer
 
 COPY --from=build /usr/local/app/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/local/app/dist/ln-visualizer /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 80
