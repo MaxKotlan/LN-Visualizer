@@ -77,7 +77,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
               })
             : new THREE.LineBasicMaterial({
                   color: 0xffffff,
-                  linewidth: 10,
+                  linewidth: 1,
                   vertexColors: true,
               });
 
