@@ -6,14 +6,15 @@ RUN apt install -y python make g++
 
 WORKDIR /usr/local/app
 
-COPY ./api/package.json ./
+COPY ./api/package.json .
+COPY ./api/package-lock.json .
 
 RUN npm install
 
 RUN npm install -g rimraf typescript
 
-COPY ./api/src /usr/local/app/src
-COPY ./api/tsconfig.json ./
+COPY ./api/src src
+COPY ./api/tsconfig.json .
 COPY ./api/config ./config
 
 RUN npm run build
