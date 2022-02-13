@@ -2,15 +2,24 @@ FROM node:14-buster-slim as build
 
 WORKDIR /usr/local/app
 
-COPY ./ /usr/local/app/
+COPY package.json package.json
+COPY package-lock.json package-lock.json
 
 RUN npm install
 
+COPY ./src /usr/local/app/src
+COPY ./angular.json /usr/local/app/angular.json
+COPY ./tsconfig.json /usr/local/app/tsconfig.json
+COPY ./tsconfig.app.json /usr/local/app/tsconfig.app.json
+COPY ./api/src/models /usr/local/app/api/src/models
+
 RUN npm run build
+
+COPY ./nginx.conf /usr/local/app/nginx.conf
 
 FROM nginx:latest
 
 COPY --from=build /usr/local/app/dist/ln-visualizer /usr/share/nginx/html
-COPY --from=build nginx.conf /etc/nginx/nginx.conf
+#COPY --from=build nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
