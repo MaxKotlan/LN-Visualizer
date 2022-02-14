@@ -19,35 +19,39 @@ export class LndAuthService {
     }
 
     public getConfig(): LndAuthenticationWithMacaroon {
-        let cert = this.readCertFromFile();
-        if (!cert) cert = config.get('macaroon.cert');
+        const macaroon: LndAuthenticationWithMacaroon = config.get('macaroon');
+        console.log(macaroon);
+        return macaroon;
 
-        let macaroon = this.readCertFromFile();
-        if (!macaroon) macaroon = config.get('macaroon.macaroon');
+        // let cert = this.readCertFromFile();
+        // if (!cert) cert = config.get('macaroon.cert');
 
-        return {
-            cert,
-            macaroon,
-            socket: this.getLndAddress(),
-        };
+        // let macaroon = this.readCertFromFile();
+        // if (!macaroon) macaroon = config.get('macaroon.macaroon');
+
+        // return {
+        //     cert,
+        //     macaroon,
+        //     socket: this.getLndAddress(),
+        // };
     }
 
-    private getLndAddress(): string {
-        let address = process.env.LND_ADDRESS;
-        if (!address) address = config.get('macaroon.socket');
-        if (!address) throw new Error('Lightning address environment variable not set');
-        return address;
-    }
+    // private getLndAddress(): string {
+    //     let address = process.env.LND_ADDRESS;
+    //     if (!address) address = config.get('macaroon.socket');
+    //     if (!address) throw new Error('Lightning address environment variable not set');
+    //     return address;
+    // }
 
-    private readCertFromFile(): string | undefined {
-        const macaroonFile = process.env.LND_VIEW_MACAROON_FILE;
-        if (!macaroonFile) return;
-        return fs.readFileSync(macaroonFile, { encoding: 'base64' });
-    }
+    // private readCertFromFile(): string | undefined {
+    //     const macaroonFile = process.env.LND_VIEW_MACAROON_FILE;
+    //     if (!macaroonFile) return;
+    //     return fs.readFileSync(macaroonFile, { encoding: 'base64' });
+    // }
 
-    private readMacaroonFromFile(): string | undefined {
-        const certFile = process.env.LND_CERT_FILE;
-        if (!certFile) return;
-        return fs.readFileSync(certFile, { encoding: 'base64' });
-    }
+    // private readMacaroonFromFile(): string | undefined {
+    //     const certFile = process.env.LND_CERT_FILE;
+    //     if (!certFile) return;
+    //     return fs.readFileSync(certFile, { encoding: 'base64' });
+    // }
 }
