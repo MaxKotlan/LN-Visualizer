@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
     web:
-        image: ln-visualizer-web:0.0.3
+        image: maxkotlan/ln-visualizer-web:0.0.3
         restart: on-failure
         stop_grace_period: 1m
         ports:
@@ -11,7 +11,7 @@ services:
             default:
                 ipv4_address: ${APP_LNVISUALIZER_WEB_IP}
     api:
-        image: ln-visualizer-api:0.0.2
+        image: maxkotlan/ln-visualizer-api:0.0.2
         restart: on-failure
         stop_grace_period: 1m
         ports:
