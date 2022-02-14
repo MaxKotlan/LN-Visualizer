@@ -21,11 +21,15 @@ export class LndGraphStateService {
 
     protected async initialGraphSync() {
         console.log('Starting Graph Sync');
-        const graphData: GetNetworkGraphResult = await lightning.getNetworkGraph(
-            this.lndAuthService.authenticatedLnd,
-        );
-        this.chunkTrackerService.splitGraphIntoChunks(graphData);
-        console.log('Done with Graph Sync');
+        try {
+            const graphData: GetNetworkGraphResult = await lightning.getNetworkGraph(
+                this.lndAuthService.authenticatedLnd,
+            );
+            this.chunkTrackerService.splitGraphIntoChunks(graphData);
+            console.log('Done with Graph Sync');
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     protected subscribeToGraphChanges() {
