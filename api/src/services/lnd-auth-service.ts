@@ -27,7 +27,8 @@ export class LndAuthService {
     private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
         this.readFileBase64(process.env.LND_CERT_FILE, macaroon.cert);
         this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE, macaroon.macaroon);
-        this.readFileBase64(process.env.LND_ADDRESS, macaroon.socket);
+
+        if (process.env.LND_ADDRESS) macaroon.socket = process.env.LND_ADDRESS;
     }
 
     private readFileBase64(path: string | undefined, output: string | undefined): void {
