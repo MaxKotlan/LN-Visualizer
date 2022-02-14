@@ -30,12 +30,15 @@ export class LndAuthService {
 
         if (macaroon?.socket && process.env.LND_ADDRESS)
             macaroon = { ...macaroon, socket: process.env.LND_ADDRESS };
+        console.log(macaroon);
     }
 
     private readFileBase64(path: string | undefined, output: string | undefined): void {
         if (!path || !output) return;
         try {
             output = fs.readFileSync(path, { encoding: 'base64' });
-        } catch {}
+        } catch (e) {
+            console.warn(e);
+        }
     }
 }
