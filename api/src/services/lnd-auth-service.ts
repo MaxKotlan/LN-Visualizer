@@ -20,38 +20,18 @@ export class LndAuthService {
 
     public getConfig(): LndAuthenticationWithMacaroon {
         const macaroon: LndAuthenticationWithMacaroon = config.get('macaroon');
-        console.log(macaroon);
+        this.replaceWithLndDataDir(macaroon);
         return macaroon;
-
-        // let cert = this.readCertFromFile();
-        // if (!cert) cert = config.get('macaroon.cert');
-
-        // let macaroon = this.readCertFromFile();
-        // if (!macaroon) macaroon = config.get('macaroon.macaroon');
-
-        // return {
-        //     cert,
-        //     macaroon,
-        //     socket: this.getLndAddress(),
-        // };
     }
 
-    // private getLndAddress(): string {
-    //     let address = process.env.LND_ADDRESS;
-    //     if (!address) address = config.get('macaroon.socket');
-    //     if (!address) throw new Error('Lightning address environment variable not set');
-    //     return address;
-    // }
+    private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
+        this.readFileBase64(process.env.LND_CERT_FILE, macaroon.cert);
+        this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE, macaroon.macaroon);
+        this.readFileBase64(process.env.LND_ADDRESS, macaroon.socket);
+    }
 
-    // private readCertFromFile(): string | undefined {
-    //     const macaroonFile = process.env.LND_VIEW_MACAROON_FILE;
-    //     if (!macaroonFile) return;
-    //     return fs.readFileSync(macaroonFile, { encoding: 'base64' });
-    // }
-
-    // private readMacaroonFromFile(): string | undefined {
-    //     const certFile = process.env.LND_CERT_FILE;
-    //     if (!certFile) return;
-    //     return fs.readFileSync(certFile, { encoding: 'base64' });
-    // }
+    private readFileBase64(path: string | undefined, output: string | undefined): void {
+        if (!path || !output) return;
+        output = fs.readFileSync(path, { encoding: 'base64' });
+    }
 }
