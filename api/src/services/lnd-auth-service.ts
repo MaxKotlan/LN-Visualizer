@@ -28,11 +28,14 @@ export class LndAuthService {
         this.readFileBase64(process.env.LND_CERT_FILE, macaroon.cert);
         this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE, macaroon.macaroon);
 
-        if (process.env.LND_ADDRESS) macaroon.socket = process.env.LND_ADDRESS;
+        if (macaroon?.socket && process.env.LND_ADDRESS)
+            macaroon = { ...macaroon, socket: process.env.LND_ADDRESS };
     }
 
     private readFileBase64(path: string | undefined, output: string | undefined): void {
         if (!path || !output) return;
-        output = fs.readFileSync(path, { encoding: 'base64' });
+        try {
+            output = fs.readFileSync(path, { encoding: 'base64' });
+        } catch {}
     }
 }
