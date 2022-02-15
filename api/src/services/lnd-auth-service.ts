@@ -21,6 +21,7 @@ export class LndAuthService {
     public getConfig(): LndAuthenticationWithMacaroon {
         const macaroon: LndAuthenticationWithMacaroon = { ...config.get('macaroon') };
         this.replaceWithLndDataDir(macaroon);
+        console.log(macaroon);
         return macaroon;
     }
 
@@ -30,9 +31,7 @@ export class LndAuthService {
 
         macaroon.cert = envCert || macaroon.cert;
         macaroon.macaroon = envMac || macaroon.macaroon;
-
-        if (macaroon?.socket && process.env.LND_ADDRESS)
-            macaroon = { ...macaroon, socket: process.env.LND_ADDRESS };
+        if (process.env.LND_ADDRESS) macaroon.socket = process.env.LND_ADDRESS;
         console.log(macaroon);
     }
 
