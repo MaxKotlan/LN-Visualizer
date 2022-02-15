@@ -19,7 +19,7 @@ export class LndAuthService {
     }
 
     public getConfig(): LndAuthenticationWithMacaroon {
-        const macaroon: LndAuthenticationWithMacaroon = config.get('macaroon');
+        const macaroon: LndAuthenticationWithMacaroon = { ...config.get('macaroon') };
         this.replaceWithLndDataDir(macaroon);
         return macaroon;
     }
