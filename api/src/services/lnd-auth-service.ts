@@ -25,18 +25,22 @@ export class LndAuthService {
     }
 
     private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
-        this.readFileBase64(process.env.LND_CERT_FILE, macaroon.cert);
-        this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE, macaroon.macaroon);
+        const envCert = this.readFileBase64(process.env.LND_CERT_FILE);
+        const envMac = this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE);
+
+        macaroon.cert = envCert || macaroon.cert;
+        macaroon.macaroon = envMac || macaroon.macaroon;
 
         if (macaroon?.socket && process.env.LND_ADDRESS)
             macaroon = { ...macaroon, socket: process.env.LND_ADDRESS };
         console.log(macaroon);
     }
 
-    private readFileBase64(path: string | undefined, output: string | undefined): void {
-        if (!path || !output) return;
+    private readFileBase64(path: string | undefined): string | undefined {
+        console.log('Attempting to read', path);
+        if (!path) return undefined;
         try {
-            output = fs.readFileSync(path, { encoding: 'base64' });
+            return fs.readFileSync(path, { encoding: 'base64' });
         } catch (e) {
             console.warn(e);
         }
