@@ -29,6 +29,7 @@ export class LndGraphStateService {
             console.log('Done with Graph Sync');
         } catch (e) {
             console.error(e);
+            process.exit(1);
         }
     }
 
