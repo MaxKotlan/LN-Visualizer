@@ -37,8 +37,17 @@ export class LndGraphStateService {
         const graphEvents = lightning.subscribeToGraph(this.lndAuthService.authenticatedLnd);
         //fromEvent(graphEvents, 'node_updated').subscribe((update) => {});
         //fromEvent(graphEvents, 'channel_updated').subscribe((update) => console.log(update));
-        fromEvent(graphEvents, 'channel_closed').subscribe((event) =>
-            this.websocketService.channelUpdated((event as any).id),
-        );
+        fromEvent(graphEvents, 'channel_closed').subscribe(async (event) => {
+            console.log('channel closed', event);
+            await this.initialGraphSync();
+        });
+        fromEvent(graphEvents, 'channel_updated').subscribe(async (event) => {
+            console.log('channel updated', event);
+            await this.initialGraphSync();
+        });
+        fromEvent(graphEvents, 'node_updated').subscribe(async (event) => {
+            console.log('node updated', event);
+            await this.initialGraphSync();
+        });
     }
 }

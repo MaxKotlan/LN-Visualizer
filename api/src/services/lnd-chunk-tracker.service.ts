@@ -14,6 +14,8 @@ export class LndChunkTrackerService {
     public channelChunks: Chunk<LndChannel>[] = [];
 
     public splitGraphIntoChunks(graph: GetNetworkGraphResult) {
+        this.nodeChunks = [];
+        this.channelChunks = [];
         for (let i = 0; i < graph.nodes.length / this.chunkSize; i++)
             this.pushNodeChunk(i, graph.nodes);
 
