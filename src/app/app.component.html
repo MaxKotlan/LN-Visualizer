@@ -1,5 +1,5 @@
 <app-quick-controls></app-quick-controls>
 <app-graph-stats></app-graph-stats>
-<app-settings></app-settings>
+<app-settings *ngIf="screenSizeService.isDesktop$ | async"></app-settings>
 <app-graph-scene></app-graph-scene>
 <app-loading-bar></app-loading-bar>

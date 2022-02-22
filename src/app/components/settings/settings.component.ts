@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsModalComponent } from '../settings-modal/settings-modal.component';
 
@@ -9,6 +9,8 @@ import { SettingsModalComponent } from '../settings-modal/settings-modal.compone
 })
 export class SettingsComponent {
     constructor(public dialog: MatDialog) {}
+
+    @Input() public inline: boolean = false;
 
     openDialog(): void {
         this.dialog.open(SettingsModalComponent, {
