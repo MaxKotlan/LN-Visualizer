@@ -1,6 +1,10 @@
-mat-card {
-  position: fixed;
-  z-index: 1000;
-  top: 10px;
-  left: 10px;
+.desktop-card {
+    position: fixed;
+    z-index: 1000;
+    top: 10px;
+    left: 10px;
+}
+
+.mobile-card {
+    padding: 0.2rem;
 }
