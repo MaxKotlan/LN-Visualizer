@@ -27,6 +27,12 @@ body {
         max-width: 80vw;
         width: 1024px;
     }
+    height: 100%;
+    overflow-y: hidden;
+}
+
+mat-dialog-container {
+    overflow-y: hidden !important;
 }
 
 .custom-pannel > mat-dialog-container {

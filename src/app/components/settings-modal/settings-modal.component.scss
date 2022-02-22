@@ -15,7 +15,13 @@ section {
 }
 
 .modal-content {
-    margin: 1.6rem;
+    padding: 1.6rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+:host {
+    position: relative;
 }
 
 :host ::ng-deep {
