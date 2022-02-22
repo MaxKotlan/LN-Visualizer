@@ -7,5 +7,8 @@
 
 .mobile-card {
     padding: 0.2rem;
+    width: 100vw;
     height: 52.063px !important;
+    position: fixed;
+    z-index: 1000;
 }
