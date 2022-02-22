@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ScreenSizeService } from 'src/app/services/screen-size.service';
 
 @Component({
     selector: 'app-settings-modal',

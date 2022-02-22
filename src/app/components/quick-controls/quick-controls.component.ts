@@ -23,6 +23,7 @@ import {
     selectFinalMatcheNodesFromSearch,
     selectNodesSearchResults,
 } from 'src/app/selectors/graph.selectors';
+import { ScreenSizeService } from 'src/app/services/screen-size.service';
 
 @Component({
     selector: 'app-quick-controls',
@@ -32,7 +33,7 @@ import {
 export class QuickControlsComponent {
     options: string[] = ['One', 'Two', 'Three'];
 
-    constructor(private store$: Store<GraphState>) {}
+    constructor(private store$: Store<GraphState>, public screenSizeService: ScreenSizeService) {}
 
     public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
