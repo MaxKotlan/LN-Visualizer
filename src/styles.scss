@@ -1,10 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-    margin: 0
+    user-select: none;
+    margin: 0;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.custom-pannel > mat-dialog-container{
+label {
+    user-select: all;
+}
+
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.custom-pannel {
+    @media only screen and (max-width: 768px) {
+        max-width: 100vw;
+        width: 100vw;
+    }
+
+    @media only screen and (min-width: 768px) {
+        max-width: 80vw;
+        width: 1024px;
+    }
+}
+
+.custom-pannel > mat-dialog-container {
     padding: 0;
 }

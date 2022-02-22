@@ -14,9 +14,7 @@ export class SettingsComponent {
 
     openDialog(): void {
         this.dialog.open(SettingsModalComponent, {
-            width: '60vw',
-            maxWidth: '1028px',
-            height: '90vh',
+            maxWidth: null,
             panelClass: 'custom-pannel',
         });
     }
