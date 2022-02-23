@@ -38,11 +38,11 @@ export class LndGraphStateService {
         //fromEvent(graphEvents, 'node_updated').subscribe((update) => {});
         //fromEvent(graphEvents, 'channel_updated').subscribe((update) => console.log(update));
         fromEvent(graphEvents, 'channel_closed').subscribe(async (event) => {
-            console.log('channel closed', event);
+            console.log(`${(event as any)?.id} channel closed`);
             //await this.initialGraphSync();
         });
         fromEvent(graphEvents, 'channel_updated').subscribe(async (event) => {
-            console.log('channel updated', event);
+            console.log(`${(event as any)?.id} channel updated`);
             //await this.initialGraphSync();
         });
         fromEvent(graphEvents, 'node_updated').subscribe(async (event) => {
