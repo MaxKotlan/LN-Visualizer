@@ -12,7 +12,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { SearchComponent } from './components/search/search.component';
@@ -49,6 +49,7 @@ import { CameraSettingsComponent } from './components/camera-settings/camera-set
 import { ChannelSettingsComponent } from './components/channel-settings/channel-settings.component';
 import { NodeSettingsComponent } from './components/node-settings/node-settings.component';
 import { MiscSettingsComponent } from './components/misc-settings/misc-settings.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
     declarations: [
@@ -71,6 +72,7 @@ import { MiscSettingsComponent } from './components/misc-settings/misc-settings.
         ChannelSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
+        TooltipComponent,
     ],
     imports: [
         BrowserModule,
@@ -102,6 +104,7 @@ import { MiscSettingsComponent } from './components/misc-settings/misc-settings.
         MatProgressBarModule,
         MatSnackBarModule,
         MatSelectModule,
+        MatTooltipModule,
         // StoreDevtoolsModule.instrument({
         //     maxAge: 25,
         //     logOnly: true,

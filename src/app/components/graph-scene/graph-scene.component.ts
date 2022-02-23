@@ -25,6 +25,7 @@ import {
 } from 'src/app/selectors/controls.selectors';
 import { selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
 import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
+import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 
@@ -43,6 +44,7 @@ export class GraphSceneComponent implements AfterViewInit {
         private actions$: Actions,
         private animationService: AnimationService,
         private graphMeshStateService: GraphMeshStateService,
+        public toolTipService: ToolTipService,
     ) {}
 
     public positions$ = this.graphMeshStateService.nodeVertices$;

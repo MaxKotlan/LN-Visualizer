@@ -33,6 +33,7 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 
 //const extendMaterial = require('three-extend-material');
 import * as extendMaterial from 'three-extend-material';
+import { ToolTipService } from 'src/app/services/tooltip.service';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -64,6 +65,7 @@ export class GraphNodeMeshComponent
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
         private raycasterService: LndRaycasterService,
         private store$: Store<GraphState>,
+        public toolTipService: ToolTipService,
     ) {
         super(rendererService, parent);
     }
@@ -80,7 +82,7 @@ export class GraphNodeMeshComponent
     private subscribeEvents() {
         const obj = this.getObject();
         obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
-        obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit);
+        obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit.bind(this));
         obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
     }
 
@@ -89,6 +91,7 @@ export class GraphNodeMeshComponent
         //   component: this
         // });
         //document.body.style.cursor = '';
+        this.toolTipService.close();
         document.body.style.cursor = null as unknown as string;
     }
 
@@ -107,6 +110,18 @@ export class GraphNodeMeshComponent
         // this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
         //   this.store$.dispatch(searchGraph({searchText: node.alias}));
         // })
+        const intersection = event as THREE.Intersection;
+        this.store$
+            .select(selectClosestPoint(intersection.point))
+            .pipe(take(1))
+            .subscribe((node) => {
+                if (!node) return;
+                this.toolTipService.open(
+                    event.mouseEvent.clientX,
+                    event.mouseEvent.clientY,
+                    node.alias,
+                );
+            });
     }
 
     private onClick(event: any) {
@@ -116,6 +131,7 @@ export class GraphNodeMeshComponent
             .pipe(take(1))
             .subscribe((node) => {
                 if (!node) return;
+                this.toolTipService.close();
                 console.log(node);
                 this.store$.dispatch(searchGraph({ searchText: node.public_key }));
             });
