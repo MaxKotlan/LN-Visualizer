@@ -6,9 +6,7 @@ import { map, Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class ScreenSizeService {
-    constructor(private observer: BreakpointObserver) {
-        this.isMobile$.subscribe(console.log);
-    }
+    constructor(private observer: BreakpointObserver) {}
 
     public isMobile$: Observable<boolean> = this.observer
         .observe(Breakpoints.Handset)

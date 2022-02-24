@@ -2,15 +2,46 @@ name: LnVisualizerWebBuild
 
 on:
     push:
-        branches: [$default-branch]
-    pull_request:
-        branches: [$default-branch]
+        branches: [main]
 
 jobs:
-    build:
+    build-web:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v2
-            - name: Build the Docker image
-              run: docker build --tag maxkotlan/ln-visualizer-web:$(date +%s) -f Dockerfile-web .
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v2
+              with:
+                  context: .
+                  file: './Dockerfile-web'
+                  push: true
+                  tags: maxkotlan/ln-visualizer-web:latest
+    build-api:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v2
+              with:
+                  context: .
+                  file: './Dockerfile-api'
+                  push: true
+                  tags: maxkotlan/ln-visualizer-api:latest

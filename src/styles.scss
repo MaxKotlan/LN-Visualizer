@@ -31,10 +31,8 @@ body {
     overflow-y: hidden;
 }
 
-mat-dialog-container {
-    overflow-y: hidden !important;
-}
-
 .custom-pannel > mat-dialog-container {
     padding: 0;
+    overflow-y: hidden !important;
+    height: 100vh;
 }
