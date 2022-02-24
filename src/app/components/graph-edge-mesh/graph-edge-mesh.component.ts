@@ -1,9 +1,6 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { Observable } from 'rxjs';
-import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
-import { NodePositionRegistryService } from 'src/app/services/node-position-registry.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 
@@ -23,7 +20,6 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
     constructor(
         protected override rendererService: RendererService,
-        protected nodePositionRegistryService: NodePositionRegistryService,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);

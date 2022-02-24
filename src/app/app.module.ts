@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { GraphSceneComponent } from './components/graph-scene/graph-scene.component';
 import { GraphEdgeMeshComponent } from './components/graph-edge-mesh/graph-edge-mesh.component';
 import { GraphNodeMeshComponent } from './components/graph-node-mesh/graph-node-mesh.component';
-import { NodePositionRegistryService } from './services/node-position-registry.service';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
@@ -118,7 +117,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
         //     },
         // }),
     ],
-    providers: [NodePositionRegistryService, LndRaycasterService, GraphMeshStateService],
+    providers: [LndRaycasterService, GraphMeshStateService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
