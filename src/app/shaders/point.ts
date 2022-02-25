@@ -6,7 +6,8 @@ export const BasicShader = {
         color: { value: new THREE.Color(0xffffff) },
     },
     vertexShader: /*glsl*/ `
-    attribute float size;
+    // attribute float size;
+    uniform float size;
     attribute vec3 customColor;
 
     varying vec3 vColor;
