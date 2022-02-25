@@ -2,8 +2,9 @@ import * as THREE from 'three';
 
 export const BasicShader = {
     uniforms: {
-        size: { value: 10.0 },
+        size: { value: 1.0 },
         color: { value: new THREE.Color(0xffffff) },
+        alphaTest: { value: 0.9 },
     },
     vertexShader: /*glsl*/ `
     // attribute float size;
@@ -18,7 +19,7 @@ export const BasicShader = {
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
-        gl_PointSize = size * ( 300.0 / -mvPosition.z );
+        gl_PointSize = size * ( 1000.0 / -mvPosition.z );
 
         gl_Position = projectionMatrix * mvPosition;
 
@@ -33,11 +34,17 @@ export const BasicShader = {
 
     void main() {
 
-        gl_FragColor = vec4( color * vColor, 1.0 );
+        vec4 outColor = texture2D( pointTexture, gl_PointCoord );
 
-        gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+        if ( outColor.a < 0.5 ) discard;
 
-        if ( gl_FragColor.a < alphaTest ) discard;
+        gl_FragColor = outColor * vec4( color * vColor.xyz, 1.0 );
+
+        float depth = gl_FragCoord.z / gl_FragCoord.w;
+        const vec3 fogColor = vec3( 0.0 );
+
+        float fogFactor = smoothstep( 200.0, 600.0, depth );
+        gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
 
     }`,
 };
