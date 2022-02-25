@@ -35,8 +35,8 @@ const initialState: ControlsState = {
     pointUseIcon: true,
     cameraFov: 60,
     cameraFocusMode: CameraFocusMode.FocusOnly,
-    edgeDepthTest: false,
-    edgeDottedLine: true,
+    edgeDepthTest: true,
+    edgeDottedLine: false,
     capacityFilterEnable: false,
     capacityFilterAmount: 8000000,
 };
