@@ -34,6 +34,7 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 //const extendMaterial = require('three-extend-material');
 import * as extendMaterial from 'three-extend-material';
 import { ToolTipService } from 'src/app/services/tooltip.service';
+import { BasicShader } from 'src/app/shaders';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -57,7 +58,7 @@ export class GraphNodeMeshComponent
     @Output() click = new EventEmitter<RaycasterEmitEvent>();
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
-    private material: THREE.PointsMaterial | null = null;
+    private material: THREE.ShaderMaterial | null = null;
     private materialMoving: any;
 
     constructor(
@@ -160,7 +161,7 @@ export class GraphNodeMeshComponent
         if (!this.positions) return;
         if (!this.colors) return;
         this.geometry.setAttribute(
-            'color',
+            'customColor',
             new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
         );
         this.geometry.setAttribute(
@@ -171,7 +172,7 @@ export class GraphNodeMeshComponent
             ),
         );
         this.geometry.setDrawRange(0, this.positions.size);
-        this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['customColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
         // this.geometry.setAttribute(
         //     'color',
@@ -190,19 +191,28 @@ export class GraphNodeMeshComponent
     }
 
     protected generateMaterial() {
-        if (!this.material)
-            this.material = new THREE.PointsMaterial({
-                size: this.spriteSize,
-                sizeAttenuation: this.pointSizeAttenuation,
-                map: this.useSprite ? this.spriteTexture : undefined,
-                vertexColors: true,
-                alphaTest: 0.5,
-                transparent: this.useSprite ? true : false,
-            });
-        this.material.size = this.spriteSize;
-        this.material.sizeAttenuation = this.pointSizeAttenuation;
-        (this.material.map = this.useSprite ? this.spriteTexture || null : null),
-            (this.material.vertexColors = true);
+        if (!this.material) {
+            const wowShader = BasicShader;
+            wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
+
+            this.material = new THREE.ShaderMaterial(
+                wowShader,
+                //{
+
+                // size: this.spriteSize,
+                // sizeAttenuation: this.pointSizeAttenuation,
+                // map: this.useSprite ? this.spriteTexture : undefined,
+                // vertexColors: true,
+                // alphaTest: 0.5,
+                // transparent: this.useSprite ? true : false,
+                //}
+            );
+        }
+        // this.material.size = this.spriteSize;
+        // this.material.sizeAttenuation = this.pointSizeAttenuation;
+        // (this.material.map = this.useSprite ? this.spriteTexture || null : null),
+        //     (this.material.vertexColors = true);
+
         this.material.alphaTest = 0.5;
         this.material.transparent = this.useSprite;
         this.material.needsUpdate = true;
