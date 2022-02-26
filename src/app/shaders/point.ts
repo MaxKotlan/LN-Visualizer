@@ -34,7 +34,7 @@ export const BasicShader = {
 
         vec4 mvPosition = modelViewMatrix * vec4( position + sinTime*invertedCap*moveFactor, 1.0 );
 
-        gl_PointSize = size * ((uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
+        gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
 
         gl_Position = projectionMatrix * mvPosition;
 

@@ -16,6 +16,7 @@ import {
     selectCameraFov,
     selectEdgeDepthTest,
     selectEdgeDottedLine,
+    selectMinimumNodeSize,
     selectNodeSize,
     selectPointAttenuation,
     selectPointUseIcon,
@@ -56,6 +57,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public selectNodeCapacity$ = this.graphMeshStateService.nodeCapacity$;
     public selectUniformNodeSize$ = this.store$.select(selectUniformNodeSize);
     public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
+    public selectMinimumNodeSize$ = this.store$.select(selectMinimumNodeSize);
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
     public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);

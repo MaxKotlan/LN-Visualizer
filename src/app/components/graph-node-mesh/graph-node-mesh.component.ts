@@ -54,6 +54,11 @@ export class GraphNodeMeshComponent
         this.material.uniforms['uniformSize'] = { value: uniformNodeSize };
     }
 
+    @Input() set minimumNodeSize(minimumNodeSize: number) {
+        if (!this.material) return;
+        this.material.uniforms['minimumSize'] = { value: minimumNodeSize };
+    }
+
     @Input() shouldRender: boolean = true;
     @Input() set pointSizeAttenuation(pointAttenuation: boolean) {
         if (!this.material) return;
