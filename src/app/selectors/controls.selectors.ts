@@ -13,6 +13,8 @@ export const shouldRenderLabels = createSelector(controlsSelector, (state) => st
 
 export const selectNodeSize = createSelector(controlsSelector, (state) => state.nodeSize);
 
+export const selectMinimumNodeSize = createSelector(controlsSelector, (state) => state.minNodeSize);
+
 export const selectPointAttenuation = createSelector(
     controlsSelector,
     (state) => state.pointAttenuation,

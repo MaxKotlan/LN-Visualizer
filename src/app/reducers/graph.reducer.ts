@@ -36,7 +36,7 @@ const initialState: GraphState = {
     loadingText: '',
 };
 
-//Allocate 10% extra buffer space
+//Allocate 10% extra buffer space for new channels and nodes
 const bufferOverheadStorage = 1.1;
 
 export const reducer = createReducer(

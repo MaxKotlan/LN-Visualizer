@@ -37,6 +37,11 @@ export const minEdgesRecompute = createAction(
 
 export const setNodeSize = createAction('[controls] setNodeSize', props<{ nodeSize: number }>());
 
+export const setMinimumNodeSize = createAction(
+    '[controls] setMinimumNodeSize',
+    props<{ nodeSize: number }>(),
+);
+
 export const setPointAttenuation = createAction(
     '[controls] setPointAttenuation',
     props<{ value: boolean }>(),
