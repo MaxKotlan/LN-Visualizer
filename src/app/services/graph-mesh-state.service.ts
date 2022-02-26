@@ -11,6 +11,7 @@ import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
     selectFinalMatcheNodesFromSearch,
+    selectNodeCapacityBuffer,
     selectNodeColorBuffer,
     selectNodeVertexBuffer,
 } from '../selectors/graph.selectors';
@@ -70,6 +71,40 @@ export class GraphMeshStateService {
                 bufferRef: colorBuffer,
                 size: graphState.nodeSet.size,
             } as BufferRef<Uint8Array>;
+        }),
+    );
+
+    nodeCapacity$ = combineLatest([
+        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.store$.select(selectNodeCapacityBuffer),
+    ]).pipe(
+        sampleTime(this.throttleTimeMs),
+        map(([graphState, capacityBuffer]) => {
+            if (!capacityBuffer || !graphState.nodeSet) return null;
+
+            let i = 0;
+            let largestCapacity = 0;
+            let averageNetworkCapacity = 0;
+            let sumSquared = 0;
+            graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
+                if (currentNode.totalCapacity > largestCapacity)
+                    largestCapacity = currentNode.totalCapacity;
+                averageNetworkCapacity += currentNode.totalCapacity;
+                sumSquared += currentNode.totalCapacity * currentNode.totalCapacity;
+                capacityBuffer[i] = currentNode.totalCapacity;
+                i++;
+            });
+            averageNetworkCapacity /= i;
+            i = 0;
+            graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
+                capacityBuffer[i] = capacityBuffer[i] / Math.sqrt(Math.max(sumSquared, 1e-12));
+                i++;
+            });
+
+            return {
+                bufferRef: capacityBuffer,
+                size: graphState.nodeSet.size,
+            } as BufferRef<Float32Array>;
         }),
     );
 

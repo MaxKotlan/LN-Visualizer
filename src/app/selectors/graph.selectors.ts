@@ -42,6 +42,11 @@ export const selectNodeColorBuffer = createSelector(
     (state) => state.nodeColorBuffer,
 );
 
+export const selectNodeCapacityBuffer = createSelector(
+    graphSelector,
+    (state) => state.nodeCapacityBuffer,
+);
+
 export const selectChannelVertexBuffer = createSelector(
     graphSelector,
     (state) => state.channelVertexBuffer,

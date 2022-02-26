@@ -19,7 +19,7 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { take } from 'rxjs';
+import { animationFrames, map, take, Timestamp, TimestampProvider } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
@@ -34,6 +34,7 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 //const extendMaterial = require('three-extend-material');
 import * as extendMaterial from 'three-extend-material';
 import { ToolTipService } from 'src/app/services/tooltip.service';
+import { BasicShader } from 'src/app/shaders';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -46,6 +47,15 @@ export class GraphNodeMeshComponent
 {
     @Input() positions!: BufferRef<Float32Array> | null;
     @Input() colors!: BufferRef<Uint8Array> | null;
+
+    private capBuff: BufferRef<Float32Array> | undefined;
+
+    @Input() set capacity(newCapacity: BufferRef<Float32Array> | null) {
+        if (!newCapacity) return;
+        this.capBuff = newCapacity;
+        if (!this.geometry.attributes['averageCapacityRatio']) return;
+        this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
+    }
     @Input() shouldRender: boolean = true;
     @Input() pointSizeAttenuation: boolean = true;
     @Input() useSprite: boolean = true;
@@ -57,7 +67,7 @@ export class GraphNodeMeshComponent
     @Output() click = new EventEmitter<RaycasterEmitEvent>();
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
-    private material: THREE.PointsMaterial | null = null;
+    private material: THREE.ShaderMaterial | null = null;
     private materialMoving: any;
 
     constructor(
@@ -74,9 +84,21 @@ export class GraphNodeMeshComponent
 
     override ngOnInit(): void {
         this.spriteTexture = new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg');
+        this.spriteTexture.flipY = false;
         super.ngOnInit();
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
+
+        let now = 0;
+        const customTSProvider: TimestampProvider = {
+            now() {
+                return now++;
+            },
+        };
+
+        animationFrames(customTSProvider)
+            .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
+            .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
     }
 
     private subscribeEvents() {
@@ -160,7 +182,7 @@ export class GraphNodeMeshComponent
         if (!this.positions) return;
         if (!this.colors) return;
         this.geometry.setAttribute(
-            'color',
+            'nodeColor',
             new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
         );
         this.geometry.setAttribute(
@@ -170,8 +192,12 @@ export class GraphNodeMeshComponent
                 3,
             ),
         );
+        this.geometry.setAttribute(
+            'averageCapacityRatio',
+            new THREE.BufferAttribute(this.capBuff?.bufferRef || new Float32Array(), 1, false),
+        );
         this.geometry.setDrawRange(0, this.positions.size);
-        this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['nodeColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
         // this.geometry.setAttribute(
         //     'color',
@@ -190,19 +216,30 @@ export class GraphNodeMeshComponent
     }
 
     protected generateMaterial() {
-        if (!this.material)
-            this.material = new THREE.PointsMaterial({
-                size: this.spriteSize,
-                sizeAttenuation: this.pointSizeAttenuation,
-                map: this.useSprite ? this.spriteTexture : undefined,
-                vertexColors: true,
-                alphaTest: 0.5,
-                transparent: this.useSprite ? true : false,
-            });
-        this.material.size = this.spriteSize;
-        this.material.sizeAttenuation = this.pointSizeAttenuation;
-        (this.material.map = this.useSprite ? this.spriteTexture || null : null),
-            (this.material.vertexColors = true);
+        if (!this.material) {
+            const wowShader = BasicShader;
+            wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
+            wowShader.uniforms['size'] = { value: this.spriteSize };
+
+            this.material = new THREE.ShaderMaterial(
+                wowShader,
+                //{
+
+                //size: this.spriteSize,
+                // sizeAttenuation: this.pointSizeAttenuation,
+                // map: this.useSprite ? this.spriteTexture : undefined,
+                // vertexColors: true,
+                // alphaTest: 0.5,
+                // transparent: this.useSprite ? true : false,
+                //}
+            );
+        }
+        // this.material.size = this.spriteSize;
+        // this.material.sizeAttenuation = this.pointSizeAttenuation;
+        // (this.material.map = this.useSprite ? this.spriteTexture || null : null),
+        //     (this.material.vertexColors = true);
+        this.material.uniforms['size'] = { value: this.spriteSize };
+
         this.material.alphaTest = 0.5;
         this.material.transparent = this.useSprite;
         this.material.needsUpdate = true;

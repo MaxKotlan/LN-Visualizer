@@ -1,0 +1,1 @@
+export { BasicShader } from './point';
