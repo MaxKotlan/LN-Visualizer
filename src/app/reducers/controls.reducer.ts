@@ -92,7 +92,7 @@ export const reducer = createReducer(
         ...state,
         capacityFilterAmount: value,
     })),
-    on(controlsActions.uniformNodeSize, (state, { value }) => ({
+    on(controlsActions.setUniformNodeSize, (state, { value }) => ({
         ...state,
         uniformNodeSize: value,
     })),

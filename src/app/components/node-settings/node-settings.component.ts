@@ -9,6 +9,7 @@ import {
     setNodeSize,
     setPointAttenuation,
     setPointUseIcon,
+    setUniformNodeSize,
 } from 'src/app/actions/controls.actions';
 import { ControlsState } from 'src/app/reducers/controls.reducer';
 import {
@@ -57,5 +58,9 @@ export class NodeSettingsComponent {
 
     setPointUseIcon(event: MatCheckboxChange) {
         this.store.dispatch(setPointUseIcon({ value: event.checked }));
+    }
+
+    setUniformSize(event: MatCheckboxChange) {
+        this.store.dispatch(setUniformNodeSize({ value: event.checked }));
     }
 }
