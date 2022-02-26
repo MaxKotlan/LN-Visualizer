@@ -19,7 +19,7 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { take } from 'rxjs';
+import { animationFrames, map, take, Timestamp, TimestampProvider } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
@@ -88,6 +88,17 @@ export class GraphNodeMeshComponent
         super.ngOnInit();
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
+
+        let now = 0;
+        const customTSProvider: TimestampProvider = {
+            now() {
+                return now++;
+            },
+        };
+
+        animationFrames(customTSProvider)
+            .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
+            .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
     }
 
     private subscribeEvents() {

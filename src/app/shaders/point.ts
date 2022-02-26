@@ -8,7 +8,8 @@ export const BasicShader = {
         alphaTest: { value: 0.5 },
         renderIcon: { value: true },
         pointAttenuation: { value: true },
-        minimumSize: { value: 0.0 },
+        minimumSize: { value: 0.1 },
+        sinTime: { value: 0.0 },
     },
     vertexShader: /*glsl*/ `
     // attribute float size;
@@ -16,6 +17,7 @@ export const BasicShader = {
     uniform bool renderIcon;
     uniform bool pointAttenuation;
     uniform float minimumSize;
+    uniform float sinTime;
     attribute vec3 nodeColor;
     attribute float averageCapacityRatio;
 
@@ -25,7 +27,10 @@ export const BasicShader = {
 
         vColor = nodeColor;
 
-        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        float invertedCap = (1.-averageCapacityRatio);
+        vec3 moveFactor = vec3(.0, .2, .0);
+
+        vec4 mvPosition = modelViewMatrix * vec4( position + sinTime*invertedCap*moveFactor, 1.0 );
 
         gl_PointSize = size * (averageCapacityRatio + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 1.0 ) );
 
