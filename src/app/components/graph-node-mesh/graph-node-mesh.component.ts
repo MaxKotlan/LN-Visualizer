@@ -75,6 +75,7 @@ export class GraphNodeMeshComponent
 
     override ngOnInit(): void {
         this.spriteTexture = new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg');
+        this.spriteTexture.flipY = false;
         super.ngOnInit();
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
@@ -199,7 +200,7 @@ export class GraphNodeMeshComponent
                 wowShader,
                 //{
 
-                // size: this.spriteSize,
+                //size: this.spriteSize,
                 // sizeAttenuation: this.pointSizeAttenuation,
                 // map: this.useSprite ? this.spriteTexture : undefined,
                 // vertexColors: true,

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export const BasicShader = {
     uniforms: {
-        size: { value: 10.0 },
+        size: { value: 3.0 },
         color: { value: new THREE.Color(0xffffff) },
         alphaTest: { value: 0.5 },
     },
@@ -19,7 +19,7 @@ export const BasicShader = {
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
-        gl_PointSize = size * ( 300.0 / -mvPosition.z );
+        gl_PointSize = size * ( 500.0 / -mvPosition.z );
 
         gl_Position = projectionMatrix * mvPosition;
 
@@ -38,13 +38,13 @@ export const BasicShader = {
 
         vec4 txcord = texture2D( pointTexture, gl_PointCoord );
 
-        if (txcord.r == 1.0 && 
-            txcord.g == 1.0 && 
-            txcord.b == 1.0) {
-            gl_FragColor = mix(vec4(1.0,1.0,1.0,1.0), gl_FragColor, .5);
-        } else {
-            gl_FragColor = gl_FragColor * txcord;
-        }
+        // if (txcord.r == 1.0 && 
+        //     txcord.g == 1.0 && 
+        //     txcord.b == 1.0) {
+        //     gl_FragColor = mix(vec4(1.0,1.0,1.0,1.0), gl_FragColor, .5);
+        // } else {
+        //     gl_FragColor = gl_FragColor * txcord;
+        // }
         gl_FragColor = gl_FragColor * txcord;
         if ( gl_FragColor.a < alphaTest ) discard;
 
