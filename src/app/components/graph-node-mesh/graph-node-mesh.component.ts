@@ -15,26 +15,18 @@ import {
     provideParent,
     RaycasterEmitEvent,
     RaycasterEvent,
-    RaycasterService,
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { animationFrames, map, take, Timestamp, TimestampProvider } from 'rxjs';
+import { take, TimestampProvider } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
 import { GraphState } from 'src/app/reducers/graph.reducer';
 import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
-//import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
-// import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
 import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
-import { BufferRef } from 'src/app/types/bufferRef.interface';
-import * as THREE from 'three';
-import { BufferAttribute } from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
-
-//const extendMaterial = require('three-extend-material');
-import * as extendMaterial from 'three-extend-material';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BasicShader } from 'src/app/shaders';
+import { BufferRef } from 'src/app/types/bufferRef.interface';
+import * as THREE from 'three';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -56,8 +48,22 @@ export class GraphNodeMeshComponent
         if (!this.geometry.attributes['averageCapacityRatio']) return;
         this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
     }
+
+    @Input() set uniformNodeSize(uniformNodeSize: boolean) {
+        if (!this.material) return;
+        this.material.uniforms['uniformSize'] = { value: uniformNodeSize };
+    }
+
+    @Input() set minimumNodeSize(minimumNodeSize: number) {
+        if (!this.material) return;
+        this.material.uniforms['minimumSize'] = { value: minimumNodeSize };
+    }
+
     @Input() shouldRender: boolean = true;
-    @Input() pointSizeAttenuation: boolean = true;
+    @Input() set pointSizeAttenuation(pointAttenuation: boolean) {
+        if (!this.material) return;
+        this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
+    }
     @Input() useSprite: boolean = true;
     @Input() spriteSize: number = 3;
 
@@ -220,6 +226,7 @@ export class GraphNodeMeshComponent
             const wowShader = BasicShader;
             wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
             wowShader.uniforms['size'] = { value: this.spriteSize };
+            wowShader.uniforms['uniformSize'] = { value: false };
 
             this.material = new THREE.ShaderMaterial(
                 wowShader,

@@ -3,18 +3,39 @@
     <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="setShouldRenderNodes($event)"
         >Render Nodes</mat-checkbox
     >
+    <mat-checkbox
+        #UniformNodeSize
+        [ngModel]="selectUniformNodeSize$ | async"
+        (change)="setUniformSize($event)"
+        >Uniform Node Size</mat-checkbox
+    >
     <span>
-        <span style="margin-right: 0.4rem">Node Size</span>
+        <span style="margin-right: 0.4rem"
+            >{{ !UniformNodeSize.checked ? 'Maximum' : '' }} Node Size</span
+        >
         <mat-slider
             [ngModel]="selectNodeSize$ | async"
             (change)="setNodeSize($event)"
-            #slider
+            #maxNodeSize
             min="1"
-            max="20"
+            max="100"
             step="0.1"
             value="1"
         ></mat-slider>
-        {{ slider.value }}
+        {{ maxNodeSize.value }}
+    </span>
+    <span *ngIf="!UniformNodeSize.checked">
+        <span style="margin-right: 0.4rem">Minimum Node Size</span>
+        <mat-slider
+            [ngModel]="selectNodeMinSize$ | async"
+            (change)="setNodeMinSize($event)"
+            #minNodeSize
+            min="0"
+            [max]="maxNodeSize.value"
+            step="0.01"
+            value="1"
+        ></mat-slider>
+        {{ minNodeSize.value }}
     </span>
     <mat-checkbox [ngModel]="selectPointAttenuation$ | async" (change)="setPointAttenuation($event)"
         >Point Attenuation</mat-checkbox

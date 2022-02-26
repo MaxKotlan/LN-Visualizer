@@ -84,31 +84,16 @@ export class GraphMeshStateService {
 
             let i = 0;
             let largestCapacity = 0;
-            // let averageNetworkCapacity = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
                 if (currentNode.totalCapacity > largestCapacity)
                     largestCapacity = currentNode.totalCapacity;
-                // averageNetworkCapacity += currentNode.totalCapacity;
                 i++;
             });
-            // averageNetworkCapacity /= i;
-            // i = 0;
-            // let variance = 0;
-            // graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-            //     variance +=
-            //         (currentNode.totalCapacity - averageNetworkCapacity) *
-            //         (currentNode.totalCapacity - averageNetworkCapacity);
-            //     i++;
-            // });
-            // let std = Math.sqrt(variance / i);
-            // console.log(std);
             i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] =
-                    Math.log10(currentNode.totalCapacity) / Math.log10(largestCapacity); //(currentNode.totalCapacity - averageNetworkCapacity) / std;
+                capacityBuffer[i] = Math.sqrt(currentNode.totalCapacity / largestCapacity);
                 i++;
             });
-            console.log(capacityBuffer);
 
             return {
                 bufferRef: capacityBuffer,

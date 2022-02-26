@@ -13,12 +13,19 @@ export const shouldRenderLabels = createSelector(controlsSelector, (state) => st
 
 export const selectNodeSize = createSelector(controlsSelector, (state) => state.nodeSize);
 
+export const selectMinimumNodeSize = createSelector(controlsSelector, (state) => state.minNodeSize);
+
 export const selectPointAttenuation = createSelector(
     controlsSelector,
     (state) => state.pointAttenuation,
 );
 
 export const selectPointUseIcon = createSelector(controlsSelector, (state) => state.pointUseIcon);
+
+export const selectUniformNodeSize = createSelector(
+    controlsSelector,
+    (state) => state.uniformNodeSize,
+);
 
 export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
 

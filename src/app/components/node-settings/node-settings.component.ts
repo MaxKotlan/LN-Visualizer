@@ -5,15 +5,19 @@ import { Store } from '@ngrx/store';
 import {
     renderLabels,
     renderNodes,
+    setMinimumNodeSize,
     setNodeSize,
     setPointAttenuation,
     setPointUseIcon,
+    setUniformNodeSize,
 } from 'src/app/actions/controls.actions';
 import { ControlsState } from 'src/app/reducers/controls.reducer';
 import {
+    selectMinimumNodeSize,
     selectNodeSize,
     selectPointAttenuation,
     selectPointUseIcon,
+    selectUniformNodeSize,
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
 
@@ -26,12 +30,18 @@ export class NodeSettingsComponent {
     constructor(private store: Store<ControlsState>) {}
 
     public selectNodeSize$ = this.store.select(selectNodeSize);
+    public selectNodeMinSize$ = this.store.select(selectMinimumNodeSize);
     public shouldRenderNodes$ = this.store.select(shouldRenderNodes);
     public selectPointAttenuation$ = this.store.select(selectPointAttenuation);
     public selectPointUseIcon$ = this.store.select(selectPointUseIcon);
+    public selectUniformNodeSize$ = this.store.select(selectUniformNodeSize);
 
     setNodeSize(event: MatSliderChange) {
         this.store.dispatch(setNodeSize({ nodeSize: event.value || 1 }));
+    }
+
+    setNodeMinSize(event: MatSliderChange) {
+        this.store.dispatch(setMinimumNodeSize({ nodeSize: event.value || 0.01 }));
     }
 
     setShouldRenderNodes(event: MatCheckboxChange) {
@@ -48,5 +58,9 @@ export class NodeSettingsComponent {
 
     setPointUseIcon(event: MatCheckboxChange) {
         this.store.dispatch(setPointUseIcon({ value: event.checked }));
+    }
+
+    setUniformSize(event: MatCheckboxChange) {
+        this.store.dispatch(setUniformNodeSize({ value: event.checked }));
     }
 }

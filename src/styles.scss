@@ -27,14 +27,14 @@ body {
         max-width: 80vw;
         width: 1024px;
     }
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
+    min-height: 90vh;
+    min-height: 90vh;
     overflow-y: hidden;
 }
 
 .custom-pannel > mat-dialog-container {
     padding: 0;
     overflow-y: hidden !important;
-    min-height: 100vh;
+    min-height: 90vh;
     min-height: -webkit-fill-available;
 }

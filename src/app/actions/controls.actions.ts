@@ -37,6 +37,11 @@ export const minEdgesRecompute = createAction(
 
 export const setNodeSize = createAction('[controls] setNodeSize', props<{ nodeSize: number }>());
 
+export const setMinimumNodeSize = createAction(
+    '[controls] setMinimumNodeSize',
+    props<{ nodeSize: number }>(),
+);
+
 export const setPointAttenuation = createAction(
     '[controls] setPointAttenuation',
     props<{ value: boolean }>(),
@@ -72,4 +77,9 @@ export const capacityFilterEnable = createAction(
 export const capacityFilterAmount = createAction(
     '[controls] capacityFilterAmount',
     props<{ value: number }>(),
+);
+
+export const setUniformNodeSize = createAction(
+    '[controls] uniformNodeSize',
+    props<{ value: boolean }>(),
 );
