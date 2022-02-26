@@ -47,13 +47,13 @@ export class GraphNodeMeshComponent
 {
     @Input() positions!: BufferRef<Float32Array> | null;
     @Input() colors!: BufferRef<Uint8Array> | null;
+
+    private capBuff: BufferRef<Float32Array> | undefined;
+
     @Input() set capacity(newCapacity: BufferRef<Float32Array> | null) {
         if (!newCapacity) return;
-        console.log(newCapacity);
-        this.geometry.setAttribute(
-            'averageCapacityRatio',
-            new THREE.BufferAttribute(newCapacity.bufferRef, 1, false),
-        );
+        this.capBuff = newCapacity;
+        if (!this.geometry.attributes['averageCapacityRatio']) return;
         this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
     }
     @Input() shouldRender: boolean = true;
@@ -180,6 +180,10 @@ export class GraphNodeMeshComponent
                 this.shouldRender ? this.positions.bufferRef : new Float32Array(),
                 3,
             ),
+        );
+        this.geometry.setAttribute(
+            'averageCapacityRatio',
+            new THREE.BufferAttribute(this.capBuff?.bufferRef || new Float32Array(), 1, false),
         );
         this.geometry.setDrawRange(0, this.positions.size);
         this.geometry.attributes['nodeColor'].needsUpdate = true;
