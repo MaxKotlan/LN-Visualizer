@@ -96,9 +96,9 @@ export class GraphNodeMeshComponent
             },
         };
 
-        animationFrames(customTSProvider)
-            .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
-            .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
+        // animationFrames(customTSProvider)
+        //     .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
+        //     .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
     }
 
     private subscribeEvents() {
