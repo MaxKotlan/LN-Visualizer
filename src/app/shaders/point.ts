@@ -4,6 +4,7 @@ export const BasicShader = {
     uniforms: {
         size: { value: 3.0 },
         color: { value: new THREE.Color(0xffffff) },
+        alphaTest: { value: 0.5 },
     },
     vertexShader: /*glsl*/ `
     // attribute float size;
