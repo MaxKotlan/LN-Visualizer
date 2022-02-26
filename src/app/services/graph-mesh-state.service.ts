@@ -84,37 +84,16 @@ export class GraphMeshStateService {
 
             let i = 0;
             let largestCapacity = 0;
-            // let averageNetworkCapacity = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
                 if (currentNode.totalCapacity > largestCapacity)
                     largestCapacity = currentNode.totalCapacity;
-                // averageNetworkCapacity += currentNode.totalCapacity;
                 i++;
             });
-            // averageNetworkCapacity /= i;
-            // i = 0;
-            // let variance = 0;
-            // graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-            //     variance +=
-            //         (currentNode.totalCapacity - averageNetworkCapacity) *
-            //         (currentNode.totalCapacity - averageNetworkCapacity);
-            //     i++;
-            // });
-            // let std = Math.sqrt(variance / i);
-            // console.log(std);
             i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] =
-                    Math.sqrt(currentNode.totalCapacity) / Math.sqrt(largestCapacity); //(currentNode.totalCapacity - averageNetworkCapacity) / std;
-                // if (currentNode.alias === 'zion-c58d643b-m')
-                //     console.log('"zion-c58d643b-m"', capacityBuffer[i]);
-                // if (currentNode.alias === 'Libertas a Ripas')
-                //     console.log('"Libertas a Ripas"', capacityBuffer[i]);
-                // if (currentNode.alias === 'ACINQ') console.log('ACINQ', capacityBuffer[i]);
-
+                capacityBuffer[i] = Math.sqrt(currentNode.totalCapacity / largestCapacity);
                 i++;
             });
-            // console.log(capacityBuffer);
 
             return {
                 bufferRef: capacityBuffer,

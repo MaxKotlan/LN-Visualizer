@@ -20,6 +20,11 @@ export const selectPointAttenuation = createSelector(
 
 export const selectPointUseIcon = createSelector(controlsSelector, (state) => state.pointUseIcon);
 
+export const selectUniformNodeSize = createSelector(
+    controlsSelector,
+    (state) => state.uniformNodeSize,
+);
+
 export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
 
 export const selectCameraFocusMode = createSelector(

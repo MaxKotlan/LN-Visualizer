@@ -14,6 +14,7 @@ import {
     selectNodeSize,
     selectPointAttenuation,
     selectPointUseIcon,
+    selectUniformNodeSize,
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
 
@@ -29,6 +30,7 @@ export class NodeSettingsComponent {
     public shouldRenderNodes$ = this.store.select(shouldRenderNodes);
     public selectPointAttenuation$ = this.store.select(selectPointAttenuation);
     public selectPointUseIcon$ = this.store.select(selectPointUseIcon);
+    public selectUniformNodeSize$ = this.store.select(selectUniformNodeSize);
 
     setNodeSize(event: MatSliderChange) {
         this.store.dispatch(setNodeSize({ nodeSize: event.value || 1 }));

@@ -14,6 +14,7 @@ export interface ControlsState {
     renderLabels: boolean;
     minimumEdges: number;
     nodeSize: number;
+    uniformNodeSize: boolean;
     pointAttenuation: boolean;
     pointUseIcon: boolean;
     cameraFov: number;
@@ -29,6 +30,7 @@ const initialState: ControlsState = {
     renderNodes: true,
     renderEdges: true,
     renderLabels: false,
+    uniformNodeSize: false,
     minimumEdges: 0,
     nodeSize: 100,
     pointAttenuation: true,
@@ -79,5 +81,9 @@ export const reducer = createReducer(
     on(controlsActions.capacityFilterAmount, (state, { value }) => ({
         ...state,
         capacityFilterAmount: value,
+    })),
+    on(controlsActions.uniformNodeSize, (state, { value }) => ({
+        ...state,
+        uniformNodeSize: value,
     })),
 );

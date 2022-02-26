@@ -73,3 +73,8 @@ export const capacityFilterAmount = createAction(
     '[controls] capacityFilterAmount',
     props<{ value: number }>(),
 );
+
+export const uniformNodeSize = createAction(
+    '[controls] uniformNodeSize',
+    props<{ value: boolean }>(),
+);
