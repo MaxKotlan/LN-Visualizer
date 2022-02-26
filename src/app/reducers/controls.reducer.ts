@@ -30,7 +30,7 @@ const initialState: ControlsState = {
     renderEdges: true,
     renderLabels: false,
     minimumEdges: 0,
-    nodeSize: 3,
+    nodeSize: 100,
     pointAttenuation: true,
     pointUseIcon: true,
     cameraFov: 60,

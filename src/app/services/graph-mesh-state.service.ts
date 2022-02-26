@@ -105,10 +105,16 @@ export class GraphMeshStateService {
             i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
                 capacityBuffer[i] =
-                    Math.log10(currentNode.totalCapacity) / Math.log10(largestCapacity); //(currentNode.totalCapacity - averageNetworkCapacity) / std;
+                    Math.sqrt(currentNode.totalCapacity) / Math.sqrt(largestCapacity); //(currentNode.totalCapacity - averageNetworkCapacity) / std;
+                // if (currentNode.alias === 'zion-c58d643b-m')
+                //     console.log('"zion-c58d643b-m"', capacityBuffer[i]);
+                // if (currentNode.alias === 'Libertas a Ripas')
+                //     console.log('"Libertas a Ripas"', capacityBuffer[i]);
+                // if (currentNode.alias === 'ACINQ') console.log('ACINQ', capacityBuffer[i]);
+
                 i++;
             });
-            console.log(capacityBuffer);
+            // console.log(capacityBuffer);
 
             return {
                 bufferRef: capacityBuffer,
