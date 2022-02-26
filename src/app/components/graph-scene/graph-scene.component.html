@@ -28,6 +28,7 @@
                 [positions]="positions$ | async"
                 [colors]="colors$ | async"
                 [capacity]="selectNodeCapacity$ | async"
+                [uniformNodeSize]="selectUniformNodeSize$ | async"
                 [spriteSize]="(selectNodeSize$ | async) || 0"
                 [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
                 [useSprite]="(selectPointUseIcon$ | async) || false"

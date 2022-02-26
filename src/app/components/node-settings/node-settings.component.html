@@ -11,7 +11,7 @@
     >
     <span>
         <span style="margin-right: 0.4rem"
-            >{{ UniformNodeSize.checked ? 'Maximum' : '' }} Node Size</span
+            >{{ !UniformNodeSize.checked ? 'Maximum' : '' }} Node Size</span
         >
         <mat-slider
             [ngModel]="selectNodeSize$ | async"
@@ -24,7 +24,7 @@
         ></mat-slider>
         {{ maxNodeSize.value }}
     </span>
-    <span *ngIf="UniformNodeSize.checked">
+    <span *ngIf="!UniformNodeSize.checked">
         <span style="margin-right: 0.4rem">Minimum Node Size</span>
         <mat-slider
             [ngModel]="selectNodeMinSize$ | async"
