@@ -102,7 +102,7 @@ export class GraphMeshStateService {
             // });
             // let std = Math.sqrt(variance / i);
             // console.log(std);
-            // i = 0;
+            i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
                 capacityBuffer[i] =
                     Math.log10(currentNode.totalCapacity) / Math.log10(largestCapacity); //(currentNode.totalCapacity - averageNetworkCapacity) / std;
