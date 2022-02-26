@@ -162,7 +162,7 @@ export class GraphNodeMeshComponent
         if (!this.positions) return;
         if (!this.colors) return;
         this.geometry.setAttribute(
-            'customColor',
+            'nodeColor',
             new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
         );
         this.geometry.setAttribute(
@@ -173,7 +173,7 @@ export class GraphNodeMeshComponent
             ),
         );
         this.geometry.setDrawRange(0, this.positions.size);
-        this.geometry.attributes['customColor'].needsUpdate = true;
+        this.geometry.attributes['nodeColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
         // this.geometry.setAttribute(
         //     'color',

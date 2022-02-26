@@ -4,18 +4,17 @@ export const BasicShader = {
     uniforms: {
         size: { value: 3.0 },
         color: { value: new THREE.Color(0xffffff) },
-        alphaTest: { value: 0.5 },
     },
     vertexShader: /*glsl*/ `
     // attribute float size;
     uniform float size;
-    attribute vec3 customColor;
+    attribute vec3 nodeColor;
 
     varying vec3 vColor;
 
     void main() {
 
-        vColor = customColor;
+        vColor = nodeColor;
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
