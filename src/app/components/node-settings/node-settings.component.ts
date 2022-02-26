@@ -36,6 +36,10 @@ export class NodeSettingsComponent {
         this.store.dispatch(setNodeSize({ nodeSize: event.value || 1 }));
     }
 
+    setNodeMinSize(event: MatSliderChange) {
+        this.store.dispatch(setNodeSize({ nodeSize: event.value || 1 }));
+    }
+
     setShouldRenderNodes(event: MatCheckboxChange) {
         this.store.dispatch(renderNodes({ value: event.checked }));
     }
