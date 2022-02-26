@@ -195,6 +195,7 @@ export class GraphNodeMeshComponent
         if (!this.material) {
             const wowShader = BasicShader;
             wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
+            wowShader.uniforms['size'] = { value: this.spriteSize };
 
             this.material = new THREE.ShaderMaterial(
                 wowShader,
@@ -213,6 +214,7 @@ export class GraphNodeMeshComponent
         // this.material.sizeAttenuation = this.pointSizeAttenuation;
         // (this.material.map = this.useSprite ? this.spriteTexture || null : null),
         //     (this.material.vertexColors = true);
+        this.material.uniforms['size'] = { value: this.spriteSize };
 
         this.material.alphaTest = 0.5;
         this.material.transparent = this.useSprite;
