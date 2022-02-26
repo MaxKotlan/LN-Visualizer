@@ -8,7 +8,7 @@ export const BasicShader = {
         alphaTest: { value: 0.5 },
         renderIcon: { value: true },
         pointAttenuation: { value: true },
-        minimumSize: { value: 0.1 },
+        minimumSize: { value: 0.0 },
         sinTime: { value: 0.0 },
     },
     vertexShader: /*glsl*/ `
