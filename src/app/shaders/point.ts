@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Shader } from 'three';
 
 export const BasicShader = {
     uniforms: {
@@ -14,6 +15,7 @@ export const BasicShader = {
     uniform bool renderIcon;
     uniform bool pointAttenuation;
     attribute vec3 nodeColor;
+    attribute float averageCapacityRatio;
 
     varying vec3 vColor;
 
@@ -23,7 +25,7 @@ export const BasicShader = {
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
-        gl_PointSize = size * ( 500.0 / (pointAttenuation ? -mvPosition.z : 1.0 ) );
+        gl_PointSize = size * averageCapacityRatio *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 1.0 ) );
 
         gl_Position = projectionMatrix * mvPosition;
 
@@ -53,4 +55,4 @@ export const BasicShader = {
         if ( gl_FragColor.a < alphaTest ) discard;
 
     }`,
-};
+} as Shader;

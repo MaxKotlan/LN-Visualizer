@@ -47,6 +47,15 @@ export class GraphNodeMeshComponent
 {
     @Input() positions!: BufferRef<Float32Array> | null;
     @Input() colors!: BufferRef<Uint8Array> | null;
+    @Input() set capacity(newCapacity: BufferRef<Float32Array> | null) {
+        if (!newCapacity) return;
+        console.log(newCapacity);
+        this.geometry.setAttribute(
+            'averageCapacityRatio',
+            new THREE.BufferAttribute(newCapacity.bufferRef, 1, false),
+        );
+        this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
+    }
     @Input() shouldRender: boolean = true;
     @Input() pointSizeAttenuation: boolean = true;
     @Input() useSprite: boolean = true;
