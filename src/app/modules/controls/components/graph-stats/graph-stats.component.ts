@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import * as graphSelectors from '../../modules/graph-renderer/selectors';
+import * as graphSelectors from '../../../graph-renderer/selectors';
 
 @Component({
     selector: 'app-graph-stats',

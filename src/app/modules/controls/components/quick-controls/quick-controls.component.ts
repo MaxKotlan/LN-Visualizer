@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
@@ -10,13 +10,13 @@ import {
     renderNodes,
     searchGraph,
     sortOrderChange,
-} from 'src/app/actions/controls.actions';
+} from '../../actions';
 import {
     capacityFilterEnable,
     capacityFilterAmount,
     shouldRenderEdges,
     shouldRenderNodes,
-} from 'src/app/selectors/controls.selectors';
+} from 'src/app/modules/controls/selectors/controls.selectors';
 import * as controlActions from '../../actions/controls.actions';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';

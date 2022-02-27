@@ -24,18 +24,7 @@ export class GraphEffects {
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
         private snackBar: MatSnackBar,
-    ) {
-        // this.store$
-        //     .select(selectNodeSetValue)
-        //     .subscribe((nsv) =>
-        //         console.log(
-        //             'noChildren: ',
-        //             nsv.filter((n) => Object.values(n.children).length === 0).length,
-        //             'no parent',
-        //             nsv.filter((n) => !n.parent).length,
-        //         ),
-        //     );
-    }
+    ) {}
 
     retrieveGraph$ = createEffect(
         () =>

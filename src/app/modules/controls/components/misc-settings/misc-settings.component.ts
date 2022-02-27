@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { resetControlsToDefault } from 'src/app/actions/controls.actions';
-import { ControlsState } from 'src/app/reducers/controls.reducer';
+import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
+import { resetControlsToDefault } from '../../actions';
 
 @Component({
     selector: 'app-misc-settings',

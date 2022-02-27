@@ -8,7 +8,6 @@ import {
     SceneComponent,
 } from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
-import { gotoNode } from 'src/app/actions/controls.actions';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import {
@@ -23,7 +22,7 @@ import {
     shouldRenderEdges,
     shouldRenderLabels,
     shouldRenderNodes,
-} from 'src/app/selectors/controls.selectors';
+} from 'src/app/modules/controls/selectors/controls.selectors';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
@@ -31,6 +30,7 @@ import { GraphState } from '../../reducer';
 import { selectFinalMatcheNodesFromSearch } from '../../selectors';
 import { GraphMeshStateService } from '../../services';
 import * as graphActions from '../../actions';
+import { gotoNode } from 'src/app/modules/controls/actions/controls.actions';
 
 @Component({
     selector: 'app-graph-scene',

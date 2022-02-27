@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
-import { setCameraFocusMode, setCameraFov } from 'src/app/actions/controls.actions';
 import { cameraFocusMode } from 'src/app/constants/camera-focusmode.constant';
-import { ControlsState } from 'src/app/reducers/controls.reducer';
-import { selectCameraFocusMode, selectCameraFov } from 'src/app/selectors/controls.selectors';
+import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
+import {
+    selectCameraFocusMode,
+    selectCameraFov,
+} from 'src/app/modules/controls/selectors/controls.selectors';
+import { setCameraFocusMode, setCameraFov } from '../../actions';
 
 @Component({
     selector: 'app-camera-settings',

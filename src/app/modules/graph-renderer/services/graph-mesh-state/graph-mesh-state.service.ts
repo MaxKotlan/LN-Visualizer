@@ -12,7 +12,7 @@ import { GraphState } from '../../reducer/graph.reducer';
 import {
     capacityFilterAmount,
     capacityFilterEnable,
-} from '../../../../selectors/controls.selectors';
+} from '../../../controls/selectors/controls.selectors';
 import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,

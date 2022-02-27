@@ -2,7 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { meshScale } from '../../../constants/mesh-scale.constant';
 import { GraphState } from '../reducer/graph.reducer';
-import { selectSearchString } from '../../../selectors/controls.selectors';
+import { selectSearchString } from '../../controls/selectors/controls.selectors';
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 

@@ -10,8 +10,8 @@ import {
     setPointAttenuation,
     setPointUseIcon,
     setUniformNodeSize,
-} from 'src/app/actions/controls.actions';
-import { ControlsState } from 'src/app/reducers/controls.reducer';
+} from '../../actions';
+import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
 import {
     selectMinimumNodeSize,
     selectNodeSize,
@@ -19,7 +19,7 @@ import {
     selectPointUseIcon,
     selectUniformNodeSize,
     shouldRenderNodes,
-} from 'src/app/selectors/controls.selectors';
+} from 'src/app/modules/controls/selectors/controls.selectors';
 
 @Component({
     selector: 'app-node-settings',

@@ -19,7 +19,7 @@ import {
     SphereMeshComponent,
 } from 'atft';
 import { take, TimestampProvider } from 'rxjs';
-import { searchGraph } from 'src/app/actions/controls.actions';
+import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as controlsActions from './actions/controls.actions';
+import * as controlsActions from './modules/controls/actions';
 import { ScreenSizeService } from './services/screen-size.service';
 
 @Component({
