@@ -25,10 +25,9 @@ export const reducer = createReducer(
 
     on(
         controlActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.nodeControls,
+        (_state, { savedState }) => savedState.nodeControls || initialState,
     ),
     on(controlActions.resetControlsToDefault, () => initialState),
-
     on(nodeControlActions.renderNodes, (state, { value }) => ({ ...state, renderNodes: value })),
     on(nodeControlActions.setNodeSize, (state, { nodeSize }) => ({
         ...state,

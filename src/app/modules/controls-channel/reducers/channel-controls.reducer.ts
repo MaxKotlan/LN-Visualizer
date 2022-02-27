@@ -25,7 +25,7 @@ export const reducer = createReducer(
 
     on(
         controlsActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.channelControls,
+        (_state, { savedState }) => savedState.channelControls || initialState,
     ),
     on(controlsActions.resetControlsToDefault, () => initialState),
 
