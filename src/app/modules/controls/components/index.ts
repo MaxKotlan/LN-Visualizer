@@ -4,7 +4,7 @@ export * from './error';
 export * from './graph-stats';
 export * from './loading-bar';
 export * from './misc-settings';
-export * from './node-settings';
+export * from '../../controls-node/components/node-settings';
 export * from './quick-controls';
 export * from './search';
 export * from './settings';

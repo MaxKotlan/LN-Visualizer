@@ -16,6 +16,7 @@ import {
 } from './components';
 import { MaterialModule } from '../material';
 import { FormsModule } from '@angular/forms';
+import { ControlsNodeModule } from '../controls-node/controls-node.module';
 
 @NgModule({
     declarations: [
@@ -28,11 +29,10 @@ import { FormsModule } from '@angular/forms';
         GraphStatsComponent,
         CameraSettingsComponent,
         ChannelSettingsComponent,
-        NodeSettingsComponent,
         MiscSettingsComponent,
         TooltipComponent,
     ],
-    imports: [CommonModule, MaterialModule, FormsModule],
+    imports: [CommonModule, MaterialModule, FormsModule, ControlsNodeModule],
     exports: [
         SearchComponent,
         QuickControlsComponent,

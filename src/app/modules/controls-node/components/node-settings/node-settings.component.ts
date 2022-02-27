@@ -10,7 +10,7 @@ import {
     setPointAttenuation,
     setPointUseIcon,
     setUniformNodeSize,
-} from '../../actions';
+} from '../../../controls/actions';
 import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
 import {
     selectMinimumNodeSize,
