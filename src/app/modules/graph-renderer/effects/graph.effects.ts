@@ -12,7 +12,7 @@ import * as THREE from 'three';
 import { initialSphereSize } from '../../../constants/mesh-scale.constant';
 import { LndApiServiceService } from '../../../services/lnd-api-service.service';
 import { Chunk } from '../../../types/chunk.interface';
-import { createSpherePoint } from '../../../utils';
+import { createSpherePoint } from '../utils';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer/graph.reducer';
 import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
