@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Shader } from 'three';
 
-export const BasicShader = {
+export const NodeShader = {
     uniforms: {
         size: { value: 3.0 },
         color: { value: new THREE.Color(0xffffff) },

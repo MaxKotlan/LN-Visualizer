@@ -26,7 +26,7 @@ import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { selectClosestPoint } from '../../selectors';
 import { LndRaycasterService } from '../../services';
-import { BasicShader } from '../../shaders';
+import { NodeShader } from '../../shaders';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -223,7 +223,7 @@ export class GraphNodeMeshComponent
 
     protected generateMaterial() {
         if (!this.material) {
-            const wowShader = BasicShader;
+            const wowShader = NodeShader;
             wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
             wowShader.uniforms['size'] = { value: this.spriteSize };
             wowShader.uniforms['uniformSize'] = { value: false };
