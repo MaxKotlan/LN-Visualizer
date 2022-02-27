@@ -1,15 +1,17 @@
-import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import { environment } from '../../../../environments/environment';
-import * as controlsReducer from './controls.reducer';
+// import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+// import { environment } from '../../../../environments/environment';
+// import * as nodeControlsReducer from '../../controls-node/reducer';
+// import * as controlsReducer from './controls.reducer';
 
-export interface State {
-    // graphState: graphReducer.GraphState;
-    controlsState: controlsReducer.ControlsState;
-}
+// export interface ControlsState {
+//     nodeControlsState: nodeControlsReducer.NodeControlState;
+//     genericControlsState: controlsReducer.GenericControlsState;
+// }
 
-export const reducers: ActionReducerMap<State> = {
-    // graphState: graphReducer.reducer,
-    controlsState: controlsReducer.reducer,
-};
+// export const reducers: ActionReducerMap<ControlsState> = {
+//     nodeControlsState: nodeControlsReducer.reducer,
+//     genericControlsState: controlsReducer.reducer,
+// };
 
-export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
+// export const metaReducers: MetaReducer<ControlsState>[] = !environment.production ? [] : [];
+export * from './controls.reducer';

@@ -1,11 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { CameraFocusMode, ControlsState } from '../reducers/controls.reducer';
+import { CameraFocusMode, GenericControlsState } from '../reducers/controls.reducer';
 
 export const loadSavedState = createAction('[controls] loadSavedState');
 
 export const setSavedStateFromLocalStorage = createAction(
     '[controls] setSavedStateFromLocalStorage',
-    props<{ savedState: ControlsState }>(),
+    props<{ savedState: GenericControlsState }>(),
 );
 
 export const resetToDefault = createAction('[controls] resetToDefault');
@@ -17,8 +17,6 @@ export const searchGraph = createAction(
     props<{ searchText: string }>(),
 );
 
-export const renderNodes = createAction('[controls] renderNodes', props<{ value: boolean }>());
-
 export const renderEdges = createAction('[controls] renderEdges', props<{ value: boolean }>());
 
 export const renderLabels = createAction('[controls] renderLabels', props<{ value: boolean }>());
@@ -28,28 +26,9 @@ export const sortOrderChange = createAction(
     props<{ ascending: boolean }>(),
 );
 
-export const gotoNode = createAction('[controls] gotoNode');
-
 export const minEdgesRecompute = createAction(
     '[controls] setMinimumEdges',
     props<{ minEdges: number }>(),
-);
-
-export const setNodeSize = createAction('[controls] setNodeSize', props<{ nodeSize: number }>());
-
-export const setMinimumNodeSize = createAction(
-    '[controls] setMinimumNodeSize',
-    props<{ nodeSize: number }>(),
-);
-
-export const setPointAttenuation = createAction(
-    '[controls] setPointAttenuation',
-    props<{ value: boolean }>(),
-);
-
-export const setPointUseIcon = createAction(
-    '[controls] setPointUseIcon',
-    props<{ value: boolean }>(),
 );
 
 export const setCameraFov = createAction('[controls] setCameraFov', props<{ value: number }>());
@@ -77,9 +56,4 @@ export const capacityFilterEnable = createAction(
 export const capacityFilterAmount = createAction(
     '[controls] capacityFilterAmount',
     props<{ value: number }>(),
-);
-
-export const setUniformNodeSize = createAction(
-    '[controls] uniformNodeSize',
-    props<{ value: boolean }>(),
 );

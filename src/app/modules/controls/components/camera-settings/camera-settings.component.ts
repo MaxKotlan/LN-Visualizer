@@ -3,12 +3,12 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { cameraFocusMode } from 'src/app/constants/camera-focusmode.constant';
-import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
 import {
     selectCameraFocusMode,
     selectCameraFov,
 } from 'src/app/modules/controls/selectors/controls.selectors';
 import { setCameraFocusMode, setCameraFov } from '../../actions';
+import { GenericControlsState } from '../../reducers';
 
 @Component({
     selector: 'app-camera-settings',
@@ -16,7 +16,7 @@ import { setCameraFocusMode, setCameraFov } from '../../actions';
     styleUrls: ['./camera-settings.component.scss'],
 })
 export class CameraSettingsComponent {
-    constructor(private store: Store<ControlsState>) {}
+    constructor(private store: Store<GenericControlsState>) {}
 
     public cameraFocusModeList = cameraFocusMode;
 

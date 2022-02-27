@@ -4,19 +4,14 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import {
-    gotoNode,
+    capacityFilterAmount,
+    capacityFilterEnable,
     minEdgesRecompute,
     renderEdges,
-    renderNodes,
     searchGraph,
     sortOrderChange,
 } from '../../actions';
-import {
-    capacityFilterEnable,
-    capacityFilterAmount,
-    shouldRenderEdges,
-    shouldRenderNodes,
-} from 'src/app/modules/controls/selectors/controls.selectors';
+import * as controlSelectors from '../../selectors/controls.selectors';
 import * as controlActions from '../../actions/controls.actions';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
@@ -24,6 +19,9 @@ import {
     selectNodesSearchResults,
     selectFinalMatcheNodesFromSearch,
 } from 'src/app/modules/graph-renderer/selectors';
+import { renderNodes, gotoNode } from 'src/app/modules/controls-node/actions';
+import { shouldRenderNodes } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+import { shouldRenderEdges } from '../../selectors/controls.selectors';
 
 @Component({
     selector: 'app-quick-controls',
@@ -38,8 +36,8 @@ export class QuickControlsComponent {
     public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
-    public shouldFilterCapacity$ = this.store$.select(capacityFilterEnable);
-    public capacityFilterAmount$ = this.store$.select(capacityFilterAmount);
+    public shouldFilterCapacity$ = this.store$.select(controlSelectors.capacityFilterEnable);
+    public capacityFilterAmount$ = this.store$.select(controlSelectors.capacityFilterAmount);
 
     public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
 

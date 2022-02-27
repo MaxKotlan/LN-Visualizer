@@ -2,24 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
+import { renderLabels } from 'src/app/modules/controls/actions';
+import { GenericControlsState } from 'src/app/modules/controls/reducers';
 import {
-    renderLabels,
-    renderNodes,
-    setMinimumNodeSize,
     setNodeSize,
+    setMinimumNodeSize,
+    renderNodes,
     setPointAttenuation,
     setPointUseIcon,
     setUniformNodeSize,
-} from '../../../controls/actions';
-import { ControlsState } from 'src/app/modules/controls/reducers/controls.reducer';
+} from '../../actions';
 import {
-    selectMinimumNodeSize,
     selectNodeSize,
+    selectMinimumNodeSize,
+    shouldRenderNodes,
     selectPointAttenuation,
     selectPointUseIcon,
     selectUniformNodeSize,
-    shouldRenderNodes,
-} from 'src/app/modules/controls/selectors/controls.selectors';
+} from '../../selectors/node-controls.selectors';
 
 @Component({
     selector: 'app-node-settings',
@@ -27,7 +27,7 @@ import {
     styleUrls: ['./node-settings.component.scss'],
 })
 export class NodeSettingsComponent {
-    constructor(private store: Store<ControlsState>) {}
+    constructor(private store: Store<GenericControlsState>) {}
 
     public selectNodeSize$ = this.store.select(selectNodeSize);
     public selectNodeMinSize$ = this.store.select(selectMinimumNodeSize);

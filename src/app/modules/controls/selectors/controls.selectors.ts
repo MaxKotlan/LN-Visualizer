@@ -1,31 +1,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ControlsState } from '../reducers/controls.reducer';
+import { GenericControlsState } from '../reducers/controls.reducer';
 
-export const controlsSelector = createFeatureSelector<ControlsState>('controlsState');
+export const controlsSelector = createFeatureSelector<GenericControlsState>('genericControls');
 
 export const selectSearchString = createSelector(controlsSelector, (state) => state.searchText);
-
-export const shouldRenderNodes = createSelector(controlsSelector, (state) => state.renderNodes);
 
 export const shouldRenderEdges = createSelector(controlsSelector, (state) => state.renderEdges);
 
 export const shouldRenderLabels = createSelector(controlsSelector, (state) => state.renderLabels);
-
-export const selectNodeSize = createSelector(controlsSelector, (state) => state.nodeSize);
-
-export const selectMinimumNodeSize = createSelector(controlsSelector, (state) => state.minNodeSize);
-
-export const selectPointAttenuation = createSelector(
-    controlsSelector,
-    (state) => state.pointAttenuation,
-);
-
-export const selectPointUseIcon = createSelector(controlsSelector, (state) => state.pointUseIcon);
-
-export const selectUniformNodeSize = createSelector(
-    controlsSelector,
-    (state) => state.uniformNodeSize,
-);
 
 export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
 

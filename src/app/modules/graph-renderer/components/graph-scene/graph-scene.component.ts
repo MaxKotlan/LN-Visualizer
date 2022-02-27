@@ -14,14 +14,8 @@ import {
     selectCameraFov,
     selectEdgeDepthTest,
     selectEdgeDottedLine,
-    selectMinimumNodeSize,
-    selectNodeSize,
-    selectPointAttenuation,
-    selectPointUseIcon,
-    selectUniformNodeSize,
     shouldRenderEdges,
     shouldRenderLabels,
-    shouldRenderNodes,
 } from 'src/app/modules/controls/selectors/controls.selectors';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
@@ -30,7 +24,15 @@ import { GraphState } from '../../reducer';
 import { selectFinalMatcheNodesFromSearch } from '../../selectors';
 import { GraphMeshStateService } from '../../services';
 import * as graphActions from '../../actions';
-import { gotoNode } from 'src/app/modules/controls/actions/controls.actions';
+import { gotoNode } from 'src/app/modules/controls-node/actions';
+import {
+    selectNodeSize,
+    selectUniformNodeSize,
+    selectPointAttenuation,
+    selectMinimumNodeSize,
+    selectPointUseIcon,
+    shouldRenderNodes,
+} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 
 @Component({
     selector: 'app-graph-scene',

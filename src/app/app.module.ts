@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ControlsEffects } from './modules/controls/effects/controls.effects';
 import { RouteEffects } from './effects/route.effects';
-import { metaReducers, reducers } from './modules/controls/reducers';
 import { GraphRendererModule } from './modules/graph-renderer';
 import { ControlsModule } from './modules/controls/controls.module';
 
@@ -22,13 +21,15 @@ import { ControlsModule } from './modules/controls/controls.module';
         GraphRendererModule,
         ControlsModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
-        StoreModule.forRoot(reducers, {
-            metaReducers,
-            runtimeChecks: {
-                strictStateImmutability: false,
-                strictActionImmutability: false,
+        StoreModule.forRoot(
+            {},
+            {
+                runtimeChecks: {
+                    strictStateImmutability: false,
+                    strictActionImmutability: false,
+                },
             },
-        }),
+        ),
         BrowserAnimationsModule,
     ],
     bootstrap: [AppComponent],

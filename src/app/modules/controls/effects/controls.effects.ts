@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, map, skipUntil, take, tap } from 'rxjs';
-import { ControlsState } from '../reducers/controls.reducer';
 import { controlsSelector } from '../selectors/controls.selectors';
 import * as controlActions from '../actions/controls.actions';
+import { GenericControlsState } from '../reducers/controls.reducer';
 
 @Injectable()
 export class ControlsEffects {
-    constructor(private actions$: Actions, private store$: Store<ControlsState>) {}
+    constructor(private actions$: Actions, private store$: Store<GenericControlsState>) {}
 
     saveControlsState$ = createEffect(
         () =>

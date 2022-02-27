@@ -17,6 +17,8 @@ import {
 import { MaterialModule } from '../material';
 import { FormsModule } from '@angular/forms';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from './reducers';
 
 @NgModule({
     declarations: [
@@ -32,7 +34,13 @@ import { ControlsNodeModule } from '../controls-node/controls-node.module';
         MiscSettingsComponent,
         TooltipComponent,
     ],
-    imports: [CommonModule, MaterialModule, FormsModule, ControlsNodeModule],
+    imports: [
+        CommonModule,
+        MaterialModule,
+        FormsModule,
+        ControlsNodeModule,
+        StoreModule.forFeature('genericControls', reducer),
+    ],
     exports: [
         SearchComponent,
         QuickControlsComponent,
