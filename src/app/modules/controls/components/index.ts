@@ -1,5 +1,5 @@
 export * from './camera-settings';
-export * from './channel-settings';
+export * from '../../controls-channel/components/channel-settings';
 export * from './error';
 export * from './graph-stats';
 export * from './loading-bar';

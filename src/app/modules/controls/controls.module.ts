@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
+import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,6 @@ import { reducer } from './reducers';
         LoadingBarComponent,
         GraphStatsComponent,
         CameraSettingsComponent,
-        ChannelSettingsComponent,
         MiscSettingsComponent,
         TooltipComponent,
     ],
@@ -39,6 +39,7 @@ import { reducer } from './reducers';
         MaterialModule,
         FormsModule,
         ControlsNodeModule,
+        ControlsChannelModule,
         StoreModule.forFeature('genericControls', reducer),
     ],
     exports: [
@@ -50,7 +51,6 @@ import { reducer } from './reducers';
         LoadingBarComponent,
         GraphStatsComponent,
         CameraSettingsComponent,
-        ChannelSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
         TooltipComponent,

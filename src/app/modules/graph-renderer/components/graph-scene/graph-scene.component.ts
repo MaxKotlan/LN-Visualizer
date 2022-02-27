@@ -12,9 +12,6 @@ import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constan
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import {
     selectCameraFov,
-    selectEdgeDepthTest,
-    selectEdgeDottedLine,
-    shouldRenderEdges,
     shouldRenderLabels,
 } from 'src/app/modules/controls/selectors/controls.selectors';
 import { ToolTipService } from 'src/app/services/tooltip.service';
@@ -33,6 +30,11 @@ import {
     selectPointUseIcon,
     shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+import {
+    selectEdgeDepthTest,
+    selectEdgeDottedLine,
+    shouldRenderEdges,
+} from 'src/app/modules/controls-channel/selectors';
 
 @Component({
     selector: 'app-graph-scene',

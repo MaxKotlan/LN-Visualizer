@@ -1,13 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
+import { GenericControlsState } from '../../../controls/reducers';
 import { renderEdges, setEdgeUseDepthTest, setEdgeUseDottedLine } from '../../actions';
-import {
-    selectEdgeDepthTest,
-    selectEdgeDottedLine,
-    shouldRenderEdges,
-} from 'src/app/modules/controls/selectors/controls.selectors';
-import { GenericControlsState } from '../../reducers';
+import { shouldRenderEdges, selectEdgeDepthTest, selectEdgeDottedLine } from '../../selectors';
 
 @Component({
     selector: 'app-channel-settings',

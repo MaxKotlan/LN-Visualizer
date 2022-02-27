@@ -10,10 +10,6 @@ import {
 import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { GraphState } from '../../reducer/graph.reducer';
 import {
-    capacityFilterAmount,
-    capacityFilterEnable,
-} from '../../../controls/selectors/controls.selectors';
-import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
     selectFinalMatcheNodesFromSearch,
@@ -22,6 +18,10 @@ import {
     selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
 import { BufferRef } from '../../../../types/bufferRef.interface';
+import {
+    capacityFilterAmount,
+    capacityFilterEnable,
+} from 'src/app/modules/controls-channel/selectors';
 
 @Injectable()
 export class GraphMeshStateService {
