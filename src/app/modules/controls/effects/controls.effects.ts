@@ -15,6 +15,7 @@ export class ControlsEffects {
             this.store$.select(controlsSelector).pipe(
                 skipUntil(this.actions$.pipe(ofType(controlActions.loadSavedState), take(1))),
                 tap((controlState) => {
+                    console.log(controlState);
                     localStorage.setItem('controlState', JSON.stringify(controlState));
                 }),
             ),

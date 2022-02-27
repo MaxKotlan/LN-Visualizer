@@ -1,15 +1,31 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { channelControlsSelector } from '../../controls-channel/selectors';
+import { nodeControlsSelector } from '../../controls-node/selectors/node-controls.selectors';
 import { GenericControlsState } from '../reducers/controls.reducer';
 
-export const controlsSelector = createFeatureSelector<GenericControlsState>('genericControls');
+export const genericControlsSelector =
+    createFeatureSelector<GenericControlsState>('genericControls');
 
-export const selectSearchString = createSelector(controlsSelector, (state) => state.searchText);
+export const controlsSelector = createSelector(
+    genericControlsSelector,
+    nodeControlsSelector,
+    channelControlsSelector,
+    (generic, node, channel) => ({ ...generic, ...node, ...channel }),
+);
 
-export const shouldRenderLabels = createSelector(controlsSelector, (state) => state.renderLabels);
+export const selectSearchString = createSelector(
+    genericControlsSelector,
+    (state) => state.searchText,
+);
 
-export const selectCameraFov = createSelector(controlsSelector, (state) => state.cameraFov);
+export const shouldRenderLabels = createSelector(
+    genericControlsSelector,
+    (state) => state.renderLabels,
+);
+
+export const selectCameraFov = createSelector(genericControlsSelector, (state) => state.cameraFov);
 
 export const selectCameraFocusMode = createSelector(
-    controlsSelector,
+    genericControlsSelector,
     (state) => state.cameraFocusMode,
 );
