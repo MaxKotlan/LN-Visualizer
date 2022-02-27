@@ -1,11 +1,12 @@
 import { createAction, props } from '@ngrx/store';
-import { CameraFocusMode, GenericControlsState } from '../reducers/controls.reducer';
+import { CameraFocusMode } from '../reducers/controls.reducer';
+import { ControlsState } from '../types';
 
 export const loadSavedState = createAction('[controls] loadSavedState');
 
 export const setSavedStateFromLocalStorage = createAction(
     '[controls] setSavedStateFromLocalStorage',
-    props<{ savedState: GenericControlsState }>(),
+    props<{ savedState: ControlsState }>(),
 );
 
 export const resetToDefault = createAction('[controls] resetToDefault');

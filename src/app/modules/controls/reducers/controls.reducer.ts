@@ -23,7 +23,10 @@ const initialState: GenericControlsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(controlsActions.setSavedStateFromLocalStorage, (_state, { savedState }) => savedState),
+    on(
+        controlsActions.setSavedStateFromLocalStorage,
+        (_state, { savedState }) => savedState.genericControls,
+    ),
     on(controlsActions.resetControlsToDefault, () => initialState),
     on(controlsActions.searchGraph, (state, { searchText }) => ({ ...state, searchText })),
     on(controlsActions.renderLabels, (state, { value }) => ({ ...state, renderLabels: value })),
