@@ -1,0 +1,1 @@
+export { NodeShader } from './point';
