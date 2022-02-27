@@ -1,31 +1,21 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaxPriorityQueue, MinPriorityQueue } from '@datastructures-js/priority-queue';
+import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
+import { catchError, delay, map, mergeMap, of, tap, throttleTime, withLatestFrom } from 'rxjs';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import {
-    catchError,
-    delay,
-    map,
-    mergeMap,
-    of,
-    switchMap,
-    tap,
-    throttleTime,
-    withLatestFrom,
-} from 'rxjs';
 import * as THREE from 'three';
+import { initialSphereSize } from '../../../constants/mesh-scale.constant';
+import { LndApiServiceService } from '../../../services/lnd-api-service.service';
+import { Chunk } from '../../../types/chunk.interface';
+import { createSpherePoint } from '../../../utils';
 import * as graphActions from '../actions/graph.actions';
-import { GraphState } from '../reducers/graph.reducer';
+import { GraphState } from '../reducer/graph.reducer';
 import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
-import { LndApiServiceService } from '../services/lnd-api-service.service';
-import { Chunk } from '../types/chunk.interface';
-import { createSpherePoint } from '../utils';
-import { initialSphereSize } from '../constants/mesh-scale.constant';
 
 @Injectable()
 export class GraphEffects {

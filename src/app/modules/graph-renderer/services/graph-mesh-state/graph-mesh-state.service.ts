@@ -3,10 +3,16 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, sampleTime, withLatestFrom } from 'rxjs';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { cacheProcessedChannelChunk, cacheProcessedGraphNodeChunk } from '../actions/graph.actions';
-import { meshScale } from '../constants/mesh-scale.constant';
-import { GraphState } from '../reducers/graph.reducer';
-import { capacityFilterAmount, capacityFilterEnable } from '../selectors/controls.selectors';
+import {
+    cacheProcessedChannelChunk,
+    cacheProcessedGraphNodeChunk,
+} from '../../actions/graph.actions';
+import { meshScale } from '../../../../constants/mesh-scale.constant';
+import { GraphState } from '../../reducer/graph.reducer';
+import {
+    capacityFilterAmount,
+    capacityFilterEnable,
+} from '../../../../selectors/controls.selectors';
 import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
@@ -14,8 +20,8 @@ import {
     selectNodeCapacityBuffer,
     selectNodeColorBuffer,
     selectNodeVertexBuffer,
-} from '../selectors/graph.selectors';
-import { BufferRef } from '../types/bufferRef.interface';
+} from '../../selectors/graph.selectors';
+import { BufferRef } from '../../../../types/bufferRef.interface';
 
 @Injectable()
 export class GraphMeshStateService {

@@ -11,7 +11,6 @@ import {
     searchGraph,
     sortOrderChange,
 } from 'src/app/actions/controls.actions';
-import { GraphState } from 'src/app/reducers/graph.reducer';
 import {
     capacityFilterEnable,
     capacityFilterAmount,
@@ -19,11 +18,12 @@ import {
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
 import * as controlActions from '../../actions/controls.actions';
-import {
-    selectFinalMatcheNodesFromSearch,
-    selectNodesSearchResults,
-} from 'src/app/selectors/graph.selectors';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
+import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import {
+    selectNodesSearchResults,
+    selectFinalMatcheNodesFromSearch,
+} from 'src/app/modules/graph-renderer/selectors';
 
 @Component({
     selector: 'app-quick-controls',

@@ -20,13 +20,13 @@ import {
 } from 'atft';
 import { take, TimestampProvider } from 'rxjs';
 import { searchGraph } from 'src/app/actions/controls.actions';
-import { GraphState } from 'src/app/reducers/graph.reducer';
-import { selectClosestPoint } from 'src/app/selectors/graph.selectors';
-import { LndRaycasterService } from 'src/app/services/lnd-raycaster-service';
 import { ToolTipService } from 'src/app/services/tooltip.service';
-import { BasicShader } from 'src/app/shaders';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
+import { GraphState } from '../../reducer';
+import { selectClosestPoint } from '../../selectors';
+import { LndRaycasterService } from '../../services';
+import { BasicShader } from '../../shaders';
 
 @Component({
     selector: 'app-graph-node-mesh',

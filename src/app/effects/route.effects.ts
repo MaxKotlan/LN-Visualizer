@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, map, mergeMap, skip, switchMap, tap, withLatestFrom } from 'rxjs';
-import { GraphState } from '../reducers/graph.reducer';
-import { selectFinalMatcheNodesFromSearch } from '../selectors/graph.selectors';
-import { Location } from '@angular/common';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
 import * as controlsActions from '../actions/controls.actions';
+import { GraphState } from '../modules/graph-renderer/reducer';
+import { selectFinalMatcheNodesFromSearch } from '../modules/graph-renderer/selectors';
 
 @Injectable()
 export class RouteEffects {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
@@ -11,7 +11,6 @@ import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotoNode } from 'src/app/actions/controls.actions';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import { GraphState } from 'src/app/reducers/graph.reducer';
 import {
     selectCameraFov,
     selectEdgeDepthTest,
@@ -25,18 +24,20 @@ import {
     shouldRenderLabels,
     shouldRenderNodes,
 } from 'src/app/selectors/controls.selectors';
-import { selectFinalMatcheNodesFromSearch } from 'src/app/selectors/graph.selectors';
-import { GraphMeshStateService } from 'src/app/services/graph-mesh-state.service';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
+import { GraphState } from '../../reducer';
+import { selectFinalMatcheNodesFromSearch } from '../../selectors';
+import { GraphMeshStateService } from '../../services';
+import * as graphActions from '../../actions';
 
 @Component({
     selector: 'app-graph-scene',
     templateUrl: './graph-scene.component.html',
     styleUrls: ['graph-scene.component.scss'],
 })
-export class GraphSceneComponent implements AfterViewInit {
+export class GraphSceneComponent implements OnInit, AfterViewInit {
     @ViewChild(SceneComponent) scene!: SceneComponent;
     @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
     @ViewChild(OrbitControlsComponent) orbitControlsComponent: OrbitControlsComponent | undefined;
@@ -48,6 +49,10 @@ export class GraphSceneComponent implements AfterViewInit {
         private graphMeshStateService: GraphMeshStateService,
         public toolTipService: ToolTipService,
     ) {}
+
+    ngOnInit(): void {
+        this.store$.dispatch(graphActions.initializeGraphSyncProcess());
+    }
 
     public positions$ = this.graphMeshStateService.nodeVertices$;
     public colors$ = this.graphMeshStateService.nodeColors$;

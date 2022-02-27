@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { searchGraph } from 'src/app/actions/controls.actions';
-import { GraphState } from 'src/app/reducers/graph.reducer';
+import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import {
-    selectFinalMatchAliasFromSearch,
     selectNodesSearchResults,
-} from 'src/app/selectors/graph.selectors';
+    selectFinalMatchAliasFromSearch,
+} from 'src/app/modules/graph-renderer/selectors';
 
 @Component({
     selector: 'app-search',

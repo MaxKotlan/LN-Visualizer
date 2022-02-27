@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as graphActions from '../actions/graph.actions';
-import { LndChannel } from '../types/channels.interface';
+import { LndChannel } from '../../../types/channels.interface';
 
 export interface GraphState {
     chunkInfo: ChunkInfo | null;
