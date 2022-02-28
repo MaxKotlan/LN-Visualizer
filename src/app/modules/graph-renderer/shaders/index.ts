@@ -1,1 +1,2 @@
-export { NodeShader } from './point';
+export { NodeShader } from './node';
+export { ChannelShader } from './channel';

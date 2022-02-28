@@ -3,6 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
+import { ChannelShader } from '../../shaders/channel';
 
 @UntilDestroy()
 @Component({
@@ -45,7 +46,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         if (!this.edgeVertices[1]) return;
         if (!this.edgeVertices[0]) return;
         this.geometry.setAttribute(
-            'color',
+            'customColor',
             new THREE.BufferAttribute(this.edgeVertices[0].bufferRef, 3, true),
         );
         this.geometry.setAttribute(
@@ -53,7 +54,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             new THREE.BufferAttribute(this.edgeVertices[1].bufferRef, 3),
         );
         this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices[1].size : 0);
-        this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['customColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
 
         this.geometry.computeBoundingBox();
@@ -63,18 +64,23 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
 
     protected generateMaterial() {
         const material = this.dashedLines
-            ? new THREE.LineDashedMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
-                  scale: 1,
-                  dashSize: 1,
-                  gapSize: 3,
+            ? new THREE.ShaderMaterial({
+                  //   color: 0xffffff,
+                  //   linewidth: 1,
+                  //   vertexColors: true,
+                  //   scale: 1,
+                  //   dashSize: 1,
+                  //   gapSize: 3,
+                  vertexShader: ChannelShader.vertexShader,
+                  fragmentShader: ChannelShader.fragmentShader,
               })
-            : new THREE.LineBasicMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
+            : new THREE.ShaderMaterial({
+                  //   color: 0xffffff,
+                  //   linewidth: 1,
+                  //   vertexColors: true,
+
+                  vertexShader: ChannelShader.vertexShader,
+                  fragmentShader: ChannelShader.fragmentShader,
               });
 
         material.depthTest = this.depthTest;
