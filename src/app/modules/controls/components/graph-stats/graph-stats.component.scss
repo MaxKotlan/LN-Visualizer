@@ -1,3 +1,6 @@
 :host {
-    color: gray;
+    color: black;
+    -webkit-text-fill-color: lightgray; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 0.01rem;
+    -webkit-text-stroke-color: black;
 }

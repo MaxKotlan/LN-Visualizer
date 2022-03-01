@@ -210,5 +210,5 @@ export const selectMaximumChannelCapacity = createSelector(
 export const selectAverageCapacity = createSelector(
     selectTotalChannelCapacity,
     selectChannelCount,
-    (totalCapacity, channelCount) => totalCapacity / channelCount,
+    (totalCapacity, channelCount) => Math.floor(totalCapacity / channelCount) || 0,
 );
