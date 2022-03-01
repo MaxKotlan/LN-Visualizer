@@ -5,9 +5,10 @@ import { MaterialModule } from '../material';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
+import { ChannelColorDropdownComponent } from './components/channel-color-dropdown/channel-color-dropdown.component';
 
 @NgModule({
-    declarations: [ChannelSettingsComponent],
+    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent],
     imports: [
         CommonModule,
         MaterialModule,
