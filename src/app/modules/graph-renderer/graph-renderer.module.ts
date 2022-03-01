@@ -14,7 +14,7 @@ import {
 } from './directives';
 import { GraphEffects } from './effects';
 import { reducer } from './reducer';
-import { GraphMeshStateService, LndRaycasterService } from './services';
+import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
 
 @NgModule({
     declarations: [
@@ -26,7 +26,7 @@ import { GraphMeshStateService, LndRaycasterService } from './services';
         LndRaycasterCameraDirective,
         LndRaycasterSceneDirective,
     ],
-    providers: [LndRaycasterService, GraphMeshStateService],
+    providers: [LndRaycasterService, GraphMeshStateService, ChannelColorService],
     imports: [
         CommonModule,
         AtftModule,
