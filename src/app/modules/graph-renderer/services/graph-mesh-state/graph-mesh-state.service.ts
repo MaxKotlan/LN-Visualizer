@@ -197,7 +197,7 @@ export class GraphMeshStateService {
                         const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
                         const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
                         if (node1 && node2) {
-                            const color = this.channelColorService.map(node1, node2);
+                            const color = this.channelColorService.map(node1, node2, channel);
 
                             colorBuffer[i * 6] = color[0];
                             colorBuffer[i * 6 + 1] = color[1];

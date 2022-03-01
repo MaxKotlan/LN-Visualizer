@@ -18,6 +18,8 @@ export interface GraphState {
     nodeCount: number;
     channelCount: number;
     loadingText: string;
+    totalChannelCapacity: number;
+    maximumChannelCapacity: number;
 }
 
 const initialState: GraphState = {
@@ -34,6 +36,8 @@ const initialState: GraphState = {
     nodeCount: 0,
     channelCount: 0,
     loadingText: '',
+    totalChannelCapacity: 0,
+    maximumChannelCapacity: 0,
 };
 
 //Allocate 10% extra buffer space for new channels and nodes
@@ -83,5 +87,13 @@ export const reducer = createReducer(
     on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
         channelCount: channelSet.size,
+    })),
+    on(graphActions.setTotalChannelCapacity, (state, { totalChannelCapacity }) => ({
+        ...state,
+        totalChannelCapacity,
+    })),
+    on(graphActions.setMaximumChannelCapacity, (state, { maximumChannelCapacity }) => ({
+        ...state,
+        maximumChannelCapacity,
     })),
 );
