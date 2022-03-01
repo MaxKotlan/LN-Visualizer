@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill">
+    <mat-label>Channel Color Map</mat-label>
+    <mat-select [value]="chanelColorDropDown$ | async" (valueChange)="valueChanged($event)">
+        <mat-option value="channel-capacity">Channel Capacity</mat-option>
+        <mat-option value="interpolate-node-color">Interpolate Node Color</mat-option>
+        <mat-option disabled value="interpolate-node-average-capacity"
+            >Interpolate Node Average Capacity</mat-option
+        >
+        <mat-option disabled value="interpolate-node-total-capacity"
+            >Interpolate Node Total Capacity</mat-option
+        >
+    </mat-select>
+</mat-form-field>

@@ -9,6 +9,7 @@ export interface ChannelControlState {
     edgeDottedLine: boolean;
     capacityFilterEnable: boolean;
     capacityFilterAmount: number;
+    channelColor: string;
 }
 
 const initialState: ChannelControlState = {
@@ -18,6 +19,7 @@ const initialState: ChannelControlState = {
     edgeDottedLine: false,
     capacityFilterEnable: false,
     capacityFilterAmount: 8000000,
+    channelColor: 'channel-capacity',
 };
 
 export const reducer = createReducer(
@@ -52,5 +54,9 @@ export const reducer = createReducer(
     on(channelControlsActions.capacityFilterAmount, (state, { value }) => ({
         ...state,
         capacityFilterAmount: value,
+    })),
+    on(channelControlsActions.setChannelColor, (state, { value }) => ({
+        ...state,
+        channelColor: value,
     })),
 );

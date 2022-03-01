@@ -22,3 +22,8 @@ export const capacityFilterAmount = createAction(
     '[controls] capacityFilterAmount',
     props<{ value: number }>(),
 );
+
+export const setChannelColor = createAction(
+    '[controls] setChannelColor',
+    props<{ value: string }>(),
+);

@@ -196,3 +196,19 @@ export const selectClosestPoint = (point: THREE.Vector3) =>
         if (minDistanceIndex === null) return;
         return nodeSetValue.get(minDistanceIndex);
     });
+
+export const selectTotalChannelCapacity = createSelector(
+    graphSelector,
+    (state) => state.totalChannelCapacity,
+);
+
+export const selectMaximumChannelCapacity = createSelector(
+    graphSelector,
+    (state) => state.maximumChannelCapacity,
+);
+
+export const selectAverageCapacity = createSelector(
+    selectTotalChannelCapacity,
+    selectChannelCount,
+    (totalCapacity, channelCount) => totalCapacity / channelCount,
+);

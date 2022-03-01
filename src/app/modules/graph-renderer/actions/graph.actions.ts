@@ -61,6 +61,16 @@ export const processChunkInfo = createAction(
     props<{ chunkInfo: ChunkInfo }>(),
 );
 
+export const setTotalChannelCapacity = createAction(
+    '[graph] setTotalChannelCapacity',
+    props<{ totalChannelCapacity: number }>(),
+);
+
+export const setMaximumChannelCapacity = createAction(
+    '[graph] setMaximumChannelCapacity',
+    props<{ maximumChannelCapacity: number }>(),
+);
+
 export const errorUnknownChunkDataType = createAction('[graph] errorUnknownChunkDataType');
 
 export const channelClosed = createAction('[graph] channelClosed', props<{ channelId: string }>());

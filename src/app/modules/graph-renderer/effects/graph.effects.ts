@@ -6,7 +6,17 @@ import { Store } from '@ngrx/store';
 import { LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { catchError, delay, map, mergeMap, of, tap, throttleTime, withLatestFrom } from 'rxjs';
+import {
+    catchError,
+    delay,
+    from,
+    map,
+    mergeMap,
+    of,
+    tap,
+    throttleTime,
+    withLatestFrom,
+} from 'rxjs';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as THREE from 'three';
 import { initialSphereSize } from '../../../constants/mesh-scale.constant';
@@ -15,7 +25,12 @@ import { Chunk } from '../../../types/chunk.interface';
 import { createSpherePoint } from '../utils';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer/graph.reducer';
-import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
+import {
+    selectChannelSetKeyValue,
+    selectMaximumChannelCapacity,
+    selectNodeSetKeyValue,
+    selectTotalChannelCapacity,
+} from '../selectors/graph.selectors';
 
 @Injectable()
 export class GraphEffects {
@@ -388,18 +403,40 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateChannelChunk),
-                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
-                map(([action, channelState]) => {
+                withLatestFrom(
+                    this.store$.select(selectChannelSetKeyValue),
+                    this.store$.select(selectTotalChannelCapacity),
+                    this.store$.select(selectMaximumChannelCapacity),
+                ),
+                mergeMap(([action, channelState, currentTotalCapacity, maximumChannelCapacity]) => {
                     // const res = channelState.reduce((acc, chnl) => {
                     //     acc[chnl.id] = chnl;
                     //     return acc;
                     // }, action.channelSubSet);
+
+                    let newTotalCapacity = currentTotalCapacity;
+                    let currentMaxChannelCap = maximumChannelCapacity;
+
                     action.channelSubSet.forEach((channel) => {
+                        newTotalCapacity += channel.capacity;
+
+                        if (channel.capacity > currentMaxChannelCap)
+                            currentMaxChannelCap = channel.capacity;
+
                         channelState.set(channel.id, channel);
                     });
-                    return graphActions.cacheProcessedChannelChunk({
-                        channelSet: channelState,
-                    });
+
+                    return from([
+                        graphActions.cacheProcessedChannelChunk({
+                            channelSet: channelState,
+                        }),
+                        graphActions.setTotalChannelCapacity({
+                            totalChannelCapacity: newTotalCapacity,
+                        }),
+                        graphActions.setMaximumChannelCapacity({
+                            maximumChannelCapacity: currentMaxChannelCap,
+                        }),
+                    ]);
                 }),
             ),
         { dispatch: true },

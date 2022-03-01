@@ -27,3 +27,5 @@ export const capacityFilterEnable = createSelector(
     channelControlsSelector,
     (state) => state.capacityFilterEnable,
 );
+
+export const channelColor = createSelector(channelControlsSelector, (state) => state.channelColor);
