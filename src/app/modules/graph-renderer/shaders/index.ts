@@ -1,1 +1,1 @@
-export { NodeShader } from './point';
+export { NodeShader } from './nodeShader';
