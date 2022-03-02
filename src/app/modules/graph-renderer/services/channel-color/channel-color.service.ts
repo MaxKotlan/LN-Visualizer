@@ -7,6 +7,8 @@ import { LndChannel } from 'src/app/types/channels.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectAverageCapacity, selectMaximumChannelCapacity } from '../../selectors';
 
+let colormap = require('colormap');
+
 @UntilDestroy()
 @Injectable({
     providedIn: 'root',
@@ -27,7 +29,21 @@ export class ChannelColorService {
             .select(selectMaximumChannelCapacity)
             .pipe(untilDestroyed(this))
             .subscribe((maximumCap) => (this.maximumChannelCapacity = maximumCap));
+
+        let colors = colormap({
+            colormap: 'jet',
+            nshades: 500,
+            format: 'hex',
+            alpha: 1,
+        });
+        // console.log(colors);
+
+        this.colorArray = colors.map((s) => this.fromHexString(s));
+        // console.log(this.colorArray);
     }
+
+    private colors: string[];
+    private colorArray: number[][];
 
     private maximumChannelCapacity: number;
     private networkAverageCapacity: number;
@@ -43,12 +59,20 @@ export class ChannelColorService {
         channel: LndChannel,
     ) {
         if (this.channelColorCache === 'channel-capacity') {
-            // const normalizedCap = Math.log10(
-            //     (channel.capacity + 1) / (this.maximumChannelCapacity + 1),
-            // );
-            const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toByte = normalizedCap * 255;
-            return [255 - toByte, toByte, 0, 255 - toByte, toByte, 0];
+            const linearCap = channel.capacity / this.maximumChannelCapacity;
+            const logCap =
+                Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
+            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
+            const toColorIndex = Math.round(logCap * 499);
+            // console.log(toColorIndex);
+
+            // if (normalizedCap < 2) console.log(normalizedCap);
+            // console.log(toColorIndex);
+            // console.log(toColorIndex);
+
+            return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
+
+            //return [255 - toByte, toByte, 0, 255 - toByte, toByte, 0];
         }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];
