@@ -2,8 +2,18 @@ import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
 import { GenericControlsState } from '../../../controls/reducers';
-import { renderEdges, setEdgeUseDepthTest, setEdgeUseDottedLine } from '../../actions';
-import { shouldRenderEdges, selectEdgeDepthTest, selectEdgeDottedLine } from '../../selectors';
+import {
+    renderEdges,
+    setEdgeUseDepthTest,
+    setEdgeUseDottedLine,
+    useLogColorScale,
+} from '../../actions';
+import {
+    shouldRenderEdges,
+    selectEdgeDepthTest,
+    selectEdgeDottedLine,
+    selectUseLogColorScale,
+} from '../../selectors';
 
 @Component({
     selector: 'app-channel-settings',
@@ -16,6 +26,7 @@ export class ChannelSettingsComponent {
     public shouldRenderEdges$ = this.store.select(shouldRenderEdges);
     public selectEdgeDepthTest$ = this.store.select(selectEdgeDepthTest);
     public selectEdgeDottedLine$ = this.store.select(selectEdgeDottedLine);
+    public selectUseLogColorScale$ = this.store.select(selectUseLogColorScale);
 
     setShouldRenderEdges(event: MatCheckboxChange) {
         this.store.dispatch(renderEdges({ value: event.checked }));
@@ -27,5 +38,9 @@ export class ChannelSettingsComponent {
 
     setDottedLines(event: MatCheckboxChange) {
         this.store.dispatch(setEdgeUseDottedLine({ value: event.checked }));
+    }
+
+    setUseLogColorScale(event: MatCheckboxChange) {
+        this.store.dispatch(useLogColorScale({ value: event.checked }));
     }
 }

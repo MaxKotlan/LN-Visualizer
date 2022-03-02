@@ -3,7 +3,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
 import { ChannelControlState } from 'src/app/modules/controls-channel/reducers';
-import { channelColor, channelColorMapRgb } from 'src/app/modules/controls-channel/selectors';
+import {
+    channelColor,
+    channelColorMapRgb,
+    selectUseLogColorScale,
+} from 'src/app/modules/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectAverageCapacity, selectMaximumChannelCapacity } from '../../selectors';
@@ -36,6 +40,11 @@ export class ChannelColorService {
             .pipe(untilDestroyed(this))
             .subscribe((arr) => (this.colorArray = arr));
 
+        this.store$
+            .select(selectUseLogColorScale)
+            .pipe(untilDestroyed(this))
+            .subscribe((ulcs) => (this.useLogColorScale = ulcs));
+
         // let colors = colormap({
         //     colormap: 'jet',
         //     nshades: 500,
@@ -55,6 +64,8 @@ export class ChannelColorService {
     private networkAverageCapacity: number;
     private channelColorCache: string;
 
+    private useLogColorScale: boolean;
+
     public map(node1: LndNodeWithPosition, node2: LndNodeWithPosition, channel: LndChannel) {
         return this.algorithmSelector(node1, node2, channel);
     }
@@ -65,13 +76,17 @@ export class ChannelColorService {
         channel: LndChannel,
     ) {
         if (this.channelColorCache === 'channel-capacity') {
-            const linearCap = channel.capacity / this.maximumChannelCapacity;
-            const logCap =
-                Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
+            let normalizedValue;
 
-            if (logCap > 1) return [255, 255, 255, 255, 255, 255];
+            if (this.useLogColorScale) {
+                normalizedValue =
+                    Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
+            } else {
+                normalizedValue = channel.capacity / this.maximumChannelCapacity;
+            }
+            if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndex = Math.round(logCap * 499);
+            const toColorIndex = Math.round(normalizedValue * 499);
             // console.log(toColorIndex);
 
             // if (normalizedCap < 2) console.log(normalizedCap);
