@@ -27,3 +27,8 @@ export const setChannelColor = createAction(
     '[controls] setChannelColor',
     props<{ value: string }>(),
 );
+
+export const setChannelColorMap = createAction(
+    '[controls] setChannelColorMap',
+    props<{ value: string }>(),
+);

@@ -54,6 +54,7 @@
         "@types/node": "^12.20.42",
         "@types/seedrandom": "^3.0.1",
         "@types/three": "^0.132.2",
+        "@types/colormap": "^2.3.1",
         "@typescript-eslint/eslint-plugin": "5.3.0",
         "@typescript-eslint/parser": "5.3.0",
         "eslint": "^8.2.0",
