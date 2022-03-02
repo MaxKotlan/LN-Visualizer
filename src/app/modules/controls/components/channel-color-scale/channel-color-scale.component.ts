@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { channelColorMap } from 'src/app/modules/controls-channel/selectors';
+import { combineLatest } from 'rxjs';
+import {
+    channelColorMap,
+    selectUseLogColorScale,
+} from 'src/app/modules/controls-channel/selectors';
 import { selectMaximumChannelCapacity } from 'src/app/modules/graph-renderer/selectors';
 import { ControlsState } from '../../types';
 const colormap = require('colormap');
@@ -15,6 +19,7 @@ export class ChannelColorScaleComponent implements OnInit {
 
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
     public maxCapacity$ = this.store$.select(selectMaximumChannelCapacity);
+    public isLogScale$ = this.store$.select(selectUseLogColorScale);
 
     public currentColorMapHex: string[];
     public backgrounColor: string;
@@ -36,10 +41,17 @@ export class ChannelColorScaleComponent implements OnInit {
                 ');';
         });
 
-        this.maxCapacity$.subscribe((max) => {
+        combineLatest(this.maxCapacity$, this.isLogScale$).subscribe(([max, isLogScale]) => {
             this.divisions = [];
             for (let i = 0; i < this.slices - 1; i++) {
-                this.divisions.push(Math.floor(max / (i + 1)));
+                let computed;
+                if (isLogScale) {
+                    computed = Math.floor(Math.log10(max / (10 * i + 1)));
+                } else {
+                    computed = Math.floor(max / (i + 1));
+                }
+
+                this.divisions.push(computed);
             }
             this.divisions.push(0);
         });
