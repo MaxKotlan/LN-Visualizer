@@ -80,7 +80,7 @@ export class ChannelColorService {
 
             if (this.useLogColorScale) {
                 normalizedValue =
-                    Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
+                    Math.log10(channel.capacity) / Math.log10(this.maximumChannelCapacity);
             } else {
                 normalizedValue = channel.capacity / this.maximumChannelCapacity;
             }

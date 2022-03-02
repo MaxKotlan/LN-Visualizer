@@ -26,12 +26,13 @@ export class ChannelColorScaleComponent implements OnInit {
     public divisions: number[];
 
     public slices: number = 10;
+    public shades: number = 20;
 
     ngOnInit(): void {
         this.currentChannelMapColor$.subscribe((mapName) => {
             this.currentColorMapHex = colormap({
                 colormap: mapName,
-                nshades: this.slices,
+                nshades: this.shades,
                 format: 'hex',
                 alpha: 1,
             });
