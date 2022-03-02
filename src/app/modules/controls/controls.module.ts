@@ -20,6 +20,7 @@ import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
 import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
+import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
         CameraSettingsComponent,
         MiscSettingsComponent,
         TooltipComponent,
+        ChannelColorScaleComponent,
     ],
     imports: [
         CommonModule,
@@ -54,6 +56,7 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
         NodeSettingsComponent,
         MiscSettingsComponent,
         TooltipComponent,
+        ChannelColorScaleComponent,
     ],
 })
 export class ControlsModule {}

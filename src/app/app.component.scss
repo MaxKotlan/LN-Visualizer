@@ -28,3 +28,11 @@ app-tooltip {
     right: 0;
     z-index: 1000;
 }
+
+app-channel-color-scale {
+    position: fixed;
+    top: 50%;
+    left: 10px;
+    z-index: 1000;
+    transform: translateY(-50%);
+}

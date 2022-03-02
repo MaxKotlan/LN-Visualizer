@@ -1,0 +1,19 @@
+:host {
+    color: black;
+    -webkit-text-fill-color: lightgray; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 0.01rem;
+    -webkit-text-stroke-color: black;
+}
+
+mat-card {
+    height: 30rem;
+    width: 1rem !important;
+    padding: 0;
+}
+
+.numberScale {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 4px;
+}
