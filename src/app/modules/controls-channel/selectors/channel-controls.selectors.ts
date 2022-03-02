@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+let colormap = require('colormap');
 import { ChannelControlState } from '../reducers';
 
 export const channelControlsSelector =
@@ -29,3 +30,24 @@ export const capacityFilterEnable = createSelector(
 );
 
 export const channelColor = createSelector(channelControlsSelector, (state) => state.channelColor);
+
+export const channelColorMap = createSelector(
+    channelControlsSelector,
+    (state) => state.channelColorMap,
+);
+
+export const channelColorMapRgb = createSelector(channelColorMap, (color) => {
+    const hexarr = colormap({
+        colormap: color,
+        nshades: 500,
+        format: 'hex',
+        alpha: 1,
+    });
+    return hexarr.map(fromHexString);
+});
+
+const fromHexString = (hexString: string) => [
+    parseInt(hexString[1] + hexString[2], 16),
+    parseInt(hexString[3] + hexString[4], 16),
+    parseInt(hexString[5] + hexString[6], 16),
+];

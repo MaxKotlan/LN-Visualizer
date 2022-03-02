@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { tap } from 'rxjs';
 import { ChannelControlState } from 'src/app/modules/controls-channel/reducers';
-import { channelColor } from 'src/app/modules/controls-channel/selectors';
+import { channelColor, channelColorMapRgb } from 'src/app/modules/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectAverageCapacity, selectMaximumChannelCapacity } from '../../selectors';
@@ -30,15 +31,20 @@ export class ChannelColorService {
             .pipe(untilDestroyed(this))
             .subscribe((maximumCap) => (this.maximumChannelCapacity = maximumCap));
 
-        let colors = colormap({
-            colormap: 'jet',
-            nshades: 500,
-            format: 'hex',
-            alpha: 1,
-        });
+        this.store$
+            .select(channelColorMapRgb)
+            .pipe(untilDestroyed(this))
+            .subscribe((arr) => (this.colorArray = arr));
+
+        // let colors = colormap({
+        //     colormap: 'jet',
+        //     nshades: 500,
+        //     format: 'hex',
+        //     alpha: 1,
+        // });
         // console.log(colors);
 
-        this.colorArray = colors.map((s) => this.fromHexString(s));
+        //this.colorArray = colors.map((s) => this.fromHexString(s));
         // console.log(this.colorArray);
     }
 
@@ -62,6 +68,8 @@ export class ChannelColorService {
             const linearCap = channel.capacity / this.maximumChannelCapacity;
             const logCap =
                 Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
+
+            if (logCap > 1) return [255, 255, 255, 255, 255, 255];
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
             const toColorIndex = Math.round(logCap * 499);
             // console.log(toColorIndex);

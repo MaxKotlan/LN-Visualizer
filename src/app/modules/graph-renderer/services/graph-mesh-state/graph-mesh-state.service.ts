@@ -22,6 +22,8 @@ import {
     capacityFilterAmount,
     capacityFilterEnable,
     channelColor,
+    channelColorMap,
+    channelColorMapRgb,
 } from 'src/app/modules/controls-channel/selectors';
 import { ChannelColorService } from '../channel-color';
 
@@ -172,6 +174,7 @@ export class GraphMeshStateService {
         this.store$.select(capacityFilterEnable),
         this.store$.select(capacityFilterAmount),
         this.store$.select(channelColor),
+        this.store$.select(channelColorMap),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
         map(
