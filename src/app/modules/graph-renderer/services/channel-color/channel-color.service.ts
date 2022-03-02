@@ -31,15 +31,15 @@ export class ChannelColorService {
             .subscribe((maximumCap) => (this.maximumChannelCapacity = maximumCap));
 
         let colors = colormap({
-            colormap: 'viridis',
-            nshades: 100,
+            colormap: 'jet',
+            nshades: 500,
             format: 'hex',
             alpha: 1,
         });
-        console.log(colors);
+        // console.log(colors);
 
         this.colorArray = colors.map((s) => this.fromHexString(s));
-        console.log(this.colorArray);
+        // console.log(this.colorArray);
     }
 
     private colors: string[];
@@ -63,7 +63,7 @@ export class ChannelColorService {
             const logCap =
                 Math.log10(channel.capacity + 1) / Math.log10(this.maximumChannelCapacity + 1);
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndex = Math.round(logCap * 99);
+            const toColorIndex = Math.round(logCap * 499);
             // console.log(toColorIndex);
 
             // if (normalizedCap < 2) console.log(normalizedCap);

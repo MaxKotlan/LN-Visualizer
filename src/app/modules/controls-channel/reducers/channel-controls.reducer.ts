@@ -19,7 +19,7 @@ const initialState: ChannelControlState = {
     edgeDottedLine: false,
     capacityFilterEnable: false,
     capacityFilterAmount: 8000000,
-    channelColor: 'interpolate-node-color',
+    channelColor: 'channel-capacity',
 };
 
 export const reducer = createReducer(
