@@ -32,3 +32,8 @@ export const setChannelColorMap = createAction(
     '[controls] setChannelColorMap',
     props<{ value: string }>(),
 );
+
+export const useLogColorScale = createAction(
+    '[controls] useLogColorScale',
+    props<{ value: boolean }>(),
+);

@@ -51,3 +51,8 @@ const fromHexString = (hexString: string) => [
     parseInt(hexString[3] + hexString[4], 16),
     parseInt(hexString[5] + hexString[6], 16),
 ];
+
+export const selectUseLogColorScale = createSelector(
+    channelControlsSelector,
+    (state) => state.useLogColorScale,
+);
