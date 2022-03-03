@@ -56,11 +56,11 @@ export class ChannelColorScaleComponent implements OnInit {
                     if (isLogScale) {
                         const maxLogScale = Math.log10(max);
                         const maxMinLogScale = Math.log10(max - min);
-                        const difference = maxMinLogScale / 10;
+                        const difference = maxMinLogScale / this.slices;
                         const log = maxLogScale - i * difference;
                         computed = Math.round(Math.pow(10, log)) || 0;
                     } else {
-                        const difference = (max - min) / 10;
+                        const difference = (max - min) / this.slices;
                         computed = max - i * difference;
                     }
 
