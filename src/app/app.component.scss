@@ -31,8 +31,9 @@ app-tooltip {
 
 app-channel-color-scale {
     position: fixed;
-    top: 50%;
+    //top: 50%;
+    bottom: 30px;
     left: 10px;
     z-index: 1000;
-    transform: translateY(-50%);
+    //transform: translateY(-50%);
 }

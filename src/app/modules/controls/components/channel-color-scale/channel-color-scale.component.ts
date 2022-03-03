@@ -44,12 +44,16 @@ export class ChannelColorScaleComponent implements OnInit {
 
         combineLatest(this.maxCapacity$, this.isLogScale$).subscribe(([max, isLogScale]) => {
             this.divisions = [];
-            for (let i = 0; i < this.slices - 1; i++) {
+            for (let i = 0; i < this.slices; i++) {
                 let computed;
                 if (isLogScale) {
-                    computed = Math.floor(Math.log10(max / (10 * i + 1)));
+                    const maxLogScale = Math.log10(max);
+                    const difference = maxLogScale / 10;
+                    const log = maxLogScale - i * difference;
+                    computed = Math.round(Math.pow(10, log)) || 0;
                 } else {
-                    computed = Math.floor(max / (i + 1));
+                    const difference = max / 10;
+                    computed = max - i * difference;
                 }
 
                 this.divisions.push(computed);
