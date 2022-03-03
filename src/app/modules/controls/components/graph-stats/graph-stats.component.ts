@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import * as graphSelectors from '../../../graph-renderer/selectors';
 
 @Component({
@@ -11,6 +11,9 @@ import * as graphSelectors from '../../../graph-renderer/selectors';
 export class GraphStatsComponent {
     constructor(private store: Store) {}
 
+    public minimumCapacity$: Observable<number> = this.store
+        .select(graphSelectors.selectMinimumChannelCapacity)
+        .pipe(map((c) => (c === Infinity ? 0 : c)));
     public maximumCapacity$: Observable<number> = this.store.select(
         graphSelectors.selectMaximumChannelCapacity,
     );
