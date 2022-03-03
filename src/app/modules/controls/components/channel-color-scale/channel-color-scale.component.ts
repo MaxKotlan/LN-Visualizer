@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import {
     channelColorMap,
     selectUseLogColorScale,
@@ -21,7 +21,9 @@ export class ChannelColorScaleComponent implements OnInit {
     constructor(private store$: Store<ControlsState>) {}
 
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
-    public minCapacity$ = this.store$.select(selectMinimumChannelCapacity);
+    public minCapacity$ = this.store$
+        .select(selectMinimumChannelCapacity)
+        .pipe(map((c) => (c === Infinity ? 0 : c)));
     public maxCapacity$ = this.store$.select(selectMaximumChannelCapacity);
     public isLogScale$ = this.store$.select(selectUseLogColorScale);
 
