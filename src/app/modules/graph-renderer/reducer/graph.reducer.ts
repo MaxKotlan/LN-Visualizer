@@ -20,6 +20,7 @@ export interface GraphState {
     loadingText: string;
     totalChannelCapacity: number;
     maximumChannelCapacity: number;
+    minimumChannelCapacity: number;
 }
 
 const initialState: GraphState = {
@@ -38,6 +39,7 @@ const initialState: GraphState = {
     loadingText: '',
     totalChannelCapacity: 0,
     maximumChannelCapacity: 0,
+    minimumChannelCapacity: Infinity,
 };
 
 //Allocate 10% extra buffer space for new channels and nodes
@@ -95,5 +97,9 @@ export const reducer = createReducer(
     on(graphActions.setMaximumChannelCapacity, (state, { maximumChannelCapacity }) => ({
         ...state,
         maximumChannelCapacity,
+    })),
+    on(graphActions.setMinimumChannelCapacity, (state, { minimumChannelCapacity }) => ({
+        ...state,
+        minimumChannelCapacity,
     })),
 );

@@ -28,6 +28,7 @@ import { GraphState } from '../reducer/graph.reducer';
 import {
     selectChannelSetKeyValue,
     selectMaximumChannelCapacity,
+    selectMinimumChannelCapacity,
     selectNodeSetKeyValue,
     selectTotalChannelCapacity,
 } from '../selectors/graph.selectors';
@@ -407,37 +408,52 @@ export class GraphEffects {
                     this.store$.select(selectChannelSetKeyValue),
                     this.store$.select(selectTotalChannelCapacity),
                     this.store$.select(selectMaximumChannelCapacity),
+                    this.store$.select(selectMinimumChannelCapacity),
                 ),
-                mergeMap(([action, channelState, currentTotalCapacity, maximumChannelCapacity]) => {
-                    // const res = channelState.reduce((acc, chnl) => {
-                    //     acc[chnl.id] = chnl;
-                    //     return acc;
-                    // }, action.channelSubSet);
+                mergeMap(
+                    ([
+                        action,
+                        channelState,
+                        currentTotalCapacity,
+                        maximumChannelCapacity,
+                        minimumChannelCapacity,
+                    ]) => {
+                        // const res = channelState.reduce((acc, chnl) => {
+                        //     acc[chnl.id] = chnl;
+                        //     return acc;
+                        // }, action.channelSubSet);
 
-                    let newTotalCapacity = currentTotalCapacity;
-                    let currentMaxChannelCap = maximumChannelCapacity;
+                        let newTotalCapacity = currentTotalCapacity;
+                        let currentMaxChannelCap = maximumChannelCapacity;
+                        let currentMinimumChannelCap = minimumChannelCapacity;
 
-                    action.channelSubSet.forEach((channel) => {
-                        newTotalCapacity += channel.capacity;
+                        action.channelSubSet.forEach((channel) => {
+                            newTotalCapacity += channel.capacity;
 
-                        if (channel.capacity > currentMaxChannelCap)
-                            currentMaxChannelCap = channel.capacity;
+                            if (channel.capacity > currentMaxChannelCap)
+                                currentMaxChannelCap = channel.capacity;
+                            if (channel.capacity < currentMinimumChannelCap)
+                                currentMinimumChannelCap = channel.capacity;
 
-                        channelState.set(channel.id, channel);
-                    });
+                            channelState.set(channel.id, channel);
+                        });
 
-                    return from([
-                        graphActions.cacheProcessedChannelChunk({
-                            channelSet: channelState,
-                        }),
-                        graphActions.setTotalChannelCapacity({
-                            totalChannelCapacity: newTotalCapacity,
-                        }),
-                        graphActions.setMaximumChannelCapacity({
-                            maximumChannelCapacity: currentMaxChannelCap,
-                        }),
-                    ]);
-                }),
+                        return from([
+                            graphActions.cacheProcessedChannelChunk({
+                                channelSet: channelState,
+                            }),
+                            graphActions.setTotalChannelCapacity({
+                                totalChannelCapacity: newTotalCapacity,
+                            }),
+                            graphActions.setMaximumChannelCapacity({
+                                maximumChannelCapacity: currentMaxChannelCap,
+                            }),
+                            graphActions.setMinimumChannelCapacity({
+                                minimumChannelCapacity: currentMinimumChannelCap,
+                            }),
+                        ]);
+                    },
+                ),
             ),
         { dispatch: true },
     );

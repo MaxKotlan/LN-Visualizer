@@ -207,6 +207,11 @@ export const selectMaximumChannelCapacity = createSelector(
     (state) => state.maximumChannelCapacity,
 );
 
+export const selectMinimumChannelCapacity = createSelector(
+    graphSelector,
+    (state) => state.minimumChannelCapacity,
+);
+
 export const selectAverageCapacity = createSelector(
     selectTotalChannelCapacity,
     selectChannelCount,
