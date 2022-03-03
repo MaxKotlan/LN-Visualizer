@@ -47,9 +47,10 @@ export class ChannelColorScaleComponent implements OnInit {
             for (let i = 0; i < this.slices; i++) {
                 let computed;
                 if (isLogScale) {
-                    const difference = max / 10;
-                    const linear = max - i * difference;
-                    computed = linear; // max / (i * Math.log10(max + 1)); //Math.log10(computed);
+                    const maxLogScale = Math.log10(max);
+                    const difference = maxLogScale / 10;
+                    const log = maxLogScale - i * difference;
+                    computed = Math.round(Math.pow(10, log)) || 0;
                 } else {
                     const difference = max / 10;
                     computed = max - i * difference;
