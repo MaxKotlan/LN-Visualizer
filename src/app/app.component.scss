@@ -20,6 +20,7 @@ app-graph-stats {
     right: 0;
     z-index: 100;
     width: 250px;
+    pointer-events: none;
 }
 
 app-tooltip {
@@ -35,5 +36,6 @@ app-channel-color-scale {
     bottom: 30px;
     left: 10px;
     z-index: 1000;
+    pointer-events: none;
     //transform: translateY(-50%);
 }

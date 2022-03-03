@@ -5,7 +5,10 @@ import {
     channelColorMap,
     selectUseLogColorScale,
 } from 'src/app/modules/controls-channel/selectors';
-import { selectMaximumChannelCapacity } from 'src/app/modules/graph-renderer/selectors';
+import {
+    selectMaximumChannelCapacity,
+    selectMinimumChannelCapacity,
+} from 'src/app/modules/graph-renderer/selectors';
 import { ControlsState } from '../../types';
 const colormap = require('colormap');
 
@@ -18,6 +21,7 @@ export class ChannelColorScaleComponent implements OnInit {
     constructor(private store$: Store<ControlsState>) {}
 
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
+    public minCapacity$ = this.store$.select(selectMinimumChannelCapacity);
     public maxCapacity$ = this.store$.select(selectMaximumChannelCapacity);
     public isLogScale$ = this.store$.select(selectUseLogColorScale);
 
@@ -42,23 +46,25 @@ export class ChannelColorScaleComponent implements OnInit {
                 ');';
         });
 
-        combineLatest(this.maxCapacity$, this.isLogScale$).subscribe(([max, isLogScale]) => {
-            this.divisions = [];
-            for (let i = 0; i < this.slices; i++) {
-                let computed;
-                if (isLogScale) {
-                    const maxLogScale = Math.log10(max);
-                    const difference = maxLogScale / 10;
-                    const log = maxLogScale - i * difference;
-                    computed = Math.round(Math.pow(10, log)) || 0;
-                } else {
-                    const difference = max / 10;
-                    computed = max - i * difference;
-                }
+        combineLatest(this.minCapacity$, this.maxCapacity$, this.isLogScale$).subscribe(
+            ([min, max, isLogScale]) => {
+                this.divisions = [];
+                for (let i = 0; i < this.slices + 1; i++) {
+                    let computed;
+                    if (isLogScale) {
+                        const maxLogScale = Math.log10(max);
+                        const maxMinLogScale = Math.log10(max - min);
+                        const difference = maxMinLogScale / 10;
+                        const log = maxLogScale - i * difference;
+                        computed = Math.round(Math.pow(10, log)) || 0;
+                    } else {
+                        const difference = (max - min) / 10;
+                        computed = max - i * difference;
+                    }
 
-                this.divisions.push(computed);
-            }
-            this.divisions.push(0);
-        });
+                    this.divisions.push(computed);
+                }
+            },
+        );
     }
 }

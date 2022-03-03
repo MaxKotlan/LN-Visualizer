@@ -10,7 +10,11 @@ import {
 } from 'src/app/modules/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { selectAverageCapacity, selectMaximumChannelCapacity } from '../../selectors';
+import {
+    selectAverageCapacity,
+    selectMaximumChannelCapacity,
+    selectMinimumChannelCapacity,
+} from '../../selectors';
 
 let colormap = require('colormap');
 
@@ -34,6 +38,11 @@ export class ChannelColorService {
             .select(selectMaximumChannelCapacity)
             .pipe(untilDestroyed(this))
             .subscribe((maximumCap) => (this.maximumChannelCapacity = maximumCap));
+
+        this.store$
+            .select(selectMinimumChannelCapacity)
+            .pipe(untilDestroyed(this))
+            .subscribe((minCap) => (this.minimumChannelCapacity = minCap));
 
         this.store$
             .select(channelColorMapRgb)
@@ -60,6 +69,7 @@ export class ChannelColorService {
     private colors: string[];
     private colorArray: number[][];
 
+    private minimumChannelCapacity: number;
     private maximumChannelCapacity: number;
     private networkAverageCapacity: number;
     private channelColorCache: string;
@@ -80,9 +90,12 @@ export class ChannelColorService {
 
             if (this.useLogColorScale) {
                 normalizedValue =
-                    Math.log10(channel.capacity) / Math.log10(this.maximumChannelCapacity);
+                    Math.log10(channel.capacity - this.minimumChannelCapacity) /
+                    Math.log10(this.maximumChannelCapacity - this.minimumChannelCapacity);
             } else {
-                normalizedValue = channel.capacity / this.maximumChannelCapacity;
+                normalizedValue =
+                    (channel.capacity - this.minimumChannelCapacity) /
+                    (this.maximumChannelCapacity - this.minimumChannelCapacity);
             }
             if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
