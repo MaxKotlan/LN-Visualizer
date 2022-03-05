@@ -135,8 +135,8 @@ export class ChannelColorService {
                 const result = [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
                 return result;
             } catch (e) {
+                console.log(channel, e);
                 return [255, 255, 255, 255, 255, 255];
-                //console.log(channel, e);
             }
         }
         if (this.channelColorCache === 'interpolate-node-color') {
