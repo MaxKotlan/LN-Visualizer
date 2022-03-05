@@ -9,12 +9,14 @@ import {
     selectUseLogColorScale,
 } from 'src/app/modules/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import {
     selectAverageCapacity,
     selectMaximumChannelCapacity,
     selectMinimumChannelCapacity,
 } from '../../selectors';
+import { selectChannelMinMaxTotal } from '../../selectors/graph-statistics.selectors';
 
 let colormap = require('colormap');
 
@@ -30,19 +32,9 @@ export class ChannelColorService {
             .subscribe((channelColor) => (this.channelColorCache = channelColor));
 
         this.store$
-            .select(selectAverageCapacity)
+            .select(selectChannelMinMaxTotal)
             .pipe(untilDestroyed(this))
-            .subscribe((averageCap) => (this.networkAverageCapacity = averageCap));
-
-        this.store$
-            .select(selectMaximumChannelCapacity)
-            .pipe(untilDestroyed(this))
-            .subscribe((maximumCap) => (this.maximumChannelCapacity = maximumCap));
-
-        this.store$
-            .select(selectMinimumChannelCapacity)
-            .pipe(untilDestroyed(this))
-            .subscribe((minCap) => (this.minimumChannelCapacity = minCap));
+            .subscribe((minMax) => (this.minMaxCap = minMax));
 
         this.store$
             .select(channelColorMapRgb)
@@ -69,9 +61,7 @@ export class ChannelColorService {
     private colors: string[];
     private colorArray: number[][];
 
-    private minimumChannelCapacity: number;
-    private maximumChannelCapacity: number;
-    private networkAverageCapacity: number;
+    private minMaxCap: MinMaxTotal;
     private channelColorCache: string;
 
     private useLogColorScale: boolean;
@@ -90,12 +80,12 @@ export class ChannelColorService {
 
             if (this.useLogColorScale) {
                 normalizedValue =
-                    Math.log10(channel.capacity - this.minimumChannelCapacity) /
-                    Math.log10(this.maximumChannelCapacity - this.minimumChannelCapacity);
+                    Math.log10(channel.capacity - this.minMaxCap.min) /
+                    Math.log10(this.minMaxCap.max - this.minMaxCap.min);
             } else {
                 normalizedValue =
-                    (channel.capacity - this.minimumChannelCapacity) /
-                    (this.maximumChannelCapacity - this.minimumChannelCapacity);
+                    (channel.capacity - this.minMaxCap.min) /
+                    (this.minMaxCap.max - this.minMaxCap.min);
             }
             if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
@@ -109,6 +99,24 @@ export class ChannelColorService {
             return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
 
             //return [255 - toByte, toByte, 0, 255 - toByte, toByte, 0];
+        }
+        if (this.channelColorCache === 'channel-fees') {
+            let normalizedValue;
+
+            // if (this.useLogColorScale) {
+            //     normalizedValue =
+            //         Math.log10(channel.capacity - this.minimumChannelCapacity) /
+            //         Math.log10(this.maximumChannelCapacity - this.minimumChannelCapacity);
+            // } else {
+            //     normalizedValue =
+            //         (channel.capacity - this.minimumChannelCapacity) /
+            //         (this.maximumChannelCapacity - this.minimumChannelCapacity);
+            // }
+            if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
+            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
+            const toColorIndex = Math.round(normalizedValue * 499);
+
+            return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
         }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];

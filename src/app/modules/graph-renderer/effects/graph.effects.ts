@@ -17,21 +17,18 @@ import {
     throttleTime,
     withLatestFrom,
 } from 'rxjs';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as THREE from 'three';
 import { initialSphereSize } from '../../../constants/mesh-scale.constant';
 import { LndApiServiceService } from '../../../services/lnd-api-service.service';
 import { Chunk } from '../../../types/chunk.interface';
-import { createSpherePoint } from '../utils';
+import * as graphStatisticActions from '../actions/graph-statistics.actions';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer/graph.reducer';
-import {
-    selectChannelSetKeyValue,
-    selectMaximumChannelCapacity,
-    selectMinimumChannelCapacity,
-    selectNodeSetKeyValue,
-    selectTotalChannelCapacity,
-} from '../selectors/graph.selectors';
+import { selectChannelMinMaxTotal } from '../selectors/graph-statistics.selectors';
+import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
+import { createSpherePoint, updateCurrentMinMaxTotalStats } from '../utils';
 
 @Injectable()
 export class GraphEffects {
@@ -406,54 +403,28 @@ export class GraphEffects {
                 ofType(graphActions.concatinateChannelChunk),
                 withLatestFrom(
                     this.store$.select(selectChannelSetKeyValue),
-                    this.store$.select(selectTotalChannelCapacity),
-                    this.store$.select(selectMaximumChannelCapacity),
-                    this.store$.select(selectMinimumChannelCapacity),
+                    this.store$.select(selectChannelMinMaxTotal),
                 ),
-                mergeMap(
-                    ([
-                        action,
-                        channelState,
-                        currentTotalCapacity,
-                        maximumChannelCapacity,
-                        minimumChannelCapacity,
-                    ]) => {
-                        // const res = channelState.reduce((acc, chnl) => {
-                        //     acc[chnl.id] = chnl;
-                        //     return acc;
-                        // }, action.channelSubSet);
+                mergeMap(([action, channelState, currentMinMaxTotal]) => {
+                    let currentCapacityMinMaxTotalState: MinMaxTotal = currentMinMaxTotal;
 
-                        let newTotalCapacity = currentTotalCapacity;
-                        let currentMaxChannelCap = maximumChannelCapacity;
-                        let currentMinimumChannelCap = minimumChannelCapacity;
+                    action.channelSubSet.forEach((channel) => {
+                        currentCapacityMinMaxTotalState = updateCurrentMinMaxTotalStats(
+                            currentCapacityMinMaxTotalState,
+                            channel.capacity,
+                        );
+                        channelState.set(channel.id, channel);
+                    });
 
-                        action.channelSubSet.forEach((channel) => {
-                            newTotalCapacity += channel.capacity;
-
-                            if (channel.capacity > currentMaxChannelCap)
-                                currentMaxChannelCap = channel.capacity;
-                            if (channel.capacity < currentMinimumChannelCap)
-                                currentMinimumChannelCap = channel.capacity;
-
-                            channelState.set(channel.id, channel);
-                        });
-
-                        return from([
-                            graphActions.cacheProcessedChannelChunk({
-                                channelSet: channelState,
-                            }),
-                            graphActions.setTotalChannelCapacity({
-                                totalChannelCapacity: newTotalCapacity,
-                            }),
-                            graphActions.setMaximumChannelCapacity({
-                                maximumChannelCapacity: currentMaxChannelCap,
-                            }),
-                            graphActions.setMinimumChannelCapacity({
-                                minimumChannelCapacity: currentMinimumChannelCap,
-                            }),
-                        ]);
-                    },
-                ),
+                    return from([
+                        graphActions.cacheProcessedChannelChunk({
+                            channelSet: channelState,
+                        }),
+                        graphStatisticActions.setChannelCapacityMinMax({
+                            channelCap: currentCapacityMinMaxTotalState,
+                        }),
+                    ]);
+                }),
             ),
         { dispatch: true },
     );

@@ -13,7 +13,7 @@ import {
     LndRaycasterSceneDirective,
 } from './directives';
 import { GraphEffects } from './effects';
-import { reducer } from './reducer';
+import { reducer, graphStatisticsReducer } from './reducer';
 import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
 
 @NgModule({
@@ -32,6 +32,7 @@ import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from 
         AtftModule,
         EffectsModule.forFeature([GraphEffects]),
         StoreModule.forFeature('graphState', reducer),
+        StoreModule.forFeature('graphStatisticsState', graphStatisticsReducer.reducer),
     ],
     exports: [GraphSceneComponent],
 })
