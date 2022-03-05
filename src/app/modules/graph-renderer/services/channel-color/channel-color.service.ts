@@ -42,7 +42,10 @@ export class ChannelColorService {
         this.store$
             .select(selectChannelFeesMinMaxTotal)
             .pipe(untilDestroyed(this))
-            .subscribe((minMax) => (this.minMaxFee = minMax));
+            .subscribe((minMax) => {
+                this.minMaxFee = minMax;
+                console.log(minMax);
+            });
 
         this.store$
             .select(channelColorMapRgb)
@@ -112,20 +115,29 @@ export class ChannelColorService {
         if (this.channelColorCache === 'channel-fees') {
             let normalizedValue;
 
-            if (this.useLogColorScale) {
-                normalizedValue =
-                    Math.log10(channel.capacity - this.minMaxFee.min) /
-                    Math.log10(this.minMaxFee.max - this.minMaxFee.min);
-            } else {
-                normalizedValue =
-                    (channel.capacity - this.minMaxFee.min) /
-                    (this.minMaxFee.max - this.minMaxFee.min);
-            }
-            if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
-            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndex = Math.round(normalizedValue * 499);
+            try {
+                if (this.useLogColorScale) {
+                    normalizedValue =
+                        Math.log10(
+                            channel.policies[0].fee_rate -
+                                //Number.parseInt(channel.policies[0].base_fee_mtokens) -
+                                this.minMaxFee.min,
+                        ) / Math.log10(this.minMaxFee.max - this.minMaxFee.min);
+                } else {
+                    normalizedValue =
+                        (channel.policies[0].fee_rate - this.minMaxFee.min) /
+                        (this.minMaxFee.max - this.minMaxFee.min);
+                }
+                if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
+                //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
+                const toColorIndex = Math.round(normalizedValue * 499);
 
-            return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
+                const result = [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
+                return result;
+            } catch (e) {
+                return [255, 255, 255, 255, 255, 255];
+                //console.log(channel, e);
+            }
         }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];

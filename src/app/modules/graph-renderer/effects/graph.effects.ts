@@ -413,14 +413,14 @@ export class GraphEffects {
                     let currentCapacityMinMaxTotalState: MinMaxTotal = currentMinMaxTotal;
                     let currentFeeMinMaxTotalState: MinMaxTotal = currentFeesMinMaxTotal;
 
-                    action.channelSubSet.forEach((channel) => {
+                    action.channelSubSet.forEach((channel, index) => {
                         currentCapacityMinMaxTotalState = updateCurrentMinMaxTotalStats(
                             currentCapacityMinMaxTotalState,
                             channel.capacity,
                         );
                         currentFeeMinMaxTotalState = updateCurrentMinMaxTotalStats(
                             currentFeeMinMaxTotalState,
-                            channel.policies['base_fee_mtokens'],
+                            channel.policies[0].fee_rate,
                         );
                         channelState.set(channel.id, channel);
                     });
