@@ -19,4 +19,8 @@ export const reducer = createReducer(
         ...state,
         channelCapacity: channelCap,
     })),
+    on(graphStatisticActions.setChannelFeesMinMax, (state, { channelFees }) => ({
+        ...state,
+        channelFees,
+    })),
 );

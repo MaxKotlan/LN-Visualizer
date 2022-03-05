@@ -26,7 +26,10 @@ import { Chunk } from '../../../types/chunk.interface';
 import * as graphStatisticActions from '../actions/graph-statistics.actions';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer/graph.reducer';
-import { selectChannelMinMaxTotal } from '../selectors/graph-statistics.selectors';
+import {
+    selectChannelFeesMinMaxTotal,
+    selectChannelMinMaxTotal,
+} from '../selectors/graph-statistics.selectors';
 import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
 import { createSpherePoint, updateCurrentMinMaxTotalStats } from '../utils';
 
@@ -404,14 +407,20 @@ export class GraphEffects {
                 withLatestFrom(
                     this.store$.select(selectChannelSetKeyValue),
                     this.store$.select(selectChannelMinMaxTotal),
+                    this.store$.select(selectChannelFeesMinMaxTotal),
                 ),
-                mergeMap(([action, channelState, currentMinMaxTotal]) => {
+                mergeMap(([action, channelState, currentMinMaxTotal, currentFeesMinMaxTotal]) => {
                     let currentCapacityMinMaxTotalState: MinMaxTotal = currentMinMaxTotal;
+                    let currentFeeMinMaxTotalState: MinMaxTotal = currentFeesMinMaxTotal;
 
                     action.channelSubSet.forEach((channel) => {
                         currentCapacityMinMaxTotalState = updateCurrentMinMaxTotalStats(
                             currentCapacityMinMaxTotalState,
                             channel.capacity,
+                        );
+                        currentFeeMinMaxTotalState = updateCurrentMinMaxTotalStats(
+                            currentFeeMinMaxTotalState,
+                            channel.policies['base_fee_mtokens'],
                         );
                         channelState.set(channel.id, channel);
                     });
@@ -422,6 +431,9 @@ export class GraphEffects {
                         }),
                         graphStatisticActions.setChannelCapacityMinMax({
                             channelCap: currentCapacityMinMaxTotalState,
+                        }),
+                        graphStatisticActions.setChannelFeesMinMax({
+                            channelFees: currentFeeMinMaxTotalState,
                         }),
                     ]);
                 }),

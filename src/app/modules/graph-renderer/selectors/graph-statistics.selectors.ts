@@ -10,6 +10,11 @@ export const selectChannelMinMaxTotal = createSelector(
     (state) => state.channelCapacity,
 );
 
+export const selectChannelFeesMinMaxTotal = createSelector(
+    graphStatisticsSelector,
+    (state) => state.channelFees,
+);
+
 export const selectTotalChannelCapacity = createSelector(
     selectChannelMinMaxTotal,
     (state) => state.total,

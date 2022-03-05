@@ -5,3 +5,8 @@ export const setChannelCapacityMinMax = createAction(
     '[graph] setChannelCapacityMinMax',
     props<{ channelCap: MinMaxTotal }>(),
 );
+
+export const setChannelFeesMinMax = createAction(
+    '[graph] setChannelFeesMinMax',
+    props<{ channelFees: MinMaxTotal }>(),
+);

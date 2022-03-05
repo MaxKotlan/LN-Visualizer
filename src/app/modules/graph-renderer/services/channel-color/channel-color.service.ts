@@ -16,7 +16,10 @@ import {
     selectMaximumChannelCapacity,
     selectMinimumChannelCapacity,
 } from '../../selectors';
-import { selectChannelMinMaxTotal } from '../../selectors/graph-statistics.selectors';
+import {
+    selectChannelFeesMinMaxTotal,
+    selectChannelMinMaxTotal,
+} from '../../selectors/graph-statistics.selectors';
 
 let colormap = require('colormap');
 
@@ -35,6 +38,11 @@ export class ChannelColorService {
             .select(selectChannelMinMaxTotal)
             .pipe(untilDestroyed(this))
             .subscribe((minMax) => (this.minMaxCap = minMax));
+
+        this.store$
+            .select(selectChannelFeesMinMaxTotal)
+            .pipe(untilDestroyed(this))
+            .subscribe((minMax) => (this.minMaxFee = minMax));
 
         this.store$
             .select(channelColorMapRgb)
@@ -61,6 +69,7 @@ export class ChannelColorService {
     private colors: string[];
     private colorArray: number[][];
 
+    private minMaxFee: MinMaxTotal;
     private minMaxCap: MinMaxTotal;
     private channelColorCache: string;
 
@@ -103,15 +112,15 @@ export class ChannelColorService {
         if (this.channelColorCache === 'channel-fees') {
             let normalizedValue;
 
-            // if (this.useLogColorScale) {
-            //     normalizedValue =
-            //         Math.log10(channel.capacity - this.minimumChannelCapacity) /
-            //         Math.log10(this.maximumChannelCapacity - this.minimumChannelCapacity);
-            // } else {
-            //     normalizedValue =
-            //         (channel.capacity - this.minimumChannelCapacity) /
-            //         (this.maximumChannelCapacity - this.minimumChannelCapacity);
-            // }
+            if (this.useLogColorScale) {
+                normalizedValue =
+                    Math.log10(channel.capacity - this.minMaxFee.min) /
+                    Math.log10(this.minMaxFee.max - this.minMaxFee.min);
+            } else {
+                normalizedValue =
+                    (channel.capacity - this.minMaxFee.min) /
+                    (this.minMaxFee.max - this.minMaxFee.min);
+            }
             if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
             //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
             const toColorIndex = Math.round(normalizedValue * 499);
