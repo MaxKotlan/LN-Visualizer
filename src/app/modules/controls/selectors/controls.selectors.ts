@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { channelControlsSelector } from '../../controls-channel/selectors';
 import { nodeControlsSelector } from '../../controls-node/selectors/node-controls.selectors';
+import { renderControlsSelector } from '../../controls-renderer/selectors';
 import { GenericControlsState } from '../reducers/controls.reducer';
 import { ControlsState } from '../types';
 
@@ -11,8 +12,9 @@ export const controlsSelector = createSelector(
     genericControlsSelector,
     nodeControlsSelector,
     channelControlsSelector,
-    (genericControls, nodeControls, channelControls) =>
-        ({ genericControls, nodeControls, channelControls } as ControlsState),
+    renderControlsSelector,
+    (genericControls, nodeControls, channelControls, renderControls) =>
+        ({ genericControls, nodeControls, channelControls, renderControls } as ControlsState),
 );
 
 export const selectSearchString = createSelector(

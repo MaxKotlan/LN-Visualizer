@@ -22,7 +22,6 @@ const initialState: NodeControlState = {
 
 export const reducer = createReducer(
     initialState,
-
     on(
         controlActions.setSavedStateFromLocalStorage,
         (_state, { savedState }) => savedState.nodeControls || initialState,

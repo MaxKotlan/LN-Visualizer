@@ -1,0 +1,7 @@
+<h2>Renderer Settings</h2>
+<section class="settings-section">
+    <mat-checkbox [ngModel]="showGrid | async" (change)="setShouldShowGrid($event)"
+        >Show Grid</mat-checkbox
+    >
+    <mat-checkbox>Show Axis</mat-checkbox>
+</section>

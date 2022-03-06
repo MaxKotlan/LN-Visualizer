@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
+import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
 import { MaterialModule } from '../material';
 import {
     CameraSettingsComponent,
@@ -31,6 +32,7 @@ import { reducer } from './reducers';
         FormsModule,
         ControlsNodeModule,
         ControlsChannelModule,
+        ControlsRendererModule,
         StoreModule.forFeature('genericControls', reducer),
     ],
     exports: [
