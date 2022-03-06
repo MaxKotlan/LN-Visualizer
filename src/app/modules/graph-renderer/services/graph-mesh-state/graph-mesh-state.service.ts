@@ -2,12 +2,20 @@ import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, sampleTime, withLatestFrom } from 'rxjs';
+import {
+    capacityFilterAmount,
+    capacityFilterEnable,
+    channelColor,
+    channelColorMap,
+    selectUseLogColorScale,
+} from 'src/app/modules/controls-channel/selectors';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { meshScale } from '../../../../constants/mesh-scale.constant';
+import { BufferRef } from '../../../../types/bufferRef.interface';
 import {
     cacheProcessedChannelChunk,
     cacheProcessedGraphNodeChunk,
 } from '../../actions/graph.actions';
-import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { GraphState } from '../../reducer/graph.reducer';
 import {
     selectChannelColorBuffer,
@@ -17,15 +25,6 @@ import {
     selectNodeColorBuffer,
     selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
-import { BufferRef } from '../../../../types/bufferRef.interface';
-import {
-    capacityFilterAmount,
-    capacityFilterEnable,
-    channelColor,
-    channelColorMap,
-    channelColorMapRgb,
-    selectUseLogColorScale,
-} from 'src/app/modules/controls-channel/selectors';
 import { ChannelColorService } from '../channel-color';
 
 @Injectable()
