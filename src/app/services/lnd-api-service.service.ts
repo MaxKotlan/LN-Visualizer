@@ -13,7 +13,7 @@ export class LndApiServiceService {
         this.subject.next('initsync');
     }
 
-    public subject = webSocket('ws://127.0.0.1:5647');
+    public subject = webSocket('wss://lnvisualizer.com/api/');
 
     public initialChunkSync(): Observable<Chunk<LndNode | LndChannel>> {
         this.subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
