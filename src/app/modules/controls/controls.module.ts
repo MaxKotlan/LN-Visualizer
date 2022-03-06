@@ -1,25 +1,20 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
+import { ControlsNodeModule } from '../controls-node/controls-node.module';
+import { MaterialModule } from '../material';
 import {
-    SearchComponent,
+    CameraSettingsComponent,
+    MiscSettingsComponent,
+    NodeSettingsComponent,
     QuickControlsComponent,
+    SearchComponent,
     SettingsComponent,
     SettingsModalComponent,
-    ErrorComponent,
-    LoadingBarComponent,
-    GraphStatsComponent,
-    CameraSettingsComponent,
-    ChannelSettingsComponent,
-    NodeSettingsComponent,
-    MiscSettingsComponent,
-    TooltipComponent,
 } from './components';
-import { MaterialModule } from '../material';
-import { FormsModule } from '@angular/forms';
-import { ControlsNodeModule } from '../controls-node/controls-node.module';
-import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
-import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
 
 @NgModule({
     declarations: [
@@ -27,12 +22,8 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
         QuickControlsComponent,
         SettingsComponent,
         SettingsModalComponent,
-        ErrorComponent,
-        LoadingBarComponent,
-        GraphStatsComponent,
         CameraSettingsComponent,
         MiscSettingsComponent,
-        TooltipComponent,
     ],
     imports: [
         CommonModule,
@@ -47,13 +38,9 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
         QuickControlsComponent,
         SettingsComponent,
         SettingsModalComponent,
-        ErrorComponent,
-        LoadingBarComponent,
-        GraphStatsComponent,
         CameraSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
-        TooltipComponent,
     ],
 })
 export class ControlsModule {}
