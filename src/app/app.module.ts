@@ -12,6 +12,7 @@ import { RouteEffects } from './effects/route.effects';
 import { GraphRendererModule } from './modules/graph-renderer';
 import { ControlsModule } from './modules/controls/controls.module';
 import { UiModule } from './modules/ui/ui.module';
+import { GraphDBService } from './services/graphdb.service';
 
 @NgModule({
     declarations: [AppComponent],
@@ -34,6 +35,9 @@ import { UiModule } from './modules/ui/ui.module';
         ),
         BrowserAnimationsModule,
     ],
+    providers: [GraphDBService],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+    constructor(gdb: GraphDBService) {}
+}
