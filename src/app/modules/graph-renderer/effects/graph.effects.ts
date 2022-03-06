@@ -66,6 +66,10 @@ export class GraphEffects {
                                     return graphActions.channelClosed({
                                         channelId: (data as unknown as ChannelCloseEvent).data,
                                     });
+                                case 'channel-updated':
+                                    return graphActions.channelUpdated({
+                                        channelId: (data as unknown as ChannelCloseEvent).data,
+                                    });
                             }
                             return graphActions.errorUnknownChunkDataType();
                         }),

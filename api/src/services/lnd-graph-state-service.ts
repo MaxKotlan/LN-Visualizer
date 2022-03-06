@@ -16,7 +16,7 @@ export class LndGraphStateService {
 
     public async init() {
         await this.initialGraphSync();
-        this.subscribeToGraphChanges();
+        //this.subscribeToGraphChanges();
     }
 
     protected async initialGraphSync() {
@@ -42,7 +42,8 @@ export class LndGraphStateService {
             //await this.initialGraphSync();
         });
         fromEvent(graphEvents, 'channel_updated').subscribe(async (event) => {
-            console.log(`${(event as any)?.id} channel updated`);
+            // console.log(`${(event as any)?.id} channel updated`);
+            this.websocketService.channelUpdated(`${(event as any)?.id}`);
             //await this.initialGraphSync();
         });
         fromEvent(graphEvents, 'node_updated').subscribe(async (event) => {

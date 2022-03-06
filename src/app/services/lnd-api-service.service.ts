@@ -9,11 +9,14 @@ import { Chunk, LndChannel, LndNode } from 'api/src/models';
     providedIn: 'root',
 })
 export class LndApiServiceService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+        this.subject.next('initsync');
+    }
+
+    public subject = webSocket('ws://127.0.0.1:5647');
 
     public initialChunkSync(): Observable<Chunk<LndNode | LndChannel>> {
-        const subject = webSocket('wss://lnvisualizer.com/api/');
-        subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
-        return subject as Observable<Chunk<LndNode>>;
+        this.subject.asObservable().pipe(map((chunk) => JSON.parse(chunk as string)));
+        return this.subject as Observable<Chunk<LndNode>>;
     }
 }
