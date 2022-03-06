@@ -1,26 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
+import { ControlsNodeModule } from '../controls-node/controls-node.module';
+import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
+import { MaterialModule } from '../material';
 import {
-    SearchComponent,
+    CameraSettingsComponent,
+    MiscSettingsComponent,
+    NodeSettingsComponent,
     QuickControlsComponent,
+    SearchComponent,
     SettingsComponent,
     SettingsModalComponent,
-    ErrorComponent,
-    LoadingBarComponent,
-    GraphStatsComponent,
-    CameraSettingsComponent,
-    ChannelSettingsComponent,
-    NodeSettingsComponent,
-    MiscSettingsComponent,
-    TooltipComponent,
 } from './components';
-import { MaterialModule } from '../material';
-import { FormsModule } from '@angular/forms';
-import { ControlsNodeModule } from '../controls-node/controls-node.module';
-import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
-import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
-import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 
 @NgModule({
     declarations: [
@@ -28,13 +23,8 @@ import { ChannelColorScaleComponent } from './components/channel-color-scale/cha
         QuickControlsComponent,
         SettingsComponent,
         SettingsModalComponent,
-        ErrorComponent,
-        LoadingBarComponent,
-        GraphStatsComponent,
         CameraSettingsComponent,
         MiscSettingsComponent,
-        TooltipComponent,
-        ChannelColorScaleComponent,
     ],
     imports: [
         CommonModule,
@@ -42,6 +32,7 @@ import { ChannelColorScaleComponent } from './components/channel-color-scale/cha
         FormsModule,
         ControlsNodeModule,
         ControlsChannelModule,
+        ControlsRendererModule,
         StoreModule.forFeature('genericControls', reducer),
     ],
     exports: [
@@ -49,14 +40,9 @@ import { ChannelColorScaleComponent } from './components/channel-color-scale/cha
         QuickControlsComponent,
         SettingsComponent,
         SettingsModalComponent,
-        ErrorComponent,
-        LoadingBarComponent,
-        GraphStatsComponent,
         CameraSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
-        TooltipComponent,
-        ChannelColorScaleComponent,
     ],
 })
 export class ControlsModule {}

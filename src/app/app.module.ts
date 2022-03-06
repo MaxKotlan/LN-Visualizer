@@ -11,6 +11,7 @@ import { ControlsEffects } from './modules/controls/effects/controls.effects';
 import { RouteEffects } from './effects/route.effects';
 import { GraphRendererModule } from './modules/graph-renderer';
 import { ControlsModule } from './modules/controls/controls.module';
+import { UiModule } from './modules/ui/ui.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -20,6 +21,7 @@ import { ControlsModule } from './modules/controls/controls.module';
         HttpClientModule,
         GraphRendererModule,
         ControlsModule,
+        UiModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         StoreModule.forRoot(
             {},

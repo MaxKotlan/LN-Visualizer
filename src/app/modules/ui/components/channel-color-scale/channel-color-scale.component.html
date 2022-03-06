@@ -1,0 +1,8 @@
+<app-color-scale
+    label="Capacity"
+    [minRange$]="minCapacity$"
+    [maxRange$]="maxCapacity$"
+    [useLogScale$]="isLogScale$"
+    [colorMapName]="currentChannelMapColor$ | async"
+>
+</app-color-scale>
