@@ -2,6 +2,7 @@
     <mat-label>Channel Color Meaning</mat-label>
     <mat-select [value]="chanelColorDropDown$ | async" (valueChange)="valueChanged($event)">
         <mat-option value="channel-capacity">Channel Capacity</mat-option>
+        <mat-option disabled value="channel-fees">Channel Feerate</mat-option>
         <mat-option value="interpolate-node-color">Interpolate Node Color</mat-option>
         <mat-option disabled value="interpolate-node-average-capacity"
             >Interpolate Node Average Capacity</mat-option

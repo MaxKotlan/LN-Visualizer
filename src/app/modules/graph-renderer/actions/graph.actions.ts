@@ -79,3 +79,8 @@ export const setMinimumChannelCapacity = createAction(
 export const errorUnknownChunkDataType = createAction('[graph] errorUnknownChunkDataType');
 
 export const channelClosed = createAction('[graph] channelClosed', props<{ channelId: string }>());
+
+export const channelUpdated = createAction(
+    '[graph] channelUpdated',
+    props<{ channelId: string }>(),
+);
