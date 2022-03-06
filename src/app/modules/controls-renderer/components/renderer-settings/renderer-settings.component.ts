@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
-import { setShowGrid } from '../../actions';
+import { setShowAxis, setShowGrid } from '../../actions';
 import { RendererControlState } from '../../reducer';
-import { selectShowGrid } from '../../selectors';
+import { selectShowAxis, selectShowGrid } from '../../selectors';
 
 @Component({
     selector: 'app-renderer-settings',
@@ -13,9 +13,14 @@ import { selectShowGrid } from '../../selectors';
 export class RendererSettingsComponent {
     constructor(private store$: Store<RendererControlState>) {}
 
-    public showGrid = this.store$.select(selectShowGrid);
+    public showGrid$ = this.store$.select(selectShowGrid);
+    public showAxis$ = this.store$.select(selectShowAxis);
 
-    setShouldShowGrid(event: MatCheckboxChange) {
+    setShowGrid(event: MatCheckboxChange) {
         this.store$.dispatch(setShowGrid({ value: event.checked }));
+    }
+
+    setShowAxis(event: MatCheckboxChange) {
+        this.store$.dispatch(setShowAxis({ value: event.checked }));
     }
 }

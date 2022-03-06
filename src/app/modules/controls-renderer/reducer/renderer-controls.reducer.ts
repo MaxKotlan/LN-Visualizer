@@ -4,10 +4,12 @@ import * as renderControlActions from '../actions';
 
 export interface RendererControlState {
     showGrid: boolean;
+    showAxis: boolean;
 }
 
 const initialState: RendererControlState = {
     showGrid: false,
+    showAxis: false,
 };
 
 export const reducer = createReducer(
@@ -19,5 +21,9 @@ export const reducer = createReducer(
     on(renderControlActions.setShowGrid, (state, { value }) => ({
         ...state,
         showGrid: value,
+    })),
+    on(renderControlActions.setShowAxis, (state, { value }) => ({
+        ...state,
+        showAxis: value,
     })),
 );

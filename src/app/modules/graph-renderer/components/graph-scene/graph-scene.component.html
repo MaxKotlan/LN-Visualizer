@@ -23,6 +23,13 @@
                 [aliases]="(selectAliases$ | async) || []"
                 [shouldRender]="(shouldRenderLabels$ | async) || false"
             ></app-graph-font-mesh> -->
+            <atft-grid-helper
+                *ngIf="showGrid$ | async"
+                [translateY]="0"
+                [size]="2000"
+                [divisions]="100"
+            ></atft-grid-helper>
+            <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-graph-node-mesh
                 *ngIf="true"
                 [positions]="positions$ | async"

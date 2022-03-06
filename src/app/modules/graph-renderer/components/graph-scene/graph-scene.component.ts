@@ -35,6 +35,7 @@ import {
     selectEdgeDottedLine,
     shouldRenderEdges,
 } from 'src/app/modules/controls-channel/selectors';
+import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
 
 @Component({
     selector: 'app-graph-scene',
@@ -73,6 +74,8 @@ export class GraphSceneComponent implements OnInit, AfterViewInit {
     public selectCameraFov$ = this.store$.select(selectCameraFov);
     public selectEdgeDepthTest$ = this.store$.select(selectEdgeDepthTest);
     public selectEdgeDottedLine$ = this.store$.select(selectEdgeDottedLine);
+    public showGrid$ = this.store$.select(selectShowGrid);
+    public showAxis$ = this.store$.select(selectShowAxis);
 
     public gotoCoordinates$: Observable<THREE.Vector3> = this.actions$.pipe(
         ofType(gotoNode),
