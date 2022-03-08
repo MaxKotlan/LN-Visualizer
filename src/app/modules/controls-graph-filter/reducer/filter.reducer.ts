@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Filter } from '../types/filter.interface';
-
+import _ from 'lodash';
 import * as filterActions from '../actions';
 
 export interface GraphFilterState {
@@ -12,14 +12,18 @@ export interface GraphFilterState {
 const initialState: GraphFilterState = {
     activeFilters: [],
     allowedFilterKeys: [],
-    allowedFilterOperators: ['gt', 'gte', 'lt', 'lte', 'ne'],
+    allowedFilterOperators: ['>', '>=', '<', '<=', '!==', '==='],
 };
 
 export const reducer = createReducer(
     initialState,
     on(filterActions.addFilter, (state, { value }) => ({
         ...state,
-        activeFilters: [...state.activeFilters, value],
+        activeFilters: [...state.activeFilters.filter((f) => !_.isEqual(f, value)), value],
+    })),
+    on(filterActions.removeFilter, (state, { value }) => ({
+        ...state,
+        activeFilters: state.activeFilters.filter((f) => !_.isEqual(f, value)),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,

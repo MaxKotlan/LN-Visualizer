@@ -1,1 +1,17 @@
-<p>filter-list works!</p>
+<ul>
+    <li *ngFor="let filter of filterList$ | async">
+        {{ filter.keyname }}
+        {{ filter.operator }}
+        {{ filter.operand }} test
+        <button
+            class="not-inline"
+            (click)="remove(filter)"
+            mat-mini-fab
+            style="transform: scale(0.6)"
+            color="primary"
+            aria-label="Example icon button with a delete icon"
+        >
+            <mat-icon>remove</mat-icon>
+        </button>
+    </li>
+</ul>

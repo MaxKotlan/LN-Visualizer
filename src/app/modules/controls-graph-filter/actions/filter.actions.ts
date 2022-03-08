@@ -6,6 +6,11 @@ export const addFilter = createAction(
     props<{ value: Filter<string | number> }>(),
 );
 
+export const removeFilter = createAction(
+    '[filter] removeFilter',
+    props<{ value: Filter<string | number> }>(),
+);
+
 export const setAllowedFilterKeys = createAction(
     '[filter] setAllowedFilterKeys',
     props<{ value: string[] }>(),

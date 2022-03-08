@@ -26,6 +26,9 @@ import {
     selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
 import { ChannelColorService } from '../channel-color';
+import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
+import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
+import { LndChannel } from 'api/src/models';
 
 @Injectable()
 export class GraphMeshStateService {
@@ -117,6 +120,7 @@ export class GraphMeshStateService {
     );
 
     channelVertices$ = combineLatest([
+        this.store$.select(filterSelectors.activeFilters),
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelVertexBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
@@ -127,6 +131,7 @@ export class GraphMeshStateService {
         sampleTime(this.throttleTimeMs),
         map(
             ([
+                filters,
                 graphState,
                 vertexBuffer,
                 nodeRegistry,
@@ -137,14 +142,7 @@ export class GraphMeshStateService {
                 if (!vertexBuffer || !graphState.channelSet) return null;
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
-                    if (
-                        this.shouldRenderChannel(
-                            searchResult,
-                            channel,
-                            capacityFilterAmount,
-                            capacityFilterEnabled,
-                        )
-                    ) {
+                    if (this.evaluateFilters(channel, filters)) {
                         const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
                         const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
                         if (node1 && node2) {
@@ -167,6 +165,7 @@ export class GraphMeshStateService {
     );
 
     channelColors$ = combineLatest([
+        this.store$.select(filterSelectors.activeFilters),
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelColorBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
@@ -180,6 +179,7 @@ export class GraphMeshStateService {
         sampleTime(this.throttleTimeMs),
         map(
             ([
+                filters,
                 graphState,
                 colorBuffer,
                 nodeRegistry,
@@ -191,12 +191,13 @@ export class GraphMeshStateService {
                 let i = 0;
                 graphState.channelSet.forEach((channel) => {
                     if (
-                        this.shouldRenderChannel(
-                            searchResult,
-                            channel,
-                            capacityFilterAmount,
-                            capacityFilterEnabled,
-                        )
+                        this.evaluateFilters(channel, filters)
+                        // this.shouldRenderChannel(
+                        //     searchResult,
+                        //     channel,
+                        //     capacityFilterAmount,
+                        //     capacityFilterEnabled,
+                        // )
                     ) {
                         const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
                         const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
@@ -238,4 +239,40 @@ export class GraphMeshStateService {
     }
 
     channelData$ = this.channelColors$.pipe(withLatestFrom(this.channelVertices$));
+
+    public evaluateFilters(channel: LndChannel, filters: Filter<number | string>[]): boolean {
+        let result = true;
+        filters.forEach((filter) => {
+            result =
+                result &&
+                this.evaluate(
+                    filter.operator,
+                    this.keyToChannelValue(channel, filter.keyname),
+                    filter.operand,
+                );
+        });
+        return result;
+    }
+
+    public keyToChannelValue(channel: LndChannel, key: string) {
+        return channel[key] || channel.policies[0][key] || channel.policies[1][key];
+    }
+
+    public evaluate(operator: string, lhs: number, rhs: number | string): boolean {
+        switch (operator) {
+            case '>':
+                return lhs > rhs;
+            case '>=':
+                return lhs >= rhs;
+            case '<':
+                return lhs < rhs;
+            case '<=':
+                return lhs <= rhs;
+            case '!==':
+                return lhs !== rhs;
+            case '===':
+                return lhs === rhs;
+        }
+        throw new Error('Unknown Operator in Filter Eval Function');
+    }
 }

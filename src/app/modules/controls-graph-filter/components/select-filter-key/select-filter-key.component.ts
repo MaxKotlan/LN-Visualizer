@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GraphFilterState } from '../../reducer';
 import * as filterSelectors from '../../selectors/filter.selectors';
+import * as filterActions from '../../actions';
+import { Filter } from '../../types/filter.interface';
 
 @UntilDestroy()
 @Component({
@@ -14,6 +16,24 @@ import * as filterSelectors from '../../selectors/filter.selectors';
 export class SelectFilterKeyComponent {
     constructor(private store$: Store<GraphFilterState>) {}
 
+    public key: string;
+    public operator: string;
+    public operand: number;
+
     public options$: Observable<string[]> = this.store$.select(filterSelectors.allowedFilterKeys);
     public operators$: Observable<string[]> = this.store$.select(filterSelectors.allowedOperators);
+
+    public createExpression() {
+        this.store$.dispatch(
+            filterActions.addFilter({
+                value: {
+                    keyname: this.key,
+                    operator: this.operator,
+                    operand: this.operand,
+                } as Filter<number>,
+            }),
+        );
+
+        console.log(this.key, this.operator, this.operand);
+    }
 }
