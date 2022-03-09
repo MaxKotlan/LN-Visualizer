@@ -1,0 +1,45 @@
+section {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+
+    > * {
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    > mat-divider {
+        margin-top: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+.modal-content {
+    padding: 1.6rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+:host {
+    position: relative;
+}
+
+:host ::ng-deep {
+    h2 {
+        margin-top: 0.6rem;
+    }
+
+    .mat-checkbox-layout {
+        height: 48px;
+        align-items: center;
+    }
+
+    .settings-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.2rem;
+        // margin-left: 1.2rem;
+        // margin-right: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+}

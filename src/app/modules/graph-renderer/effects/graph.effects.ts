@@ -32,6 +32,8 @@ import {
 } from '../selectors/graph-statistics.selectors';
 import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
 import { createSpherePoint, updateCurrentMinMaxTotalStats } from '../utils';
+import * as filterActions from '../../controls-graph-filter/actions';
+import * as graphSelectors from '../selectors';
 
 @Injectable()
 export class GraphEffects {
@@ -478,6 +480,31 @@ export class GraphEffects {
             this.actions$.pipe(
                 ofType(graphActions.channelClosed),
                 tap((action) => this.snackBar.open(`Channel ${action.channelId} has closed`)),
+            ),
+        { dispatch: true },
+    );
+
+    addNodeFilter$ = createEffect(
+        () =>
+            this.store$.select(graphSelectors.selectFinalMatcheNodesFromSearch).pipe(
+                mergeMap((c) => {
+                    let addPubKeyFilter = [];
+                    if (c)
+                        addPubKeyFilter.push(
+                            filterActions.addFilter({
+                                value: {
+                                    keyname: 'public_key',
+                                    operator: '==',
+                                    operand: c.public_key,
+                                },
+                            }),
+                        );
+
+                    return from([
+                        filterActions.removeFilterByKey({ key: 'public_key' }),
+                        ...addPubKeyFilter,
+                    ]);
+                }),
             ),
         { dispatch: true },
     );

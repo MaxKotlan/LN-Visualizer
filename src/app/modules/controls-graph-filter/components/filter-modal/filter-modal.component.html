@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+    <mat-icon>filter_list</mat-icon>
+    <span style="margin-left: 0.4rem; flex-grow: 1">Graph Filters</span>
+    <button (click)="dialogRef.close()" mat-icon-button aria-label="Close Dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+</mat-toolbar>
+<div class="modal-content">
+    <app-select-filter-key></app-select-filter-key>
+    <app-filter-list></app-filter-list>
+</div>

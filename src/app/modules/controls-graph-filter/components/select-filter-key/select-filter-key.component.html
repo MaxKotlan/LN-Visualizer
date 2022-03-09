@@ -1,0 +1,31 @@
+<mat-form-field appearance="fill">
+    <mat-label>Channel Property</mat-label>
+    <!-- <mat-select [value]="chanelColorDropDown$ | async" (valueChange)="valueChanged($event)"> -->
+    <mat-select [(ngModel)]="key">
+        <mat-option *ngFor="let option of options$ | async" [value]="option">{{
+            option
+        }}</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field appearance="fill">
+    <mat-label>Operator</mat-label>
+    <!-- <mat-select [value]="chanelColorDropDown$ | async" (valueChange)="valueChanged($event)"> -->
+    <mat-select [(ngModel)]="operator">
+        <mat-option *ngFor="let operator of operators$ | async" [value]="operator">{{
+            operator
+        }}</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Operand</mat-label>
+    <input type="text" aria-label="Amount" matInput [(ngModel)]="operand" />
+</mat-form-field>
+<button
+    class="not-inline"
+    (click)="createExpression()"
+    mat-mini-fab
+    color="primary"
+    aria-label="Example icon button with a delete icon"
+>
+    <mat-icon>add</mat-icon>
+</button>
