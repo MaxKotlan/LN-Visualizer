@@ -1,5 +1,5 @@
 export interface Filter<T> {
     keyname: string;
-    operator: 'gt' | 'gte' | 'lt' | 'lte' | 'ne';
+    operator: string;
     operand: T;
 }

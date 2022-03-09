@@ -27,6 +27,10 @@ export const reducer = createReducer(
         ...state,
         activeFilters: state.activeFilters.filter((f) => !_.isEqual(f, value)),
     })),
+    on(filterActions.removeFilterByKey, (state, { key }) => ({
+        ...state,
+        activeFilters: state.activeFilters.filter((f) => f.keyname !== key),
+    })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
         channelFilterKeys: value,

@@ -11,6 +11,11 @@ export const removeFilter = createAction(
     props<{ value: Filter<string | number> }>(),
 );
 
+export const removeFilterByKey = createAction(
+    '[filter] removeFilterByKey',
+    props<{ key: string }>(),
+);
+
 export const setAllowedFilterKeys = createAction(
     '[filter] setAllowedFilterKeys',
     props<{ value: string[] }>(),
