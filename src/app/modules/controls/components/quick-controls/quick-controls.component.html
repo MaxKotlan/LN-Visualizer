@@ -35,6 +35,7 @@
             >Render Channels</mat-checkbox
         >
         <mat-checkbox
+            disabled
             [ngModel]="shouldFilterCapacity$ | async"
             (change)="updateFilterCapacityEnable($event)"
             >Filter Capacity</mat-checkbox
@@ -42,6 +43,7 @@
         <span *ngIf="shouldFilterCapacity$ | async">
             <span style="margin-right: 0.4rem">Minimum Capacity</span>
             <mat-slider
+                disabled
                 [ngModel]="capacityFilterAmount$ | async"
                 (change)="setCapacityFiliterAmount($event)"
                 #slider
