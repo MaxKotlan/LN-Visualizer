@@ -31,4 +31,28 @@ export class FilterEffects {
             ),
         { dispatch: true },
     );
+
+    // generateFiltersNode$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.cacheProcessedGraphNodeChunk),
+
+    //             tap((channelState) => {
+    //                 const keySet: Set<string> = new Set();
+
+    //                 channelState.nodeSet.forEach((ch) => {
+    //                     Object.keys(ch).forEach((chKey) => {
+    //                         keySet.add(chKey);
+    //                     });
+    //                     // ch.policies.forEach(
+    //                     //     (policy) => Object.keys(policy).forEach((pkey) => keySet.add(pkey)),
+    //                     //     // keySet.add(chKey)
+    //                     // );
+    //                 });
+    //                 console.log(Array.from(keySet));
+    //                 //return filterActions.setAllowedFilterKeys({ value: Array.from(keySet) });
+    //             }),
+    //         ),
+    //     { dispatch: false },
+    // );
 }

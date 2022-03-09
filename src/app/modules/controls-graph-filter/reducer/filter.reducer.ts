@@ -5,14 +5,16 @@ import * as filterActions from '../actions';
 
 export interface GraphFilterState {
     activeFilters: Filter<string | number>[];
-    allowedFilterKeys: string[];
-    allowedFilterOperators: string[];
+    channelFilterKeys: string[];
+    nodeFilterKeys: string[];
+    filterOperators: string[];
 }
 
 const initialState: GraphFilterState = {
     activeFilters: [],
-    allowedFilterKeys: [],
-    allowedFilterOperators: ['>', '>=', '<', '<=', '!==', '==='],
+    channelFilterKeys: [],
+    nodeFilterKeys: ['color', 'public_key', 'alias', 'position', 'totalCapacity', 'depth'],
+    filterOperators: ['>', '>=', '<', '<=', '!=', '=='],
 };
 
 export const reducer = createReducer(
@@ -27,6 +29,6 @@ export const reducer = createReducer(
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
-        allowedFilterKeys: value,
+        channelFilterKeys: value,
     })),
 );

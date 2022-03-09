@@ -268,10 +268,10 @@ export class GraphMeshStateService {
                 return lhs < rhs;
             case '<=':
                 return lhs <= rhs;
-            case '!==':
-                return lhs !== rhs;
-            case '===':
-                return lhs === rhs;
+            case '!=':
+                return lhs != rhs;
+            case '==':
+                return lhs == rhs;
         }
         throw new Error('Unknown Operator in Filter Eval Function');
     }

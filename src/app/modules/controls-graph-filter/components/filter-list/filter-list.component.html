@@ -2,7 +2,7 @@
     <li *ngFor="let filter of filterList$ | async">
         {{ filter.keyname }}
         {{ filter.operator }}
-        {{ filter.operand }} test
+        {{ filter.operand }}
         <button
             class="not-inline"
             (click)="remove(filter)"

@@ -20,10 +20,15 @@ export class SelectFilterKeyComponent {
     public operator: string;
     public operand: number;
 
-    public options$: Observable<string[]> = this.store$.select(filterSelectors.allowedFilterKeys);
-    public operators$: Observable<string[]> = this.store$.select(filterSelectors.allowedOperators);
+    public options$: Observable<string[]> = this.store$.select(filterSelectors.channelFilterKeys);
+    // public nodeFilterKeys$: Observable<string[]> = this.store$.select(
+    //     filterSelectors.nodeFilterKeys,
+    // );
+
+    public operators$: Observable<string[]> = this.store$.select(filterSelectors.filterOperators);
 
     public createExpression() {
+        if (!this.key || !this.operator || !this.operand) return;
         this.store$.dispatch(
             filterActions.addFilter({
                 value: {

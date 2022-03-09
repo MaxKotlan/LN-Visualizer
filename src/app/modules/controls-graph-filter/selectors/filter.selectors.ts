@@ -6,12 +6,11 @@ export const graphFilterState = createFeatureSelector<GraphFilterState>('graphFi
 
 export const activeFilters = createSelector(graphFilterState, (state) => state.activeFilters);
 
-export const allowedFilterKeys = createSelector(
+export const channelFilterKeys = createSelector(
     graphFilterState,
-    (state) => state.allowedFilterKeys,
+    (state) => state.channelFilterKeys,
 );
 
-export const allowedOperators = createSelector(
-    graphFilterState,
-    (state) => state.allowedFilterOperators,
-);
+export const nodeFilterKeys = createSelector(graphFilterState, (state) => state.nodeFilterKeys);
+
+export const filterOperators = createSelector(graphFilterState, (state) => state.filterOperators);
