@@ -38,7 +38,5 @@ export class SelectFilterKeyComponent {
                 } as Filter<number>,
             }),
         );
-
-        console.log(this.key, this.operator, this.operand);
     }
 }

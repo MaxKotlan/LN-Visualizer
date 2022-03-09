@@ -124,44 +124,31 @@ export class GraphMeshStateService {
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelVertexBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
-        this.store$.select(selectFinalMatcheNodesFromSearch),
-        this.store$.select(capacityFilterEnable),
-        this.store$.select(capacityFilterAmount),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(
-            ([
-                filters,
-                graphState,
-                vertexBuffer,
-                nodeRegistry,
-                searchResult,
-                capacityFilterEnabled,
-                capacityFilterAmount,
-            ]) => {
-                if (!vertexBuffer || !graphState.channelSet) return null;
-                let i = 0;
-                graphState.channelSet.forEach((channel) => {
-                    if (this.evaluateFilters(channel, filters)) {
-                        const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
-                        const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
-                        if (node1 && node2) {
-                            vertexBuffer[i * 6] = node1.position.x * meshScale;
-                            vertexBuffer[i * 6 + 1] = node1.position.y * meshScale;
-                            vertexBuffer[i * 6 + 2] = node1.position.z * meshScale;
-                            vertexBuffer[i * 6 + 3] = node2.position.x * meshScale;
-                            vertexBuffer[i * 6 + 4] = node2.position.y * meshScale;
-                            vertexBuffer[i * 6 + 5] = node2.position.z * meshScale;
-                            i++;
-                        }
+        map(([filters, graphState, vertexBuffer, nodeRegistry]) => {
+            if (!vertexBuffer || !graphState.channelSet) return null;
+            let i = 0;
+            graphState.channelSet.forEach((channel) => {
+                if (this.evaluateFilters(channel, filters)) {
+                    const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
+                    const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
+                    if (node1 && node2) {
+                        vertexBuffer[i * 6] = node1.position.x * meshScale;
+                        vertexBuffer[i * 6 + 1] = node1.position.y * meshScale;
+                        vertexBuffer[i * 6 + 2] = node1.position.z * meshScale;
+                        vertexBuffer[i * 6 + 3] = node2.position.x * meshScale;
+                        vertexBuffer[i * 6 + 4] = node2.position.y * meshScale;
+                        vertexBuffer[i * 6 + 5] = node2.position.z * meshScale;
+                        i++;
                     }
-                });
-                return {
-                    bufferRef: vertexBuffer,
-                    size: i * 2,
-                } as BufferRef<Float32Array>;
-            },
-        ),
+                }
+            });
+            return {
+                bufferRef: vertexBuffer,
+                size: i * 2,
+            } as BufferRef<Float32Array>;
+        }),
     );
 
     channelColors$ = combineLatest([
@@ -169,74 +156,45 @@ export class GraphMeshStateService {
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelColorBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
-        this.store$.select(selectFinalMatcheNodesFromSearch),
-        this.store$.select(capacityFilterEnable),
-        this.store$.select(capacityFilterAmount),
         this.store$.select(channelColor),
         this.store$.select(channelColorMap),
         this.store$.select(selectUseLogColorScale),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(
-            ([
-                filters,
-                graphState,
-                colorBuffer,
-                nodeRegistry,
-                searchResult,
-                capacityFilterEnabled,
-                capacityFilterAmount,
-            ]) => {
-                if (!colorBuffer || !graphState.channelSet) return null;
-                let i = 0;
-                graphState.channelSet.forEach((channel) => {
-                    if (
-                        this.evaluateFilters(channel, filters)
-                        // this.shouldRenderChannel(
-                        //     searchResult,
-                        //     channel,
-                        //     capacityFilterAmount,
-                        //     capacityFilterEnabled,
-                        // )
-                    ) {
-                        const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
-                        const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
-                        if (node1 && node2) {
-                            const color = this.channelColorService.map(node1, node2, channel);
+        map(([filters, graphState, colorBuffer, nodeRegistry]) => {
+            if (!colorBuffer || !graphState.channelSet) return null;
+            let i = 0;
+            graphState.channelSet.forEach((channel) => {
+                if (
+                    this.evaluateFilters(channel, filters)
+                    // this.shouldRenderChannel(
+                    //     searchResult,
+                    //     channel,
+                    //     capacityFilterAmount,
+                    //     capacityFilterEnabled,
+                    // )
+                ) {
+                    const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
+                    const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
+                    if (node1 && node2) {
+                        const color = this.channelColorService.map(node1, node2, channel);
 
-                            colorBuffer[i * 6] = color[0];
-                            colorBuffer[i * 6 + 1] = color[1];
-                            colorBuffer[i * 6 + 2] = color[2];
-                            colorBuffer[i * 6 + 3] = color[3];
-                            colorBuffer[i * 6 + 4] = color[4];
-                            colorBuffer[i * 6 + 5] = color[5];
-                            i++;
-                        }
+                        colorBuffer[i * 6] = color[0];
+                        colorBuffer[i * 6 + 1] = color[1];
+                        colorBuffer[i * 6 + 2] = color[2];
+                        colorBuffer[i * 6 + 3] = color[3];
+                        colorBuffer[i * 6 + 4] = color[4];
+                        colorBuffer[i * 6 + 5] = color[5];
+                        i++;
                     }
-                });
-                return {
-                    bufferRef: colorBuffer,
-                    size: i * 2,
-                } as BufferRef<Uint8Array>;
-            },
-        ),
+                }
+            });
+            return {
+                bufferRef: colorBuffer,
+                size: i * 2,
+            } as BufferRef<Uint8Array>;
+        }),
     );
-
-    public shouldRenderChannel(
-        searchResult: LndNodeWithPosition,
-        channel,
-        capacityFilterAmount: number,
-        capacityFilterEnabled: boolean,
-    ): boolean {
-        return (
-            (!searchResult ||
-                (searchResult &&
-                    (channel.policies[0].public_key === searchResult.public_key ||
-                        channel.policies[1].public_key === searchResult.public_key))) &&
-            ((capacityFilterEnabled && channel.capacity >= capacityFilterAmount) ||
-                !capacityFilterEnabled)
-        );
-    }
 
     channelData$ = this.channelColors$.pipe(withLatestFrom(this.channelVertices$));
 
