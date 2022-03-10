@@ -8,15 +8,16 @@ export class FilterEvaluatorService {
     constructor() {}
 
     protected prescedence(operator: string) {
+        if (this.isComparatorOperator(operator)) return 0;
         switch (operator) {
             case '+':
-                return 0;
+                return 1;
             case '-':
                 return 1;
             case '*':
                 return 2;
             case '/':
-                return 3;
+                return 2;
         }
     }
 
@@ -93,7 +94,7 @@ export class FilterEvaluatorService {
 
     public channelProperties = ['capacity', 'fee_rate'];
     public arithmetics = ['/', '*', '-', '+'];
-    public comparators = ['>', '>=', '<', '<=', '!=', '=='];
+    public comparators = ['>', '>=', '<', '<=', '!=', '==', '='];
 
     public isValidToken(token) {
         return (
@@ -182,6 +183,8 @@ export class FilterEvaluatorService {
                 return lhs <= rhs;
             case '!=':
                 return lhs != rhs;
+            case '=':
+                return lhs == rhs;
             case '==':
                 return lhs == rhs;
             case '&&':
