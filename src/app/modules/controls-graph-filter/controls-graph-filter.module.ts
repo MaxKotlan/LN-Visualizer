@@ -11,6 +11,7 @@ import { FilterEffects } from './effects/filter.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducer';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { AddExpressionComponent } from './components/add-expression/add-expression.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
         FilterButtonComponent,
         FilterModalComponent,
         SelectFilterKeyComponent,
+        AddExpressionComponent,
     ],
     imports: [
         CommonModule,

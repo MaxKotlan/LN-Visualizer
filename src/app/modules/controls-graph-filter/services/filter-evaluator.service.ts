@@ -7,14 +7,62 @@ import { LndChannel } from 'api/src/models';
 export class FilterEvaluatorService {
     constructor() {}
 
-    public evaluateExpression(channel: LndChannel, expression: string) {
+    protected prescedence(operator: string) {
+        switch (operator) {
+            case '+':
+                return 0;
+            case '-':
+                return 1;
+            case '*':
+                return 2;
+            case '/':
+                return 3;
+        }
+    }
+
+    public convertInfixExpressionToPostfix(expression: string): string[] {
         let stack: string[] = [];
+        let queue: string[] = [];
         const tokens = expression
             .replace(/\s\s+/g, ' ')
             .split(' ')
             .filter((x) => x !== '');
         // console.log(tokens);
         tokens.forEach((token) => {
+            if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
+            if (this.isNumberOrChannelProperty(token)) {
+                queue.push(token);
+            }
+            if (this.isOperator(token)) {
+                while (this.prescedence(token) < this.prescedence(stack[stack.length - 1])) {
+                    queue.push(stack.pop());
+                }
+                stack.push(token);
+            }
+            if (this.isComparatorOperator(token)) {
+                // while (this.isComparatorOperator(stack[stack.length - 1]) && stack.length > 0) {
+                //     queue.push(stack.pop());
+                // }
+                // //stack.pop();
+            }
+            if (token === '(') {
+                stack.push(token);
+            }
+            if (token === ')') {
+                while (stack[stack.length - 1] !== '(' && stack.length > 0) {
+                    queue.push(stack.pop());
+                }
+                stack.pop();
+            }
+        });
+        stack.forEach((item) => queue.push(item));
+        return queue;
+    }
+
+    public evaluateExpression(channel: LndChannel, postFixExpression: string[]) {
+        let stack: string[] = [];
+        console.log(postFixExpression);
+        postFixExpression.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isOperator(token)) {
                 if (stack.length < 2) throw new Error(`Operator not in correct order: ${token}`);
@@ -36,31 +84,11 @@ export class FilterEvaluatorService {
                 stack.push(token as unknown as string);
             }
         });
-        if (stack.length != 1) throw new Error(`stack not empty ${stack.length}`);
         const result = stack.pop();
+        if (stack.length != 0) throw new Error(`stack not empty. ${stack.length} items left`);
         if (typeof result !== 'boolean') throw new Error('does not evaluate to boolean');
-        //   throw new Error(`Unknown Token ${lhs} ${rhs}`);
-
         console.log(result);
-        // }
-        // while (stack.length > 1) {
-        //     console.log(stack.length);
-        //     const token = stack[stack.length - 1];
-        //     if (this.isOperator(token)) {
-        //         const rhs = stack.pop();
-        //         const lhs = stack.pop();
-        //         stack.push(
-        //             this.evaluate(
-        //                 token,
-        //                 lhs as unknown as number,
-        //                 rhs as unknown as number,
-        //             ) as unknown as string,
-        //         );
-        //     } else {
-        //         stack.push(token);
-        //     }
-        // }
-        //if (result !== typeof Boolean) throw new Error('Expression Must Evalue to Boolean');
+        return result;
     }
 
     public channelProperties = ['capacity', 'fee_rate'];
@@ -68,7 +96,13 @@ export class FilterEvaluatorService {
     public comparators = ['>', '>=', '<', '<=', '!=', '=='];
 
     public isValidToken(token) {
-        return this.isChannelProperty(token) || this.isOperator(token) || !isNaN(Number(token));
+        return (
+            this.isChannelProperty(token) ||
+            this.isOperator(token) ||
+            !isNaN(Number(token)) ||
+            token === '(' ||
+            token === ')'
+        );
     }
 
     public isChannelProperty(token) {
@@ -85,6 +119,10 @@ export class FilterEvaluatorService {
 
     public isOperator(token) {
         return this.isComparatorOperator(token) || this.arithmetics.includes(token);
+    }
+
+    public isNumberOrChannelProperty(token) {
+        return this.isChannelProperty(token) || !isNaN(Number(token));
     }
 
     // public evaluateFilters(channel: LndChannel, filters: Filter<number | string>[]): boolean {
@@ -149,6 +187,6 @@ export class FilterEvaluatorService {
             case '&&':
                 return lhs && rhs;
         }
-        throw new Error('Unknown Operator in Filter Eval Function');
+        throw new Error('Unknown logical operator');
     }
 }

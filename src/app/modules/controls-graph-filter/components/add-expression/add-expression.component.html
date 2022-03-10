@@ -1,0 +1,22 @@
+<h3 *ngIf="error">{{ error }}</h3>
+<div style="display: flex">
+    <ngx-codemirror
+        style="width: 100%"
+        [(ngModel)]="expression"
+        (ngModelChange)="expressionEval($event)"
+        [options]="{
+            lineNumbers: false,
+            theme: 'material',
+            mode: 'javascript'
+        }"
+    ></ngx-codemirror>
+    <button
+        class="not-inline"
+        (click)="createExpression()"
+        mat-mini-fab
+        color="primary"
+        aria-label="Example icon button with a delete icon"
+    >
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
