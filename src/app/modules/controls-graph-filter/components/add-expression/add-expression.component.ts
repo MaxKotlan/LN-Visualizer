@@ -11,22 +11,25 @@ export class AddExpressionComponent {
     constructor(public filterEval: FilterEvaluatorService) {}
 
     public error: Error | undefined = undefined;
+    public expression: string;
+    public rpnExpression: string[];
 
     public expressionEval(input: string) {
         try {
-            const postFix = this.filterEval.convertInfixExpressionToPostfix(input);
-            this.filterEval.evaluateExpression({ capacity: 32 } as unknown as LndChannel, postFix);
+            this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
+            this.filterEval.evaluateExpression(
+                { capacity: 32 } as unknown as LndChannel,
+                this.rpnExpression,
+            );
             this.error = undefined;
         } catch (e) {
             this.error = e;
         }
     }
 
-    public expression: string;
-
     public createExpression() {
         if (!this.error) {
-            console.log('adding valid expression');
+            console.log('adding valid expression: ', this.rpnExpression.join(''));
         }
     }
 }
