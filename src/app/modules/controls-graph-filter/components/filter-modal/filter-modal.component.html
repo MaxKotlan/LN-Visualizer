@@ -6,6 +6,15 @@
     </button>
 </mat-toolbar>
 <div class="modal-content">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>RP Expression</mat-label>
+        <textarea
+            matInput
+            placeholder="capacity 2 * 1000 "
+            [(ngModel)]="expression"
+            (ngModelChange)="expressionEval($event)"
+        ></textarea>
+    </mat-form-field>
     <app-select-filter-key></app-select-filter-key>
     <app-filter-list></app-filter-list>
 </div>

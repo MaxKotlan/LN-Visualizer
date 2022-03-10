@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
 @Component({
     selector: 'app-filter-modal',
@@ -7,5 +8,14 @@ import { MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./filter-modal.component.scss'],
 })
 export class FilterModalComponent {
-    constructor(public dialogRef: MatDialogRef<FilterModalComponent>) {}
+    constructor(
+        public dialogRef: MatDialogRef<FilterModalComponent>,
+        public filterEval: FilterEvaluatorService,
+    ) {}
+
+    public expressionEval(input: any) {
+        this.filterEval.evaluateExpression(input);
+    }
+
+    public expression: string;
 }
