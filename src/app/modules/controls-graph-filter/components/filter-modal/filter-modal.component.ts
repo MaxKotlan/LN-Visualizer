@@ -14,8 +14,15 @@ export class FilterModalComponent {
         public filterEval: FilterEvaluatorService,
     ) {}
 
+    public error: Error | undefined = undefined;
+
     public expressionEval(input: any) {
-        this.filterEval.evaluateExpression({ capacity: 32 } as unknown as LndChannel, input);
+        try {
+            this.filterEval.evaluateExpression({ capacity: 32 } as unknown as LndChannel, input);
+            this.error = undefined;
+        } catch (e) {
+            this.error = e;
+        }
     }
 
     public expression: string;

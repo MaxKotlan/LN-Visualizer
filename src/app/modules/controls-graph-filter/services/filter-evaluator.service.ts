@@ -13,10 +13,12 @@ export class FilterEvaluatorService {
             .replace(/\s\s+/g, ' ')
             .split(' ')
             .filter((x) => x !== '');
-        console.log(tokens);
+        // console.log(tokens);
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isOperator(token)) {
+                if (stack.length < 2) throw new Error(`Operator not in correct order: ${token}`);
+
                 let rhs = stack.pop();
                 let lhs = stack.pop();
 

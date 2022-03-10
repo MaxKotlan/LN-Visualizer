@@ -6,15 +6,7 @@
     </button>
 </mat-toolbar>
 <div class="modal-content">
-    <mat-form-field class="example-full-width" appearance="fill">
-        <mat-label>RPN Expression</mat-label>
-        <textarea
-            matInput
-            placeholder="capacity 2 * 1000 "
-            [(ngModel)]="expression"
-            (ngModelChange)="expressionEval($event)"
-        ></textarea>
-    </mat-form-field>
+    <h3 *ngIf="error">{{ error }}</h3>
     <ngx-codemirror
         [(ngModel)]="expression"
         (ngModelChange)="expressionEval($event)"
