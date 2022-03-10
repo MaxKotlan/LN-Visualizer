@@ -15,6 +15,15 @@
             (ngModelChange)="expressionEval($event)"
         ></textarea>
     </mat-form-field>
+    <ngx-codemirror
+        [(ngModel)]="expression"
+        (ngModelChange)="expressionEval($event)"
+        [options]="{
+            lineNumbers: false,
+            theme: 'material',
+            mode: 'javascript'
+        }"
+    ></ngx-codemirror>
     <app-select-filter-key></app-select-filter-key>
     <app-filter-list></app-filter-list>
 </div>

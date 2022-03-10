@@ -10,6 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './effects/filter.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducer';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { reducer } from './reducer';
         CommonModule,
         FormsModule,
         MaterialModule,
+        CodemirrorModule,
         EffectsModule.forFeature([FilterEffects]),
         StoreModule.forFeature('graphFilterState', reducer),
     ],

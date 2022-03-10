@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { LndChannel } from 'api/src/models';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class FilterModalComponent {
     ) {}
 
     public expressionEval(input: any) {
-        this.filterEval.evaluateExpression(input);
+        this.filterEval.evaluateExpression({ capacity: 32 } as unknown as LndChannel, input);
     }
 
     public expression: string;
