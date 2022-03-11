@@ -1,7 +1,6 @@
 <mat-drawer-container class="app-container" autosize>
     <mat-drawer #drawer class="app-sidenav" mode="side" [opened]="true">
-        <h3>Quick Controls</h3>
-        <mat-divider></mat-divider>
+        <app-quick-controls></app-quick-controls>
         <label>Control</label>
         <div style="display: flex; align-items: center; gap: 0.2rem">
             <mat-slide-toggle></mat-slide-toggle>
@@ -15,7 +14,6 @@
 
     <div class="app-sidenav-content">
         <!-- <button type="button" mat-button (click)="drawer.toggle()">Toggle sidenav</button> -->
-        <app-quick-controls></app-quick-controls>
         <app-graph-stats></app-graph-stats>
         <app-settings *ngIf="screenSizeService.isDesktop$ | async"></app-settings>
         <app-filter-button></app-filter-button>

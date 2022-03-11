@@ -2,6 +2,10 @@
     height: 100vh;
 }
 
+.app-sidenav {
+    padding: 16px;
+}
+
 mat-spinner {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
