@@ -29,7 +29,7 @@ export const reducer = createReducer(
     })),
     on(filterActions.removeFilterByKey, (state, { key }) => ({
         ...state,
-        activeFilters: state.activeFilters.filter((f) => f.expression.includes(key)),
+        activeFilters: state.activeFilters.filter((f) => !f.expression.includes(key)),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
