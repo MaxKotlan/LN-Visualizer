@@ -1,5 +1,3 @@
-export interface Filter<T> {
-    keyname: string;
-    operator: string;
-    operand: T;
+export interface Filter {
+    expression: string[];
 }

@@ -493,9 +493,7 @@ export class GraphEffects {
                         addPubKeyFilter.push(
                             filterActions.addFilter({
                                 value: {
-                                    keyname: 'public_key',
-                                    operator: '==',
-                                    operand: c.public_key,
+                                    expression: ['public_key', c.public_key, '=='],
                                 },
                             }),
                         );

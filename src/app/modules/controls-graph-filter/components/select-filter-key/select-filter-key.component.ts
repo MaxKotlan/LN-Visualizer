@@ -29,14 +29,14 @@ export class SelectFilterKeyComponent {
 
     public createExpression() {
         if (!this.key || !this.operator || !this.operand) return;
-        this.store$.dispatch(
-            filterActions.addFilter({
-                value: {
-                    keyname: this.key,
-                    operator: this.operator,
-                    operand: this.operand,
-                } as Filter<number>,
-            }),
-        );
+        // this.store$.dispatch(
+        //     filterActions.addFilter({
+        //         value: {
+        //             keyname: this.key,
+        //             operator: this.operator,
+        //             operand: this.operand,
+        //         } as Filter,
+        //     }),
+        // );
     }
 }

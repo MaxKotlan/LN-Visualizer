@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as filterActions from '../actions';
 
 export interface GraphFilterState {
-    activeFilters: Filter<string | number>[];
+    activeFilters: Filter[];
     channelFilterKeys: string[];
     nodeFilterKeys: string[];
     filterOperators: string[];
@@ -29,7 +29,7 @@ export const reducer = createReducer(
     })),
     on(filterActions.removeFilterByKey, (state, { key }) => ({
         ...state,
-        activeFilters: state.activeFilters.filter((f) => f.keyname !== key),
+        activeFilters: state.activeFilters.filter((f) => !f.expression.includes(key)),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,

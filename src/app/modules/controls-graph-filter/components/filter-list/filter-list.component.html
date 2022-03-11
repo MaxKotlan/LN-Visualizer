@@ -1,8 +1,6 @@
 <ul>
     <li *ngFor="let filter of filterList$ | async">
-        {{ filter.keyname }}
-        {{ filter.operator }}
-        {{ filter.operand }}
+        {{ filter.expression }}
         <button
             class="not-inline"
             (click)="remove(filter)"

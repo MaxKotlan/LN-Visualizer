@@ -1,0 +1,48 @@
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { LndChannel } from 'src/app/types/channels.interface';
+import { GraphFilterState } from '../../reducer';
+import { activeFilters } from '../../selectors/filter.selectors';
+import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
+import * as filterActions from '../../actions/filter.actions';
+import { Filter } from '../../types/filter.interface';
+
+@Component({
+    selector: 'app-add-expression',
+    templateUrl: './add-expression.component.html',
+    styleUrls: ['./add-expression.component.scss'],
+})
+export class AddExpressionComponent {
+    constructor(
+        public filterEval: FilterEvaluatorService,
+        private store$: Store<GraphFilterState>,
+    ) {
+        this.store$.select(activeFilters).subscribe(console.log);
+    }
+
+    public error: Error | undefined = undefined;
+    public expression: string;
+    public rpnExpression: string[];
+
+    public expressionEval(input: string) {
+        try {
+            this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
+            this.filterEval.evaluateExpression(
+                { capacity: 32 } as unknown as LndChannel,
+                this.rpnExpression,
+            );
+            this.error = undefined;
+        } catch (e) {
+            this.error = e;
+        }
+    }
+
+    public createExpression() {
+        if (!this.error) {
+            this.store$.dispatch(
+                filterActions.addFilter({ value: { expression: this.rpnExpression } }),
+            );
+            console.log('adding valid expression: ', this.rpnExpression);
+        }
+    }
+}
