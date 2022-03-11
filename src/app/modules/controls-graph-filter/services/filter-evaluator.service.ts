@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LndChannel } from 'api/src/models';
+import { Filter } from '../types/filter.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -62,7 +63,7 @@ export class FilterEvaluatorService {
 
     public evaluateExpression(channel: LndChannel, postFixExpression: string[]) {
         let stack: string[] = [];
-        console.log(postFixExpression);
+        // console.log(postFixExpression);
         postFixExpression.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isOperator(token)) {
@@ -72,8 +73,10 @@ export class FilterEvaluatorService {
                 let lhs = stack.pop();
 
                 if (this.isChannelProperty(lhs) || this.isChannelProperty(rhs)) {
-                    if (this.isChannelProperty(lhs)) lhs = channel[lhs];
-                    if (this.isChannelProperty(rhs)) rhs = channel[rhs];
+                    if (this.isChannelProperty(lhs))
+                        lhs = channel[lhs] || channel.policies[0][lhs] || channel.policies[1][lhs];
+                    if (this.isChannelProperty(rhs))
+                        rhs = channel[rhs] || channel.policies[0][rhs] || channel.policies[1][rhs];
                 }
 
                 if (this.isArithmeticOperator(token)) {
@@ -88,15 +91,16 @@ export class FilterEvaluatorService {
         const result = stack.pop();
         if (stack.length != 0) throw new Error(`stack not empty. ${stack.length} items left`);
         if (typeof result !== 'boolean') throw new Error('does not evaluate to boolean');
-        console.log(result);
+        // console.log(result);
         return result;
     }
 
-    public channelProperties = ['capacity', 'fee_rate'];
+    public channelProperties = ['capacity', 'fee_rate', 'public_key'];
     public arithmetics = ['/', '*', '-', '+'];
     public comparators = ['>', '>=', '<', '<=', '!=', '==', '='];
 
     public isValidToken(token) {
+        return true;
         return (
             this.isChannelProperty(token) ||
             this.isOperator(token) ||
@@ -126,21 +130,15 @@ export class FilterEvaluatorService {
         return this.isChannelProperty(token) || !isNaN(Number(token));
     }
 
-    // public evaluateFilters(channel: LndChannel, filters: Filter<number | string>[]): boolean {
-    //     let result = true;
-    //     filters.forEach((filter) => {
-    //         result =
-    //             result &&
-    //             this.evaluate(
-    //                 filter.operator,
-    //                 this.keyToChannelValue(channel, filter.keyname),
-    //                 filter.operand,
-    //             );
-    //     });
-    //     return result;
-    // }
+    public evaluateFilters(channel: LndChannel, filters: Filter[]): boolean {
+        let result = true;
+        filters.forEach((filter) => {
+            result = result && this.evaluateExpression(channel, filter.expression);
+        });
+        return result;
+    }
 
-    public keyToChannelValue(channel: LndChannel, key: string) {
+    public keyToChannelValue(channel: LndChannel, key: string): string {
         return channel[key] || channel.policies[0][key] || channel.policies[1][key];
     }
 

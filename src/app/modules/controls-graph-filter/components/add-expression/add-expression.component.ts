@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { LndChannel } from 'src/app/types/channels.interface';
+import { GraphFilterState } from '../../reducer';
+import { activeFilters } from '../../selectors/filter.selectors';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
+import * as filterActions from '../../actions/filter.actions';
+import { Filter } from '../../types/filter.interface';
 
 @Component({
     selector: 'app-add-expression',
@@ -8,7 +13,12 @@ import { FilterEvaluatorService } from '../../services/filter-evaluator.service'
     styleUrls: ['./add-expression.component.scss'],
 })
 export class AddExpressionComponent {
-    constructor(public filterEval: FilterEvaluatorService) {}
+    constructor(
+        public filterEval: FilterEvaluatorService,
+        private store$: Store<GraphFilterState>,
+    ) {
+        this.store$.select(activeFilters).subscribe(console.log);
+    }
 
     public error: Error | undefined = undefined;
     public expression: string;
@@ -29,7 +39,10 @@ export class AddExpressionComponent {
 
     public createExpression() {
         if (!this.error) {
-            console.log('adding valid expression: ', this.rpnExpression.join(''));
+            this.store$.dispatch(
+                filterActions.addFilter({ value: { expression: this.rpnExpression } }),
+            );
+            console.log('adding valid expression: ', this.rpnExpression);
         }
     }
 }
