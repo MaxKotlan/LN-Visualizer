@@ -27,9 +27,9 @@ export const reducer = createReducer(
         ...state,
         activeFilters: state.activeFilters.filter((f) => !_.isEqual(f, value)),
     })),
-    on(filterActions.removeFilterByKey, (state, { key }) => ({
+    on(filterActions.removeFilterByIssueId, (state, { issueId }) => ({
         ...state,
-        activeFilters: state.activeFilters.filter((f) => !f.expression.includes(key)),
+        activeFilters: state.activeFilters.filter((f) => f.issueId !== issueId),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
