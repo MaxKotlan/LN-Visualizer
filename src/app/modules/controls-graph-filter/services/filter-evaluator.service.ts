@@ -97,7 +97,7 @@ export class FilterEvaluatorService {
 
     public channelProperties = ['capacity', 'fee_rate', 'public_key'];
     public arithmetics = ['/', '*', '-', '+'];
-    public comparators = ['>', '>=', '<', '<=', '!=', '==', '='];
+    public comparators = ['>', '>=', '<', '<=', '!=', '==', '=', '&&', '||'];
 
     public isValidToken(token) {
         return true;
