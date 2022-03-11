@@ -16,9 +16,7 @@ export class AddExpressionComponent {
     constructor(
         public filterEval: FilterEvaluatorService,
         private store$: Store<GraphFilterState>,
-    ) {
-        this.store$.select(activeFilters).subscribe(console.log);
-    }
+    ) {}
 
     public error: Error | undefined = undefined;
     public expression: string;
