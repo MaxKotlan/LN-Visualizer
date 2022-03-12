@@ -16,6 +16,7 @@ import {
     SettingsModalComponent,
 } from './components';
 import { reducer } from './reducers';
+import { QuickCapacityComponent } from './components/quick-capacity/quick-capacity.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { reducer } from './reducers';
         SettingsModalComponent,
         CameraSettingsComponent,
         MiscSettingsComponent,
+        QuickCapacityComponent,
     ],
     imports: [
         CommonModule,
@@ -43,6 +45,7 @@ import { reducer } from './reducers';
         CameraSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
+        QuickCapacityComponent,
     ],
 })
 export class ControlsModule {}

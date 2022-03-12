@@ -35,4 +35,8 @@ export const reducer = createReducer(
         ...state,
         channelFilterKeys: value,
     })),
+    on(filterActions.updateFilterByIssueId, (state, { value }) => ({
+        ...state,
+        activeFilters: [...state.activeFilters.filter((f) => f?.issueId != value?.issueId), value],
+    })),
 );

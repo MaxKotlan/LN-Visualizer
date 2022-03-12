@@ -4,7 +4,6 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { searchGraph, sortOrderChange } from '../../actions';
-import * as channelControlSelectors from '../../../controls-channel/selectors';
 import * as channelControlActions from '../../../controls-channel/actions';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
@@ -23,15 +22,11 @@ import { minEdgesRecompute, renderEdges } from 'src/app/modules/controls-channel
     styleUrls: ['./quick-controls.component.scss'],
 })
 export class QuickControlsComponent {
-    options: string[] = ['One', 'Two', 'Three'];
-
     constructor(private store$: Store<GraphState>, public screenSizeService: ScreenSizeService) {}
 
     public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
-    public shouldFilterCapacity$ = this.store$.select(channelControlSelectors.capacityFilterEnable);
-    public capacityFilterAmount$ = this.store$.select(channelControlSelectors.capacityFilterAmount);
 
     public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
 
@@ -56,16 +51,6 @@ export class QuickControlsComponent {
 
     connectionSortChanged(event: MatSlideToggleChange) {
         this.store$.dispatch(sortOrderChange({ ascending: event.checked }));
-    }
-
-    updateFilterCapacityEnable(event: MatCheckboxChange) {
-        this.store$.dispatch(channelControlActions.capacityFilterEnable({ value: event.checked }));
-    }
-
-    setCapacityFiliterAmount(event: MatSliderChange) {
-        this.store$.dispatch(
-            channelControlActions.capacityFilterAmount({ value: event.value || 1 }),
-        );
     }
 
     gotoNode() {

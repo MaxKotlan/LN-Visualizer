@@ -19,16 +19,6 @@ export const selectEdgeDottedLine = createSelector(
     (state) => state.edgeDottedLine,
 );
 
-export const capacityFilterAmount = createSelector(
-    channelControlsSelector,
-    (state) => state.capacityFilterAmount,
-);
-
-export const capacityFilterEnable = createSelector(
-    channelControlsSelector,
-    (state) => state.capacityFilterEnable,
-);
-
 export const channelColor = createSelector(channelControlsSelector, (state) => state.channelColor);
 
 export const channelColorMap = createSelector(
