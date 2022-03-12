@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     }
 
     public recomputeCanvasSize() {
-        console.log('recom');
         this.store$.dispatch(graphActions.recomputeCanvasSize());
     }
 }

@@ -93,7 +93,6 @@ export class GraphSceneComponent implements OnInit, AfterViewInit {
         this.animationService.start();
 
         this.actions$.pipe(ofType(graphActions.recomputeCanvasSize)).subscribe(() => {
-            console.log('resizing');
             this.renderCanvas.onResize(undefined);
         });
 

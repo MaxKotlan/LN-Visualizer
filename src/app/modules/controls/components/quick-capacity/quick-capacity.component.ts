@@ -15,12 +15,13 @@ export class QuickCapacityComponent {
     constructor(private store$: Store<GraphState>) {}
 
     public isEnabled: boolean;
-    public capacityAmount: number;
 
     public max = Number(1400000000);
     public maxLog = Math.log10(this.max);
     public step = this.maxLog / 100;
     public value = this.maxLog / 2;
+
+    public capacityAmount: number = this.maxLog / 2;
 
     enableCapacityChange() {
         if (!this.isEnabled) {
