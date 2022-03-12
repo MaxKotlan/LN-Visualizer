@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'src/app/types/channels.interface';
-import { GraphFilterState } from '../../reducer';
-import { activeFilters } from '../../selectors/filter.selectors';
-import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 import * as filterActions from '../../actions/filter.actions';
-import { Filter } from '../../types/filter.interface';
+import { GraphFilterState } from '../../reducer';
+import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
 @Component({
     selector: 'app-add-expression',
@@ -16,9 +14,7 @@ export class AddExpressionComponent {
     constructor(
         public filterEval: FilterEvaluatorService,
         private store$: Store<GraphFilterState>,
-    ) {
-        this.store$.select(activeFilters).subscribe(console.log);
-    }
+    ) {}
 
     public error: Error | undefined = undefined;
     public expression: string;

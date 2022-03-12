@@ -5,9 +5,14 @@ export const addFilter = createAction('[filter] addFilter', props<{ value: Filte
 
 export const removeFilter = createAction('[filter] removeFilter', props<{ value: Filter }>());
 
-export const removeFilterByKey = createAction(
-    '[filter] removeFilterByKey',
-    props<{ key: string }>(),
+export const updateFilterByIssueId = createAction(
+    '[filter] updateFilterByIssueId',
+    props<{ value: Filter }>(),
+);
+
+export const removeFilterByIssueId = createAction(
+    '[filter] removeFilterByIssueId',
+    props<{ issueId: string }>(),
 );
 
 export const setAllowedFilterKeys = createAction(

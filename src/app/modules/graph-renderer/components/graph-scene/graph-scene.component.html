@@ -1,9 +1,5 @@
 <atft-orbit-controls [rotateSpeed]="1" [zoomSpeed]="1.2">
-    <atft-renderer-canvas
-        #mainRenderer
-        lnd-raycaster-scene
-        style="position: fixed; width: 100vw; height: 100vh"
-    >
+    <atft-renderer-canvas #mainRenderer lnd-raycaster-scene style="height: 100vh">
         <atft-perspective-camera
             [fov]="(selectCameraFov$ | async) || 60"
             [near]="0.1"

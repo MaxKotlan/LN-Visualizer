@@ -494,12 +494,13 @@ export class GraphEffects {
                             filterActions.addFilter({
                                 value: {
                                     expression: ['public_key', c.public_key, '=='],
+                                    issueId: 'addNodeFilter',
                                 },
                             }),
                         );
 
                     return from([
-                        filterActions.removeFilterByKey({ key: 'public_key' }),
+                        filterActions.removeFilterByIssueId({ issueId: 'addNodeFilter' }),
                         ...addPubKeyFilter,
                     ]);
                 }),

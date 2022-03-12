@@ -3,8 +3,6 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, sampleTime, withLatestFrom } from 'rxjs';
 import {
-    capacityFilterAmount,
-    capacityFilterEnable,
     channelColor,
     channelColorMap,
     selectUseLogColorScale,

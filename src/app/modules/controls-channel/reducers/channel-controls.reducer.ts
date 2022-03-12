@@ -7,8 +7,6 @@ export interface ChannelControlState {
     minimumEdges: number;
     edgeDepthTest: boolean;
     edgeDottedLine: boolean;
-    capacityFilterEnable: boolean;
-    capacityFilterAmount: number;
     channelColor: string;
     channelColorMap: string;
     useLogColorScale: boolean;
@@ -19,8 +17,6 @@ const initialState: ChannelControlState = {
     minimumEdges: 0,
     edgeDepthTest: true,
     edgeDottedLine: false,
-    capacityFilterEnable: false,
-    capacityFilterAmount: 8000000,
     channelColor: 'channel-capacity',
     channelColorMap: 'jet',
     useLogColorScale: true,
@@ -50,14 +46,6 @@ export const reducer = createReducer(
     on(channelControlsActions.setEdgeUseDepthTest, (state, { value }) => ({
         ...state,
         edgeDepthTest: value,
-    })),
-    on(channelControlsActions.capacityFilterEnable, (state, { value }) => ({
-        ...state,
-        capacityFilterEnable: value,
-    })),
-    on(channelControlsActions.capacityFilterAmount, (state, { value }) => ({
-        ...state,
-        capacityFilterAmount: value,
     })),
     on(channelControlsActions.setChannelColor, (state, { value }) => ({
         ...state,

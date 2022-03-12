@@ -1,5 +1,17 @@
+.app-container {
+    height: 100vh;
+}
+
+.app-sidenav {
+    padding: 16px;
+}
+
+:host ::ng-deep .mat-drawer-content {
+    overflow: unset !important;
+}
+
 mat-spinner {
-    position: fixed;
+    position: absolute;
     transform: translateX(-50%) translateY(-50%);
     top: 50%;
     left: 50%;
@@ -8,14 +20,14 @@ mat-spinner {
 }
 
 app-loading-bar {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     z-index: 100;
     width: 100vw;
 }
 
 app-graph-stats {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
     z-index: 100;
@@ -24,14 +36,14 @@ app-graph-stats {
 }
 
 app-tooltip {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
     z-index: 1000;
 }
 
 app-channel-color-scale {
-    position: fixed;
+    position: absolute;
     //top: 50%;
     bottom: 30px;
     left: 10px;

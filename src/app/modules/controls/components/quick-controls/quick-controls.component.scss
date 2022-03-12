@@ -1,14 +1,14 @@
 .desktop-card {
-    position: fixed;
-    z-index: 1000;
-    top: 10px;
-    left: 10px;
+    // position: absolute;
+    // z-index: 1000;
+    // top: 10px;
+    // left: 10px;
 }
 
 .mobile-card {
     padding: 0.2rem;
     width: 100vw;
     height: 52.063px !important;
-    position: fixed;
+    position: absolute;
     z-index: 1000;
 }
