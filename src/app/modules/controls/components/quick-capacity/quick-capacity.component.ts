@@ -28,12 +28,14 @@ export class QuickCapacityComponent {
                 filterActions.removeFilterByIssueId({ issueId: 'quick-capacity' }),
             );
         } else {
-            filterActions.updateFilterByIssueId({
-                value: {
-                    issueId: 'quick-capacity',
-                    expression: ['capacity', this.capacityAmount, '>'],
-                } as Filter,
-            });
+            this.store$.dispatch(
+                filterActions.updateFilterByIssueId({
+                    value: {
+                        issueId: 'quick-capacity',
+                        expression: ['capacity', Math.pow(10, this.capacityAmount), '>'],
+                    } as Filter,
+                }),
+            );
         }
     }
 

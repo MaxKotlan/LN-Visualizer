@@ -7,8 +7,9 @@
         [max]="maxLog"
         [step]="step"
         [value]="value"
-        [ngModel]="capacityAmount"
+        [(ngModel)]="capacityAmount"
         (change)="updateQuickCapacityFiliterScript($event)"
+        [disabled]="!isEnabled"
     ></mat-slider>
 </div>
 <mat-divider></mat-divider>
