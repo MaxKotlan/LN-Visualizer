@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
@@ -13,7 +14,26 @@ import * as filterActions from '../../../controls-graph-filter/actions';
 export class QuickCapacityComponent {
     constructor(private store$: Store<GraphState>) {}
 
+    public isEnabled: boolean;
+    public capacityAmount: number;
+
+    enableCapacityChange() {
+        if (!this.isEnabled) {
+            this.store$.dispatch(
+                filterActions.removeFilterByIssueId({ issueId: 'quick-capacity' }),
+            );
+        } else {
+            filterActions.updateFilterByIssueId({
+                value: {
+                    issueId: 'quick-capacity',
+                    expression: ['capacity', this.capacityAmount, '>'],
+                } as Filter,
+            });
+        }
+    }
+
     updateQuickCapacityFiliterScript(event: MatSliderChange) {
+        this.isEnabled = true;
         this.store$.dispatch(
             filterActions.updateFilterByIssueId({
                 value: {
