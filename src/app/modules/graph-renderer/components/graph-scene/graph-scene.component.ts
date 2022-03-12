@@ -5,6 +5,7 @@ import {
     AnimationService,
     OrbitControlsComponent,
     PerspectiveCameraComponent,
+    RendererCanvasComponent,
     SceneComponent,
 } from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
@@ -43,6 +44,7 @@ import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-rendere
     styleUrls: ['graph-scene.component.scss'],
 })
 export class GraphSceneComponent implements OnInit, AfterViewInit {
+    @ViewChild(RendererCanvasComponent) renderCanvas!: RendererCanvasComponent;
     @ViewChild(SceneComponent) scene!: SceneComponent;
     @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
     @ViewChild(OrbitControlsComponent) orbitControlsComponent: OrbitControlsComponent | undefined;
@@ -89,6 +91,11 @@ export class GraphSceneComponent implements OnInit, AfterViewInit {
         this.animate = this.animate.bind(this);
         this.animation = this.animationService.animate.subscribe(this.animate);
         this.animationService.start();
+
+        this.actions$.pipe(ofType(graphActions.recomputeCanvasSize)).subscribe(() => {
+            console.log('resizing');
+            this.renderCanvas.onResize(undefined);
+        });
 
         this.selectCameraFov$.subscribe((fov) => {
             const camera: any = this.cameraComponent?.camera;

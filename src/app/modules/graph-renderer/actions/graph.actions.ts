@@ -84,3 +84,5 @@ export const channelUpdated = createAction(
     '[graph] channelUpdated',
     props<{ channelId: string }>(),
 );
+
+export const recomputeCanvasSize = createAction('[graph] recomputeCanvasSize');

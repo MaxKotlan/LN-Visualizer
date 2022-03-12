@@ -4,6 +4,7 @@
         class="app-sidenav"
         [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
         [opened]="true"
+        (openedChange)="recomputeCanvasSize()"
     >
         <app-quick-controls></app-quick-controls>
         <app-quick-capacity></app-quick-capacity>

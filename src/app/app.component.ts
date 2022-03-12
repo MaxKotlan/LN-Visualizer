@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as controlsActions from './modules/controls/actions';
 import { ScreenSizeService } from './services/screen-size.service';
+import * as graphActions from './modules/graph-renderer/actions';
 
 @Component({
     selector: 'app-root',
@@ -15,5 +16,10 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store$.dispatch(controlsActions.loadSavedState());
+    }
+
+    public recomputeCanvasSize() {
+        console.log('recom');
+        this.store$.dispatch(graphActions.recomputeCanvasSize());
     }
 }
