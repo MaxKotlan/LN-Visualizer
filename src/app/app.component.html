@@ -1,5 +1,10 @@
 <mat-drawer-container class="app-container">
-    <mat-drawer #drawer class="app-sidenav" mode="side" [opened]="true">
+    <mat-drawer
+        #drawer
+        class="app-sidenav"
+        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [opened]="true"
+    >
         <app-quick-controls></app-quick-controls>
         <div>Capacity</div>
         <div style="display: flex; align-items: center; gap: 0.2rem">
