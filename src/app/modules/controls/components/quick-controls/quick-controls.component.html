@@ -28,14 +28,14 @@
             Goto
         </button>
     </span>
-    <div style="display: flex; flex-direction: column">
-        <!-- <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="updateRenderNodes($event)"
+    <mat-divider></mat-divider>
+    <div style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
+        <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="updateRenderNodes($event)"
             >Render Nodes</mat-checkbox
         >
         <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="updateRenderEdges($event)"
             >Render Channels</mat-checkbox
-        > -->
-        <mat-divider></mat-divider>
+        >
         <!-- <mat-checkbox
             disabled
             [ngModel]="shouldFilterCapacity$ | async"
@@ -63,4 +63,5 @@
         </span> -->
         <!-- <mat-slide-toggle (change)="connectionSortChanged($event)" #connectionSort>{{connectionSort.checked ? 'Lower' : 'Higher' }} connections towards center</mat-slide-toggle> -->
     </div>
+    <mat-divider></mat-divider>
 </div>
