@@ -12,31 +12,31 @@ import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import {
+    selectEdgeDepthTest,
+    selectEdgeDottedLine,
+    shouldRenderEdges,
+} from 'src/app/modules/controls-channel/selectors';
+import { gotoNode } from 'src/app/modules/controls-node/actions';
+import {
+    selectMinimumNodeSize,
+    selectNodeSize,
+    selectPointAttenuation,
+    selectPointUseIcon,
+    selectUniformNodeSize,
+    shouldRenderNodes,
+} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
+import {
     selectCameraFov,
     shouldRenderLabels,
 } from 'src/app/modules/controls/selectors/controls.selectors';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
+import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { selectFinalMatcheNodesFromSearch } from '../../selectors';
 import { GraphMeshStateService } from '../../services';
-import * as graphActions from '../../actions';
-import { gotoNode } from 'src/app/modules/controls-node/actions';
-import {
-    selectNodeSize,
-    selectUniformNodeSize,
-    selectPointAttenuation,
-    selectMinimumNodeSize,
-    selectPointUseIcon,
-    shouldRenderNodes,
-} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
-import {
-    selectEdgeDepthTest,
-    selectEdgeDottedLine,
-    shouldRenderEdges,
-} from 'src/app/modules/controls-channel/selectors';
-import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
 
 @Component({
     selector: 'app-graph-scene',
@@ -94,6 +94,7 @@ export class GraphSceneComponent implements OnInit, AfterViewInit {
 
         this.actions$.pipe(ofType(graphActions.recomputeCanvasSize)).subscribe(() => {
             this.renderCanvas.onResize(undefined);
+            this.cameraComponent.camera.updateProjectionMatrix();
         });
 
         this.selectCameraFov$.subscribe((fov) => {
