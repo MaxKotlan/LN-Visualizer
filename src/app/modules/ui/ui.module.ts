@@ -9,6 +9,7 @@ import {
 import { MaterialModule } from '../material';
 import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 import { ErrorComponent } from './components/error';
+import { SidenavOpenButtonComponent } from './components/sidenav-open-button/sidenav-open-button.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { ErrorComponent } from './components/error';
         LoadingBarComponent,
         TooltipComponent,
         GraphStatsComponent,
+        SidenavOpenButtonComponent,
     ],
     imports: [CommonModule, MaterialModule],
     exports: [
@@ -27,6 +29,7 @@ import { ErrorComponent } from './components/error';
         LoadingBarComponent,
         TooltipComponent,
         GraphStatsComponent,
+        SidenavOpenButtonComponent,
     ],
 })
 export class UiModule {}

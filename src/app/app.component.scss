@@ -6,6 +6,10 @@
     padding: 16px;
 }
 
+:host ::ng-deep .mat-drawer-content {
+    overflow: unset !important;
+}
+
 mat-spinner {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
