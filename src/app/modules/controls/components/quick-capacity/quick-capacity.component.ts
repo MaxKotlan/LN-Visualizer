@@ -17,6 +17,11 @@ export class QuickCapacityComponent {
     public isEnabled: boolean;
     public capacityAmount: number;
 
+    public max = Number(1400000000);
+    public maxLog = Math.log(this.max);
+    public step = this.maxLog / 100;
+    public value = this.maxLog / 50;
+
     enableCapacityChange() {
         if (!this.isEnabled) {
             this.store$.dispatch(
@@ -38,7 +43,7 @@ export class QuickCapacityComponent {
             filterActions.updateFilterByIssueId({
                 value: {
                     issueId: 'quick-capacity',
-                    expression: ['capacity', event.value || 1, '>'],
+                    expression: ['capacity', Math.pow(10, event.value), '>'],
                 } as Filter,
             }),
         );

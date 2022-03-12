@@ -3,9 +3,9 @@
     <mat-slide-toggle [(ngModel)]="isEnabled" (change)="enableCapacityChange()"></mat-slide-toggle>
     <mat-slider
         min="0"
-        max="1000000000"
-        step="1"
-        value="1"
+        [max]="maxLog"
+        [step]="step"
+        [value]="value"
         [ngModel]="capacityAmount"
         (change)="updateQuickCapacityFiliterScript($event)"
     ></mat-slider>
