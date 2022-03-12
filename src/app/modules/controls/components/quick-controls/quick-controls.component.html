@@ -1,4 +1,4 @@
-<mat-card *ngIf="screenSizeService.isMobile$ | async" class="mobile-card">
+<!-- <mat-card *ngIf="screenSizeService.isMobile$ | async" class="mobile-card">
     <span style="display: flex; align-items: center">
         <app-search style="width: 100%"></app-search>
         <button
@@ -12,9 +12,10 @@
         </button>
         <app-settings [inline]="true"></app-settings>
     </span>
-</mat-card>
+</mat-card> -->
 
-<div *ngIf="screenSizeService.isDesktop$ | async" class="desktop-card">
+<!-- *ngIf="screenSizeService.isDesktop$ | async" -->
+<div *ngIf="true" class="desktop-card">
     <span style="display: flex; align-items: center">
         <app-search></app-search>
         <button
