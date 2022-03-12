@@ -18,9 +18,9 @@ export class QuickCapacityComponent {
     public capacityAmount: number;
 
     public max = Number(1400000000);
-    public maxLog = Math.log(this.max);
+    public maxLog = Math.log10(this.max);
     public step = this.maxLog / 100;
-    public value = this.maxLog / 50;
+    public value = this.maxLog / 2;
 
     enableCapacityChange() {
         if (!this.isEnabled) {
