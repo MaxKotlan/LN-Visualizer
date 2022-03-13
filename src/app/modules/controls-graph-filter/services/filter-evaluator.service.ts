@@ -36,7 +36,7 @@ export class FilterEvaluatorService {
             .replace(/\s\s+/g, ' ')
             .split(/[\s()]+/g)
             .filter((x) => x !== '');
-        console.log(tokens);
+
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isNumberOrChannelProperty(token)) {
