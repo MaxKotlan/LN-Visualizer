@@ -22,17 +22,13 @@ export class FilterEvaluatorService {
         }
     }
 
-    public get allOpertors() {
-        return [...this.arithmetics, ...this.comparators, ...this.channelProperties];
-    }
-
     public convertInfixExpressionToPostfix(expression: string): string[] {
         let stack: string[] = [];
         let queue: string[] = [];
 
         let preParse = expression;
 
-        this.allOpertors.forEach((op) => {
+        this.arithmetics.forEach((op) => {
             preParse = preParse.replace(op, ` ${op} `);
         });
 
