@@ -29,16 +29,24 @@
         </button>
     </span>
     <mat-divider></mat-divider>
-    <div style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
+    <div
+        style="
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            gap: 0.2rem;
+        "
+    >
         <mat-slide-toggle
             [ngModel]="shouldRenderNodes$ | async"
             (change)="updateRenderNodes($event)"
-            >Render Nodes</mat-slide-toggle
+            >Renderer Nodes</mat-slide-toggle
         >
         <mat-slide-toggle
             [ngModel]="shouldRenderEdges$ | async"
             (change)="updateRenderEdges($event)"
-            >Render Channels</mat-slide-toggle
+            >Renderer Channels</mat-slide-toggle
         >
         <!-- <mat-checkbox
             disabled
