@@ -26,10 +26,11 @@ export class FilterEvaluatorService {
         let stack: string[] = [];
         let queue: string[] = [];
         const tokens = expression
+            .replace('*', ' * ')
             .replace(/\s\s+/g, ' ')
-            .split(' ')
+            .split(/[\s()]+/g)
             .filter((x) => x !== '');
-        // console.log(tokens);
+        console.log(tokens);
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isNumberOrChannelProperty(token)) {
