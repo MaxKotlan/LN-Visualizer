@@ -1,13 +1,21 @@
 <mat-drawer-container class="app-container">
     <mat-drawer
         #drawer
-        class="app-sidenav"
         [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
         [opened]="true"
         (openedChange)="recomputeCanvasSize()"
     >
-        <app-quick-controls></app-quick-controls>
-        <app-quick-capacity></app-quick-capacity>
+        <mat-toolbar style="height: 3rem">
+            <mat-icon>offline_bolt</mat-icon>
+            <span style="margin-left: 0.4rem; flex-grow: 1">LnVisualizer</span>
+            <button (click)="drawer.close()" mat-icon-button aria-label="Close Dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar>
+        <div class="app-sidenav">
+            <app-quick-controls></app-quick-controls>
+            <app-quick-capacity></app-quick-capacity>
+        </div>
     </mat-drawer>
 
     <div class="app-sidenav-content">
