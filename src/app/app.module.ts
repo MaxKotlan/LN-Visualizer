@@ -10,6 +10,7 @@ import { RouteEffects } from './effects/route.effects';
 import { ControlsGraphFilterModule } from './modules/controls-graph-filter/controls-graph-filter.module';
 import { ControlsModule } from './modules/controls/controls.module';
 import { ControlsEffects } from './modules/controls/effects/controls.effects';
+import { FloatingButtonMenuModule } from './modules/floating-button-menu/floating-button-menu.module';
 import { GraphRendererModule } from './modules/graph-renderer';
 import { MaterialModule } from './modules/material';
 import { UiModule } from './modules/ui/ui.module';
@@ -26,6 +27,7 @@ import { UiModule } from './modules/ui/ui.module';
         UiModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         MaterialModule,
+        FloatingButtonMenuModule,
         StoreModule.forRoot(
             {},
             {

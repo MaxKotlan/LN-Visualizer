@@ -12,7 +12,6 @@ import {
     NodeSettingsComponent,
     QuickControlsComponent,
     SearchComponent,
-    SettingsComponent,
     SettingsModalComponent,
 } from './components';
 import { reducer } from './reducers';
@@ -22,7 +21,6 @@ import { QuickCapacityComponent } from './components/quick-capacity/quick-capaci
     declarations: [
         SearchComponent,
         QuickControlsComponent,
-        SettingsComponent,
         SettingsModalComponent,
         CameraSettingsComponent,
         MiscSettingsComponent,
@@ -40,7 +38,6 @@ import { QuickCapacityComponent } from './components/quick-capacity/quick-capaci
     exports: [
         SearchComponent,
         QuickControlsComponent,
-        SettingsComponent,
         SettingsModalComponent,
         CameraSettingsComponent,
         NodeSettingsComponent,
