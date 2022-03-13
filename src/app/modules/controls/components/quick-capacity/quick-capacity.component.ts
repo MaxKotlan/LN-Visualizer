@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import * as filterActions from '../../../controls-graph-filter/actions';
+import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 
 @Component({
     selector: 'app-quick-capacity',
@@ -22,6 +24,10 @@ export class QuickCapacityComponent {
     public value = this.maxLog / 2;
 
     public capacityAmount: number = this.maxLog / 2;
+
+    public isEnabled$: Observable<boolean> = this.store$.select(
+        filterSelectors.isFilterActive('quick-capacity'),
+    );
 
     enableCapacityChange() {
         if (!this.isEnabled) {

@@ -37,11 +37,11 @@ export class QuickControlsComponent {
             this.store$.dispatch(searchGraph({ searchText: event.option.value }));
     }
 
-    updateRenderNodes(event: MatCheckboxChange) {
+    updateRenderNodes(event: MatSlideToggleChange) {
         this.store$.dispatch(renderNodes({ value: event.checked }));
     }
 
-    updateRenderEdges(event: MatCheckboxChange) {
+    updateRenderEdges(event: MatSlideToggleChange) {
         this.store$.dispatch(renderEdges({ value: event.checked }));
     }
 

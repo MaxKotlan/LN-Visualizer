@@ -14,3 +14,6 @@ export const channelFilterKeys = createSelector(
 export const nodeFilterKeys = createSelector(graphFilterState, (state) => state.nodeFilterKeys);
 
 export const filterOperators = createSelector(graphFilterState, (state) => state.filterOperators);
+
+export const isFilterActive = (issueId: string) =>
+    createSelector(activeFilters, (filters) => filters.some((f) => f?.issueId === issueId));

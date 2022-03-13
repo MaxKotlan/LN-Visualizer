@@ -29,12 +29,24 @@
         </button>
     </span>
     <mat-divider></mat-divider>
-    <div style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
-        <mat-checkbox [ngModel]="shouldRenderNodes$ | async" (change)="updateRenderNodes($event)"
-            >Render Nodes</mat-checkbox
+    <div
+        style="
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            gap: 0.2rem;
+        "
+    >
+        <mat-slide-toggle
+            [ngModel]="shouldRenderNodes$ | async"
+            (change)="updateRenderNodes($event)"
+            >Renderer Nodes</mat-slide-toggle
         >
-        <mat-checkbox [ngModel]="shouldRenderEdges$ | async" (change)="updateRenderEdges($event)"
-            >Render Channels</mat-checkbox
+        <mat-slide-toggle
+            [ngModel]="shouldRenderEdges$ | async"
+            (change)="updateRenderEdges($event)"
+            >Renderer Channels</mat-slide-toggle
         >
         <!-- <mat-checkbox
             disabled

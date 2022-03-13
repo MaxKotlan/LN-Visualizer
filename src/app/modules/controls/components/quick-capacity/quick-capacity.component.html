@@ -1,6 +1,10 @@
 <p style="margin-top: 10px; margin-bottom: 0px">Capacity</p>
 <div style="display: flex; align-items: center; gap: 0.2rem">
-    <mat-slide-toggle [(ngModel)]="isEnabled" (change)="enableCapacityChange()"></mat-slide-toggle>
+    <mat-slide-toggle
+        [(ngModel)]="isEnabled"
+        [ngModel]="isEnabled$ | async"
+        (change)="enableCapacityChange()"
+    ></mat-slide-toggle>
     <mat-slider
         style="width: 100%"
         min="0"
@@ -9,7 +13,7 @@
         [value]="value"
         [(ngModel)]="capacityAmount"
         (change)="updateQuickCapacityFiliterScript($event)"
-        [disabled]="!isEnabled"
+        [disabled]="(isEnabled$ | async) === false"
     ></mat-slider>
 </div>
 <mat-divider></mat-divider>
