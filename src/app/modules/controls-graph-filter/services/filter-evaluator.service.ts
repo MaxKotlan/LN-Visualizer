@@ -19,6 +19,10 @@ export class FilterEvaluatorService {
                 return 2;
             case '/':
                 return 2;
+            case 'policies':
+                return 3;
+            case '.':
+                return 4;
         }
     }
 
@@ -37,12 +41,19 @@ export class FilterEvaluatorService {
             .split(/[\s()]+/g)
             .filter((x) => x !== '');
 
+        // tokens.forEach((token, index) => {
+        //     if (token.includes('.')) {
+        //         const reverse = token.split('.').reverse().join('.');
+        //     }
+        // });
+
+        console.log(tokens);
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isNumberOrChannelProperty(token)) {
                 queue.push(token);
             }
-            if (this.isOperator(token)) {
+            if (this.isOperator(token) || this.isChannelProperty(token)) {
                 while (this.prescedence(token) < this.prescedence(stack[stack.length - 1])) {
                     queue.push(stack.pop());
                 }
@@ -65,11 +76,30 @@ export class FilterEvaluatorService {
             }
         });
         stack.forEach((item) => queue.push(item));
+        console.log(queue);
         return queue;
     }
 
     public evaluateExpression(channel: LndChannel, postFixExpression: string[]) {
         let stack: string[] = [];
+        // console.log(postFixExpression);
+        // postFixExpression = [
+        //     'policies',
+        //     '0',
+        //     '.',
+        //     'public_key',
+        //     '.',
+        //     '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
+        //     '=',
+        //     'policies',
+        //     '1',
+        //     '.',
+        //     'public_key',
+        //     '.',
+        //     '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
+        //     '=',
+        //     '||',
+        // ];
         // console.log(postFixExpression);
         postFixExpression.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
@@ -80,15 +110,18 @@ export class FilterEvaluatorService {
                 let lhs = stack.pop();
 
                 if (this.isChannelProperty(lhs) || this.isChannelProperty(rhs)) {
-                    if (this.isChannelProperty(lhs))
-                        lhs = channel[lhs] || channel.policies[0][lhs] || channel.policies[1][lhs];
-                    if (this.isChannelProperty(rhs))
-                        rhs = channel[rhs] || channel.policies[0][rhs] || channel.policies[1][rhs];
+                    if (this.isChannelProperty(lhs)) lhs = channel[lhs];
+                    if (this.isChannelProperty(rhs)) rhs = channel[rhs];
+                }
+
+                if (this.isObjectOperator(token)) {
+                    stack.push(this.evaluteObject(token, lhs, rhs) as unknown as string);
                 }
 
                 if (this.isArithmeticOperator(token)) {
                     stack.push(this.evaluteArithmetic(token, lhs, rhs) as unknown as string);
-                } else {
+                }
+                if (this.isComparatorOperator(token)) {
                     stack.push(this.evaluateLogical(token, lhs, rhs) as unknown as string);
                 }
             } else {
@@ -96,13 +129,15 @@ export class FilterEvaluatorService {
             }
         });
         const result = stack.pop();
+        // console.log(result);
         if (stack.length != 0) throw new Error(`stack not empty. ${stack.length} items left`);
         if (typeof result !== 'boolean') throw new Error('does not evaluate to boolean');
         // console.log(result);
         return result;
     }
 
-    public channelProperties = ['capacity', 'fee_rate', 'public_key'];
+    public channelProperties = ['capacity', 'policies'];
+    public objectOperators = ['.'];
     public arithmetics = ['/', '*', '-', '+'];
     public comparators = ['>', '>=', '<', '<=', '!=', '==', '=', '&&', '||'];
 
@@ -115,6 +150,10 @@ export class FilterEvaluatorService {
             token === '(' ||
             token === ')'
         );
+    }
+
+    protected isObjectOperator(operator: string) {
+        return this.objectOperators.includes(operator);
     }
 
     public isChannelProperty(token) {
@@ -130,11 +169,15 @@ export class FilterEvaluatorService {
     }
 
     public isOperator(token) {
-        return this.isComparatorOperator(token) || this.arithmetics.includes(token);
+        return (
+            this.isComparatorOperator(token) ||
+            this.isArithmeticOperator(token) ||
+            this.isObjectOperator(token)
+        );
     }
 
     public isNumberOrChannelProperty(token) {
-        return this.isChannelProperty(token) || !isNaN(Number(token));
+        return !isNaN(Number(token)); // || token === 'public_key';
     }
 
     public evaluateFilters(channel: LndChannel, filters: Filter[]): boolean {
@@ -147,6 +190,16 @@ export class FilterEvaluatorService {
 
     public keyToChannelValue(channel: LndChannel, key: string): string {
         return channel[key] || channel.policies[0][key] || channel.policies[1][key];
+    }
+
+    protected evaluteObject(operator: string, lhs: string, rhs: string) {
+        switch (operator) {
+            case '.':
+                const result = lhs[rhs];
+                if (!result) throw new Error('Invalid use of dot operator');
+                return result;
+        }
+        throw new Error('Unknown Object Operator');
     }
 
     protected evaluteArithmetic(operator: string, lhs: string, rhs: string) {
@@ -194,6 +247,8 @@ export class FilterEvaluatorService {
                 return lhs == rhs;
             case '&&':
                 return lhs && rhs;
+            case '||':
+                return lhs || rhs;
         }
         throw new Error('Unknown logical operator');
     }
