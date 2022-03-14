@@ -1,4 +1,11 @@
 <h3 *ngIf="error">{{ error }}</h3>
+<mat-form-field>
+    <mat-label>Script Language</mat-label>
+    <mat-select [(ngModel)]="scriptLanguage">
+        <mat-option [value]="'lnscript'">LnScript</mat-option>
+        <mat-option [value]="'javascript'">Javascript</mat-option>
+    </mat-select>
+</mat-form-field>
 <div style="display: flex">
     <ngx-codemirror
         style="width: 750px; height: 40px; overflow-y: hidden"

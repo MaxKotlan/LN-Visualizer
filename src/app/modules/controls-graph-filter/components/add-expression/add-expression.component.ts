@@ -16,6 +16,7 @@ export class AddExpressionComponent {
         private store$: Store<GraphFilterState>,
     ) {}
 
+    public scriptLanguage: 'lnscript' | 'javascript' = 'lnscript';
     public error: Error | undefined = undefined;
     public expression: string;
     public rpnExpression: string[];
@@ -32,25 +33,54 @@ export class AddExpressionComponent {
         ],
     } as LndChannel;
 
+    public jsFunction: Function;
+    public source: string;
+
     public expressionEval(input: string) {
-        try {
-            this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
-            this.filterEval.evaluateExpression(
-                { capacity: 32 } as unknown as LndChannel,
-                this.rpnExpression,
-            );
-            this.error = undefined;
-        } catch (e) {
-            this.error = e;
+        if (this.scriptLanguage == 'lnscript') {
+            try {
+                this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
+                this.filterEval.evaluateExpression(this.mockLndChannel, this.rpnExpression);
+                this.error = undefined;
+                this.source = input;
+            } catch (e) {
+                this.error = e;
+            }
+        }
+        if (this.scriptLanguage === 'javascript') {
+            try {
+                this.jsFunction = eval(input);
+                this.jsFunction(this.mockLndChannel);
+                this.error = undefined;
+                this.source = input;
+            } catch (e) {
+                this.error = e;
+            }
         }
     }
 
     public createExpression() {
         if (!this.error) {
-            this.store$.dispatch(
-                filterActions.addFilter({ value: { expression: this.rpnExpression } }),
-            );
-            console.log('adding valid expression: ', this.rpnExpression);
+            if (this.scriptLanguage === 'lnscript') {
+                this.store$.dispatch(
+                    filterActions.addFilter({
+                        value: { interpreter: 'lnscript', expression: this.rpnExpression },
+                    }),
+                );
+                console.log('adding valid expression: ', this.rpnExpression);
+            }
+            if (this.scriptLanguage === 'javascript') {
+                console.log(this.jsFunction);
+                this.store$.dispatch(
+                    filterActions.addFilter({
+                        value: {
+                            interpreter: 'javascript',
+                            function: this.jsFunction,
+                            source: this.source,
+                        },
+                    }),
+                );
+            }
         }
     }
 }

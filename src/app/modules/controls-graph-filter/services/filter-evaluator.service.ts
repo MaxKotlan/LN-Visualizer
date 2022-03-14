@@ -181,11 +181,15 @@ export class FilterEvaluatorService {
     }
 
     public evaluateFilters(channel: LndChannel, filters: Filter[]): boolean {
-        let result = true;
+        let resultAccumulator = true;
         filters.forEach((filter) => {
-            result = result && this.evaluateExpression(channel, filter.expression);
+            let result = null;
+            if (filter.interpreter === 'lnscript')
+                result = this.evaluateExpression(channel, filter.expression);
+            if (filter.interpreter === 'javascript') result = filter.function(channel);
+            resultAccumulator = resultAccumulator && result;
         });
-        return result;
+        return resultAccumulator;
     }
 
     public keyToChannelValue(channel: LndChannel, key: string): string {

@@ -493,6 +493,7 @@ export class GraphEffects {
                         addPubKeyFilter.push(
                             filterActions.addFilter({
                                 value: {
+                                    interpreter: 'lnscript',
                                     expression: [
                                         'policies',
                                         '0',
