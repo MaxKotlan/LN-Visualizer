@@ -19,7 +19,10 @@
     </mat-drawer>
 
     <div class="app-sidenav-content">
-        <app-sidenav-open-button [matDrawer]="drawer"></app-sidenav-open-button>
+        <app-sidenav-open-button
+            *ngIf="!drawer.opened"
+            [matDrawer]="drawer"
+        ></app-sidenav-open-button>
         <app-graph-stats></app-graph-stats>
         <app-floating-buttons></app-floating-buttons>
         <app-graph-scene></app-graph-scene>

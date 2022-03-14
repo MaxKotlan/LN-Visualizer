@@ -40,6 +40,10 @@ $angular-dark-theme: mat.define-dark-theme(
     background-color: rgba(60, 60, 60, 0.6);
 }
 
+.mat-toolbar {
+    height: 3rem;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 0.5rem;
