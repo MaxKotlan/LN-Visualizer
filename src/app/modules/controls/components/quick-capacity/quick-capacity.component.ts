@@ -41,7 +41,7 @@ export class QuickCapacityComponent {
                     value: {
                         interpreter: 'javascript',
                         source: `(channel) =>
-channel.capacity > ${Math.pow(10, this.capacityAmount)}                            
+    channel.capacity > ${Math.pow(10, this.capacityAmount)}                            
 `,
                         function: (channel: LndChannel) =>
                             channel.capacity > Math.pow(10, this.capacityAmount),
@@ -61,7 +61,7 @@ channel.capacity > ${Math.pow(10, this.capacityAmount)}
                     issueId: 'quick-capacity',
                     function: (channel: LndChannel) => channel.capacity > Math.pow(10, event.value),
                     source: `(channel) =>
-channel.capacity > ${Math.pow(10, event.value)}                            
+    channel.capacity > ${Math.pow(10, event.value)}                            
 `,
                 } as Filter,
             }),
