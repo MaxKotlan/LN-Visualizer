@@ -36,6 +36,32 @@ $angular-dark-theme: mat.define-dark-theme(
     @include mat.all-component-colors($angular-dark-theme);
 }
 
+.darkMode .mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(60, 60, 60, 0.6);
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgb(38, 38, 38, 0.3);
+    border-radius: 0.5rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #212121;
+    border-radius: 0.5rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #212121;
+}
+
 // Emit theme-dependent styles for common features used across multiple components.
 @include mat.core-theme($my-theme);
 

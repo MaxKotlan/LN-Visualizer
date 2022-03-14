@@ -5,5 +5,5 @@ export * from './misc-settings';
 export * from '../../controls-node/components/node-settings';
 export * from './quick-controls';
 export * from './search';
-export * from './settings';
+export * from '../../floating-button-menu/components/settings-buttons';
 export * from './settings-modal';

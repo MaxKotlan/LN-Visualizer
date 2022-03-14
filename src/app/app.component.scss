@@ -10,6 +10,12 @@
     overflow: unset !important;
 }
 
+app-floating-buttons {
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+}
+
 mat-spinner {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
@@ -33,6 +39,11 @@ app-graph-stats {
     z-index: 100;
     width: 250px;
     pointer-events: none;
+}
+
+app-floating-buttons {
+    position: absolute;
+    z-index: 100;
 }
 
 app-tooltip {

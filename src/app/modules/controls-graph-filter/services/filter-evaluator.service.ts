@@ -25,11 +25,18 @@ export class FilterEvaluatorService {
     public convertInfixExpressionToPostfix(expression: string): string[] {
         let stack: string[] = [];
         let queue: string[] = [];
-        const tokens = expression
+
+        let preParse = expression;
+
+        this.arithmetics.forEach((op) => {
+            preParse = preParse.replace(op, ` ${op} `);
+        });
+
+        const tokens = preParse
             .replace(/\s\s+/g, ' ')
-            .split(' ')
+            .split(/[\s()]+/g)
             .filter((x) => x !== '');
-        // console.log(tokens);
+
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
             if (this.isNumberOrChannelProperty(token)) {

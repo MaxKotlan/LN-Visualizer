@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FilterModalComponent } from '../filter-modal/filter-modal.component';
+import { FilterModalComponent } from '../../../controls-graph-filter/components/filter-modal/filter-modal.component';
 
 @Component({
     selector: 'app-filter-button',
