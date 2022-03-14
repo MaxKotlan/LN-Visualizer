@@ -36,6 +36,10 @@ $angular-dark-theme: mat.define-dark-theme(
     @include mat.all-component-colors($angular-dark-theme);
 }
 
+.darkMode .mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(60, 60, 60, 0.6);
+}
+
 // Emit theme-dependent styles for common features used across multiple components.
 @include mat.core-theme($my-theme);
 
