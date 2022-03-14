@@ -16,7 +16,7 @@ export class AddExpressionComponent {
         private store$: Store<GraphFilterState>,
     ) {}
 
-    public scriptLanguage: 'lnscript' | 'javascript' = 'lnscript';
+    public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
     public error: Error | undefined = undefined;
     public expression: string;
     public rpnExpression: string[];
@@ -50,7 +50,11 @@ export class AddExpressionComponent {
         if (this.scriptLanguage === 'javascript') {
             try {
                 this.jsFunction = eval(input);
-                this.jsFunction(this.mockLndChannel);
+                if (input.includes('console.log')) {
+                    throw new Error('Should not have console.log');
+                }
+                if (typeof this.jsFunction(this.mockLndChannel) !== 'boolean')
+                    throw new Error('Function must evaluate to boolean');
                 this.error = undefined;
                 this.source = input;
             } catch (e) {

@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { LndChannel } from 'src/app/types/channels.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 
@@ -38,8 +39,13 @@ export class QuickCapacityComponent {
             this.store$.dispatch(
                 filterActions.updateFilterByIssueId({
                     value: {
+                        interpreter: 'javascript',
+                        source: `(channel) =>
+channel.capacity > ${Math.pow(10, this.capacityAmount)}                            
+`,
+                        function: (channel: LndChannel) =>
+                            channel.capacity > Math.pow(10, this.capacityAmount),
                         issueId: 'quick-capacity',
-                        expression: ['capacity', Math.pow(10, this.capacityAmount), '>'],
                     } as Filter,
                 }),
             );
@@ -51,8 +57,12 @@ export class QuickCapacityComponent {
         this.store$.dispatch(
             filterActions.updateFilterByIssueId({
                 value: {
+                    interpreter: 'javascript',
                     issueId: 'quick-capacity',
-                    expression: ['capacity', Math.pow(10, event.value), '>'],
+                    function: (channel: LndChannel) => channel.capacity > Math.pow(10, event.value),
+                    source: `(channel) =>
+channel.capacity > ${Math.pow(10, event.value)}                            
+`,
                 } as Filter,
             }),
         );
