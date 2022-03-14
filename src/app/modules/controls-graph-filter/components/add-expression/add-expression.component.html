@@ -8,7 +8,7 @@
 </mat-form-field>
 <div style="display: flex">
     <ngx-codemirror
-        style="width: 750px; height: 40px; overflow-y: hidden"
+        style="width: 100%"
         [(ngModel)]="expression"
         (ngModelChange)="expressionEval($event)"
         [options]="{

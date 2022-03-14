@@ -493,24 +493,31 @@ export class GraphEffects {
                         addPubKeyFilter.push(
                             filterActions.addFilter({
                                 value: {
-                                    interpreter: 'lnscript',
-                                    expression: [
-                                        'policies',
-                                        '0',
-                                        '.',
-                                        'public_key',
-                                        '.',
-                                        c.public_key,
-                                        '=',
-                                        'policies',
-                                        '1',
-                                        '.',
-                                        'public_key',
-                                        '.',
-                                        c.public_key,
-                                        '==',
-                                        '||',
-                                    ],
+                                    interpreter: 'javascript',
+                                    // expression: [
+                                    //     'policies',
+                                    //     '0',
+                                    //     '.',
+                                    //     'public_key',
+                                    //     '.',
+                                    //     c.public_key,
+                                    //     '=',
+                                    //     'policies',
+                                    //     '1',
+                                    //     '.',
+                                    //     'public_key',
+                                    //     '.',
+                                    //     c.public_key,
+                                    //     '==',
+                                    //     '||',
+                                    // ],
+                                    source: `(channel: LndChannel) => 
+    channel.policies[0].public_key === c.public_key || 
+    channel.policies[1].public_key === c.public_key
+`.trim(),
+                                    function: (channel: LndChannel) =>
+                                        channel.policies[0].public_key === c.public_key ||
+                                        channel.policies[1].public_key === c.public_key,
                                     issueId: 'addNodeFilter',
                                 },
                             }),
