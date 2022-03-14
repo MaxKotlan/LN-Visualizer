@@ -493,7 +493,23 @@ export class GraphEffects {
                         addPubKeyFilter.push(
                             filterActions.addFilter({
                                 value: {
-                                    expression: ['public_key', c.public_key, '=='],
+                                    expression: [
+                                        'policies',
+                                        '0',
+                                        '.',
+                                        'public_key',
+                                        '.',
+                                        c.public_key,
+                                        '=',
+                                        'policies',
+                                        '1',
+                                        '.',
+                                        'public_key',
+                                        '.',
+                                        c.public_key,
+                                        '==',
+                                        '||',
+                                    ],
                                     issueId: 'addNodeFilter',
                                 },
                             }),
