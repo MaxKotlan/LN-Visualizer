@@ -8,7 +8,7 @@ export interface RendererControlState {
 }
 
 const initialState: RendererControlState = {
-    showGrid: false,
+    showGrid: true,
     showAxis: false,
 };
 
@@ -18,6 +18,7 @@ export const reducer = createReducer(
         controlActions.setSavedStateFromLocalStorage,
         (_state, { savedState }) => savedState.renderControls || initialState,
     ),
+    on(controlActions.resetControlsToDefault, () => initialState),
     on(renderControlActions.setShowGrid, (state, { value }) => ({
         ...state,
         showGrid: value,
