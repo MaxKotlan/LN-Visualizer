@@ -1,15 +1,32 @@
-<ul>
-    <li *ngFor="let filter of filterList$ | async">
-        {{ filter.expression }}
-        <button
-            class="not-inline"
-            (click)="remove(filter)"
-            mat-mini-fab
-            style="transform: scale(0.6)"
-            color="primary"
-            aria-label="Example icon button with a delete icon"
-        >
-            <mat-icon>remove</mat-icon>
-        </button>
-    </li>
-</ul>
+<!-- <ul> -->
+<div
+    style="display: flex; width: 100%; margin-top: 10px; margin-bottom: 10px"
+    *ngFor="let filter of filterList$ | async"
+>
+    <ngx-codemirror
+        style="width: 750px; height: 40px; overflow-y: hidden"
+        [ngModel]="filter.expression.join(' ')"
+        [options]="{
+            lineNumbers: false,
+            theme: 'material',
+            mode: 'javascript',
+            readOnly: true
+        }"
+    ></ngx-codemirror>
+
+    <!-- <li
+        *ngFor="let filter of filterList$ | async"
+        class="CodeMirror"
+        style="display: list-item; width: 100%; overflow-wrap: anywhere; height: unset"
+    > -->
+    <button
+        class="not-inline"
+        (click)="remove(filter)"
+        mat-mini-fab
+        style="transform: scale(0.6)"
+        color="primary"
+        aria-label="Example icon button with a delete icon"
+    >
+        <mat-icon>remove</mat-icon>
+    </button>
+</div>

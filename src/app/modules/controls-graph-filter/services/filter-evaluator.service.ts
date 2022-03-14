@@ -19,8 +19,10 @@ export class FilterEvaluatorService {
                 return 2;
             case '/':
                 return 2;
-            case '.':
+            case 'policies':
                 return 3;
+            case '.':
+                return 4;
         }
     }
 
@@ -30,7 +32,7 @@ export class FilterEvaluatorService {
 
         let preParse = expression;
 
-        [...this.arithmetics, ...this.objectOperators].forEach((op) => {
+        this.arithmetics.forEach((op) => {
             preParse = preParse.replace(op, ` ${op} `);
         });
 
@@ -38,13 +40,20 @@ export class FilterEvaluatorService {
             .replace(/\s\s+/g, ' ')
             .split(/[\s()]+/g)
             .filter((x) => x !== '');
+
+        // tokens.forEach((token, index) => {
+        //     if (token.includes('.')) {
+        //         const reverse = token.split('.').reverse().join('.');
+        //     }
+        // });
+
         console.log(tokens);
         tokens.forEach((token) => {
             if (!this.isValidToken(token)) throw new Error(`Invalid Token: ${token}`);
-            if (this.isNumberOrChannelProperty(token) || token === 'public_key') {
+            if (this.isNumberOrChannelProperty(token)) {
                 queue.push(token);
             }
-            if (this.isOperator(token)) {
+            if (this.isOperator(token) || this.isChannelProperty(token)) {
                 while (this.prescedence(token) < this.prescedence(stack[stack.length - 1])) {
                     queue.push(stack.pop());
                 }
@@ -168,7 +177,7 @@ export class FilterEvaluatorService {
     }
 
     public isNumberOrChannelProperty(token) {
-        return this.isChannelProperty(token) || !isNaN(Number(token)) || token === 'public_key';
+        return !isNaN(Number(token)); // || token === 'public_key';
     }
 
     public evaluateFilters(channel: LndChannel, filters: Filter[]): boolean {
