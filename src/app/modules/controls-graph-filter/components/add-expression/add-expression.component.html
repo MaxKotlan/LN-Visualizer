@@ -1,7 +1,7 @@
 <h3 *ngIf="error">{{ error }}</h3>
 <div style="display: flex">
     <ngx-codemirror
-        style="width: 100%"
+        style="width: 750px; height: 40px; overflow-y: hidden"
         [(ngModel)]="expression"
         (ngModelChange)="expressionEval($event)"
         [options]="{
@@ -13,6 +13,7 @@
     <button
         class="not-inline"
         (click)="createExpression()"
+        style="transform: scale(0.6)"
         mat-mini-fab
         color="primary"
         aria-label="Example icon button with a delete icon"
