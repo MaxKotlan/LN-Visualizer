@@ -18,7 +18,7 @@ const initialState: ChannelControlState = {
     edgeDepthTest: true,
     edgeDottedLine: false,
     channelColor: 'channel-capacity',
-    channelColorMap: 'jet',
+    channelColorMap: 'warm',
     useLogColorScale: true,
 };
 
@@ -30,7 +30,6 @@ export const reducer = createReducer(
         (_state, { savedState }) => savedState.channelControls || initialState,
     ),
     on(controlsActions.resetControlsToDefault, () => initialState),
-
     on(channelControlsActions.renderEdges, (state, { value }) => ({
         ...state,
         renderEdges: value,

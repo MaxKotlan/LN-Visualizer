@@ -14,8 +14,8 @@ export interface NodeControlState {
 const initialState: NodeControlState = {
     renderNodes: true,
     uniformNodeSize: false,
-    nodeSize: 100,
-    minNodeSize: 0.1,
+    nodeSize: 20,
+    minNodeSize: 1,
     pointAttenuation: true,
     pointUseIcon: true,
 };
