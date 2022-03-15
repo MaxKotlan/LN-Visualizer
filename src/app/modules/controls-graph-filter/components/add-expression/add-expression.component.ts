@@ -18,7 +18,16 @@ export class AddExpressionComponent {
 
     public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
     public error: Error | undefined = undefined;
-    public expression: string;
+    public expression: string =
+        this.scriptLanguage === 'javascript'
+            ? `(channel) =>
+    channel.capacity < 1000000 && 
+    channel.policies.some(p => 
+        p.public_key === 
+        '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f'
+    )
+`
+            : undefined;
     public rpnExpression: string[];
 
     protected readonly mockLndChannel = {
@@ -33,8 +42,14 @@ export class AddExpressionComponent {
         ],
     } as LndChannel;
 
-    public jsFunction: Function;
-    public source: string;
+    public jsFunction: Function = (channel) =>
+        channel.capacity < 1000000 &&
+        channel.policies.some(
+            (p) =>
+                p.public_key ===
+                '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
+        );
+    public source: string = this.expression;
 
     public expressionEval(input: string) {
         if (this.scriptLanguage == 'lnscript') {

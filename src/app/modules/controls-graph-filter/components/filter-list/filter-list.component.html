@@ -6,7 +6,7 @@
     <ngx-codemirror
         style="width: 100%; overflow-y: hidden"
         [style.height]="filter?.source?.split('\n').length + 2 + 'rem !important'"
-        [ngModel]="filter?.expression?.join(' ') || filter?.source || filter.function.toString()"
+        [ngModel]="filter?.expression?.join(' ') || filter?.source"
         [options]="{
             lineNumbers: false,
             theme: 'material',

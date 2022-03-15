@@ -511,13 +511,12 @@ export class GraphEffects {
                                     //     '==',
                                     //     '||',
                                     // ],
-                                    source: `(channel: LndChannel) => 
-    channel.policies[0].public_key === c.public_key || 
-    channel.policies[1].public_key === c.public_key
+                                    source: `(channel) => 
+    channel.policies.some((p) => 
+        p.public_key === ${c.public_key})
 `.trim(),
                                     function: (channel: LndChannel) =>
-                                        channel.policies[0].public_key === c.public_key ||
-                                        channel.policies[1].public_key === c.public_key,
+                                        channel.policies.some((p) => p.public_key === c.public_key),
                                     issueId: 'addNodeFilter',
                                 },
                             }),
