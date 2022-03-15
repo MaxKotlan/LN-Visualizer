@@ -493,23 +493,30 @@ export class GraphEffects {
                         addPubKeyFilter.push(
                             filterActions.addFilter({
                                 value: {
-                                    expression: [
-                                        'policies',
-                                        '0',
-                                        '.',
-                                        'public_key',
-                                        '.',
-                                        c.public_key,
-                                        '=',
-                                        'policies',
-                                        '1',
-                                        '.',
-                                        'public_key',
-                                        '.',
-                                        c.public_key,
-                                        '==',
-                                        '||',
-                                    ],
+                                    interpreter: 'javascript',
+                                    // expression: [
+                                    //     'policies',
+                                    //     '0',
+                                    //     '.',
+                                    //     'public_key',
+                                    //     '.',
+                                    //     c.public_key,
+                                    //     '=',
+                                    //     'policies',
+                                    //     '1',
+                                    //     '.',
+                                    //     'public_key',
+                                    //     '.',
+                                    //     c.public_key,
+                                    //     '==',
+                                    //     '||',
+                                    // ],
+                                    source: `(channel) => 
+    channel.policies.some((p) => 
+        p.public_key === ${c.public_key})
+`.trim(),
+                                    function: (channel: LndChannel) =>
+                                        channel.policies.some((p) => p.public_key === c.public_key),
                                     issueId: 'addNodeFilter',
                                 },
                             }),

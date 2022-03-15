@@ -4,8 +4,9 @@
     *ngFor="let filter of filterList$ | async"
 >
     <ngx-codemirror
-        style="width: 750px; height: 40px; overflow-y: hidden"
-        [ngModel]="filter.expression.join(' ')"
+        style="width: 100%; overflow-y: hidden"
+        [style.height]="filter?.source?.split('\n').length + 2 + 'rem !important'"
+        [ngModel]="filter?.expression?.join(' ') || filter?.source"
         [options]="{
             lineNumbers: false,
             theme: 'material',
