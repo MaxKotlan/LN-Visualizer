@@ -494,26 +494,9 @@ export class GraphEffects {
                             filterActions.addFilter({
                                 value: {
                                     interpreter: 'javascript',
-                                    // expression: [
-                                    //     'policies',
-                                    //     '0',
-                                    //     '.',
-                                    //     'public_key',
-                                    //     '.',
-                                    //     c.public_key,
-                                    //     '=',
-                                    //     'policies',
-                                    //     '1',
-                                    //     '.',
-                                    //     'public_key',
-                                    //     '.',
-                                    //     c.public_key,
-                                    //     '==',
-                                    //     '||',
-                                    // ],
-                                    source: `(channel) => 
+                                    source: `return (channel) => 
     channel.policies.some((p) => 
-        p.public_key === ${c.public_key})
+        p.public_key === "${c.public_key}")
 `.trim(),
                                     function: (channel: LndChannel) =>
                                         channel.policies.some((p) => p.public_key === c.public_key),

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'src/app/types/channels.interface';
 import * as filterActions from '../../actions/filter.actions';
@@ -11,12 +12,15 @@ import { FilterEvaluatorService } from '../../services/filter-evaluator.service'
     styleUrls: ['./add-expression.component.scss'],
 })
 export class AddExpressionComponent {
+    @ViewChild('codeMirror') private codeEditorCmp: CodemirrorComponent;
+
     constructor(
         public filterEval: FilterEvaluatorService,
         private store$: Store<GraphFilterState>,
     ) {}
 
     public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
+    public evalMode: 'add' | 'type' = 'add';
     public error: Error | undefined = undefined;
     public expression: string =
         this.scriptLanguage === 'javascript'
