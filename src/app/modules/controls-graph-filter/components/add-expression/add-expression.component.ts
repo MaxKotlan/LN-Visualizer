@@ -20,12 +20,14 @@ export class AddExpressionComponent {
     public error: Error | undefined = undefined;
     public expression: string =
         this.scriptLanguage === 'javascript'
-            ? `(channel) =>
-    channel.capacity < 1000000 && 
-    channel.policies.some(p => 
-        p.public_key === 
-        '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f'
-    )
+            ? `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
+    .then(response => response.json())
+    .then(data => data.data.amount);
+    
+const satPrice = btcPrice / 100000000;
+
+return (channel) =>
+    channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
 `
             : undefined;
     public rpnExpression: string[];
@@ -78,7 +80,8 @@ export class AddExpressionComponent {
         }
     }
 
-    public createExpression() {
+    public async createExpression() {
+        await this.expressionEval(this.expression);
         if (!this.error) {
             if (this.scriptLanguage === 'lnscript') {
                 this.store$.dispatch(
