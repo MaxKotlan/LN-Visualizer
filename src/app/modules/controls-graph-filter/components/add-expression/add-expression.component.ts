@@ -67,7 +67,6 @@ return (channel) =>
         if (this.scriptLanguage === 'javascript') {
             try {
                 this.jsFunction = await eval(`(async () => { ${input} })()`);
-                console.log(this.jsFunction);
                 if (typeof this.jsFunction !== 'function')
                     throw new Error('Script must return a function');
                 if (typeof this.jsFunction(this.mockLndChannel) !== 'boolean')
