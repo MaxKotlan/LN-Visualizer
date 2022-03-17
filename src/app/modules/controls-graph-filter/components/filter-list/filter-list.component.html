@@ -8,6 +8,8 @@
         [ngModel]="filter?.expression?.join(' ') || filter?.source"
         [options]="{
             lineNumbers: true,
+            gutter: true,
+            lineWrapping: true,
             theme: 'material',
             mode: 'javascript',
             readOnly: true
