@@ -51,7 +51,7 @@ export class AddExpressionComponent {
         );
     public source: string = this.expression;
 
-    public expressionEval(input: string) {
+    public async expressionEval(input: string) {
         if (this.scriptLanguage == 'lnscript') {
             try {
                 this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
@@ -64,10 +64,10 @@ export class AddExpressionComponent {
         }
         if (this.scriptLanguage === 'javascript') {
             try {
-                this.jsFunction = eval(input);
-                if (input.includes('console.log')) {
-                    throw new Error('Should not have console.log');
-                }
+                this.jsFunction = await eval(`(async () => { ${input} })()`);
+                console.log(this.jsFunction);
+                if (typeof this.jsFunction !== 'function')
+                    throw new Error('Script must return a function');
                 if (typeof this.jsFunction(this.mockLndChannel) !== 'boolean')
                     throw new Error('Function must evaluate to boolean');
                 this.error = undefined;
