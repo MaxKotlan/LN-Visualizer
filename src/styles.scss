@@ -89,7 +89,8 @@ label {
 
 html,
 body {
-    height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
 }
 body {
     margin: 0;
