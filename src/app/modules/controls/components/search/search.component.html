@@ -1,6 +1,7 @@
 <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>Public Key or Alias</mat-label>
     <input
+        #input
         type="text"
         placeholder="Pick one"
         aria-label="Public Key or Alias"
@@ -9,6 +10,16 @@
         (input)="onTextChange($event)"
         [matAutocomplete]="auto"
     />
+    <button
+        *ngIf="input.value"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clear(); input.value = ''"
+        style="position: absolute; right: -5px; bottom: -1px"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
     <mat-autocomplete
         autoActiveFirstOption
         #auto="matAutocomplete"
