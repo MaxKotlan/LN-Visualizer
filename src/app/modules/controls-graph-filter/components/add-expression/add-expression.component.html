@@ -3,16 +3,24 @@
     <mat-label>Script Language</mat-label>
     <mat-select [(ngModel)]="scriptLanguage">
         <mat-option [value]="'javascript'">Javascript</mat-option>
-        <!-- <mat-option [value]="'lnscript'">LnScript</mat-option> -->
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-label>Evaluate Mode</mat-label>
+    <mat-select [(ngModel)]="evalMode">
+        <mat-option [value]="'add'">On Add</mat-option>
+        <mat-option [value]="'type'">On Type</mat-option>
     </mat-select>
 </mat-form-field>
 <div style="display: flex">
     <ngx-codemirror
         style="width: 100%"
         [(ngModel)]="expression"
-        (ngModelChange)="expressionEval($event)"
+        (ngModelChange)="evalMode === 'type' ? expressionEval($event) : ''"
         [options]="{
-            lineNumbers: false,
+            lineNumbers: true,
+            gutter: true,
+            lineWrapping: true,
             theme: 'material',
             mode: 'javascript'
         }"

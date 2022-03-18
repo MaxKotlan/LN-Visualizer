@@ -15,7 +15,7 @@ export class FilterButtonComponent {
             maxWidth: null,
             panelClass: 'custom-pannel',
             height: '90vh',
-            maxHeight: '768px',
+            maxHeight: '90vh',
         });
     }
 }

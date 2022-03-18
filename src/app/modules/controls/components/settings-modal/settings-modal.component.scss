@@ -17,7 +17,7 @@ section {
 .modal-content {
     padding: 1.6rem;
     overflow-y: auto;
-    height: 100%;
+    height: calc(90vh - 6rem);
 }
 
 :host {

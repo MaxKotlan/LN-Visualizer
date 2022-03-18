@@ -40,7 +40,7 @@ export class QuickCapacityComponent {
                 filterActions.updateFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
-                        source: `(channel) =>
+                        source: `return (channel) =>
     channel.capacity > ${Math.pow(10, this.capacityAmount)}                            
 `,
                         function: (channel: LndChannel) =>
@@ -60,7 +60,7 @@ export class QuickCapacityComponent {
                     interpreter: 'javascript',
                     issueId: 'quick-capacity',
                     function: (channel: LndChannel) => channel.capacity > Math.pow(10, event.value),
-                    source: `(channel) =>
+                    source: `return (channel) =>
     channel.capacity > ${Math.pow(10, event.value)}                            
 `,
                 } as Filter,

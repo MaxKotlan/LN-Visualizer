@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'src/app/types/channels.interface';
 import * as filterActions from '../../actions/filter.actions';
@@ -11,21 +12,26 @@ import { FilterEvaluatorService } from '../../services/filter-evaluator.service'
     styleUrls: ['./add-expression.component.scss'],
 })
 export class AddExpressionComponent {
+    @ViewChild('codeMirror') private codeEditorCmp: CodemirrorComponent;
+
     constructor(
         public filterEval: FilterEvaluatorService,
         private store$: Store<GraphFilterState>,
     ) {}
 
     public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
+    public evalMode: 'add' | 'type' = 'add';
     public error: Error | undefined = undefined;
     public expression: string =
         this.scriptLanguage === 'javascript'
-            ? `(channel) =>
-    channel.capacity < 1000000 && 
-    channel.policies.some(p => 
-        p.public_key === 
-        '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f'
-    )
+            ? `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
+    .then(response => response.json())
+    .then(data => data.data.amount);
+    
+const satPrice = btcPrice / 100000000;
+
+return (channel) =>
+    channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
 `
             : undefined;
     public rpnExpression: string[];
@@ -51,7 +57,7 @@ export class AddExpressionComponent {
         );
     public source: string = this.expression;
 
-    public expressionEval(input: string) {
+    public async expressionEval(input: string) {
         if (this.scriptLanguage == 'lnscript') {
             try {
                 this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
@@ -64,10 +70,9 @@ export class AddExpressionComponent {
         }
         if (this.scriptLanguage === 'javascript') {
             try {
-                this.jsFunction = eval(input);
-                if (input.includes('console.log')) {
-                    throw new Error('Should not have console.log');
-                }
+                this.jsFunction = await eval(`(async () => { ${input} })()`);
+                if (typeof this.jsFunction !== 'function')
+                    throw new Error('Script must return a function');
                 if (typeof this.jsFunction(this.mockLndChannel) !== 'boolean')
                     throw new Error('Function must evaluate to boolean');
                 this.error = undefined;
@@ -78,7 +83,8 @@ export class AddExpressionComponent {
         }
     }
 
-    public createExpression() {
+    public async createExpression() {
+        await this.expressionEval(this.expression);
         if (!this.error) {
             if (this.scriptLanguage === 'lnscript') {
                 this.store$.dispatch(
