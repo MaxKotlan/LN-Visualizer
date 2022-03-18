@@ -17,7 +17,6 @@ export class SettingsButtonComponent {
             maxWidth: null,
             panelClass: 'custom-pannel',
             height: '90vh',
-            maxHeight: '768px',
         });
     }
 }
