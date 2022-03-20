@@ -17,6 +17,15 @@
             <app-quick-capacity></app-quick-capacity>
         </div>
     </mat-drawer>
+    <mat-drawer
+        #drawer2
+        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [opened]="true"
+        (openedChange)="recomputeCanvasSize()"
+        [position]="'end'"
+    >
+        <app-filter-modal></app-filter-modal>
+    </mat-drawer>
 
     <div class="app-sidenav-content">
         <app-sidenav-open-button

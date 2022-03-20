@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -7,5 +7,5 @@ import { MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./filter-modal.component.scss'],
 })
 export class FilterModalComponent {
-    constructor(public dialogRef: MatDialogRef<FilterModalComponent>) {}
+    constructor(@Optional() public dialogRef: MatDialogRef<FilterModalComponent>) {}
 }
