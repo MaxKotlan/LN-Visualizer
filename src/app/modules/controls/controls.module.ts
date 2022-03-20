@@ -16,6 +16,7 @@ import {
 } from './components';
 import { reducer } from './reducers';
 import { QuickCapacityComponent } from './components/quick-capacity/quick-capacity.component';
+import { ScreenSizeModule } from '../screen-size/screen-size.module';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { QuickCapacityComponent } from './components/quick-capacity/quick-capaci
         ControlsNodeModule,
         ControlsChannelModule,
         ControlsRendererModule,
+        ScreenSizeModule,
         StoreModule.forFeature('genericControls', reducer),
     ],
     exports: [

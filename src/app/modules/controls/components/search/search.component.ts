@@ -18,7 +18,12 @@ export class SearchComponent {
     public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
     public selectSearchString$ = this.store$.select(selectFinalMatchAliasFromSearch);
 
+    clear() {
+        this.store$.dispatch(searchGraph({ searchText: '' }));
+    }
+
     onTextChange(event: any) {
+        console.log(event);
         if (!!event?.target?.value || event?.target?.value === '')
             this.store$.dispatch(searchGraph({ searchText: event.target.value }));
     }

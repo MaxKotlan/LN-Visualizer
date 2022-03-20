@@ -1,0 +1,22 @@
+<mat-drawer-container>
+    <mat-drawer
+        #drawer
+        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [opened]="shouldShowQuickControls$ | async"
+        (closedStart)="closeQuickControls()"
+        (openedStart)="openQuickControls()"
+    >
+        <app-quick-controls-view></app-quick-controls-view>
+    </mat-drawer>
+    <mat-drawer
+        #drawer2
+        mode="side"
+        [opened]="shouldShowFilterScriptsSidebar$ | async"
+        [position]="'end'"
+        (closed)="closeFilters()"
+    >
+        <app-filter-modal></app-filter-modal>
+    </mat-drawer>
+
+    <app-graph-view></app-graph-view>
+</mat-drawer-container>

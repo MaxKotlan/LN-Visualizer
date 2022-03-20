@@ -5,7 +5,6 @@ import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { searchGraph, sortOrderChange } from '../../actions';
 import * as channelControlActions from '../../../controls-channel/actions';
-import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import {
     selectNodesSearchResults,
@@ -15,6 +14,7 @@ import { renderNodes, gotoNode } from 'src/app/modules/controls-node/actions';
 import { shouldRenderNodes } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { shouldRenderEdges } from 'src/app/modules/controls-channel/selectors';
 import { minEdgesRecompute, renderEdges } from 'src/app/modules/controls-channel/actions';
+import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 
 @Component({
     selector: 'app-quick-controls',

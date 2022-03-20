@@ -27,6 +27,6 @@ import { AddExpressionComponent } from './components/add-expression/add-expressi
         EffectsModule.forFeature([FilterEffects]),
         StoreModule.forFeature('graphFilterState', reducer),
     ],
-    exports: [],
+    exports: [FilterModalComponent],
 })
 export class ControlsGraphFilterModule {}

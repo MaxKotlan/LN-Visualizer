@@ -1,5 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { setModalOpen } from 'src/app/modules/window-manager/actions';
+import { quickControlsId } from 'src/app/modules/window-manager/constants/windowIds';
+import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
+import * as windowManagementSelectors from 'src/app/modules/window-manager/selectors';
 
 @Component({
     selector: 'app-sidenav-open-button',
@@ -7,5 +12,13 @@ import { MatDrawer } from '@angular/material/sidenav';
     styleUrls: ['./sidenav-open-button.component.scss'],
 })
 export class SidenavOpenButtonComponent {
-    @Input() matDrawer: MatDrawer;
+    constructor(private store$: Store<WindowManagerState>) {}
+
+    public openModal() {
+        this.store$.dispatch(setModalOpen({ modalId: quickControlsId }));
+    }
+
+    shouldShowButton$: Observable<boolean> = this.store$.select(
+        windowManagementSelectors.selectModalStateBool(quickControlsId),
+    );
 }
