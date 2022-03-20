@@ -1,3 +1,4 @@
-<pre><ng-container *ngFor="let label of statLabels$ | async">{{label}}</ng-container>{{ nodeCount$ | async }} Nodes 
-{{ channelCount$ | async }} Channels
+<pre><ng-container *ngFor="let label of statLabels$ | async">{{label}}</ng-container>{{averageCapacity$ | async}} average capacity
+{{ nodeCount$ | async }} nodes 
+{{ channelCount$ | async }} channels
 </pre>

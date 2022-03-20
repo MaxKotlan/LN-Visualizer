@@ -20,12 +20,11 @@ export class GraphStatsComponent {
     // public totalCapacity$: Observable<number> = this.store.select(
     //     graphSelectors.selectTotalChannelCapacity,
     // );
-    // public averageCapacity$: Observable<number> = this.store.select(
-    //     graphSelectors.selectAverageCapacity,
-    // );
+    public averageCapacity$: Observable<number> = this.store.select(
+        graphSelectors.selectAverageCapacity,
+    );
 
     public statLabels$: Observable<string[]> = this.store.select(graphSelectors.statsLabels);
-
     public nodeCount$: Observable<number> = this.store.select(graphSelectors.selectNodeCount);
     public channelCount$: Observable<number> = this.store.select(graphSelectors.selectChannelCount);
 }
