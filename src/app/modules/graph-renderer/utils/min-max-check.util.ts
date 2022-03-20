@@ -4,6 +4,9 @@ export const updateCurrentMinMaxTotalStats = (
     currentState: MinMaxTotal | MinMax,
     capacity: number,
 ): MinMaxTotal | MinMax => {
+    if (typeof capacity === 'string') {
+        capacity = Number.parseInt(capacity);
+    }
     if ((currentState as MinMaxTotal).total !== undefined) {
         return {
             min: capacity < currentState.min ? capacity : currentState.min,

@@ -8,4 +8,9 @@
 <div class="app-sidenav">
     <app-quick-controls></app-quick-controls>
     <app-quick-capacity></app-quick-capacity>
+    <app-quick-slider
+        *ngFor="let key of statsKeys"
+        [key]="key"
+        [minMax]="statsState[key]"
+    ></app-quick-slider>
 </div>
