@@ -27,8 +27,8 @@ export class QuickSliderComponent {
     @Input() set minMax(minMax: MinMax) {
         this.minMaxLinear = minMax;
         this.minMaxLogarithmic = {
-            min: Math.log10(this.minMaxLinear.min),
-            max: Math.log10(this.minMaxLinear.max),
+            min: Math.log2(this.minMaxLinear.min),
+            max: Math.log2(this.minMaxLinear.max),
         };
         this.logStep = this.minMaxLogarithmic.max / 100;
         this.logValue = this.minMaxLogarithmic.max / 2;
@@ -81,13 +81,13 @@ export class QuickSliderComponent {
 
     public createScript() {
         return (channel: LndChannel) =>
-            channel.policies.some((p) => p[this.objectKey] > Math.pow(10, this.logValue));
+            channel.policies.some((p) => p[this.objectKey] > Math.pow(2, this.logValue));
     }
 
     public createScriptSource(value: number) {
         return `return (channel) =>
   channel.policies.some(p => p.${this.objectKey} > ${Math.pow(
-            10,
+            2,
             this.logValue,
         )})                        
 `;
