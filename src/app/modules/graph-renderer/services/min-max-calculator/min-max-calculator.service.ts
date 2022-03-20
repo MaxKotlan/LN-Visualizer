@@ -12,16 +12,18 @@ import { updateCurrentMinMaxTotalStats } from '../../utils';
 })
 export class MinMaxCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
-        this.store$
-            .select(graphStatisticsSelector)
-            .subscribe((currentState) => (this.currentStatisticsState = currentState));
+        this.store$.select(graphStatisticsSelector).subscribe((currentState) => {
+            this.currentStatisticsState = currentState;
+            this.keysToCheck = Object.keys(this.currentStatisticsState);
+        });
     }
 
     //probably will cause issues because not using withLatestFrom in graph effect
+    public keysToCheck: string[];
     public currentStatisticsState: GraphStatisticsState;
 
     public checkChannel(channel: LndChannel) {
-        Object.keys(this.currentStatisticsState).forEach((property) => {
+        this.keysToCheck.forEach((property) => {
             if (channel[property]) {
                 this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
                     this.currentStatisticsState[property],
@@ -39,7 +41,7 @@ export class MinMaxCalculatorService {
     }
 
     public updateStore() {
-        Object.keys(this.currentStatisticsState).forEach((property) => {
+        this.keysToCheck.forEach((property) => {
             this.store$.dispatch(
                 graphStatisticActions.updateMinMaxStatistic({
                     property,
