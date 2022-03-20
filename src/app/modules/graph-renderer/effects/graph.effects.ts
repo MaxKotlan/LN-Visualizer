@@ -17,23 +17,18 @@ import {
     throttleTime,
     withLatestFrom,
 } from 'rxjs';
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as THREE from 'three';
 import { initialSphereSize } from '../../../constants/mesh-scale.constant';
 import { LndApiServiceService } from '../../../services/lnd-api-service.service';
 import { Chunk } from '../../../types/chunk.interface';
-import * as graphStatisticActions from '../actions/graph-statistics.actions';
+import * as filterActions from '../../controls-graph-filter/actions';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer/graph.reducer';
-import {
-    selectChannelFeesMinMaxTotal,
-    selectChannelMinMaxTotal,
-} from '../selectors/graph-statistics.selectors';
-import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
-import { createSpherePoint, updateCurrentMinMaxTotalStats } from '../utils';
-import * as filterActions from '../../controls-graph-filter/actions';
 import * as graphSelectors from '../selectors';
+import { selectChannelSetKeyValue, selectNodeSetKeyValue } from '../selectors/graph.selectors';
+import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
+import { createSpherePoint } from '../utils';
 
 @Injectable()
 export class GraphEffects {
@@ -42,6 +37,7 @@ export class GraphEffects {
         private store$: Store<GraphState>,
         private lndApiServiceService: LndApiServiceService,
         private snackBar: MatSnackBar,
+        private minMaxCaluclator: MinMaxCalculatorService,
     ) {}
 
     retrieveGraph$ = createEffect(
@@ -410,38 +406,18 @@ export class GraphEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateChannelChunk),
-                withLatestFrom(
-                    this.store$.select(selectChannelSetKeyValue),
-                    this.store$.select(selectChannelMinMaxTotal),
-                    this.store$.select(selectChannelFeesMinMaxTotal),
-                ),
-                mergeMap(([action, channelState, currentMinMaxTotal, currentFeesMinMaxTotal]) => {
-                    let currentCapacityMinMaxTotalState: MinMaxTotal = currentMinMaxTotal;
-                    let currentFeeMinMaxTotalState: MinMaxTotal = currentFeesMinMaxTotal;
+                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
+                map(([action, channelState]) => {
+                    action.channelSubSet.forEach((channel) => {
+                        this.minMaxCaluclator.checkChannel(channel);
 
-                    action.channelSubSet.forEach((channel, index) => {
-                        currentCapacityMinMaxTotalState = updateCurrentMinMaxTotalStats(
-                            currentCapacityMinMaxTotalState,
-                            channel.capacity,
-                        );
-                        currentFeeMinMaxTotalState = updateCurrentMinMaxTotalStats(
-                            currentFeeMinMaxTotalState,
-                            channel.policies[0].fee_rate,
-                        );
                         channelState.set(channel.id, channel);
                     });
+                    this.minMaxCaluclator.updateStore();
 
-                    return from([
-                        graphActions.cacheProcessedChannelChunk({
-                            channelSet: channelState,
-                        }),
-                        graphStatisticActions.setChannelCapacityMinMax({
-                            channelCap: currentCapacityMinMaxTotalState,
-                        }),
-                        graphStatisticActions.setChannelFeesMinMax({
-                            channelFees: currentFeeMinMaxTotalState,
-                        }),
-                    ]);
+                    return graphActions.cacheProcessedChannelChunk({
+                        channelSet: channelState,
+                    });
                 }),
             ),
         { dispatch: true },

@@ -1,16 +1,21 @@
 import { createReducer, on } from '@ngrx/store';
-import { initMinMaxTotal, MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import {
+    initMinMax,
+    initMinMaxTotal,
+    MinMax,
+    MinMaxTotal,
+} from 'src/app/types/min-max-total.interface';
 
 import * as graphStatisticActions from '../actions/graph-statistics.actions';
 
 export interface GraphStatisticsState {
     channelCapacity: MinMaxTotal;
-    channelFees: MinMaxTotal;
+    channelFees: MinMax;
 }
 
 const initialState: GraphStatisticsState = {
     channelCapacity: initMinMaxTotal,
-    channelFees: initMinMaxTotal,
+    channelFees: initMinMax,
 };
 
 export const reducer = createReducer(

@@ -1,12 +1,19 @@
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { MinMax, MinMaxTotal } from 'src/app/types/min-max-total.interface';
 
 export const updateCurrentMinMaxTotalStats = (
-    currentState: MinMaxTotal,
+    currentState: MinMaxTotal | MinMax,
     capacity: number,
-): MinMaxTotal => {
-    return {
-        min: capacity < currentState.min ? capacity : currentState.min,
-        max: capacity > currentState.max ? capacity : currentState.max,
-        total: (currentState.total += capacity),
-    };
+): MinMaxTotal | MinMax => {
+    if ((currentState as MinMaxTotal).total !== undefined) {
+        return {
+            min: capacity < currentState.min ? capacity : currentState.min,
+            max: capacity > currentState.max ? capacity : currentState.max,
+            total: (currentState as MinMaxTotal).total + capacity,
+        };
+    } else {
+        return {
+            min: capacity < currentState.min ? capacity : currentState.min,
+            max: capacity > currentState.max ? capacity : currentState.max,
+        };
+    }
 };
