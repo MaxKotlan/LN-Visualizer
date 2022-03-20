@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import {
-    animationFrames,
-    debounceTime,
-    map,
-    switchMap,
-    takeUntil,
-    tap,
-    throttleTime,
-    timer,
-} from 'rxjs';
+import { animationFrames, map, switchMap, takeUntil, throttleTime, timer } from 'rxjs';
 import * as graphActions from '../../graph-renderer/actions';
 import { quickControlsId } from '../constants/windowIds';
 import { WindowManagerState } from '../reducers';
