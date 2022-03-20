@@ -22,14 +22,9 @@ import { WindowManagerModule } from './modules/window-manager/window-manager.mod
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        GraphRendererModule,
-        ControlsModule,
         ControlsGraphFilterModule,
-        UiModule,
         WindowManagerModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
-        MaterialModule,
-        FloatingButtonMenuModule,
         StoreModule.forRoot(
             {},
             {
