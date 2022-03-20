@@ -56,9 +56,9 @@ export class QuickSliderComponent {
                 filterActions.updateFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
+                        issueId: this.scriptName,
                         source: this.createScriptSource(this.logValue),
                         function: this.createScript(),
-                        issueId: this.scriptName,
                     } as Filter,
                 }),
             );
@@ -71,7 +71,7 @@ export class QuickSliderComponent {
             filterActions.updateFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
-                    issueId: 'quick-capacity',
+                    issueId: this.scriptName,
                     function: this.createScript(),
                     source: this.createScriptSource(event.value),
                 } as Filter,
