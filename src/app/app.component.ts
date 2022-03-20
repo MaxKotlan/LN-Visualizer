@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as controlsActions from './modules/controls/actions';
-import { ScreenSizeService } from './services/screen-size.service';
+// import { ScreenSizeService } from './services/screen-size.service';
 import * as graphActions from './modules/graph-renderer/actions';
 
 @Component({
@@ -12,13 +12,13 @@ import * as graphActions from './modules/graph-renderer/actions';
 export class AppComponent implements OnInit {
     title = 'LN-Visualizer';
 
-    constructor(private store$: Store, public screenSizeService: ScreenSizeService) {}
+    constructor(private store$: Store /* public screenSizeService: ScreenSizeService */) {}
 
     ngOnInit() {
         this.store$.dispatch(controlsActions.loadSavedState());
     }
 
-    public recomputeCanvasSize() {
-        this.store$.dispatch(graphActions.recomputeCanvasSize());
-    }
+    // public recomputeCanvasSize() {
+    //     this.store$.dispatch(graphActions.recomputeCanvasSize());
+    // }
 }

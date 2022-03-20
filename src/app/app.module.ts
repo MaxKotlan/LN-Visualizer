@@ -14,6 +14,7 @@ import { FloatingButtonMenuModule } from './modules/floating-button-menu/floatin
 import { GraphRendererModule } from './modules/graph-renderer';
 import { MaterialModule } from './modules/material';
 import { UiModule } from './modules/ui/ui.module';
+import { WindowManagerModule } from './modules/window-manager/window-manager.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -25,6 +26,7 @@ import { UiModule } from './modules/ui/ui.module';
         ControlsModule,
         ControlsGraphFilterModule,
         UiModule,
+        WindowManagerModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         MaterialModule,
         FloatingButtonMenuModule,

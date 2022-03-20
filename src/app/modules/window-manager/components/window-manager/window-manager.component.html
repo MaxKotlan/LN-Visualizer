@@ -1,0 +1,21 @@
+<mat-drawer-container>
+    <mat-drawer
+        #drawer
+        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [opened]="true"
+    >
+        <app-quick-controls-view></app-quick-controls-view>
+    </mat-drawer>
+    <!-- <mat-drawer
+        #drawer2
+        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [opened]="true"
+        [position]="'end'"
+    >
+        <app-graph-view></app-graph-view>
+    </mat-drawer> -->
+
+    <div class="app-sidenav-content">
+        <app-graph-view></app-graph-view>
+    </div>
+</mat-drawer-container>
