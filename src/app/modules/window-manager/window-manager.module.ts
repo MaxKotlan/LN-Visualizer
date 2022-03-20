@@ -8,6 +8,8 @@ import { MaterialModule } from '../material';
 import { ScreenSizeModule } from '../screen-size/screen-size.module';
 import { QuickControlsViewModule } from '../quick-controls-view/quick-controls-view.module';
 import { GraphViewModule } from '../graph-view/graph-view.module';
+import { EffectsModule } from '@ngrx/effects';
+import { WindowManagerEffects } from './effects';
 
 @NgModule({
     declarations: [WindowManagerComponent],
@@ -17,6 +19,7 @@ import { GraphViewModule } from '../graph-view/graph-view.module';
         ScreenSizeModule,
         QuickControlsViewModule,
         GraphViewModule,
+        EffectsModule.forFeature([WindowManagerEffects]),
         StoreModule.forFeature('windowManagement', windowManagementReducer.reducer),
     ],
     exports: [WindowManagerComponent],
