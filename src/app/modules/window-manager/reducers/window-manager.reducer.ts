@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as windowMangementActions from '../actions';
+import { quickControlsId } from '../constants/windowIds';
 
 export interface WindowManagerState {
     modalState: Record<string, 'open' | 'close'>;
@@ -7,7 +8,9 @@ export interface WindowManagerState {
 }
 
 const initialState: WindowManagerState = {
-    modalState: {},
+    modalState: {
+        [quickControlsId]: 'open',
+    },
     modalPreference: {},
 };
 

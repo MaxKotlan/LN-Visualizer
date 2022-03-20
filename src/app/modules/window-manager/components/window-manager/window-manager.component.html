@@ -2,7 +2,7 @@
     <mat-drawer
         #drawer
         [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
-        [opened]="true"
+        [opened]="shouldShowQuickControls$ | async"
     >
         <app-quick-controls-view></app-quick-controls-view>
     </mat-drawer>
@@ -15,7 +15,5 @@
         <app-graph-view></app-graph-view>
     </mat-drawer> -->
 
-    <div class="app-sidenav-content">
-        <app-graph-view></app-graph-view>
-    </div>
+    <app-graph-view></app-graph-view>
 </mat-drawer-container>

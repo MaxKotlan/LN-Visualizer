@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { map, Observable } from 'rxjs';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
+import { quickControlsId } from '../../constants/windowIds';
+import { WindowManagerState } from '../../reducers';
+import * as windowManagementSelectors from '../../selectors';
 
 @Component({
     selector: 'app-window-manager',
@@ -7,5 +12,12 @@ import { ScreenSizeService } from 'src/app/modules/screen-size/services';
     styleUrls: ['./window-manager.component.scss'],
 })
 export class WindowManagerComponent {
-    constructor(public screenSizeService: ScreenSizeService) {}
+    constructor(
+        public screenSizeService: ScreenSizeService,
+        private store$: Store<WindowManagerState>,
+    ) {}
+
+    shouldShowQuickControls$: Observable<boolean> = this.store$.select(
+        windowManagementSelectors.selectModalStateBool(quickControlsId),
+    );
 }

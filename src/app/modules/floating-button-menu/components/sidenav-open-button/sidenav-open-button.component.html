@@ -1,6 +1,7 @@
 <button
+    *ngIf="(shouldShowButton$ | async) !== true"
     class="sidenav-button"
-    (click)="matDrawer.toggle()"
+    (click)="openModal()"
     mat-mini-fab
     color="primary"
     aria-label="Example icon button with a delete icon"
