@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
-import { MinMax, MinMaxTotal } from 'src/app/types/min-max-total.interface';
-import { GraphStatisticsState } from '../../reducer/graph-statistics.reducer';
-import { selectChannelFeesMinMaxTotal, selectChannelMinMaxTotal } from '../../selectors';
-import { updateCurrentMinMaxTotalStats } from '../../utils';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import * as graphStatisticActions from '../../actions/graph-statistics.actions';
+import { GraphStatisticsState } from '../../reducer/graph-statistics.reducer';
+import { graphStatisticsSelector } from '../../selectors';
+import { updateCurrentMinMaxTotalStats } from '../../utils';
 
 @Injectable({
     providedIn: 'root',
@@ -13,38 +13,39 @@ import * as graphStatisticActions from '../../actions/graph-statistics.actions';
 export class MinMaxCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
         this.store$
-            .select(selectChannelMinMaxTotal)
-            .subscribe((currentMax) => (this.currentCapacityMinMaxTotalState = currentMax));
-        this.store$
-            .select(selectChannelFeesMinMaxTotal)
-            .subscribe((currentMax) => (this.currentFeeMinMaxTotalState = currentMax));
+            .select(graphStatisticsSelector)
+            .subscribe((currentState) => (this.currentStatisticsState = currentState));
     }
 
     //probably will cause issues because not using withLatestFrom in graph effect
-    public currentCapacityMinMaxTotalState: MinMaxTotal;
-    public currentFeeMinMaxTotalState: MinMax;
+    public currentStatisticsState: GraphStatisticsState;
 
     public checkChannel(channel: LndChannel) {
-        this.currentCapacityMinMaxTotalState = updateCurrentMinMaxTotalStats(
-            this.currentCapacityMinMaxTotalState,
-            channel.capacity,
-        ) as MinMaxTotal;
-        this.currentFeeMinMaxTotalState = updateCurrentMinMaxTotalStats(
-            this.currentFeeMinMaxTotalState,
-            channel.policies[0].fee_rate,
-        );
+        Object.keys(this.currentStatisticsState).forEach((property) => {
+            if (channel[property]) {
+                this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
+                    this.currentStatisticsState[property],
+                    channel[property],
+                ) as MinMaxTotal;
+            } else {
+                channel.policies.forEach((p) => {
+                    this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
+                        this.currentStatisticsState[property],
+                        p[property],
+                    ) as MinMaxTotal;
+                });
+            }
+        });
     }
 
     public updateStore() {
-        this.store$.dispatch(
-            graphStatisticActions.setChannelCapacityMinMax({
-                channelCap: this.currentCapacityMinMaxTotalState,
-            }),
-        );
-        this.store$.dispatch(
-            graphStatisticActions.setChannelFeesMinMax({
-                channelFees: this.currentFeeMinMaxTotalState,
-            }),
-        );
+        Object.keys(this.currentStatisticsState).forEach((property) => {
+            this.store$.dispatch(
+                graphStatisticActions.updateMinMaxStatistic({
+                    property,
+                    newStatState: this.currentStatisticsState[property],
+                }),
+            );
+        });
     }
 }

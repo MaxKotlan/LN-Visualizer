@@ -7,12 +7,12 @@ export const graphStatisticsSelector =
 
 export const selectChannelMinMaxTotal = createSelector(
     graphStatisticsSelector,
-    (state) => state.channelCapacity,
+    (state) => state.capacity,
 );
 
 export const selectChannelFeesMinMaxTotal = createSelector(
     graphStatisticsSelector,
-    (state) => state.channelFees,
+    (state) => state.fee_rate,
 );
 
 export const selectTotalChannelCapacity = createSelector(
