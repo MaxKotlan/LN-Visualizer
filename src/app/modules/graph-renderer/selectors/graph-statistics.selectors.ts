@@ -35,3 +35,11 @@ export const selectAverageCapacity = createSelector(
     selectChannelCount,
     (totalCapacity, channelCount) => Math.floor(totalCapacity / channelCount) || 0,
 );
+
+export const statsLabels = createSelector(graphStatisticsSelector, (state) =>
+    Object.keys(state).flatMap((key) =>
+        Object.keys(state[key]).map(
+            (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,
+        ),
+    ),
+);
