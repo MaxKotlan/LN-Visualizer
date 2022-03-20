@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as windowMangementActions from '../actions';
-import { quickControlsId } from '../constants/windowIds';
+import { filterScriptsId, quickControlsId } from '../constants/windowIds';
 
 export interface WindowManagerState {
     modalState: Record<string, 'open' | 'close'>;
@@ -11,7 +11,10 @@ const initialState: WindowManagerState = {
     modalState: {
         [quickControlsId]: 'open',
     },
-    modalPreference: {},
+    modalPreference: {
+        [quickControlsId]: 'modal',
+        [filterScriptsId]: 'sidebar',
+    },
 };
 
 export const reducer = createReducer(
@@ -27,5 +30,12 @@ export const reducer = createReducer(
     on(windowMangementActions.setModalPreference, (state, { modalId, preference }) => ({
         ...state,
         modalPreference: { ...state.modalPreference, [modalId]: preference },
+    })),
+    on(windowMangementActions.toggleModalPreference, (state, { modalId }) => ({
+        ...state,
+        modalPreference: {
+            ...state.modalPreference,
+            [modalId]: state.modalPreference[modalId] === 'modal' ? 'sidebar' : 'modal',
+        },
     })),
 );

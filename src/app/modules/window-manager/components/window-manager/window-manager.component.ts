@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
-import { quickControlsId } from '../../constants/windowIds';
+import { filterScriptsId, quickControlsId } from '../../constants/windowIds';
 import { WindowManagerState } from '../../reducers';
 import * as windowManagementSelectors from '../../selectors';
 import * as windowManagementActions from '../../actions';
@@ -20,6 +20,10 @@ export class WindowManagerComponent {
 
     shouldShowQuickControls$: Observable<boolean> = this.store$.select(
         windowManagementSelectors.selectModalStateBool(quickControlsId),
+    );
+
+    shouldShowFilterScriptsSidebar$: Observable<boolean> = this.store$.select(
+        windowManagementSelectors.shouldShowSidebar(filterScriptsId),
     );
 
     public closeQuickControls() {

@@ -10,5 +10,26 @@ export const selectModalState = (modalId: string) =>
 export const selectModalStateBool = (modalId: string) =>
     createSelector(windowManagementSelector, (state) => state.modalState[modalId] === 'open');
 
-export const modalPreference = (modalId: string) =>
+export const selectModalPreference = (modalId: string) =>
     createSelector(windowManagementSelector, (state) => state.modalPreference[modalId]);
+
+export const shouldShowSidebar = (modalId: string) =>
+    createSelector(
+        windowManagementSelector,
+        (state) =>
+            state.modalPreference[modalId] === 'sidebar' && state.modalState[modalId] === 'open',
+    );
+
+export const shouldShowModal = (modalId: string) =>
+    createSelector(
+        windowManagementSelector,
+        (state) =>
+            state.modalPreference[modalId] === 'modal' && state.modalState[modalId] === 'open',
+    );
+
+export const shouldCloseModal = (modalId: string) =>
+    createSelector(
+        windowManagementSelector,
+        (state) =>
+            state.modalPreference[modalId] === 'modal' && state.modalState[modalId] === 'close',
+    );

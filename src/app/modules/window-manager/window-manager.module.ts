@@ -10,6 +10,7 @@ import { QuickControlsViewModule } from '../quick-controls-view/quick-controls-v
 import { GraphViewModule } from '../graph-view/graph-view.module';
 import { EffectsModule } from '@ngrx/effects';
 import { WindowManagerEffects } from './effects';
+import { ControlsGraphFilterModule } from '../controls-graph-filter/controls-graph-filter.module';
 
 @NgModule({
     declarations: [WindowManagerComponent],
@@ -18,6 +19,7 @@ import { WindowManagerEffects } from './effects';
         MaterialModule,
         ScreenSizeModule,
         QuickControlsViewModule,
+        ControlsGraphFilterModule,
         GraphViewModule,
         EffectsModule.forFeature([WindowManagerEffects]),
         StoreModule.forFeature('windowManagement', windowManagementReducer.reducer),
