@@ -3,6 +3,8 @@
         #drawer
         [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
         [opened]="shouldShowQuickControls$ | async"
+        (closedStart)="closeQuickControls()"
+        (openedStart)="openQuickControls()"
     >
         <app-quick-controls-view></app-quick-controls-view>
     </mat-drawer>
@@ -12,7 +14,7 @@
         [opened]="true"
         [position]="'end'"
     >
-        <app-graph-view></app-graph-view>
+        <app-quick-controls-view></app-quick-controls-view>
     </mat-drawer> -->
 
     <app-graph-view></app-graph-view>

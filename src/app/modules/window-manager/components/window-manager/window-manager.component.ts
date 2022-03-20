@@ -5,6 +5,7 @@ import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 import { quickControlsId } from '../../constants/windowIds';
 import { WindowManagerState } from '../../reducers';
 import * as windowManagementSelectors from '../../selectors';
+import * as windowManagementActions from '../../actions';
 
 @Component({
     selector: 'app-window-manager',
@@ -20,4 +21,12 @@ export class WindowManagerComponent {
     shouldShowQuickControls$: Observable<boolean> = this.store$.select(
         windowManagementSelectors.selectModalStateBool(quickControlsId),
     );
+
+    public closeQuickControls() {
+        this.store$.dispatch(windowManagementActions.setModalClose({ modalId: quickControlsId }));
+    }
+
+    public openQuickControls() {
+        this.store$.dispatch(windowManagementActions.setModalOpen({ modalId: quickControlsId }));
+    }
 }
