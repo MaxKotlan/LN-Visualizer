@@ -13,6 +13,7 @@
         mode="side"
         [opened]="shouldShowFilterScriptsSidebar$ | async"
         [position]="'end'"
+        (closed)="closeFilters()"
     >
         <app-filter-modal></app-filter-modal>
     </mat-drawer>

@@ -1,12 +1,14 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     animationFrames,
+    combineLatest,
     filter,
+    iif,
     map,
-    skip,
+    of,
     switchMap,
     take,
     takeUntil,
@@ -16,13 +18,14 @@ import {
 } from 'rxjs';
 import { FilterModalComponent } from '../../controls-graph-filter/components/filter-modal/filter-modal.component';
 import * as graphActions from '../../graph-renderer/actions';
-import { setModalClose } from '../actions';
+import { ScreenSizeService } from '../../screen-size/services';
+import { setModalClose, setModalPreference } from '../actions';
 import { filterScriptsId, quickControlsId } from '../constants/windowIds';
 import { WindowManagerState } from '../reducers';
 import {
+    selectAllModalState,
+    selectModalPreference,
     selectModalState,
-    shouldCloseModal,
-    shouldShowModal,
     windowManagementSelector,
 } from '../selectors';
 
@@ -30,16 +33,14 @@ import {
 export class WindowManagerEffects {
     constructor(
         public dialog: MatDialog,
-        // @Optional() public dialogRef: MatDialogRef<FilterModalComponent>,
         private store$: Store<WindowManagerState>,
-    ) {
-        this.store$.select(windowManagementSelector).subscribe(console.log);
-    }
+        public screenSizeService: ScreenSizeService,
+    ) {}
 
     recomputeCanvasSize$ = createEffect(
         () =>
             this.store$
-                .select(selectModalState(quickControlsId))
+                .select(selectAllModalState)
                 .pipe(
                     switchMap(() =>
                         animationFrames().pipe(
@@ -52,36 +53,97 @@ export class WindowManagerEffects {
         { dispatch: true },
     );
 
-    public test: MatDialogRef<FilterModalComponent>;
+    // mobileModal$ = createEffect(
+    //     () =>
+    //         this.screenSizeService.isMobile$.pipe(
+    //             map((isMobile) => {
+    //                 if (isMobile) {
+    //                     return setModalPreference({
+    //                         modalId: filterScriptsId,
+    //                         preference: 'modal',
+    //                     });
+    //                 } else {
+    //                     return setModalPreference({
+    //                         modalId: filterScriptsId,
+    //                         preference: 'sidebar',
+    //                     });
+    //                 }
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
-    filterScriptsModalOpen$ = createEffect(
-        () =>
-            this.store$.select(shouldShowModal(filterScriptsId)).pipe(
-                filter((action) => action !== undefined),
-                tap(() => {
-                    this.test = this.dialog.open(FilterModalComponent, {
-                        maxWidth: null,
-                        panelClass: 'custom-pannel',
-                        height: '90vh',
-                        maxHeight: '90vh',
-                    });
-                    this.test
-                        .beforeClosed()
-                        .pipe(take(1))
-                        .subscribe(() =>
-                            this.store$.dispatch(setModalClose({ modalId: filterScriptsId })),
-                        );
-                }),
-            ),
-        { dispatch: false },
-    );
+    public openedModal: MatDialogRef<FilterModalComponent>;
 
-    filterScriptsModalClose$ = createEffect(
-        () =>
-            this.store$.select(shouldCloseModal(filterScriptsId)).pipe(
-                filter((action) => action !== undefined),
-                tap(() => this.test?.close()),
-            ),
-        { dispatch: false },
-    );
+    // filterModalClose$ = createEffect(
+    //     () =>
+    //         combineLatest([
+    //             this.store$.select(selectModalState(filterScriptsId)),
+    //             this.store$.select(selectModalPreference(filterScriptsId)),
+    //             this.openedModal.beforeClosed(),
+    //         ]).pipe(
+    //             filter(
+    //                 ([modalState, modalPreference]) =>
+    //                     modalState === 'open' && modalPreference === 'modal' && !this.openedModal,
+    //             ),
+    //         ),
+    //     { dispatch: false },
+    // );
+
+    // filterScriptsModalOpen$ = createEffect(
+    //     () =>
+    //         combineLatest([
+    //             this.store$.select(selectModalState(filterScriptsId)),
+    //             this.store$.select(selectModalPreference(filterScriptsId)),
+    //         ]).pipe(
+    //             filter(
+    //                 ([modalState, modalPreference]) =>
+    //                     modalState === 'close' && modalPreference === 'modal' && !this.openedModal,
+    //             ),
+    //             tap(() => {
+    //                 this.openedModal = this.dialog.open(FilterModalComponent, {
+    //                     maxWidth: null,
+    //                     panelClass: 'custom-pannel',
+    //                     height: '90vh',
+    //                     maxHeight: '90vh',
+    //                 });
+    //                 this.openedModal.afterClosed().subscribe(() => {
+    //                     this.openedModal = undefined;
+    //                     this.store$.dispatch(setModalClose({ modalId: filterScriptsId }));
+    //                 });
+    //             }),
+    //         ),
+    //     { dispatch: false },
+    // );
+
+    // // filterScriptsModalOpen$ = createEffect(
+    // //     () =>
+    // //         this.store$.select(shouldShowModal(filterScriptsId)).pipe(
+    // //             filter((action) => action === true && !this.test),
+    // //             tap(() => {
+    // //                 this.test = this.dialog.open(FilterModalComponent, {
+    // //                     maxWidth: null,
+    // //                     panelClass: 'custom-pannel',
+    // //                     height: '90vh',
+    // //                     maxHeight: '90vh',
+    // //                 });
+    // //                 this.test
+    // //                     .afterClosed()
+    // //                     .pipe(take(1))
+    // //                     .subscribe(() => {
+    // //                         this.store$.dispatch(setModalClose({ modalId: filterScriptsId }));
+    // //                     });
+    // //             }),
+    // //         ),
+    // //     { dispatch: false },
+    // // );
+
+    // filterScriptsModalClose$ = createEffect(
+    //     () =>
+    //         this.store$.select(selectModalState(filterScriptsId)).pipe(
+    //             filter((modalState) => modalState === 'open' && !!this.openedModal),
+    //             tap(() => this.openedModal.close()),
+    //         ),
+    //     { dispatch: false },
+    // );
 }

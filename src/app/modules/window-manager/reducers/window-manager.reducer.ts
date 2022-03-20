@@ -10,10 +10,11 @@ export interface WindowManagerState {
 const initialState: WindowManagerState = {
     modalState: {
         [quickControlsId]: 'open',
+        [filterScriptsId]: 'close',
     },
     modalPreference: {
         [quickControlsId]: 'modal',
-        [filterScriptsId]: 'sidebar',
+        [filterScriptsId]: 'modal',
     },
 };
 

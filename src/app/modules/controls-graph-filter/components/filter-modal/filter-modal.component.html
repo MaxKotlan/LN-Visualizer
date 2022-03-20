@@ -2,11 +2,11 @@
     <mat-toolbar color="primary">
         <mat-icon>filter_list</mat-icon>
         <span style="margin-left: 0.4rem; flex-grow: 1">Filter Scripts</span>
-        <button (click)="togglePreference()" mat-icon-button aria-label="Close Dialog">
+        <!-- <button (click)="togglePreference()" mat-icon-button aria-label="Close Dialog">
             <mat-icon>
                 {{ (windowPosition$ | async) === 'sidebar' ? 'pin_end' : 'push_pin' }}
             </mat-icon>
-        </button>
+        </button> -->
         <button (click)="closeModal()" mat-icon-button aria-label="Close Dialog">
             <mat-icon>close</mat-icon>
         </button>

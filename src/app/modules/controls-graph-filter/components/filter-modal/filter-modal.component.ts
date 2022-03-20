@@ -27,6 +27,7 @@ export class FilterModalComponent {
     }
 
     public closeModal() {
-        this.store$.dispatch(setModalClose({ modalId: filterScriptsId }));
+        this.dialogRef.close();
+        //this.store$.dispatch(setModalClose({ modalId: filterScriptsId }));
     }
 }
