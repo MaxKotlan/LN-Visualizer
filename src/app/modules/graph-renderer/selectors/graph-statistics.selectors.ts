@@ -7,12 +7,12 @@ export const graphStatisticsSelector =
 
 export const selectChannelMinMaxTotal = createSelector(
     graphStatisticsSelector,
-    (state) => state.channelCapacity,
+    (state) => state.capacity,
 );
 
 export const selectChannelFeesMinMaxTotal = createSelector(
     graphStatisticsSelector,
-    (state) => state.channelFees,
+    (state) => state.fee_rate,
 );
 
 export const selectTotalChannelCapacity = createSelector(
@@ -34,4 +34,12 @@ export const selectAverageCapacity = createSelector(
     selectTotalChannelCapacity,
     selectChannelCount,
     (totalCapacity, channelCount) => Math.floor(totalCapacity / channelCount) || 0,
+);
+
+export const statsLabels = createSelector(graphStatisticsSelector, (state) =>
+    Object.keys(state).flatMap((key) =>
+        Object.keys(state[key]).map(
+            (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,
+        ),
+    ),
 );

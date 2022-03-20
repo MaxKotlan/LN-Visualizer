@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { MinMax, MinMaxTotal } from 'src/app/types/min-max-total.interface';
+
+export const updateMinMaxStatistic = createAction(
+    '[graph] setChannelCapacityMinMax',
+    props<{ property: string; newStatState: MinMaxTotal | MinMax }>(),
+);
 
 export const setChannelCapacityMinMax = createAction(
     '[graph] setChannelCapacityMinMax',
@@ -8,5 +13,5 @@ export const setChannelCapacityMinMax = createAction(
 
 export const setChannelFeesMinMax = createAction(
     '[graph] setChannelFeesMinMax',
-    props<{ channelFees: MinMaxTotal }>(),
+    props<{ channelFees: MinMax }>(),
 );

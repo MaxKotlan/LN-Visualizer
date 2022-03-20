@@ -16,11 +16,7 @@ export class WindowManagerComponent {
     constructor(
         public screenSizeService: ScreenSizeService,
         private store$: Store<WindowManagerState>,
-    ) {
-        this.store$
-            .select(windowManagementSelectors.windowManagementSelector)
-            .subscribe(console.log);
-    }
+    ) {}
 
     shouldShowQuickControls$: Observable<boolean> = this.store$.select(
         windowManagementSelectors.selectModalStateBool(quickControlsId),
