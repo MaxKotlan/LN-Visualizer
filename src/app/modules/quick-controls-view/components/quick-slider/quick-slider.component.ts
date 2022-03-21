@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
+import { MtxSliderChange } from '@ng-matero/extensions/slider';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
@@ -26,18 +27,18 @@ export class QuickSliderComponent {
 
     @Input() set minMax(minMax: MinMax) {
         this.minMaxLinear = minMax;
-        this.minMaxLogarithmic = {
-            min: Math.log2(this.minMaxLinear.min),
-            max: Math.log2(this.minMaxLinear.max),
-        };
-        this.logStep = this.minMaxLogarithmic.max / 100;
-        this.logValue = this.minMaxLogarithmic.max / 2;
+        this.minLog = 0; //this.minMaxLinear.min < 0 ? 0 : Math.log2(this.minMaxLinear.min);
+        this.maxLog = Math.log2(this.minMaxLinear.max);
+        this.logStep = this.maxLog / 100;
+        this.logValue = [this.maxLog / 4, (3 * this.maxLog) / 4];
     }
 
+    public minLog = 0;
+    public maxLog = 1;
+
     public minMaxLinear: MinMax;
-    public minMaxLogarithmic: MinMax;
     public logStep: number;
-    public logValue: number;
+    public logValue: number[];
 
     public isPolicyScript: boolean = true;
     public objectKey: string;
@@ -46,13 +47,13 @@ export class QuickSliderComponent {
     public isEnabled: boolean;
     public isEnabled$: Observable<boolean>;
 
-    public value: number;
+    // public value: number;
 
     public onEnableChange() {
         if (!this.isEnabled) {
             this.store$.dispatch(filterActions.removeFilterByIssueId({ issueId: this.scriptName }));
         } else {
-            this.value = Math.round(Math.pow(2, this.logValue));
+            // this.value = Math.round(Math.pow(2, this.logValue));
             this.store$.dispatch(
                 filterActions.updateFilterByIssueId({
                     value: {
@@ -66,8 +67,7 @@ export class QuickSliderComponent {
         }
     }
 
-    updateScript(event: MatSliderChange) {
-        this.value = Math.round(Math.pow(2, this.logValue));
+    updateScript() {
         this.isEnabled = true;
         this.store$.dispatch(
             filterActions.updateFilterByIssueId({
@@ -75,7 +75,7 @@ export class QuickSliderComponent {
                     interpreter: 'javascript',
                     issueId: this.scriptName,
                     function: this.createScript(),
-                    source: this.createScriptSource(event.value),
+                    source: this.createScriptSource(this.logValue),
                 } as Filter,
             }),
         );
@@ -83,15 +83,20 @@ export class QuickSliderComponent {
 
     public createScript() {
         return (channel: LndChannel) =>
-            channel.policies.some((p) => p[this.objectKey] > Math.pow(2, this.logValue));
+            channel.policies.some(
+                (p) =>
+                    p[this.objectKey] > Math.pow(2, this.logValue[0]) &&
+                    p[this.objectKey] < Math.pow(2, this.logValue[1]),
+            );
     }
 
-    public createScriptSource(value: number) {
+    public createScriptSource(value: number[]) {
         return `return (channel) =>
-  channel.policies.some(p => p.${this.objectKey} > ${Math.pow(
+  channel.policies.some(p =>
+    p.${this.objectKey} > ${Math.pow(2, value[0])} &&  p.${this.objectKey} < ${Math.pow(
             2,
-            this.logValue,
-        )})                        
+            value[1],
+        )} )                        
 `;
     }
 }
