@@ -52,6 +52,7 @@ export class QuickSliderComponent {
         if (!this.isEnabled) {
             this.store$.dispatch(filterActions.removeFilterByIssueId({ issueId: this.scriptName }));
         } else {
+            this.value = Math.round(Math.pow(2, this.logValue));
             this.store$.dispatch(
                 filterActions.updateFilterByIssueId({
                     value: {
@@ -66,6 +67,7 @@ export class QuickSliderComponent {
     }
 
     updateScript(event: MatSliderChange) {
+        this.value = Math.round(Math.pow(2, this.logValue));
         this.isEnabled = true;
         this.store$.dispatch(
             filterActions.updateFilterByIssueId({
