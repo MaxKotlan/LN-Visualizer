@@ -1,6 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatSliderChange } from '@angular/material/slider';
-import { MtxSliderChange } from '@ng-matero/extensions/slider';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
@@ -40,27 +38,28 @@ export class QuickSliderComponent {
     public logStep: number;
     public logValue: number[];
 
-    public isPolicyScript: boolean = true;
+    @Input() public isPolicyScript: boolean = true;
     public objectKey: string;
     public label: string;
     public scriptName: string;
     public isEnabled: boolean;
     public isEnabled$: Observable<boolean>;
 
-    // public value: number;
-
     public onEnableChange() {
         if (!this.isEnabled) {
             this.store$.dispatch(filterActions.removeFilterByIssueId({ issueId: this.scriptName }));
         } else {
-            // this.value = Math.round(Math.pow(2, this.logValue));
             this.store$.dispatch(
                 filterActions.updateFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
                         issueId: this.scriptName,
-                        source: this.createScriptSource(this.logValue),
-                        function: this.createScript(),
+                        source: this.isPolicyScript
+                            ? this.createPolicyScriptSource(this.logValue)
+                            : this.createNonPolicyScriptSource(this.logValue),
+                        function: this.isPolicyScript
+                            ? this.createPolicyScript()
+                            : this.createNonPolicyScript(),
                     } as Filter,
                 }),
             );
@@ -74,14 +73,24 @@ export class QuickSliderComponent {
                 value: {
                     interpreter: 'javascript',
                     issueId: this.scriptName,
-                    function: this.createScript(),
-                    source: this.createScriptSource(this.logValue),
+                    source: this.isPolicyScript
+                        ? this.createPolicyScriptSource(this.logValue)
+                        : this.createNonPolicyScriptSource(this.logValue),
+                    function: this.isPolicyScript
+                        ? this.createPolicyScript()
+                        : this.createNonPolicyScript(),
                 } as Filter,
             }),
         );
     }
 
-    public createScript() {
+    public createNonPolicyScript() {
+        return (channel: LndChannel) =>
+            channel[this.objectKey] > Math.pow(2, this.logValue[0]) &&
+            channel[this.objectKey] < Math.pow(2, this.logValue[1]);
+    }
+
+    public createPolicyScript() {
         return (channel: LndChannel) =>
             channel.policies.some(
                 (p) =>
@@ -90,7 +99,16 @@ export class QuickSliderComponent {
             );
     }
 
-    public createScriptSource(value: number[]) {
+    public createNonPolicyScriptSource(value: number[]) {
+        return `return (channel) =>
+    channel.${this.objectKey} > ${Math.pow(2, value[0])} && channel.${this.objectKey} < ${Math.pow(
+            2,
+            value[1],
+        )}                     
+`;
+    }
+
+    public createPolicyScriptSource(value: number[]) {
         return `return (channel) =>
   channel.policies.some(p =>
     p.${this.objectKey} > ${Math.pow(2, value[0])} &&  p.${this.objectKey} < ${Math.pow(
