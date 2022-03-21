@@ -26,7 +26,7 @@ export class QuickSliderComponent {
     @Input() set minMax(minMax: MinMax) {
         this.minMaxLinear = minMax;
         this.minLog = 0; //this.minMaxLinear.min < 0 ? 0 : Math.log2(this.minMaxLinear.min);
-        this.maxLog = Math.log2(this.minMaxLinear.max);
+        this.maxLog = Math.log2(this.minMaxLinear.max + 1);
         this.logStep = this.maxLog / 100;
         this.logValue = [this.maxLog / 4, (3 * this.maxLog) / 4];
     }
@@ -87,7 +87,7 @@ export class QuickSliderComponent {
     public createNonPolicyScript() {
         return (channel: LndChannel) =>
             channel[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-            channel[this.objectKey] <= this.logToLinear(this.logValue[1]) + 1;
+            channel[this.objectKey] <= this.logToLinear(this.logValue[1]);
     }
 
     public createPolicyScript() {
@@ -95,24 +95,24 @@ export class QuickSliderComponent {
             channel.policies.some(
                 (p) =>
                     p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-                    p[this.objectKey] <= this.logToLinear(this.logValue[1]) + 1,
+                    p[this.objectKey] <= this.logToLinear(this.logValue[1]),
             );
     }
 
     public createNonPolicyScriptSource(value: number[]) {
         return `return (channel) =>
-    channel.${this.objectKey} >= ${this.logToLinear(value[0])} && channel.${this.objectKey} <= ${
-            this.logToLinear(value[1]) + 1
-        }                     
+    channel.${this.objectKey} >= ${this.logToLinear(value[0])} && channel.${
+            this.objectKey
+        } <= ${this.logToLinear(value[1])}                     
 `;
     }
 
     public createPolicyScriptSource(value: number[]) {
         return `return (channel) =>
   channel.policies.some(p =>
-    p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${this.objectKey} <= ${
-            this.logToLinear(value[1]) + 1
-        } )                        
+    p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${
+            this.objectKey
+        } <= ${this.logToLinear(value[1])} )                        
 `;
     }
 
