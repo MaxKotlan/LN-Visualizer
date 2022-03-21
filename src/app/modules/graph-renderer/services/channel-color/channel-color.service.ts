@@ -68,9 +68,11 @@ export class ChannelColorService {
             let normalizedValue;
 
             if (this.useLogColorScale) {
-                normalizedValue =
-                    Math.log10(channel.capacity - this.minMaxCap.min) /
-                    Math.log10(this.minMaxCap.max - this.minMaxCap.min);
+                const maxLog = Math.log10(this.minMaxCap.max);
+                const minLog = Math.log10(this.minMaxCap.min);
+                const capLog = Math.log10(channel.capacity);
+
+                normalizedValue = (capLog - minLog) / (maxLog - minLog);
             } else {
                 normalizedValue =
                     (channel.capacity - this.minMaxCap.min) /
