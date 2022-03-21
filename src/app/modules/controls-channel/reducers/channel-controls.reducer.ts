@@ -18,7 +18,7 @@ const initialState: ChannelControlState = {
     edgeDepthTest: true,
     edgeDottedLine: false,
     channelColor: 'channel-capacity',
-    channelColorMap: 'warm',
+    channelColorMap: 'viridis',
     useLogColorScale: true,
 };
 
