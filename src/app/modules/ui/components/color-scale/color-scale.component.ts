@@ -46,11 +46,12 @@ export class ColorScaleComponent implements OnInit {
                 for (let i = 0; i < this.intervals + 1; i++) {
                     let computed;
                     if (isLogScale) {
-                        const maxLogScale = Math.log10(max);
-                        const maxMinLogScale = Math.log10(max - min);
+                        const maxLog = Math.log10(max + 1);
+                        const minLog = Math.log10(min + 1);
+                        const maxMinLogScale = maxLog - minLog;
                         const difference = maxMinLogScale / this.intervals;
-                        const log = maxLogScale - i * difference;
-                        computed = Math.round(Math.pow(10, log)) || 0;
+                        const log = maxLog - i * difference;
+                        computed = Math.round(Math.pow(10, log) - 1) || 0;
                     } else {
                         const difference = (max - min) / this.intervals;
                         computed = max - i * difference;
