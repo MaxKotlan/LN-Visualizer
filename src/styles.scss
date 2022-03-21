@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use '@ng-matero/extensions' as mtx;
 
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
@@ -31,6 +32,9 @@ $angular-dark-theme: mat.define-dark-theme(
         ),
     )
 );
+
+@include mtx.all-component-themes($angular-dark-theme);
+@include mtx.all-experimental-component-themes($angular-dark-theme);
 
 .darkMode {
     @include mat.all-component-colors($angular-dark-theme);

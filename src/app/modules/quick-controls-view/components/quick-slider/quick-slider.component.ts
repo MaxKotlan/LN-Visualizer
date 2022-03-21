@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatSliderChange } from '@angular/material/slider';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
@@ -26,27 +25,25 @@ export class QuickSliderComponent {
 
     @Input() set minMax(minMax: MinMax) {
         this.minMaxLinear = minMax;
-        this.minMaxLogarithmic = {
-            min: Math.log2(this.minMaxLinear.min),
-            max: Math.log2(this.minMaxLinear.max),
-        };
-        this.logStep = this.minMaxLogarithmic.max / 100;
-        this.logValue = this.minMaxLogarithmic.max / 2;
+        this.minLog = 0; //this.minMaxLinear.min < 0 ? 0 : Math.log2(this.minMaxLinear.min);
+        this.maxLog = Math.log2(this.minMaxLinear.max);
+        this.logStep = this.maxLog / 100;
+        this.logValue = [this.maxLog / 4, (3 * this.maxLog) / 4];
     }
 
-    public minMaxLinear: MinMax;
-    public minMaxLogarithmic: MinMax;
-    public logStep: number;
-    public logValue: number;
+    public minLog = 0;
+    public maxLog = 1;
 
-    public isPolicyScript: boolean = true;
+    public minMaxLinear: MinMax;
+    public logStep: number;
+    public logValue: number[];
+
+    @Input() public isPolicyScript: boolean = true;
     public objectKey: string;
     public label: string;
     public scriptName: string;
     public isEnabled: boolean;
     public isEnabled$: Observable<boolean>;
-
-    public value: number;
 
     public onEnableChange() {
         if (!this.isEnabled) {
@@ -57,39 +54,67 @@ export class QuickSliderComponent {
                     value: {
                         interpreter: 'javascript',
                         issueId: this.scriptName,
-                        source: this.createScriptSource(this.logValue),
-                        function: this.createScript(),
+                        source: this.isPolicyScript
+                            ? this.createPolicyScriptSource(this.logValue)
+                            : this.createNonPolicyScriptSource(this.logValue),
+                        function: this.isPolicyScript
+                            ? this.createPolicyScript()
+                            : this.createNonPolicyScript(),
                     } as Filter,
                 }),
             );
         }
     }
 
-    updateScript(event: MatSliderChange) {
+    updateScript() {
         this.isEnabled = true;
         this.store$.dispatch(
             filterActions.updateFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
                     issueId: this.scriptName,
-                    function: this.createScript(),
-                    source: this.createScriptSource(event.value),
+                    source: this.isPolicyScript
+                        ? this.createPolicyScriptSource(this.logValue)
+                        : this.createNonPolicyScriptSource(this.logValue),
+                    function: this.isPolicyScript
+                        ? this.createPolicyScript()
+                        : this.createNonPolicyScript(),
                 } as Filter,
             }),
         );
     }
 
-    public createScript() {
+    public createNonPolicyScript() {
         return (channel: LndChannel) =>
-            channel.policies.some((p) => p[this.objectKey] > Math.pow(2, this.logValue));
+            channel[this.objectKey] > Math.pow(2, this.logValue[0]) &&
+            channel[this.objectKey] < Math.pow(2, this.logValue[1]);
     }
 
-    public createScriptSource(value: number) {
+    public createPolicyScript() {
+        return (channel: LndChannel) =>
+            channel.policies.some(
+                (p) =>
+                    p[this.objectKey] > Math.pow(2, this.logValue[0]) &&
+                    p[this.objectKey] < Math.pow(2, this.logValue[1]),
+            );
+    }
+
+    public createNonPolicyScriptSource(value: number[]) {
         return `return (channel) =>
-  channel.policies.some(p => p.${this.objectKey} > ${Math.pow(
+    channel.${this.objectKey} > ${Math.pow(2, value[0])} && channel.${this.objectKey} < ${Math.pow(
             2,
-            this.logValue,
-        )})                        
+            value[1],
+        )}                     
+`;
+    }
+
+    public createPolicyScriptSource(value: number[]) {
+        return `return (channel) =>
+  channel.policies.some(p =>
+    p.${this.objectKey} > ${Math.pow(2, value[0])} &&  p.${this.objectKey} < ${Math.pow(
+            2,
+            value[1],
+        )} )                        
 `;
     }
 }

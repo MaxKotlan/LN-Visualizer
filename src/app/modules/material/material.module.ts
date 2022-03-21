@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MtxSliderModule } from '@ng-matero/extensions/slider';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         MatSelectModule,
         MatTooltipModule,
         MatSidenavModule,
+        MtxSliderModule,
     ],
     exports: [
         MatInputModule,
@@ -55,6 +57,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         MatSelectModule,
         MatTooltipModule,
         MatSidenavModule,
+        MtxSliderModule,
     ],
 })
 export class MaterialModule {}

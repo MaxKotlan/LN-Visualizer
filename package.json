@@ -23,6 +23,7 @@
         "@angular/router": "~13.1.0",
         "@ctrl/ngx-codemirror": "^5.1.1",
         "@datastructures-js/priority-queue": "^5.3.0",
+        "@ng-matero/extensions": "^13.1.0",
         "@ngneat/until-destroy": "^9.0.0",
         "@ngrx/effects": "^13.0.2",
         "@ngrx/store": "^13.0.2",
