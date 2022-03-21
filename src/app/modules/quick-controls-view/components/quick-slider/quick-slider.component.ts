@@ -25,7 +25,7 @@ export class QuickSliderComponent {
 
     @Input() set minMax(minMax: MinMax) {
         this.minMaxLinear = minMax;
-        this.minLog = 0; //this.minMaxLinear.min < 0 ? 0 : Math.log2(this.minMaxLinear.min);
+        this.minLog = Math.log2(this.minMaxLinear.min + 1); //this.minMaxLinear.min < 0 ? 0 : Math.log2(this.minMaxLinear.min);
         this.maxLog = Math.log2(this.minMaxLinear.max + 1);
         this.logStep = this.maxLog / 100;
         this.logValue = [this.maxLog / 4, (3 * this.maxLog) / 4];
