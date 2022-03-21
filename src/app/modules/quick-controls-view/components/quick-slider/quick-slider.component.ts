@@ -86,35 +86,37 @@ export class QuickSliderComponent {
 
     public createNonPolicyScript() {
         return (channel: LndChannel) =>
-            channel[this.objectKey] > Math.pow(2, this.logValue[0]) &&
-            channel[this.objectKey] < Math.pow(2, this.logValue[1]);
+            channel[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
+            channel[this.objectKey] <= this.logToLinear(this.logValue[1]) + 1;
     }
 
     public createPolicyScript() {
         return (channel: LndChannel) =>
             channel.policies.some(
                 (p) =>
-                    p[this.objectKey] > Math.pow(2, this.logValue[0]) &&
-                    p[this.objectKey] < Math.pow(2, this.logValue[1]),
+                    p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
+                    p[this.objectKey] <= this.logToLinear(this.logValue[1]) + 1,
             );
     }
 
     public createNonPolicyScriptSource(value: number[]) {
         return `return (channel) =>
-    channel.${this.objectKey} > ${Math.pow(2, value[0])} && channel.${this.objectKey} < ${Math.pow(
-            2,
-            value[1],
-        )}                     
+    channel.${this.objectKey} >= ${this.logToLinear(value[0])} && channel.${this.objectKey} <= ${
+            this.logToLinear(value[1]) + 1
+        }                     
 `;
     }
 
     public createPolicyScriptSource(value: number[]) {
         return `return (channel) =>
   channel.policies.some(p =>
-    p.${this.objectKey} > ${Math.pow(2, value[0])} &&  p.${this.objectKey} < ${Math.pow(
-            2,
-            value[1],
-        )} )                        
+    p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${this.objectKey} <= ${
+            this.logToLinear(value[1]) + 1
+        } )                        
 `;
+    }
+
+    public logToLinear(value: number) {
+        return Math.round(Math.pow(2, value) - 1);
     }
 }
