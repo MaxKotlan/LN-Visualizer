@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
 import {
-    ChannelCallback,
+    ChannelEvaluationFunction,
     Filter,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
@@ -68,7 +68,7 @@ export class QuickSliderComponent {
                         function: this.isPolicyScript
                             ? this.createPolicyScript()
                             : this.createNonPolicyScript(),
-                    } as Filter<ChannelCallback>,
+                    } as Filter<ChannelEvaluationFunction>,
                 }),
             );
         }
@@ -87,7 +87,7 @@ export class QuickSliderComponent {
                     function: this.isPolicyScript
                         ? this.createPolicyScript()
                         : this.createNonPolicyScript(),
-                } as Filter<ChannelCallback>,
+                } as Filter<ChannelEvaluationFunction>,
             }),
         );
     }
