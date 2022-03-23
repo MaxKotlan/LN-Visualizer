@@ -120,7 +120,7 @@ export class GraphMeshStateService {
     );
 
     channelVertices$ = combineLatest([
-        this.store$.select(filterSelectors.activeFilters),
+        this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelVertexBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
@@ -152,7 +152,7 @@ export class GraphMeshStateService {
     );
 
     channelColors$ = combineLatest([
-        this.store$.select(filterSelectors.activeFilters),
+        this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
         this.store$.select(selectChannelColorBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),

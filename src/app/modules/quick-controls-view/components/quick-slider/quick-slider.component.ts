@@ -50,10 +50,12 @@ export class QuickSliderComponent {
 
     public onEnableChange() {
         if (!this.isEnabled) {
-            this.store$.dispatch(filterActions.removeFilterByIssueId({ issueId: this.scriptName }));
+            this.store$.dispatch(
+                filterActions.removeChannelFilterByIssueId({ issueId: this.scriptName }),
+            );
         } else {
             this.store$.dispatch(
-                filterActions.updateFilterByIssueId({
+                filterActions.updateChannelFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
                         issueId: this.scriptName,
@@ -72,7 +74,7 @@ export class QuickSliderComponent {
     updateScript() {
         this.isEnabled = true;
         this.store$.dispatch(
-            filterActions.updateFilterByIssueId({
+            filterActions.updateChannelFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
                     issueId: this.scriptName,

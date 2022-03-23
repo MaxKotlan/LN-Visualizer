@@ -88,7 +88,7 @@ return (channel) =>
         if (!this.error) {
             if (this.scriptLanguage === 'lnscript') {
                 this.store$.dispatch(
-                    filterActions.addFilter({
+                    filterActions.addChannelFilter({
                         value: { interpreter: 'lnscript', expression: this.rpnExpression },
                     }),
                 );
@@ -97,7 +97,7 @@ return (channel) =>
             if (this.scriptLanguage === 'javascript') {
                 console.log(this.jsFunction);
                 this.store$.dispatch(
-                    filterActions.addFilter({
+                    filterActions.addChannelFilter({
                         value: {
                             interpreter: 'javascript',
                             function: this.jsFunction,

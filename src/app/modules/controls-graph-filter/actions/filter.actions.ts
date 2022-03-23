@@ -1,17 +1,23 @@
 import { createAction, props } from '@ngrx/store';
 import { Filter } from '../types/filter.interface';
 
-export const addFilter = createAction('[filter] addFilter', props<{ value: Filter }>());
-
-export const removeFilter = createAction('[filter] removeFilter', props<{ value: Filter }>());
-
-export const updateFilterByIssueId = createAction(
-    '[filter] updateFilterByIssueId',
+export const addChannelFilter = createAction(
+    '[filter] addChannelFilter',
     props<{ value: Filter }>(),
 );
 
-export const removeFilterByIssueId = createAction(
-    '[filter] removeFilterByIssueId',
+export const removeChannelFilter = createAction(
+    '[filter] removeChannelFilter',
+    props<{ value: Filter }>(),
+);
+
+export const updateChannelFilterByIssueId = createAction(
+    '[filter] updateChannelFilterByIssueId',
+    props<{ value: Filter }>(),
+);
+
+export const removeChannelFilterByIssueId = createAction(
+    '[filter] removeChannelFilterByIssueId',
     props<{ issueId: string }>(),
 );
 

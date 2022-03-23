@@ -33,11 +33,11 @@ export class QuickCapacityComponent {
     enableCapacityChange() {
         if (!this.isEnabled) {
             this.store$.dispatch(
-                filterActions.removeFilterByIssueId({ issueId: 'quick-capacity' }),
+                filterActions.removeChannelFilterByIssueId({ issueId: 'quick-capacity' }),
             );
         } else {
             this.store$.dispatch(
-                filterActions.updateFilterByIssueId({
+                filterActions.updateChannelFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
                         source: `return (channel) =>
@@ -55,7 +55,7 @@ export class QuickCapacityComponent {
     updateQuickCapacityFiliterScript(event: MatSliderChange) {
         this.isEnabled = true;
         this.store$.dispatch(
-            filterActions.updateFilterByIssueId({
+            filterActions.updateChannelFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
                     issueId: 'quick-capacity',

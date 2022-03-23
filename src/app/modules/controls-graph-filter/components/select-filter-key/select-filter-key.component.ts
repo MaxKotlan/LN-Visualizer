@@ -30,7 +30,7 @@ export class SelectFilterKeyComponent {
     public createExpression() {
         if (!this.key || !this.operator || !this.operand) return;
         // this.store$.dispatch(
-        //     filterActions.addFilter({
+        //     filterActions.addChannelFilter({
         //         value: {
         //             keyname: this.key,
         //             operator: this.operator,

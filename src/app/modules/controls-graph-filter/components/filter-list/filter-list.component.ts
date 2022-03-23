@@ -14,11 +14,13 @@ import * as filterActions from '../../actions';
 export class FilterListComponent {
     constructor(private store$: Store<GraphFilterState>) {}
 
-    public filterList$: Observable<Filter[]> = this.store$.select(filterSelectors.activeFilters);
+    public filterList$: Observable<Filter[]> = this.store$.select(
+        filterSelectors.activeChannelFilters,
+    );
 
     public remove(filter: Filter) {
         this.store$.dispatch(
-            filterActions.removeFilter({
+            filterActions.removeChannelFilter({
                 value: filter,
             }),
         );

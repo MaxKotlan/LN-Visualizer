@@ -467,7 +467,7 @@ export class GraphEffects {
                     let addPubKeyFilter = [];
                     if (c)
                         addPubKeyFilter.push(
-                            filterActions.addFilter({
+                            filterActions.addChannelFilter({
                                 value: {
                                     interpreter: 'javascript',
                                     source: `return (channel) => 
@@ -482,7 +482,7 @@ export class GraphEffects {
                         );
 
                     return from([
-                        filterActions.removeFilterByIssueId({ issueId: 'addNodeFilter' }),
+                        filterActions.removeChannelFilterByIssueId({ issueId: 'addNodeFilter' }),
                         ...addPubKeyFilter,
                     ]);
                 }),
