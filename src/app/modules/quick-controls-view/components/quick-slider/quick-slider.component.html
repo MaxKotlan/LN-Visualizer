@@ -2,7 +2,9 @@
     <p style="margin-top: 10px; margin-bottom: 0px; text-transform: capitalize; flex-grow: 1">
         {{ label }}
     </p>
-    <!-- <p style="margin-top: 10px; margin-bottom: 0px">{{ logValue | json }}</p> -->
+    <p style="margin-top: 10px; margin-bottom: 0px">
+        {{ logToLinear(logValue[0]) }}-{{ logToLinear(logValue[1]) }}
+    </p>
 </div>
 <div style="display: flex; align-items: center; gap: 0.2rem">
     <mat-slide-toggle
