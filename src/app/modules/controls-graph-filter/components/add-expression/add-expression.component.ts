@@ -58,16 +58,6 @@ return (channel) =>
     public source: string = this.expression;
 
     public async expressionEval(input: string) {
-        if (this.scriptLanguage == 'lnscript') {
-            try {
-                this.rpnExpression = this.filterEval.convertInfixExpressionToPostfix(input);
-                this.filterEval.evaluateExpression(this.mockLndChannel, this.rpnExpression);
-                this.error = undefined;
-                this.source = input;
-            } catch (e) {
-                this.error = e;
-            }
-        }
         if (this.scriptLanguage === 'javascript') {
             try {
                 this.jsFunction = await eval(`(async () => { ${input} })()`);
@@ -86,14 +76,6 @@ return (channel) =>
     public async createExpression() {
         await this.expressionEval(this.expression);
         if (!this.error) {
-            if (this.scriptLanguage === 'lnscript') {
-                this.store$.dispatch(
-                    filterActions.addChannelFilter({
-                        value: { interpreter: 'lnscript', expression: this.rpnExpression },
-                    }),
-                );
-                console.log('adding valid expression: ', this.rpnExpression);
-            }
             if (this.scriptLanguage === 'javascript') {
                 console.log(this.jsFunction);
                 this.store$.dispatch(
