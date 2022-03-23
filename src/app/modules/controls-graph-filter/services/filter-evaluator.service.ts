@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { LndChannel } from 'api/src/models';
-import { Filter } from '../types/filter.interface';
+import { ChannelCallback, Filter } from '../types/filter.interface';
 
 @Injectable({
     providedIn: 'root',
 })
 export class FilterEvaluatorService {
-    public evaluateFilters(channel: LndChannel, filters: Filter[]): boolean {
+    public evaluateFilters(channel: LndChannel, filters: Filter<ChannelCallback>[]): boolean {
         let resultAccumulator = true;
         filters.forEach((filter) => {
             let result = null;

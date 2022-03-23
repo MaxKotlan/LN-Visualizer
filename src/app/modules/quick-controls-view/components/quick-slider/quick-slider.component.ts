@@ -2,7 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
-import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
+import {
+    ChannelCallback,
+    Filter,
+} from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -65,7 +68,7 @@ export class QuickSliderComponent {
                         function: this.isPolicyScript
                             ? this.createPolicyScript()
                             : this.createNonPolicyScript(),
-                    } as Filter,
+                    } as Filter<ChannelCallback>,
                 }),
             );
         }
@@ -84,7 +87,7 @@ export class QuickSliderComponent {
                     function: this.isPolicyScript
                         ? this.createPolicyScript()
                         : this.createNonPolicyScript(),
-                } as Filter,
+                } as Filter<ChannelCallback>,
             }),
         );
     }

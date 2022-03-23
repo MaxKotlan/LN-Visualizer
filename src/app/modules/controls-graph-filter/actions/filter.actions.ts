@@ -1,19 +1,19 @@
 import { createAction, props } from '@ngrx/store';
-import { Filter } from '../types/filter.interface';
+import { ChannelCallback, Filter } from '../types/filter.interface';
 
 export const addChannelFilter = createAction(
     '[filter] addChannelFilter',
-    props<{ value: Filter }>(),
+    props<{ value: Filter<ChannelCallback> }>(),
 );
 
 export const removeChannelFilter = createAction(
     '[filter] removeChannelFilter',
-    props<{ value: Filter }>(),
+    props<{ value: Filter<ChannelCallback> }>(),
 );
 
 export const updateChannelFilterByIssueId = createAction(
     '[filter] updateChannelFilterByIssueId',
-    props<{ value: Filter }>(),
+    props<{ value: Filter<ChannelCallback> }>(),
 );
 
 export const removeChannelFilterByIssueId = createAction(

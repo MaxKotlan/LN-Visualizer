@@ -1,11 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
-import { Filter } from '../types/filter.interface';
+import { ChannelCallback, Filter, NodeCallback } from '../types/filter.interface';
 import _ from 'lodash';
 import * as filterActions from '../actions';
 
 export interface GraphFilterState {
-    activeNodeFilters: Filter[];
-    activeChannelFilters: Filter[];
+    activeNodeFilters: Filter<NodeCallback>[];
+    activeChannelFilters: Filter<ChannelCallback>[];
     channelFilterKeys: string[];
     nodeFilterKeys: string[];
     filterOperators: string[];

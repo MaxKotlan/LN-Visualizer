@@ -5,6 +5,7 @@ import { LndChannel } from 'src/app/types/channels.interface';
 import * as filterActions from '../../actions/filter.actions';
 import { GraphFilterState } from '../../reducer';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
+import { ChannelCallback } from '../../types/filter.interface';
 
 @Component({
     selector: 'app-add-expression',
@@ -48,7 +49,7 @@ return (channel) =>
         ],
     } as LndChannel;
 
-    public jsFunction: Function = (channel) =>
+    public jsFunction: ChannelCallback = (channel) =>
         channel.capacity < 1000000 &&
         channel.policies.some(
             (p) =>
@@ -77,7 +78,6 @@ return (channel) =>
         await this.expressionEval(this.expression);
         if (!this.error) {
             if (this.scriptLanguage === 'javascript') {
-                console.log(this.jsFunction);
                 this.store$.dispatch(
                     filterActions.addChannelFilter({
                         value: {
