@@ -7,9 +7,11 @@ import {
     channelColorMap,
     selectUseLogColorScale,
 } from 'src/app/modules/controls-channel/selectors';
+import { FilterEvaluatorService } from 'src/app/modules/controls-graph-filter/services/filter-evaluator.service';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { BufferRef } from '../../../../types/bufferRef.interface';
+import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 import {
     cacheProcessedChannelChunk,
     cacheProcessedGraphNodeChunk,
@@ -18,16 +20,11 @@ import { GraphState } from '../../reducer/graph.reducer';
 import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
-    selectFinalMatcheNodesFromSearch,
     selectNodeCapacityBuffer,
     selectNodeColorBuffer,
     selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
 import { ChannelColorService } from '../channel-color';
-import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
-import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
-import { LndChannel } from 'api/src/models';
-import { FilterEvaluatorService } from 'src/app/modules/controls-graph-filter/services/filter-evaluator.service';
 
 @Injectable()
 export class GraphMeshStateService {
