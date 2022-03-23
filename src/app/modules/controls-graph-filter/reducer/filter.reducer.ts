@@ -11,16 +11,12 @@ export interface GraphFilterState {
     activeNodeFilters: Filter<NodeEvaluationFunction>[];
     activeChannelFilters: Filter<ChannelEvaluationFunction>[];
     channelFilterKeys: string[];
-    nodeFilterKeys: string[];
-    filterOperators: string[];
 }
 
 const initialState: GraphFilterState = {
     activeNodeFilters: [],
     activeChannelFilters: [],
     channelFilterKeys: [],
-    nodeFilterKeys: ['color', 'public_key', 'alias', 'position', 'totalCapacity', 'depth'],
-    filterOperators: ['>', '>=', '<', '<=', '!=', '=='],
 };
 
 export const reducer = createReducer(
