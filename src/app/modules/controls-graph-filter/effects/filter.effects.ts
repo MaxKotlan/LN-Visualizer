@@ -9,28 +9,28 @@ export class FilterEffects {
     constructor(private actions$: Actions) {}
 
     //this is going to be expensive... must come back here and fix it later
-    generateFilters$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.cacheProcessedChannelChunk),
+    // generateFilters$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.cacheProcessedChannelChunk),
 
-                map((channelState) => {
-                    const keySet: Set<string> = new Set();
+    //             map((channelState) => {
+    //                 const keySet: Set<string> = new Set();
 
-                    channelState.channelSet.forEach((ch) => {
-                        Object.keys(ch).forEach((chKey) => {
-                            if (chKey !== 'policies') keySet.add(chKey);
-                        });
-                        ch.policies.forEach(
-                            (policy) => Object.keys(policy).forEach((pkey) => keySet.add(pkey)),
-                            // keySet.add(chKey)
-                        );
-                    });
-                    return filterActions.setAllowedFilterKeys({ value: Array.from(keySet) });
-                }),
-            ),
-        { dispatch: true },
-    );
+    //                 channelState.channelSet.forEach((ch) => {
+    //                     Object.keys(ch).forEach((chKey) => {
+    //                         if (chKey !== 'policies') keySet.add(chKey);
+    //                     });
+    //                     ch.policies.forEach(
+    //                         (policy) => Object.keys(policy).forEach((pkey) => keySet.add(pkey)),
+    //                         // keySet.add(chKey)
+    //                     );
+    //                 });
+    //                 return filterActions.setAllowedFilterKeys({ value: Array.from(keySet) });
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
     // generateFiltersNode$ = createEffect(
     //     () =>

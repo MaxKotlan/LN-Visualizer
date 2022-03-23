@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FilterListComponent } from './components/filter-list/filter-list.component';
 import { FilterModalComponent } from './components/filter-modal/filter-modal.component';
 import { MaterialModule } from '../material';
-import { SelectFilterKeyComponent } from './components/select-filter-key/select-filter-key.component';
 import { FormsModule } from '@angular/forms';
 import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './effects/filter.effects';
@@ -13,12 +12,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AddExpressionComponent } from './components/add-expression/add-expression.component';
 
 @NgModule({
-    declarations: [
-        FilterListComponent,
-        FilterModalComponent,
-        SelectFilterKeyComponent,
-        AddExpressionComponent,
-    ],
+    declarations: [FilterListComponent, FilterModalComponent, AddExpressionComponent],
     imports: [
         CommonModule,
         FormsModule,
