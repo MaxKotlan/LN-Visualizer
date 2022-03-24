@@ -9,6 +9,7 @@ import {
 import * as graphStatisticActions from '../actions/graph-statistics.actions';
 
 export interface GraphStatisticsState {
+    node_capacity: MinMax;
     capacity: MinMaxTotal;
     base_fee_mtokens: MinMax;
     cltv_delta: MinMax;
@@ -18,6 +19,7 @@ export interface GraphStatisticsState {
 }
 
 const initialState: GraphStatisticsState = {
+    node_capacity: initMinMax,
     capacity: initMinMaxTotal,
     base_fee_mtokens: initMinMax,
     cltv_delta: initMinMax,

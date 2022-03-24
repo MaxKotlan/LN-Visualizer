@@ -14,10 +14,15 @@ import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-po
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { selectNodeSetKeyValue } from '../selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
+import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 
 @Injectable()
 export class NodeEffects {
-    constructor(private actions$: Actions, private store$: Store<GraphState>) {}
+    constructor(
+        private actions$: Actions,
+        private store$: Store<GraphState>,
+        private minMaxCaluclator: MinMaxCalculatorService,
+    ) {}
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
 
@@ -27,7 +32,9 @@ export class NodeEffects {
                 ofType(graphActions.concatinateNodeChunk),
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
                 map(([action, nodeState]) => {
-                    action.nodeSubSet.forEach((node) => nodeState.set(node.public_key, node));
+                    action.nodeSubSet.forEach((node) => {
+                        nodeState.set(node.public_key, node);
+                    });
                     return graphActions.cacheProcessedGraphNodeChunk({
                         nodeSet: nodeState,
                     });
@@ -45,7 +52,8 @@ export class NodeEffects {
                 map((cacheProcessedGraphNodeChunk) => {
                     this.filteredSet.clear();
                     cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
-                        if (node.totalCapacity > 1000000000)
+                        this.minMaxCaluclator.checkNode(node);
+                        if (node.node_capacity > 1000000000)
                             this.filteredSet.set(node.public_key, node);
                     });
                     return graphActions.setFilteredNodes({
@@ -101,7 +109,7 @@ export class NodeEffects {
                             ),
                             parent: null,
                             children: new Map<string, LndNodeWithPosition>(),
-                            totalCapacity: 0,
+                            node_capacity: 0,
                             visited: false,
                             depth: 1,
                         } as LndNodeWithPosition;
@@ -267,7 +275,7 @@ export class NodeEffects {
         if (!lndNode) return;
         const lndPar = channel as LndChannelWithParent;
         lndPar.parent = otherNode;
-        lndNode.totalCapacity += channel.capacity;
+        lndNode.node_capacity += channel.capacity;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 

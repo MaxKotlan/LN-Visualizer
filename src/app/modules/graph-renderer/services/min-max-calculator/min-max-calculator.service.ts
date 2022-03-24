@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as graphStatisticActions from '../../actions/graph-statistics.actions';
 import { GraphStatisticsState } from '../../reducer/graph-statistics.reducer';
 import { graphStatisticsSelector } from '../../selectors';
@@ -21,6 +22,17 @@ export class MinMaxCalculatorService {
     //probably will cause issues because not using withLatestFrom in graph effect
     public keysToCheck: string[];
     public currentStatisticsState: GraphStatisticsState;
+
+    public checkNode(node: LndNodeWithPosition) {
+        this.keysToCheck.forEach((property) => {
+            if (node[property]) {
+                this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
+                    this.currentStatisticsState[property],
+                    node[property],
+                ) as MinMaxTotal;
+            }
+        });
+    }
 
     public checkChannel(channel: LndChannel) {
         this.keysToCheck.forEach((property) => {

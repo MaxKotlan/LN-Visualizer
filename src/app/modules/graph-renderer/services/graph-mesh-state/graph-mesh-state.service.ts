@@ -101,13 +101,13 @@ export class GraphMeshStateService {
             let i = 0;
             let largestCapacity = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                if (currentNode.totalCapacity > largestCapacity)
-                    largestCapacity = currentNode.totalCapacity;
+                if (currentNode.node_capacity > largestCapacity)
+                    largestCapacity = currentNode.node_capacity;
                 i++;
             });
             i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] = Math.sqrt(currentNode.totalCapacity / largestCapacity);
+                capacityBuffer[i] = Math.sqrt(currentNode.node_capacity / largestCapacity);
                 i++;
             });
 

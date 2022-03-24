@@ -44,6 +44,7 @@ export class QuickSliderComponent {
     public logStep: number;
     public logValue: number[];
 
+    @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
     public objectKey: string;
     public label: string;
