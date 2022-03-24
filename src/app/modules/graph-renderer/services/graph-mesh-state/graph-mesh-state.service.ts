@@ -18,6 +18,7 @@ import {
     setFilteredNodes,
 } from '../../actions/graph.actions';
 import { GraphState } from '../../reducer/graph.reducer';
+import { selectMinMax } from '../../selectors';
 import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
@@ -92,21 +93,20 @@ export class GraphMeshStateService {
     nodeCapacity$ = combineLatest([
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(selectNodeCapacityBuffer),
+        this.store$.select(selectMinMax('node_capacity')),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, capacityBuffer]) => {
+        map(([graphState, capacityBuffer, minMaxNodeCapacity]) => {
             if (!capacityBuffer || !graphState.nodeSet) return null;
 
             let i = 0;
-            let largestCapacity = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                if (currentNode.node_capacity > largestCapacity)
-                    largestCapacity = currentNode.node_capacity;
-                i++;
-            });
-            i = 0;
-            graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] = Math.sqrt(currentNode.node_capacity / largestCapacity);
+                capacityBuffer[i] = Math.sqrt(currentNode.node_capacity / minMaxNodeCapacity.max);
+
+                // capacityBuffer[i] =
+                //     (Math.log10(currentNode.node_capacity) - Math.log10(minMaxNodeCapacity.min)) /
+                //     (Math.log10(minMaxNodeCapacity.max) - Math.log10(minMaxNodeCapacity.min));
+
                 i++;
             });
 

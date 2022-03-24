@@ -36,6 +36,9 @@ export const selectAverageCapacity = createSelector(
     (node_capacity, channelCount) => Math.floor(node_capacity / channelCount) || 0,
 );
 
+export const selectMinMax = (property: keyof GraphStatisticsState) =>
+    createSelector(graphStatisticsSelector, (graphState) => graphState[property]);
+
 export const statsLabels = createSelector(graphStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>
         Object.keys(state[key]).map(
