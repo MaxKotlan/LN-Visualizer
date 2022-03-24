@@ -36,20 +36,20 @@ export class NodeEffects {
         { dispatch: true },
     );
 
+    public filteredSet: Map<string, LndNodeWithPosition> = new Map<string, LndNodeWithPosition>();
+
     filterNodesCache$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
                 map((cacheProcessedGraphNodeChunk) => {
-                    const filteredSet: Map<string, LndNodeWithPosition> = new Map<
-                        string,
-                        LndNodeWithPosition
-                    >();
+                    this.filteredSet.clear();
                     cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
-                        filteredSet.set(node.public_key, node);
+                        if (node.totalCapacity > 1000000000)
+                            this.filteredSet.set(node.public_key, node);
                     });
                     return graphActions.setFilteredNodes({
-                        nodeSet: filteredSet,
+                        nodeSet: this.filteredSet,
                     });
                 }),
             ),
