@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { activeNodeFilters } from 'src/app/modules/controls-graph-filter/selectors/filter.selectors';
 import { setModalClose } from 'src/app/modules/window-manager/actions';
 import { quickControlsId } from 'src/app/modules/window-manager/constants/windowIds';
 import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
@@ -15,8 +14,6 @@ import * as graphStatisticsSelector from '../../../graph-renderer/selectors';
 })
 export class QuickControlsViewComponent {
     constructor(private store$: Store<WindowManagerState>) {
-        this.store$.select(activeNodeFilters).subscribe(console.log);
-
         this.store$
             .select(graphStatisticsSelector.graphStatisticsSelector)
             .pipe(untilDestroyed(this))
