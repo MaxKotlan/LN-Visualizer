@@ -122,7 +122,7 @@ export class GraphMeshStateService {
         this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelVertexBuffer),
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
         map(([filters, graphState, vertexBuffer, nodeRegistry]) => {
@@ -154,7 +154,7 @@ export class GraphMeshStateService {
         this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelColorBuffer),
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(channelColor),
         this.store$.select(channelColorMap),
         this.store$.select(selectUseLogColorScale),

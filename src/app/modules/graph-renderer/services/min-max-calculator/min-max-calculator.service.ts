@@ -41,7 +41,7 @@ export class MinMaxCalculatorService {
     }
 
     public updateStore() {
-        this.keysToCheck.forEach((property) => {
+        this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
             this.store$.dispatch(
                 graphStatisticActions.updateMinMaxStatistic({
                     property,
