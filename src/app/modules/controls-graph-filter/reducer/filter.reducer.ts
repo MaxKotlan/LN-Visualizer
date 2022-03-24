@@ -35,6 +35,7 @@ export const reducer = createReducer(
     on(filterActions.removeChannelFilterByIssueId, (state, { issueId }) => ({
         ...state,
         activeChannelFilters: state.activeChannelFilters.filter((f) => f.issueId !== issueId),
+        activeNodeFilters: state.activeNodeFilters.filter((f) => f.issueId !== issueId),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
@@ -44,6 +45,13 @@ export const reducer = createReducer(
         ...state,
         activeChannelFilters: [
             ...state.activeChannelFilters.filter((f) => f?.issueId != value?.issueId),
+            value,
+        ],
+    })),
+    on(filterActions.updateNodeFilterByIssueId, (state, { value }) => ({
+        ...state,
+        activeNodeFilters: [
+            ...state.activeNodeFilters.filter((f) => f?.issueId != value?.issueId),
             value,
         ],
     })),
