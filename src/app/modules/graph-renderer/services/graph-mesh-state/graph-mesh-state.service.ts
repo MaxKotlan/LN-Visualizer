@@ -13,7 +13,6 @@ import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { BufferRef } from '../../../../types/bufferRef.interface';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 import {
-    cacheProcessedChannelChunk,
     cacheProcessedGraphNodeChunk,
     setFilteredNodeChannels,
     setFilteredNodes,
