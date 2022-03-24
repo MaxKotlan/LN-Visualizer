@@ -1,5 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { ChannelEvaluationFunction, Filter } from '../types/filter.interface';
+import {
+    ChannelEvaluationFunction,
+    Filter,
+    NodeEvaluationFunction,
+} from '../types/filter.interface';
 
 export const addChannelFilter = createAction(
     '[filter] addChannelFilter',
@@ -14,6 +18,11 @@ export const removeChannelFilter = createAction(
 export const updateChannelFilterByIssueId = createAction(
     '[filter] updateChannelFilterByIssueId',
     props<{ value: Filter<ChannelEvaluationFunction> }>(),
+);
+
+export const updateNodeFilterByIssueId = createAction(
+    '[filter] updateNodeFilterByIssueId',
+    props<{ value: Filter<NodeEvaluationFunction> }>(),
 );
 
 export const removeChannelFilterByIssueId = createAction(
