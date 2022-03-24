@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { from, map, mergeMap, withLatestFrom } from 'rxjs';
+import { combineLatest, from, map, mergeMap, withLatestFrom } from 'rxjs';
 import { initialSphereSize } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from '../reducer';
 import { createSpherePoint } from '../utils';
@@ -9,12 +9,14 @@ import * as THREE from 'three';
 import * as graphActions from '../actions/graph.actions';
 import * as graphSelectors from '../selectors';
 import * as filterActions from '../../controls-graph-filter/actions';
+import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { LndNode } from 'src/app/types/node.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { selectNodeSetKeyValue } from '../selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
+import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
 
 @Injectable()
 export class NodeEffects {
@@ -22,6 +24,7 @@ export class NodeEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private minMaxCaluclator: MinMaxCalculatorService,
+        private evaluationService: FilterEvaluatorService,
     ) {}
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
@@ -35,8 +38,25 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         nodeState.set(node.public_key, node);
                     });
+
                     return graphActions.cacheProcessedGraphNodeChunk({
                         nodeSet: nodeState,
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
+
+    computeStatistics$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.cacheProcessedGraphNodeChunk),
+                map((cacheProcessedGraphNodeChunk) => {
+                    cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
+                        this.minMaxCaluclator.checkNode(node);
+                    });
+                    return graphActions.computeNodeStatistics({
+                        nodeSet: cacheProcessedGraphNodeChunk.nodeSet,
                     });
                 }),
             ),
@@ -47,13 +67,14 @@ export class NodeEffects {
 
     filterNodesCache$ = createEffect(
         () =>
-            this.actions$.pipe(
-                ofType(graphActions.cacheProcessedGraphNodeChunk),
-                map((cacheProcessedGraphNodeChunk) => {
+            combineLatest([
+                this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
+                this.store$.select(filterSelectors.activeNodeFilters),
+            ]).pipe(
+                map(([cacheProcessedGraphNodeChunk, activeNodeFilters]) => {
                     this.filteredSet.clear();
                     cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
-                        this.minMaxCaluclator.checkNode(node);
-                        if (node.node_capacity > 1000000000)
+                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
                             this.filteredSet.set(node.public_key, node);
                     });
                     return graphActions.setFilteredNodes({
