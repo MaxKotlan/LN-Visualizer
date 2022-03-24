@@ -23,11 +23,9 @@ export class ChannelEffects {
                 map(([action, channelState]) => {
                     action.channelSubSet.forEach((channel) => {
                         this.minMaxCaluclator.checkChannel(channel);
-
                         channelState.set(channel.id, channel);
                     });
                     this.minMaxCaluclator.updateStore();
-
                     return graphActions.cacheProcessedChannelChunk({
                         channelSet: channelState,
                     });

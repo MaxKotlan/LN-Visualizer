@@ -15,6 +15,8 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
 import {
     cacheProcessedChannelChunk,
     cacheProcessedGraphNodeChunk,
+    setFilteredNodeChannels,
+    setFilteredNodes,
 } from '../../actions/graph.actions';
 import { GraphState } from '../../reducer/graph.reducer';
 import {
@@ -38,7 +40,7 @@ export class GraphMeshStateService {
     readonly throttleTimeMs: number = 500;
 
     nodeVertices$ = combineLatest([
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
@@ -67,7 +69,7 @@ export class GraphMeshStateService {
     ];
 
     nodeColors$ = combineLatest([
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(selectNodeColorBuffer),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
@@ -118,7 +120,7 @@ export class GraphMeshStateService {
 
     channelVertices$ = combineLatest([
         this.store$.select(filterSelectors.activeChannelFilters),
-        this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
+        this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelVertexBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
     ]).pipe(
@@ -150,7 +152,7 @@ export class GraphMeshStateService {
 
     channelColors$ = combineLatest([
         this.store$.select(filterSelectors.activeChannelFilters),
-        this.actions$.pipe(ofType(cacheProcessedChannelChunk)),
+        this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelColorBuffer),
         this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
         this.store$.select(channelColor),

@@ -36,6 +36,50 @@ export class NodeEffects {
         { dispatch: true },
     );
 
+    filterNodesCache$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.cacheProcessedGraphNodeChunk),
+                map((cacheProcessedGraphNodeChunk) => {
+                    const filteredSet: Map<string, LndNodeWithPosition> = new Map<
+                        string,
+                        LndNodeWithPosition
+                    >();
+                    cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
+                        filteredSet.set(node.public_key, node);
+                    });
+                    return graphActions.setFilteredNodes({
+                        nodeSet: filteredSet,
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
+
+    filterNodesChannelCache$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.setFilteredNodes),
+                map((filteredNodes) => {
+                    const channels: Map<string, LndChannel> = new Map<string, LndChannel>();
+
+                    filteredNodes.nodeSet.forEach((node) => {
+                        node.connectedChannels.toArray().forEach((channel) => {
+                            channels.set(
+                                (channel as unknown as LndChannelWithParent)
+                                    .id as unknown as string,
+                                channel as unknown as LndChannel,
+                            );
+                        });
+                    });
+                    return graphActions.setFilteredNodeChannels({
+                        channelSet: channels,
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
+
     positionNodes$ = createEffect(
         () =>
             this.actions$.pipe(
