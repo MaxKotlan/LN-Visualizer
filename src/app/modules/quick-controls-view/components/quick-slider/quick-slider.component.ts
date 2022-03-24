@@ -2,7 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
-import { Filter } from 'src/app/modules/controls-graph-filter/types/filter.interface';
+import {
+    ChannelEvaluationFunction,
+    Filter,
+} from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -50,10 +53,12 @@ export class QuickSliderComponent {
 
     public onEnableChange() {
         if (!this.isEnabled) {
-            this.store$.dispatch(filterActions.removeFilterByIssueId({ issueId: this.scriptName }));
+            this.store$.dispatch(
+                filterActions.removeChannelFilterByIssueId({ issueId: this.scriptName }),
+            );
         } else {
             this.store$.dispatch(
-                filterActions.updateFilterByIssueId({
+                filterActions.updateChannelFilterByIssueId({
                     value: {
                         interpreter: 'javascript',
                         issueId: this.scriptName,
@@ -63,7 +68,7 @@ export class QuickSliderComponent {
                         function: this.isPolicyScript
                             ? this.createPolicyScript()
                             : this.createNonPolicyScript(),
-                    } as Filter,
+                    } as Filter<ChannelEvaluationFunction>,
                 }),
             );
         }
@@ -72,7 +77,7 @@ export class QuickSliderComponent {
     updateScript() {
         this.isEnabled = true;
         this.store$.dispatch(
-            filterActions.updateFilterByIssueId({
+            filterActions.updateChannelFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
                     issueId: this.scriptName,
@@ -82,7 +87,7 @@ export class QuickSliderComponent {
                     function: this.isPolicyScript
                         ? this.createPolicyScript()
                         : this.createNonPolicyScript(),
-                } as Filter,
+                } as Filter<ChannelEvaluationFunction>,
             }),
         );
     }

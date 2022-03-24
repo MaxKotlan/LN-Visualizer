@@ -15,7 +15,6 @@ import {
     SettingsModalComponent,
 } from './components';
 import { reducer } from './reducers';
-import { QuickCapacityComponent } from './components/quick-capacity/quick-capacity.component';
 import { ScreenSizeModule } from '../screen-size/screen-size.module';
 
 @NgModule({
@@ -25,7 +24,6 @@ import { ScreenSizeModule } from '../screen-size/screen-size.module';
         SettingsModalComponent,
         CameraSettingsComponent,
         MiscSettingsComponent,
-        QuickCapacityComponent,
     ],
     imports: [
         CommonModule,
@@ -44,7 +42,6 @@ import { ScreenSizeModule } from '../screen-size/screen-size.module';
         CameraSettingsComponent,
         NodeSettingsComponent,
         MiscSettingsComponent,
-        QuickCapacityComponent,
     ],
 })
 export class ControlsModule {}

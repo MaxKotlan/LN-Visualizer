@@ -1,42 +1,50 @@
 import { createReducer, on } from '@ngrx/store';
-import { Filter } from '../types/filter.interface';
+import {
+    ChannelEvaluationFunction,
+    Filter,
+    NodeEvaluationFunction,
+} from '../types/filter.interface';
 import _ from 'lodash';
 import * as filterActions from '../actions';
 
 export interface GraphFilterState {
-    activeFilters: Filter[];
+    activeNodeFilters: Filter<NodeEvaluationFunction>[];
+    activeChannelFilters: Filter<ChannelEvaluationFunction>[];
     channelFilterKeys: string[];
-    nodeFilterKeys: string[];
-    filterOperators: string[];
 }
 
 const initialState: GraphFilterState = {
-    activeFilters: [],
+    activeNodeFilters: [],
+    activeChannelFilters: [],
     channelFilterKeys: [],
-    nodeFilterKeys: ['color', 'public_key', 'alias', 'position', 'totalCapacity', 'depth'],
-    filterOperators: ['>', '>=', '<', '<=', '!=', '=='],
 };
 
 export const reducer = createReducer(
     initialState,
-    on(filterActions.addFilter, (state, { value }) => ({
+    on(filterActions.addChannelFilter, (state, { value }) => ({
         ...state,
-        activeFilters: [...state.activeFilters.filter((f) => !_.isEqual(f, value)), value],
+        activeChannelFilters: [
+            ...state.activeChannelFilters.filter((f) => !_.isEqual(f, value)),
+            value,
+        ],
     })),
-    on(filterActions.removeFilter, (state, { value }) => ({
+    on(filterActions.removeChannelFilter, (state, { value }) => ({
         ...state,
-        activeFilters: state.activeFilters.filter((f) => !_.isEqual(f, value)),
+        activeChannelFilters: state.activeChannelFilters.filter((f) => !_.isEqual(f, value)),
     })),
-    on(filterActions.removeFilterByIssueId, (state, { issueId }) => ({
+    on(filterActions.removeChannelFilterByIssueId, (state, { issueId }) => ({
         ...state,
-        activeFilters: state.activeFilters.filter((f) => f.issueId !== issueId),
+        activeChannelFilters: state.activeChannelFilters.filter((f) => f.issueId !== issueId),
     })),
     on(filterActions.setAllowedFilterKeys, (state, { value }) => ({
         ...state,
         channelFilterKeys: value,
     })),
-    on(filterActions.updateFilterByIssueId, (state, { value }) => ({
+    on(filterActions.updateChannelFilterByIssueId, (state, { value }) => ({
         ...state,
-        activeFilters: [...state.activeFilters.filter((f) => f?.issueId != value?.issueId), value],
+        activeChannelFilters: [
+            ...state.activeChannelFilters.filter((f) => f?.issueId != value?.issueId),
+            value,
+        ],
     })),
 );

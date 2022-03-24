@@ -4,7 +4,8 @@ import { Store } from '@ngrx/store';
 import { filter, map, skipUntil, take, tap } from 'rxjs';
 import { controlsSelector } from '../selectors/controls.selectors';
 import * as controlActions from '../actions/controls.actions';
-import { GenericControlsState } from '../reducers/controls.reducer';
+import { GenericControlsState, initialState } from '../reducers/controls.reducer';
+import { ControlsState } from '../types';
 
 @Injectable()
 export class ControlsEffects {
@@ -27,6 +28,10 @@ export class ControlsEffects {
             map(() => localStorage.getItem('controlState')),
             filter((controlStateStr) => !!controlStateStr),
             map((controlStateStr) => JSON.parse(controlStateStr || '')),
+            filter(
+                (savedState: ControlsState) =>
+                    savedState.genericControls.controlVersion === initialState.controlVersion,
+            ),
             map((savedState) =>
                 controlActions.setSavedStateFromLocalStorage({
                     savedState,

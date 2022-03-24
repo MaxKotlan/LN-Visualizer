@@ -8,13 +8,15 @@ export const enum CameraFocusMode {
 }
 
 export interface GenericControlsState {
+    controlVersion: string;
     searchText: string;
     renderLabels: boolean;
     cameraFov: number;
     cameraFocusMode: CameraFocusMode;
 }
 
-const initialState: GenericControlsState = {
+export const initialState: GenericControlsState = {
+    controlVersion: '1',
     searchText: '',
     renderLabels: false,
     cameraFov: 60,

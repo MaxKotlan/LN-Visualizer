@@ -36,6 +36,16 @@ export const cacheProcessedGraphNodeChunk = createAction(
     props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
+export const setFilteredNodes = createAction(
+    '[graph] setFilteredNodes',
+    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
+);
+
+export const setFilteredNodeChannels = createAction(
+    '[graph] setFilteredNodeChannels',
+    props<{ channelSet: Map<string, LndChannel> }>(),
+);
+
 export const concatinateChannelChunk = createAction(
     '[graph] concatinateChannelChunk',
     props<{ channelSubSet: LndChannel[] }>(),
