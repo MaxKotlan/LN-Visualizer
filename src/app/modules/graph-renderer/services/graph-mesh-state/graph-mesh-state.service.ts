@@ -13,7 +13,6 @@ import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { BufferRef } from '../../../../types/bufferRef.interface';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 import {
-    cacheProcessedChannelChunk,
     cacheProcessedGraphNodeChunk,
     setFilteredNodeChannels,
     setFilteredNodes,
@@ -101,13 +100,13 @@ export class GraphMeshStateService {
             let i = 0;
             let largestCapacity = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                if (currentNode.totalCapacity > largestCapacity)
-                    largestCapacity = currentNode.totalCapacity;
+                if (currentNode.node_capacity > largestCapacity)
+                    largestCapacity = currentNode.node_capacity;
                 i++;
             });
             i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] = Math.sqrt(currentNode.totalCapacity / largestCapacity);
+                capacityBuffer[i] = Math.sqrt(currentNode.node_capacity / largestCapacity);
                 i++;
             });
 
@@ -122,7 +121,7 @@ export class GraphMeshStateService {
         this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelVertexBuffer),
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
         map(([filters, graphState, vertexBuffer, nodeRegistry]) => {
@@ -154,7 +153,7 @@ export class GraphMeshStateService {
         this.store$.select(filterSelectors.activeChannelFilters),
         this.actions$.pipe(ofType(setFilteredNodeChannels)),
         this.store$.select(selectChannelColorBuffer),
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(channelColor),
         this.store$.select(channelColorMap),
         this.store$.select(selectUseLogColorScale),

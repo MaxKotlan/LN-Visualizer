@@ -8,7 +8,7 @@ export interface LndNodeWithPosition extends LndNode {
     connectedChannels: MaxPriorityQueue<LndChannelWithParent>;
     parent: LndNodeWithPosition | null;
     children: Map<string, LndNodeWithPosition>;
-    totalCapacity: number;
+    node_capacity: number;
     visited: boolean;
     depth: number;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { from, map, mergeMap, withLatestFrom } from 'rxjs';
+import { combineLatest, from, map, mergeMap, withLatestFrom } from 'rxjs';
 import { initialSphereSize } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from '../reducer';
 import { createSpherePoint } from '../utils';
@@ -9,15 +9,23 @@ import * as THREE from 'three';
 import * as graphActions from '../actions/graph.actions';
 import * as graphSelectors from '../selectors';
 import * as filterActions from '../../controls-graph-filter/actions';
+import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { LndNode } from 'src/app/types/node.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { selectNodeSetKeyValue } from '../selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
+import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
+import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
 
 @Injectable()
 export class NodeEffects {
-    constructor(private actions$: Actions, private store$: Store<GraphState>) {}
+    constructor(
+        private actions$: Actions,
+        private store$: Store<GraphState>,
+        private minMaxCaluclator: MinMaxCalculatorService,
+        private evaluationService: FilterEvaluatorService,
+    ) {}
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
 
@@ -27,7 +35,10 @@ export class NodeEffects {
                 ofType(graphActions.concatinateNodeChunk),
                 withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
                 map(([action, nodeState]) => {
-                    action.nodeSubSet.forEach((node) => nodeState.set(node.public_key, node));
+                    action.nodeSubSet.forEach((node) => {
+                        nodeState.set(node.public_key, node);
+                    });
+
                     return graphActions.cacheProcessedGraphNodeChunk({
                         nodeSet: nodeState,
                     });
@@ -36,20 +47,38 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    filterNodesCache$ = createEffect(
+    computeStatistics$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
                 map((cacheProcessedGraphNodeChunk) => {
-                    const filteredSet: Map<string, LndNodeWithPosition> = new Map<
-                        string,
-                        LndNodeWithPosition
-                    >();
                     cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
-                        filteredSet.set(node.public_key, node);
+                        this.minMaxCaluclator.checkNode(node);
+                    });
+                    return graphActions.computeNodeStatistics({
+                        nodeSet: cacheProcessedGraphNodeChunk.nodeSet,
+                    });
+                }),
+            ),
+        { dispatch: true },
+    );
+
+    public filteredSet: Map<string, LndNodeWithPosition> = new Map<string, LndNodeWithPosition>();
+
+    filterNodesCache$ = createEffect(
+        () =>
+            combineLatest([
+                this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
+                this.store$.select(filterSelectors.activeNodeFilters),
+            ]).pipe(
+                map(([cacheProcessedGraphNodeChunk, activeNodeFilters]) => {
+                    this.filteredSet.clear();
+                    cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
+                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
+                            this.filteredSet.set(node.public_key, node);
                     });
                     return graphActions.setFilteredNodes({
-                        nodeSet: filteredSet,
+                        nodeSet: this.filteredSet,
                     });
                 }),
             ),
@@ -101,7 +130,7 @@ export class NodeEffects {
                             ),
                             parent: null,
                             children: new Map<string, LndNodeWithPosition>(),
-                            totalCapacity: 0,
+                            node_capacity: 0,
                             visited: false,
                             depth: 1,
                         } as LndNodeWithPosition;
@@ -267,7 +296,7 @@ export class NodeEffects {
         if (!lndNode) return;
         const lndPar = channel as LndChannelWithParent;
         lndPar.parent = otherNode;
-        lndNode.totalCapacity += channel.capacity;
+        lndNode.node_capacity += channel.capacity;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 

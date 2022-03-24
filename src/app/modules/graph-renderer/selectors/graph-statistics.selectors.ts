@@ -33,7 +33,7 @@ export const selectMinimumChannelCapacity = createSelector(
 export const selectAverageCapacity = createSelector(
     selectTotalChannelCapacity,
     selectChannelCount,
-    (totalCapacity, channelCount) => Math.floor(totalCapacity / channelCount) || 0,
+    (node_capacity, channelCount) => Math.floor(node_capacity / channelCount) || 0,
 );
 
 export const statsLabels = createSelector(graphStatisticsSelector, (state) =>

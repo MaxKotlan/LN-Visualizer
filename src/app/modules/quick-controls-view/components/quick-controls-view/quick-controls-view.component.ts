@@ -18,7 +18,9 @@ export class QuickControlsViewComponent {
             .select(graphStatisticsSelector.graphStatisticsSelector)
             .pipe(untilDestroyed(this))
             .subscribe((newStatsState) => {
-                this.statsKeys = Object.keys(newStatsState).filter((f) => f !== 'capacity');
+                this.statsKeys = Object.keys(newStatsState).filter(
+                    (f) => f !== 'capacity' && f !== 'node_capacity',
+                );
                 this.statsState = newStatsState;
             });
     }

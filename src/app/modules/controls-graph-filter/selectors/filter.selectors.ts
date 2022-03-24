@@ -8,10 +8,21 @@ export const activeChannelFilters = createSelector(
     (state) => state.activeChannelFilters,
 );
 
+export const activeNodeFilters = createSelector(
+    graphFilterState,
+    (state) => state.activeNodeFilters,
+);
+
 export const channelFilterKeys = createSelector(
     graphFilterState,
     (state) => state.channelFilterKeys,
 );
 
 export const isFilterActive = (issueId: string) =>
-    createSelector(activeChannelFilters, (filters) => filters.some((f) => f?.issueId === issueId));
+    createSelector(
+        activeChannelFilters,
+        activeNodeFilters,
+        (channelFilters, nodeFilters) =>
+            channelFilters.some((f) => f?.issueId === issueId) ||
+            nodeFilters.some((f) => f?.issueId === issueId),
+    );

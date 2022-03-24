@@ -7,7 +7,13 @@
 </mat-toolbar>
 <div class="app-sidenav">
     <app-quick-controls></app-quick-controls>
-    <!-- <app-quick-capacity></app-quick-capacity> -->
+    <app-quick-slider
+        [isNodeScript]="true"
+        [isPolicyScript]="false"
+        [key]="'node_capacity'"
+        [minMax]="statsState['node_capacity']"
+    >
+    </app-quick-slider>
     <app-quick-slider [isPolicyScript]="false" [key]="'capacity'" [minMax]="statsState['capacity']">
     </app-quick-slider>
     <app-quick-slider

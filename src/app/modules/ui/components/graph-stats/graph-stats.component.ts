@@ -17,7 +17,7 @@ export class GraphStatsComponent {
     // public maximumCapacity$: Observable<number> = this.store.select(
     //     graphSelectors.selectMaximumChannelCapacity,
     // );
-    // public totalCapacity$: Observable<number> = this.store.select(
+    // public node_capacity$: Observable<number> = this.store.select(
     //     graphSelectors.selectTotalChannelCapacity,
     // );
     public averageCapacity$: Observable<number> = this.store.select(

@@ -5,9 +5,11 @@ import { Observable } from 'rxjs';
 import {
     ChannelEvaluationFunction,
     Filter,
+    NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { MinMax } from 'src/app/types/min-max-total.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 
@@ -44,6 +46,7 @@ export class QuickSliderComponent {
     public logStep: number;
     public logValue: number[];
 
+    @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
     public objectKey: string;
     public label: string;
@@ -57,25 +60,34 @@ export class QuickSliderComponent {
                 filterActions.removeChannelFilterByIssueId({ issueId: this.scriptName }),
             );
         } else {
-            this.store$.dispatch(
-                filterActions.updateChannelFilterByIssueId({
-                    value: {
-                        interpreter: 'javascript',
-                        issueId: this.scriptName,
-                        source: this.isPolicyScript
-                            ? this.createPolicyScriptSource(this.logValue)
-                            : this.createNonPolicyScriptSource(this.logValue),
-                        function: this.isPolicyScript
-                            ? this.createPolicyScript()
-                            : this.createNonPolicyScript(),
-                    } as Filter<ChannelEvaluationFunction>,
-                }),
-            );
+            this.nodeOrChannelScript();
         }
     }
 
     updateScript() {
         this.isEnabled = true;
+        this.nodeOrChannelScript();
+    }
+
+    public nodeOrChannelScript() {
+        if (this.isNodeScript) this.updateNodeScript();
+        else this.updateChannelScript();
+    }
+
+    public updateNodeScript() {
+        this.store$.dispatch(
+            filterActions.updateNodeFilterByIssueId({
+                value: {
+                    interpreter: 'javascript',
+                    issueId: this.scriptName,
+                    source: 'node script placeholder',
+                    function: this.createNodeScript(),
+                } as Filter<NodeEvaluationFunction>,
+            }),
+        );
+    }
+
+    public updateChannelScript() {
         this.store$.dispatch(
             filterActions.updateChannelFilterByIssueId({
                 value: {
@@ -105,6 +117,12 @@ export class QuickSliderComponent {
                     p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
                     p[this.objectKey] <= this.logToLinear(this.logValue[1]),
             );
+    }
+
+    public createNodeScript() {
+        return (node: LndNodeWithPosition) =>
+            node[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
+            node[this.objectKey] <= this.logToLinear(this.logValue[1]);
     }
 
     public createNonPolicyScriptSource(value: number[]) {
