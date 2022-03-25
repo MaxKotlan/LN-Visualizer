@@ -91,7 +91,7 @@ export class GraphMeshStateService {
     );
 
     nodeCapacity$ = combineLatest([
-        this.actions$.pipe(ofType(cacheProcessedGraphNodeChunk)),
+        this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(selectNodeCapacityBuffer),
         this.store$.select(selectMinMax('node_capacity')),
     ]).pipe(
