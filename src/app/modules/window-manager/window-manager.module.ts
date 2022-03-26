@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-
 import * as windowManagementReducer from './reducers';
 import { WindowManagerComponent } from './components/window-manager/window-manager.component';
 import { MaterialModule } from '../material';

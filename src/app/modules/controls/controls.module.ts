@@ -6,6 +6,7 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
 import { MaterialModule } from '../material';
+import { ScreenSizeModule } from '../screen-size/screen-size.module';
 import {
     CameraSettingsComponent,
     MiscSettingsComponent,
@@ -15,7 +16,6 @@ import {
     SettingsModalComponent,
 } from './components';
 import { reducer } from './reducers';
-import { ScreenSizeModule } from '../screen-size/screen-size.module';
 
 @NgModule({
     declarations: [
