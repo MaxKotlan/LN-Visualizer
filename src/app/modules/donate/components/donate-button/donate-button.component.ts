@@ -8,9 +8,7 @@ import { DonateModalComponent } from '../donate-modal/donate-modal.component';
     styleUrls: ['./donate-button.component.scss'],
 })
 export class DonateButtonComponent {
-    constructor(public dialog: MatDialog) {
-        this.openDonateModal();
-    }
+    constructor(public dialog: MatDialog) {}
 
     openDonateModal() {
         this.dialog.open(DonateModalComponent, {

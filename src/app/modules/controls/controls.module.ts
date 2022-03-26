@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
+import { DonateModule } from '../donate/donate.module';
 import { MaterialModule } from '../material';
 import { ScreenSizeModule } from '../screen-size/screen-size.module';
 import {
@@ -34,6 +35,7 @@ import { reducer } from './reducers';
         ControlsRendererModule,
         ScreenSizeModule,
         StoreModule.forFeature('genericControls', reducer),
+        DonateModule,
     ],
     exports: [
         SearchComponent,
