@@ -31,6 +31,7 @@
         "@seregpie/three.text-sprite": "^3.2.0",
         "@seregpie/three.text-texture": "^3.2.1",
         "@types/colormap": "^2.3.1",
+        "angularx-qrcode": "^13.0.6",
         "atft": "^1.5.0",
         "codemirror": "^5.65.2",
         "colormap": "^2.3.2",
