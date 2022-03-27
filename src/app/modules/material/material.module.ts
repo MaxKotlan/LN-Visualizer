@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MtxSliderModule } from '@ng-matero/extensions/slider';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import { MtxSliderModule } from '@ng-matero/extensions/slider';
         MatTooltipModule,
         MatSidenavModule,
         MtxSliderModule,
+        ClipboardModule,
     ],
     exports: [
         MatInputModule,

@@ -76,6 +76,14 @@
                     [errorCorrectionLevel]="'M'"
                 ></qrcode>
             </a>
+            <button
+                style="width: 100%"
+                (click)="clickToCopy(paymentMethod.destination)"
+                mat-raised-button
+                color="primary"
+            >
+                Copy Invoice
+            </button>
         </div>
     </ng-container>
 </div>

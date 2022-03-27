@@ -13,6 +13,7 @@ import {
 } from '../../selectors/donate.selectors';
 import { DonateApiService } from '../../services/donate-api.service';
 import { PaymentMethod } from '../models';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
     selector: 'app-donate-modal',
@@ -22,8 +23,8 @@ import { PaymentMethod } from '../models';
 export class DonateModalComponent {
     constructor(
         public donateApiService: DonateApiService,
-        private dialogRef: MatDialogRef<DonateModalComponent>,
         private store$: Store<DonateState>,
+        private clipboard: Clipboard,
     ) {}
 
     public isLoading$ = this.store$.select(selectIsLoading);
@@ -54,5 +55,9 @@ export class DonateModalComponent {
                 selectPaymentMethod({ paymentMethodName: paymentMethodName.value }),
             );
         }
+    }
+
+    public clickToCopy(value) {
+        this.clipboard.copy(value);
     }
 }
