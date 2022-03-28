@@ -3,6 +3,8 @@ name: LnVisualizerWebBuild
 on:
     push:
         branches: [main]
+        tags:
+            - v*.*.*
 
 jobs:
     build-web:
@@ -11,7 +13,8 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-
+            - name: Set env
+              run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
             - name: Log in to Docker Hub
               uses: docker/login-action@v1
               with:
@@ -24,14 +27,15 @@ jobs:
                   context: .
                   file: './Dockerfile-web'
                   push: true
-                  tags: maxkotlan/ln-visualizer-web:latest
+                  tags: maxkotlan/ln-visualizer-web:latest,maxkotlan/ln-visualizer-web:${{ env.RELEASE_VERSION }}
     build-api:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-
+            - name: Set env
+              run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
             - name: Log in to Docker Hub
               uses: docker/login-action@v1
               with:
@@ -44,4 +48,4 @@ jobs:
                   context: .
                   file: './Dockerfile-api'
                   push: true
-                  tags: maxkotlan/ln-visualizer-api:latest
+                  tags: maxkotlan/ln-visualizer-api:latest,maxkotlan/ln-visualizer-web:${{ env.RELEASE_VERSION }}
