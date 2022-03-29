@@ -9,6 +9,7 @@ export interface LndNodeWithPosition extends LndNode {
     parent: LndNodeWithPosition | null;
     children: Map<string, LndNodeWithPosition>;
     node_capacity: number;
+    channel_count: number;
     visited: boolean;
     depth: number;
 }

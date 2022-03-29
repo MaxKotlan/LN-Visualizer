@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, from, map, mergeMap, withLatestFrom } from 'rxjs';
+import { combineLatest, debounceTime, from, map, mergeMap, withLatestFrom } from 'rxjs';
 import { initialSphereSize } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from '../reducer';
 import { createSpherePoint } from '../utils';
@@ -69,7 +69,7 @@ export class NodeEffects {
         () =>
             combineLatest([
                 this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
-                this.store$.select(filterSelectors.activeNodeFilters),
+                this.store$.select(filterSelectors.activeNodeFilters).pipe(debounceTime(100)),
             ]).pipe(
                 map(([cacheProcessedGraphNodeChunk, activeNodeFilters]) => {
                     this.filteredSet.clear();
@@ -85,16 +85,17 @@ export class NodeEffects {
         { dispatch: true },
     );
 
+    public filterNodeCache: Map<string, LndChannel> = new Map<string, LndChannel>();
+
     filterNodesChannelCache$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
                 map((filteredNodes) => {
-                    const channels: Map<string, LndChannel> = new Map<string, LndChannel>();
-
+                    this.filterNodeCache.clear();
                     filteredNodes.nodeSet.forEach((node) => {
                         node.connectedChannels.toArray().forEach((channel) => {
-                            channels.set(
+                            this.filterNodeCache.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
@@ -102,7 +103,7 @@ export class NodeEffects {
                         });
                     });
                     return graphActions.setFilteredNodeChannels({
-                        channelSet: channels,
+                        channelSet: this.filterNodeCache,
                     });
                 }),
             ),
@@ -131,6 +132,7 @@ export class NodeEffects {
                             parent: null,
                             children: new Map<string, LndNodeWithPosition>(),
                             node_capacity: 0,
+                            channel_count: 0,
                             visited: false,
                             depth: 1,
                         } as LndNodeWithPosition;
@@ -297,6 +299,7 @@ export class NodeEffects {
         const lndPar = channel as LndChannelWithParent;
         lndPar.parent = otherNode;
         lndNode.node_capacity += channel.capacity;
+        lndNode.channel_count += 1;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 
