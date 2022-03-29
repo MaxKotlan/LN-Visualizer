@@ -49,3 +49,10 @@ app-channel-color-scale {
     z-index: 1000;
     pointer-events: none;
 }
+
+app-donate-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+}

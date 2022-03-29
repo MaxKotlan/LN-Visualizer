@@ -4,10 +4,11 @@ import { FloatingButtonMenuModule } from '../floating-button-menu/floating-butto
 import { GraphRendererModule } from '../graph-renderer';
 import { UiModule } from '../ui/ui.module';
 import { GraphViewComponent } from './components';
+import { DonateModule } from '../donate/donate.module';
 
 @NgModule({
     declarations: [GraphViewComponent],
-    imports: [CommonModule, FloatingButtonMenuModule, GraphRendererModule, UiModule],
+    imports: [CommonModule, FloatingButtonMenuModule, GraphRendererModule, UiModule, DonateModule],
     exports: [GraphViewComponent],
 })
 export class GraphViewModule {}

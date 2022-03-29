@@ -1,0 +1,9 @@
+button {
+    all: unset;
+    cursor: pointer;
+    text-decoration: underline;
+    color: #fbc02d;
+}
+button:focus {
+    outline: orange 5px auto;
+}
