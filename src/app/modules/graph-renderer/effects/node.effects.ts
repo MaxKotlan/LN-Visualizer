@@ -85,16 +85,17 @@ export class NodeEffects {
         { dispatch: true },
     );
 
+    public filterNodeCache: Map<string, LndChannel> = new Map<string, LndChannel>();
+
     filterNodesChannelCache$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
                 map((filteredNodes) => {
-                    const channels: Map<string, LndChannel> = new Map<string, LndChannel>();
-
+                    this.filterNodeCache.clear();
                     filteredNodes.nodeSet.forEach((node) => {
                         node.connectedChannels.toArray().forEach((channel) => {
-                            channels.set(
+                            this.filterNodeCache.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
@@ -102,7 +103,7 @@ export class NodeEffects {
                         });
                     });
                     return graphActions.setFilteredNodeChannels({
-                        channelSet: channels,
+                        channelSet: this.filterNodeCache,
                     });
                 }),
             ),
