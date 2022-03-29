@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, from, map, mergeMap, withLatestFrom } from 'rxjs';
+import { combineLatest, debounceTime, from, map, mergeMap, withLatestFrom } from 'rxjs';
 import { initialSphereSize } from 'src/app/constants/mesh-scale.constant';
 import { GraphState } from '../reducer';
 import { createSpherePoint } from '../utils';
@@ -69,7 +69,7 @@ export class NodeEffects {
         () =>
             combineLatest([
                 this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
-                this.store$.select(filterSelectors.activeNodeFilters),
+                this.store$.select(filterSelectors.activeNodeFilters).pipe(debounceTime(100)),
             ]).pipe(
                 map(([cacheProcessedGraphNodeChunk, activeNodeFilters]) => {
                     this.filteredSet.clear();
