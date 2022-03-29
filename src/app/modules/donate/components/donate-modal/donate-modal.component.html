@@ -82,7 +82,7 @@
                 mat-raised-button
                 color="primary"
             >
-                Copy Invoice
+                Copy {{ paymentMethod.paymentMethod === 'BTC' ? 'Address' : 'Invoice' }}
             </button>
         </div>
     </ng-container>
