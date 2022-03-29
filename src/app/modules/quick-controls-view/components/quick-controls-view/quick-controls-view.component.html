@@ -14,6 +14,13 @@
         [minMax]="statsState['node_capacity']"
     >
     </app-quick-slider>
+    <app-quick-slider
+        [isNodeScript]="true"
+        [isPolicyScript]="false"
+        [key]="'channel_count'"
+        [minMax]="statsState['channel_count']"
+    >
+    </app-quick-slider>
     <app-quick-slider [isPolicyScript]="false" [key]="'capacity'" [minMax]="statsState['capacity']">
     </app-quick-slider>
     <app-quick-slider

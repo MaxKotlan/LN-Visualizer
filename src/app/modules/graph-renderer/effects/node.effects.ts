@@ -131,6 +131,7 @@ export class NodeEffects {
                             parent: null,
                             children: new Map<string, LndNodeWithPosition>(),
                             node_capacity: 0,
+                            channel_count: 0,
                             visited: false,
                             depth: 1,
                         } as LndNodeWithPosition;
@@ -297,6 +298,7 @@ export class NodeEffects {
         const lndPar = channel as LndChannelWithParent;
         lndPar.parent = otherNode;
         lndNode.node_capacity += channel.capacity;
+        lndNode.channel_count += 1;
         lndNode.connectedChannels.enqueue(lndPar);
     }
 

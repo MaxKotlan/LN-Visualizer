@@ -9,6 +9,7 @@ import {
 import * as graphStatisticActions from '../actions/graph-statistics.actions';
 
 export interface GraphStatisticsState {
+    channel_count: MinMax;
     node_capacity: MinMax;
     capacity: MinMaxTotal;
     base_fee_mtokens: MinMax;
@@ -19,6 +20,7 @@ export interface GraphStatisticsState {
 }
 
 const initialState: GraphStatisticsState = {
+    channel_count: initMinMax,
     node_capacity: initMinMax,
     capacity: initMinMaxTotal,
     base_fee_mtokens: initMinMax,
