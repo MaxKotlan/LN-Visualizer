@@ -6,6 +6,7 @@ import { setModalClose, toggleModalPreference } from 'src/app/modules/window-man
 import { filterScriptsId } from 'src/app/modules/window-manager/constants/windowIds';
 import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
 import { selectModalPreference } from 'src/app/modules/window-manager/selectors';
+import * as filterSelectors from '../../selectors/filter.selectors';
 
 @Component({
     selector: 'app-filter-modal',
@@ -17,6 +18,8 @@ export class FilterModalComponent {
         @Optional() public dialogRef: MatDialogRef<FilterModalComponent>,
         private store$: Store<WindowManagerState>,
     ) {}
+
+    public activeChannelFilters$ = this.store$.select(filterSelectors.activeChannelFilters);
 
     public windowPosition$: Observable<'modal' | 'sidebar'> = this.store$.select(
         selectModalPreference(filterScriptsId),

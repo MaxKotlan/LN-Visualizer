@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GraphFilterState } from '../../reducer';
-import * as filterSelectors from '../../selectors/filter.selectors';
-import { ChannelEvaluationFunction, Filter } from '../../types/filter.interface';
+import {
+    ChannelEvaluationFunction,
+    Filter,
+    NodeEvaluationFunction,
+} from '../../types/filter.interface';
 import * as filterActions from '../../actions';
 
 @Component({
@@ -14,11 +17,9 @@ import * as filterActions from '../../actions';
 export class FilterListComponent {
     constructor(private store$: Store<GraphFilterState>) {}
 
-    public filterList$: Observable<Filter<ChannelEvaluationFunction>[]> = this.store$.select(
-        filterSelectors.activeChannelFilters,
-    );
+    @Input() filterList: Filter<NodeEvaluationFunction | ChannelEvaluationFunction>[];
 
-    public remove(filter: Filter<ChannelEvaluationFunction>) {
+    public remove(filter: Filter<NodeEvaluationFunction | ChannelEvaluationFunction>) {
         this.store$.dispatch(
             filterActions.removeChannelFilter({
                 value: filter,

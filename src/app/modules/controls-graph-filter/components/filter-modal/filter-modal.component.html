@@ -23,6 +23,6 @@
         <app-add-expression></app-add-expression>
         <h3 style="margin-top: 10px">Active Filters</h3>
         <mat-divider style="margin-bottom: 5px"></mat-divider>
-        <app-filter-list></app-filter-list>
+        <app-filter-list [filterList]="activeChannelFilters$ | async"></app-filter-list>
     </div>
 </div>
