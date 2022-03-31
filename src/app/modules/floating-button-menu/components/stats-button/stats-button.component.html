@@ -1,0 +1,12 @@
+<button
+    mat-mini-fab
+    color="primary"
+    aria-label="Example icon button with a delete icon"
+    #popoverTrigger2="mtxPopoverTrigger"
+    [mtxPopoverTriggerFor]="popover"
+>
+    <mat-icon>query_stats</mat-icon>
+</button>
+<mtx-popover #popover="mtxPopover" [closeOnBackdropClick]="true">
+    <app-graph-stats></app-graph-stats>
+</mtx-popover>
