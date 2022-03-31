@@ -14,7 +14,6 @@
     <div class="modal-content" cdkScrollable>
         <h3 style="margin-top: 10px">Add Filter</h3>
         <mat-divider style="margin-bottom: 5px"></mat-divider>
-
         <p>
             Filter scripts are small scripts used to determine which channels should be rendered.
             Channels will only be rendered if all scripts evaluates to true. Each script must
@@ -23,6 +22,7 @@
         <app-add-expression></app-add-expression>
         <h3 style="margin-top: 10px">Active Filters</h3>
         <mat-divider style="margin-bottom: 5px"></mat-divider>
+        <app-filter-list [filterList]="activeNodeFilters$ | async"></app-filter-list>
         <app-filter-list [filterList]="activeChannelFilters$ | async"></app-filter-list>
     </div>
 </div>

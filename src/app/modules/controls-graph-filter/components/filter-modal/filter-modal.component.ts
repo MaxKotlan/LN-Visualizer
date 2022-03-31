@@ -19,6 +19,7 @@ export class FilterModalComponent {
         private store$: Store<WindowManagerState>,
     ) {}
 
+    public activeNodeFilters$ = this.store$.select(filterSelectors.activeNodeFilters);
     public activeChannelFilters$ = this.store$.select(filterSelectors.activeChannelFilters);
 
     public windowPosition$: Observable<'modal' | 'sidebar'> = this.store$.select(
