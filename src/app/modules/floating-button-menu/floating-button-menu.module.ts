@@ -8,6 +8,7 @@ import {
     SettingsButtonComponent,
     SidenavOpenButtonComponent,
 } from './components';
+import { StatsButtonComponent } from './components/stats-button/stats-button.component';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import {
         FloatingButtonsComponent,
         FilterButtonComponent,
         SidenavOpenButtonComponent,
+        StatsButtonComponent,
     ],
     imports: [CommonModule, UiModule, MaterialModule],
     exports: [FloatingButtonsComponent, SidenavOpenButtonComponent],

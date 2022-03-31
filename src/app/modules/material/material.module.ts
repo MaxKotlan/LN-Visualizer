@@ -19,6 +19,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MtxSliderModule } from '@ng-matero/extensions/slider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MtxSplitModule } from '@ng-matero/extensions/split';
+import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 
 @NgModule({
     imports: [
@@ -42,6 +43,7 @@ import { MtxSplitModule } from '@ng-matero/extensions/split';
         MtxSliderModule,
         ClipboardModule,
         MtxSplitModule,
+        MtxPopoverModule,
     ],
     exports: [
         MatInputModule,
@@ -63,6 +65,7 @@ import { MtxSplitModule } from '@ng-matero/extensions/split';
         MatSidenavModule,
         MtxSliderModule,
         MtxSplitModule,
+        MtxPopoverModule,
     ],
 })
 export class MaterialModule {}
