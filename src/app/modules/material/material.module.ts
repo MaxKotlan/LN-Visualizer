@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MtxSliderModule } from '@ng-matero/extensions/slider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { MtxSplitModule } from '@ng-matero/extensions/split';
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
         MatSidenavModule,
         MtxSliderModule,
         ClipboardModule,
+        MtxSplitModule,
     ],
     exports: [
         MatInputModule,
@@ -60,6 +62,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
         MatTooltipModule,
         MatSidenavModule,
         MtxSliderModule,
+        MtxSplitModule,
     ],
 })
 export class MaterialModule {}

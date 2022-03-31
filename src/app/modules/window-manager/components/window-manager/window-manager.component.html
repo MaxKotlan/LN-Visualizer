@@ -1,7 +1,35 @@
-<mat-drawer-container>
+<mtx-split
+    #mtxSplit
+    unit="pixel"
+    direction="horizontal"
+    [restrictMove]="false"
+    [useTransition]="true"
+    *ngIf="screenSizeService.isDesktop$ | async"
+    class="mat-drawer-container"
+    [disabled]="(shouldShowQuickControls$ | async) === false"
+    (dragEnd)="recomputeCanvas()"
+    (transitionEnd)="recomputeCanvas()"
+>
+    <mtx-split-pane
+        [order]="0"
+        [minSize]="(shouldShowQuickControls$ | async) ? 280 : 0"
+        [maxSize]="(shouldShowQuickControls$ | async) ? 750 : 0"
+        [size]="(shouldShowQuickControls$ | async) ? 280 : 0"
+    >
+        <app-quick-controls-view></app-quick-controls-view
+    ></mtx-split-pane>
+    <mtx-split-pane [order]="1">
+        <app-graph-view></app-graph-view>
+    </mtx-split-pane>
+    <!-- <mtx-split-pane [order]="2">
+        <app-filter-modal></app-filter-modal>
+    </mtx-split-pane> -->
+</mtx-split>
+
+<mat-drawer-container *ngIf="screenSizeService.isMobile$ | async">
     <mat-drawer
         #drawer
-        [mode]="(screenSizeService.isDesktop$ | async) ? 'side' : 'over'"
+        [mode]="'over'"
         [opened]="shouldShowQuickControls$ | async"
         (closedStart)="closeQuickControls()"
         (openedStart)="openQuickControls()"
