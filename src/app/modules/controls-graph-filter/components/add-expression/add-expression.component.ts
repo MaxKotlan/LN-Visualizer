@@ -22,6 +22,7 @@ export class AddExpressionComponent {
 
     public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
     public evalMode: 'add' | 'type' = 'add';
+    public scriptType: 'node' | 'channel' = 'channel';
     public error: Error | undefined = undefined;
     public expression: string =
         this.scriptLanguage === 'javascript'

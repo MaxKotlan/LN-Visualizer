@@ -1,17 +1,20 @@
 <h3 *ngIf="error">{{ error }}</h3>
-<!-- <mat-form-field>
-    <mat-label>Script Language</mat-label>
-    <mat-select [(ngModel)]="scriptLanguage">
-        <mat-option [value]="'javascript'">Javascript</mat-option>
-    </mat-select>
-</mat-form-field> -->
-<mat-form-field>
-    <mat-label>Evaluate Mode</mat-label>
-    <mat-select [(ngModel)]="evalMode">
-        <mat-option [value]="'add'">On Add</mat-option>
-        <mat-option [value]="'type'">On Type</mat-option>
-    </mat-select>
-</mat-form-field>
+<div style="display: flex">
+    <mat-form-field style="margin-right: 10px">
+        <mat-label>Evaluate Mode</mat-label>
+        <mat-select [(ngModel)]="evalMode">
+            <mat-option [value]="'add'">On Add</mat-option>
+            <mat-option [value]="'type'">On Type</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Script Type</mat-label>
+        <mat-select disabled [(ngModel)]="scriptType">
+            <mat-option [value]="'channel'">channel</mat-option>
+            <mat-option [value]="'node'">node</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
 <div style="display: flex">
     <ngx-codemirror
         style="width: 100%"
