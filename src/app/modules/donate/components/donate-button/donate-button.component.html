@@ -1,1 +1,3 @@
-<button (click)="openDonateModal()" color="primary">Donate</button>
+<button *ngIf="donateLinkVisible$ | async" (click)="openDonateModal()" color="primary">
+    Donate
+</button>

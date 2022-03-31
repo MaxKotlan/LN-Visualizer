@@ -3,13 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { ControlsChannelModule } from '../controls-channel/controls-channel.module';
+import { ControlsMiscModule } from '../controls-misc/controls-misc.module';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
 import { MaterialModule } from '../material';
 import { ScreenSizeModule } from '../screen-size/screen-size.module';
 import {
     CameraSettingsComponent,
-    MiscSettingsComponent,
     NodeSettingsComponent,
     QuickControlsComponent,
     SearchComponent,
@@ -23,7 +23,6 @@ import { reducer } from './reducers';
         QuickControlsComponent,
         SettingsModalComponent,
         CameraSettingsComponent,
-        MiscSettingsComponent,
     ],
     imports: [
         CommonModule,
@@ -32,6 +31,7 @@ import { reducer } from './reducers';
         ControlsNodeModule,
         ControlsChannelModule,
         ControlsRendererModule,
+        ControlsMiscModule,
         ScreenSizeModule,
         StoreModule.forFeature('genericControls', reducer),
     ],
@@ -41,7 +41,6 @@ import { reducer } from './reducers';
         SettingsModalComponent,
         CameraSettingsComponent,
         NodeSettingsComponent,
-        MiscSettingsComponent,
     ],
 })
 export class ControlsModule {}

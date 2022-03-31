@@ -1,7 +1,6 @@
 export * from './camera-settings';
 export * from '../../controls-channel/components/channel-settings';
 export * from '../../ui/components/graph-stats';
-export * from './misc-settings';
 export * from '../../controls-node/components/node-settings';
 export * from './quick-controls';
 export * from './search';

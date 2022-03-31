@@ -24,7 +24,7 @@ export class QuickSliderComponent {
     @Input() set key(key: string) {
         this.label = key.replace(/_/g, ' ');
         this.objectKey = key;
-        this.scriptName = `quick-${key}-2`;
+        this.scriptName = `quick-${key}`;
         this.isEnabled$ = this.store$.select(filterSelectors.isFilterActive(this.scriptName));
     }
 

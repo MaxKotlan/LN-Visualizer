@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { donateLinkVisible } from 'src/app/modules/controls-misc/selectors/misc-controls.selectors';
 import { DonateModalComponent } from '../donate-modal/donate-modal.component';
 
 @Component({
@@ -8,7 +10,9 @@ import { DonateModalComponent } from '../donate-modal/donate-modal.component';
     styleUrls: ['./donate-button.component.scss'],
 })
 export class DonateButtonComponent {
-    constructor(public dialog: MatDialog) {}
+    constructor(public dialog: MatDialog, private store: Store<any>) {}
+
+    public donateLinkVisible$ = this.store.select(donateLinkVisible);
 
     openDonateModal() {
         this.dialog.open(DonateModalComponent, {
