@@ -5,7 +5,6 @@
     [restrictMove]="false"
     [useTransition]="true"
     *ngIf="screenSizeService.isDesktop$ | async"
-    class="mat-drawer-container"
     [disabled]="(shouldShowQuickControls$ | async) === false"
     (dragEnd)="recomputeCanvas()"
     (transitionEnd)="recomputeCanvas()"
