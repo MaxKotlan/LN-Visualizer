@@ -31,6 +31,7 @@ export const reducer = createReducer(
     on(filterActions.removeChannelFilter, (state, { value }) => ({
         ...state,
         activeChannelFilters: state.activeChannelFilters.filter((f) => !_.isEqual(f, value)),
+        activeNodeFilters: state.activeNodeFilters.filter((f) => !_.isEqual(f, value)),
     })),
     on(filterActions.removeChannelFilterByIssueId, (state, { issueId }) => ({
         ...state,

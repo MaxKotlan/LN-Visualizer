@@ -3,5 +3,8 @@
     <button (click)="resetSettingsToDefault()" mat-raised-button color="primary">
         Reset Settings to Default
     </button>
-    <app-donate-button></app-donate-button>
+    <mat-checkbox [ngModel]="donateLinkVisible$ | async" (change)="setDonateLinkVisible($event)">
+        <!-- <mat-checkbox  -->
+        Show Donate Link
+    </mat-checkbox>
 </section>

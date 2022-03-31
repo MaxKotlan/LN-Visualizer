@@ -24,7 +24,7 @@ export class QuickSliderComponent {
     @Input() set key(key: string) {
         this.label = key.replace(/_/g, ' ');
         this.objectKey = key;
-        this.scriptName = `quick-${key}-2`;
+        this.scriptName = `quick-${key}`;
         this.isEnabled$ = this.store$.select(filterSelectors.isFilterActive(this.scriptName));
     }
 
@@ -80,7 +80,7 @@ export class QuickSliderComponent {
                 value: {
                     interpreter: 'javascript',
                     issueId: this.scriptName,
-                    source: 'node script placeholder',
+                    source: this.createNodeScriptSource(this.logValue),
                     function: this.createNodeScript(),
                 } as Filter<NodeEvaluationFunction>,
             }),
@@ -123,6 +123,14 @@ export class QuickSliderComponent {
         return (node: LndNodeWithPosition) =>
             node[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
             node[this.objectKey] <= this.logToLinear(this.logValue[1]);
+    }
+
+    public createNodeScriptSource(value: number[]) {
+        return `return (node) =>
+    node.${this.objectKey} >= ${this.logToLinear(value[0])} && node.${
+            this.objectKey
+        } <= ${this.logToLinear(value[1])}                     
+`;
     }
 
     public createNonPolicyScriptSource(value: number[]) {

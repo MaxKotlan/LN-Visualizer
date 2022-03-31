@@ -12,7 +12,7 @@ export const addChannelFilter = createAction(
 
 export const removeChannelFilter = createAction(
     '[filter] removeChannelFilter',
-    props<{ value: Filter<ChannelEvaluationFunction> }>(),
+    props<{ value: Filter<NodeEvaluationFunction | ChannelEvaluationFunction> }>(),
 );
 
 export const updateChannelFilterByIssueId = createAction(

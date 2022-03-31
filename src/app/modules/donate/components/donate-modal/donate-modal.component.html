@@ -9,7 +9,7 @@
         *ngIf="(selectInvoice$ | async) === undefined && (isLoading$ | async) === false"
     >
         <mat-form-field class="example-full-width" appearance="fill">
-            <mat-label>Amount</mat-label>
+            <mat-label>Amount (SATS)</mat-label>
             <input
                 [(ngModel)]="amount"
                 #input
@@ -82,7 +82,7 @@
                 mat-raised-button
                 color="primary"
             >
-                Copy Invoice
+                Copy {{ paymentMethod.paymentMethod === 'BTC' ? 'Address' : 'Invoice' }}
             </button>
         </div>
     </ng-container>
