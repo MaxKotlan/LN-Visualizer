@@ -6,6 +6,7 @@ import {
     animationFrames,
     combineLatest,
     filter,
+    fromEvent,
     iif,
     map,
     of,
@@ -37,7 +38,7 @@ export class WindowManagerEffects {
         public screenSizeService: ScreenSizeService,
     ) {}
 
-    recomputeCanvasSize$ = createEffect(
+    modalStateChanged$ = createEffect(
         () =>
             this.store$
                 .select(selectAllModalState)
@@ -52,7 +53,6 @@ export class WindowManagerEffects {
                 ),
         { dispatch: true },
     );
-
     // mobileModal$ = createEffect(
     //     () =>
     //         this.screenSizeService.isMobile$.pipe(

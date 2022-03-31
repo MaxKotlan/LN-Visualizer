@@ -33,11 +33,15 @@ $angular-dark-theme: mat.define-dark-theme(
     )
 );
 
-@include mtx.all-component-themes($angular-dark-theme);
-@include mtx.all-experimental-component-themes($angular-dark-theme);
-
 .darkMode {
+    @include mtx.all-component-themes($angular-dark-theme);
+    @include mtx.all-experimental-component-themes($angular-dark-theme);
     @include mat.all-component-colors($angular-dark-theme);
+}
+
+.darkMode .mtx-split {
+    background-color: #424242;
+    color: white;
 }
 
 .darkMode .mat-drawer-backdrop.mat-drawer-shown {
