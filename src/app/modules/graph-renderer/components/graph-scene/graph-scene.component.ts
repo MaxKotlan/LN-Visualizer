@@ -43,7 +43,7 @@ import { GraphMeshStateService } from '../../services';
     templateUrl: './graph-scene.component.html',
     styleUrls: ['graph-scene.component.scss'],
 })
-export class GraphSceneComponent implements OnInit, AfterViewInit {
+export class GraphSceneComponent implements AfterViewInit {
     @ViewChild(RendererCanvasComponent) renderCanvas!: RendererCanvasComponent;
     @ViewChild(SceneComponent) scene!: SceneComponent;
     @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
@@ -56,10 +56,6 @@ export class GraphSceneComponent implements OnInit, AfterViewInit {
         private graphMeshStateService: GraphMeshStateService,
         public toolTipService: ToolTipService,
     ) {}
-
-    ngOnInit(): void {
-        this.store$.dispatch(graphActions.initializeGraphSyncProcess());
-    }
 
     public positions$ = this.graphMeshStateService.nodeVertices$;
     public colors$ = this.graphMeshStateService.nodeColors$;
