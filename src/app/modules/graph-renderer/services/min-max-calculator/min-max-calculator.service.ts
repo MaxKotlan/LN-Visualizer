@@ -36,7 +36,7 @@ export class MinMaxCalculatorService {
 
     public checkChannel(channel: LndChannel) {
         this.keysToCheck.forEach((property) => {
-            if (channel[property]) {
+            if (channel[property] !== undefined) {
                 this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
                     this.currentStatisticsState[property],
                     channel[property],

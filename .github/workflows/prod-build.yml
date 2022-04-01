@@ -46,7 +46,6 @@ jobs:
               with:
                   context: .
                   file: './Dockerfile-web'
-                  platforms: linux/amd64,linux/arm64,linux/arm/v7
                   push: true
                   tags: maxkotlan/ln-visualizer-web:latest
     build-api:
@@ -88,6 +87,5 @@ jobs:
               with:
                   context: .
                   file: './Dockerfile-api'
-                  platforms: linux/amd64,linux/arm64,linux/arm/v7
                   push: true
                   tags: maxkotlan/ln-visualizer-api:latest
