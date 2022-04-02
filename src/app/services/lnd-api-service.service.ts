@@ -15,9 +15,14 @@ export class LndApiServiceService {
         this.configService.origin$.subscribe((origin) => {
             if (origin) this.subject = webSocket(origin);
             else {
-                this.subject = webSocket(
-                    `ws://${location.origin.replace('http://', '').replace('https://', '')}/api`,
-                );
+                if (location.origin.includes('https://')) {
+                    this.subject = webSocket(
+                        `wss://${location.origin.replace('https://', '')}/api`,
+                    );
+                }
+                if (location.origin.includes('http://')) {
+                    this.subject = webSocket(`ws://${location.origin.replace('http://', '')}/api`);
+                }
             }
             this.subject.next('initsync');
             this.store$.dispatch(initializeGraphSyncProcess());
