@@ -17,11 +17,11 @@ export class LndApiServiceService {
             else {
                 if (location.origin.includes('https://')) {
                     this.subject = webSocket(
-                        `wss://${location.origin.replace('https://', '')}/api`,
+                        `wss://${location.origin.replace('https://', '')}/api/`,
                     );
                 }
                 if (location.origin.includes('http://')) {
-                    this.subject = webSocket(`ws://${location.origin.replace('http://', '')}/api`);
+                    this.subject = webSocket(`ws://${location.origin.replace('http://', '')}/api/`);
                 }
             }
             this.subject.next('initsync');
