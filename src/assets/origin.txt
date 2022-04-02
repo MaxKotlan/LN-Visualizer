@@ -1,1 +1,0 @@
-wss://lnvisualizer.com/api/

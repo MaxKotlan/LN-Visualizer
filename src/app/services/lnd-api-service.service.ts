@@ -13,7 +13,10 @@ export class LndApiServiceService {
     public subject: WebSocketSubject<unknown>;
     constructor(private configService: ConfigService, private store$: Store<any>) {
         this.configService.origin$.subscribe((origin) => {
-            this.subject = webSocket(origin);
+            if (origin) this.subject = webSocket(origin);
+            else {
+                this.subject = webSocket(`ws://${location.origin.replace('http://', '')}/api`);
+            }
             this.subject.next('initsync');
             this.store$.dispatch(initializeGraphSyncProcess());
         });
