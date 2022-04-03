@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { map, Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { environment } from 'src/environments/environment';
 import { initializeGraphSyncProcess } from '../modules/graph-renderer/actions';
 import { ConfigService } from './config.service';
 
@@ -15,13 +16,14 @@ export class LndApiServiceService {
         this.configService.origin$.subscribe((origin) => {
             if (origin) this.subject = webSocket(origin);
             else {
-                if (location.origin.includes('https://')) {
+                if (environment.production) {
                     this.subject = webSocket(
-                        `wss://${location.origin.replace('https://', '')}/api/`,
+                        `${location.origin
+                            .replace('http://', 'ws://')
+                            .replace('https://', 'wss://')}/api/`,
                     );
-                }
-                if (location.origin.includes('http://')) {
-                    this.subject = webSocket(`ws://${location.origin.replace('http://', '')}/api/`);
+                } else {
+                    this.subject = webSocket(`wss://lnvisualizer.com/api/`);
                 }
             }
             this.subject.next('initsync');

@@ -1,0 +1,10 @@
+<mtx-alert
+    *ngIf="topAlert | async as alert"
+    [type]="alert.type"
+    [elevation]="12"
+    dismissible
+    style="margin-bottom: 0"
+    (closed)="closeAlert(alert.id)"
+>
+    {{ alert.message }}
+</mtx-alert>
