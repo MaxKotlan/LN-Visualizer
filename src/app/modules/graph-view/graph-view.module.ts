@@ -5,10 +5,18 @@ import { GraphRendererModule } from '../graph-renderer';
 import { UiModule } from '../ui/ui.module';
 import { GraphViewComponent } from './components';
 import { DonateModule } from '../donate/donate.module';
+import { AlertsModule } from '../alerts/alerts.module';
 
 @NgModule({
     declarations: [GraphViewComponent],
-    imports: [CommonModule, FloatingButtonMenuModule, GraphRendererModule, UiModule, DonateModule],
+    imports: [
+        CommonModule,
+        FloatingButtonMenuModule,
+        GraphRendererModule,
+        UiModule,
+        DonateModule,
+        AlertsModule,
+    ],
     exports: [GraphViewComponent],
 })
 export class GraphViewModule {}

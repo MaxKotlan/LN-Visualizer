@@ -1,0 +1,8 @@
+<mtx-alert
+    *ngIf="topAlert | async as alert"
+    type="warning"
+    [elevation]="12"
+    style="margin-bottom: 0"
+>
+    {{ alert }}
+</mtx-alert>
