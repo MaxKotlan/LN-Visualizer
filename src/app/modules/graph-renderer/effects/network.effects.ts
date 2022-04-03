@@ -50,9 +50,17 @@ export class NetworkEffects {
                             return graphActions.errorUnknownChunkDataType();
                         }),
                         catchError((e: ErrorEvent) => {
-                            console.log(e);
-                            //this.snackBar.open('Failed to connect to websocket', 'close');
-                            return of(alertActions.createAlert);
+                            return of(
+                                alertActions.createAlert({
+                                    alert: {
+                                        id: 'websocket-connection-error',
+                                        type: 'danger',
+                                        message: `Could not connect to websocket at ${
+                                            (e.target as unknown as any).url
+                                        }. The server might be down`,
+                                    },
+                                }),
+                            );
                         }),
                     ),
                 ),

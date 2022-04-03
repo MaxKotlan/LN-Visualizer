@@ -11,20 +11,20 @@ import { selectTopAlert } from '../../selectors/alerts.selectors';
 })
 export class AlertsBannerComponent {
     constructor(private store$: Store<AlertsState>) {
-        this.store$.dispatch(
-            createAlert({
-                alert: {
-                    id: 'test-1',
-                    type: 'danger',
-                    message: 'error this app sucks and is not working',
-                },
-            }),
-        );
-        this.store$.dispatch(
-            createAlert({
-                alert: { id: 'test-2', type: 'warning', message: 'omegalaul' },
-            }),
-        );
+        // this.store$.dispatch(
+        //     createAlert({
+        //         alert: {
+        //             id: 'test-1',
+        //             type: 'danger',
+        //             message: 'error this app sucks and is not working',
+        //         },
+        //     }),
+        // );
+        // this.store$.dispatch(
+        //     createAlert({
+        //         alert: { id: 'test-2', type: 'warning', message: 'omegalaul' },
+        //     }),
+        // );
     }
     public topAlert = this.store$.select(selectTopAlert);
 
