@@ -1,23 +1,17 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import { catchError, delay, filter, map, mergeMap } from 'rxjs/operators';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
-import * as graphActions from '../actions/graph.actions';
 import * as alertActions from '../../alerts/actions/alerts.actions';
-import { Action } from '@ngrx/store';
+import * as graphActions from '../actions/graph.actions';
 
 @Injectable()
 export class NetworkEffects {
-    constructor(
-        private actions$: Actions,
-        private lndApiServiceService: LndApiServiceService,
-        private snackBar: MatSnackBar,
-    ) {}
+    constructor(private actions$: Actions, private lndApiServiceService: LndApiServiceService) {}
 
     retrieveGraph$ = createEffect(
         () =>
@@ -50,6 +44,12 @@ export class NetworkEffects {
                             }
                             return graphActions.errorUnknownChunkDataType();
                         }),
+                        mergeMap((wow) =>
+                            from([
+                                wow,
+                                alertActions.dismissAlert({ id: 'websocket-connection-error' }),
+                            ]),
+                        ),
                         catchError((e: ErrorEvent) => {
                             return of(
                                 alertActions.createAlert({

@@ -23,7 +23,7 @@ export class LndApiServiceService {
                             .replace('https://', 'wss://')}/api/`,
                     );
                 } else {
-                    this.subject = webSocket(`wss:///api/`);
+                    this.subject = webSocket(`wss://lnvisualizer.com/api/`);
                 }
             }
             this.subject.next('initsync');
