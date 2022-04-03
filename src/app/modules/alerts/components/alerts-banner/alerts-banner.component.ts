@@ -13,18 +13,22 @@ export class AlertsBannerComponent {
     constructor(private store$: Store<AlertsState>) {
         this.store$.dispatch(
             createAlert({
-                alert: { type: 'danger', message: 'error this app sucks and is not working' },
+                alert: {
+                    id: 'test-1',
+                    type: 'danger',
+                    message: 'error this app sucks and is not working',
+                },
             }),
         );
         this.store$.dispatch(
             createAlert({
-                alert: { type: 'warning', message: 'omegalaul' },
+                alert: { id: 'test-2', type: 'warning', message: 'omegalaul' },
             }),
         );
     }
     public topAlert = this.store$.select(selectTopAlert);
 
-    public closeAlert(message: string) {
-        this.store$.dispatch(dismissAlert({ message }));
+    public closeAlert(id: string) {
+        this.store$.dispatch(dismissAlert({ id }));
     }
 }

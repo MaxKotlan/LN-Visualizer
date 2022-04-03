@@ -17,8 +17,8 @@ export const reducer = createReducer(
         ...state,
         alerts: [alert, ...state.alerts],
     })),
-    on(alertsActions.dismissAlert, (state, { message }) => ({
+    on(alertsActions.dismissAlert, (state, { id }) => ({
         ...state,
-        alerts: state.alerts.filter((a) => a.message !== message),
+        alerts: state.alerts.filter((a) => a.id !== id),
     })),
 );

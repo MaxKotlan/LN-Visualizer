@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { catchError, delay, map, mergeMap } from 'rxjs/operators';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
 import * as graphActions from '../actions/graph.actions';
+import * as alertActions from '../../alerts/actions/alerts.actions';
 
 @Injectable()
 export class NetworkEffects {
@@ -49,8 +50,9 @@ export class NetworkEffects {
                             return graphActions.errorUnknownChunkDataType();
                         }),
                         catchError((e: ErrorEvent) => {
-                            this.snackBar.open('Failed to connect to websocket', 'close');
-                            return of(graphActions.initializeGraphSyncProcess()).pipe(delay(1000));
+                            console.log(e);
+                            //this.snackBar.open('Failed to connect to websocket', 'close');
+                            return of(alertActions.createAlert);
                         }),
                     ),
                 ),
