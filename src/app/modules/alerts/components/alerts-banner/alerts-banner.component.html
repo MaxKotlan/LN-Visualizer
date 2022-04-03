@@ -2,7 +2,9 @@
     *ngIf="topAlert | async as alert"
     type="warning"
     [elevation]="12"
+    dismissible
     style="margin-bottom: 0"
+    (closed)="closeAlert(alert)"
 >
     {{ alert }}
 </mtx-alert>
