@@ -5,10 +5,11 @@ import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { of } from 'rxjs';
-import { catchError, delay, map, mergeMap } from 'rxjs/operators';
+import { catchError, delay, filter, map, mergeMap } from 'rxjs/operators';
 import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
 import * as graphActions from '../actions/graph.actions';
 import * as alertActions from '../../alerts/actions/alerts.actions';
+import { Action } from '@ngrx/store';
 
 @Injectable()
 export class NetworkEffects {
@@ -66,5 +67,14 @@ export class NetworkEffects {
                 ),
             ),
         { dispatch: true },
+    );
+
+    public retryOnError$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(alertActions.createAlert),
+            filter((action) => action.alert.id === 'websocket-connection-error'),
+            delay(1000),
+            map(() => graphActions.initializeGraphSyncProcess()),
+        ),
     );
 }
