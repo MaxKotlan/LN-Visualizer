@@ -11,8 +11,16 @@ import { selectTopAlert } from '../../selectors/alerts.selectors';
 })
 export class AlertsBannerComponent {
     constructor(private store$: Store<AlertsState>) {
-        this.store$.dispatch(createAlert({ message: 'error this app sucks and is not working' }));
-        this.store$.dispatch(createAlert({ message: 'omega lul' }));
+        this.store$.dispatch(
+            createAlert({
+                alert: { type: 'danger', message: 'error this app sucks and is not working' },
+            }),
+        );
+        this.store$.dispatch(
+            createAlert({
+                alert: { type: 'warning', message: 'omegalaul' },
+            }),
+        );
     }
     public topAlert = this.store$.select(selectTopAlert);
 

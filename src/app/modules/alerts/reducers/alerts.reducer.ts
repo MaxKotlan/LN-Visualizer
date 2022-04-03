@@ -1,9 +1,10 @@
 import { state } from '@angular/animations';
 import { createReducer, on } from '@ngrx/store';
 import * as alertsActions from '../actions/alerts.actions';
+import { Alert } from '../models/alert.interface';
 
 export interface AlertsState {
-    alerts: string[];
+    alerts: Alert[];
 }
 
 export const initialState: AlertsState = {
@@ -12,12 +13,12 @@ export const initialState: AlertsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(alertsActions.createAlert, (state, { message }) => ({
+    on(alertsActions.createAlert, (state, { alert }) => ({
         ...state,
-        alerts: [message, ...state.alerts],
+        alerts: [alert, ...state.alerts],
     })),
     on(alertsActions.dismissAlert, (state, { message }) => ({
         ...state,
-        alerts: state.alerts.filter((a) => a !== message),
+        alerts: state.alerts.filter((a) => a.message !== message),
     })),
 );
