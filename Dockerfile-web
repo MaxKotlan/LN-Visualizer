@@ -24,4 +24,4 @@ COPY --from=build /usr/local/app/dist/ln-visualizer /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/bin/sh" , "-c" , "envsubst < /nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh" , "-c" , "envsubst '$LN_VISUALIZER_API_URL' < /nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"]
