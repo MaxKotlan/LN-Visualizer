@@ -40,10 +40,9 @@ export class GraphMeshStateService {
     readonly throttleTimeMs: number = 500;
 
     nodeVertices$ = combineLatest([
-        this.actions$.pipe(ofType(setFilteredNodes)),
+        this.actions$.pipe(ofType(setFilteredNodes), sampleTime(this.throttleTimeMs)),
         this.store$.select(selectNodeVertexBuffer),
     ]).pipe(
-        sampleTime(this.throttleTimeMs),
         map(([graphState, vertexBuffer]) => {
             if (!vertexBuffer || !graphState.nodeSet) return null;
 
@@ -69,10 +68,9 @@ export class GraphMeshStateService {
     ];
 
     nodeColors$ = combineLatest([
-        this.actions$.pipe(ofType(setFilteredNodes)),
+        this.actions$.pipe(ofType(setFilteredNodes), sampleTime(this.throttleTimeMs)),
         this.store$.select(selectNodeColorBuffer),
     ]).pipe(
-        sampleTime(this.throttleTimeMs),
         map(([graphState, colorBuffer]) => {
             if (!colorBuffer || !graphState.nodeSet) return null;
             let i = 0;
@@ -91,11 +89,10 @@ export class GraphMeshStateService {
     );
 
     nodeCapacity$ = combineLatest([
-        this.actions$.pipe(ofType(setFilteredNodes)),
+        this.actions$.pipe(ofType(setFilteredNodes), sampleTime(this.throttleTimeMs)),
         this.store$.select(selectNodeCapacityBuffer),
         this.store$.select(selectMinMax('node_capacity')),
     ]).pipe(
-        sampleTime(this.throttleTimeMs),
         map(([graphState, capacityBuffer, minMaxNodeCapacity]) => {
             if (!capacityBuffer || !graphState.nodeSet) return null;
 
@@ -119,11 +116,10 @@ export class GraphMeshStateService {
 
     channelVertices$ = combineLatest([
         this.store$.select(filterSelectors.activeChannelFilters),
-        this.actions$.pipe(ofType(setFilteredNodeChannels)),
+        this.actions$.pipe(ofType(setFilteredNodeChannels), sampleTime(this.throttleTimeMs)),
         this.store$.select(selectChannelVertexBuffer),
         this.actions$.pipe(ofType(setFilteredNodes)),
     ]).pipe(
-        sampleTime(this.throttleTimeMs),
         map(([filters, graphState, vertexBuffer, nodeRegistry]) => {
             if (!vertexBuffer || !graphState.channelSet) return null;
             let i = 0;
@@ -151,14 +147,13 @@ export class GraphMeshStateService {
 
     channelColors$ = combineLatest([
         this.store$.select(filterSelectors.activeChannelFilters),
-        this.actions$.pipe(ofType(setFilteredNodeChannels)),
+        this.actions$.pipe(ofType(setFilteredNodeChannels), sampleTime(this.throttleTimeMs)),
         this.store$.select(selectChannelColorBuffer),
         this.actions$.pipe(ofType(setFilteredNodes)),
         this.store$.select(channelColor),
         this.store$.select(channelColorMap),
         this.store$.select(selectUseLogColorScale),
     ]).pipe(
-        sampleTime(this.throttleTimeMs),
         map(([filters, graphState, colorBuffer, nodeRegistry]) => {
             if (!colorBuffer || !graphState.channelSet) return null;
             let i = 0;
@@ -187,40 +182,4 @@ export class GraphMeshStateService {
     );
 
     channelData$ = this.channelColors$.pipe(withLatestFrom(this.channelVertices$));
-
-    // public evaluateFilters(channel: LndChannel, filters: Filter<number | string>[]): boolean {
-    //     let result = true;
-    //     filters.forEach((filter) => {
-    //         result =
-    //             result &&
-    //             this.evaluate(
-    //                 filter.operator,
-    //                 this.keyToChannelValue(channel, filter.keyname),
-    //                 filter.operand,
-    //             );
-    //     });
-    //     return result;
-    // }
-
-    // public keyToChannelValue(channel: LndChannel, key: string) {
-    //     return channel[key] || channel.policies[0][key] || channel.policies[1][key];
-    // }
-
-    // public evaluate(operator: string, lhs: number, rhs: number | string): boolean {
-    //     switch (operator) {
-    //         case '>':
-    //             return lhs > rhs;
-    //         case '>=':
-    //             return lhs >= rhs;
-    //         case '<':
-    //             return lhs < rhs;
-    //         case '<=':
-    //             return lhs <= rhs;
-    //         case '!=':
-    //             return lhs != rhs;
-    //         case '==':
-    //             return lhs == rhs;
-    //     }
-    //     throw new Error('Unknown Operator in Filter Eval Function');
-    // }
 }
