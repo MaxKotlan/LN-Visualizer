@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, throttleTime, withLatestFrom } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { concatMap, map, throttleTime, withLatestFrom } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { selectChannelSetKeyValue } from '../selectors';
@@ -41,13 +42,12 @@ export class ChannelEffects {
                 withLatestFrom(
                     this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
                 ),
-                throttleTime(200),
-                map(([, nodeRegistry]) => {
-                    // return of(
-                    return graphActions.graphNodePositionRecalculate({
-                        nodeSet: nodeRegistry.nodeSet,
-                    });
-                    //)
+                concatMap(([, nodeRegistry]) => {
+                    return of(
+                        graphActions.graphNodePositionRecalculate({
+                            nodeSet: nodeRegistry.nodeSet,
+                        }),
+                    ).pipe(throttleTime(200));
                 }),
             ),
         { dispatch: true },
