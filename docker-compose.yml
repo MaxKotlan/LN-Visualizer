@@ -7,7 +7,7 @@ services:
         stop_grace_period: 1m
         ports:
             - '${APP_LNVISUALIZER_WEB_PORT}:80'
-        environemnt:
+        environment:
             LN_VISUALIZER_API_URL: 'http://${APP_LNVISUALIZER_API_IP}:${APP_LNVISUALIZER_API_PORT}'
         networks:
             default:
