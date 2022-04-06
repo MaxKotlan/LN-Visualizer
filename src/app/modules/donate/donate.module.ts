@@ -15,9 +15,10 @@ import { DonateLoadingComponent } from './components/donate-loading/donate-loadi
 import { EnterInvoiceAmountComponent } from './components/enter-invoice-amount/enter-invoice-amount.component';
 import { InvoicePendingComponent } from './components/invoice-pending/invoice-pending.component';
 import { InvoiceErrorComponent } from './components/invoice-error/invoice-error.component';
+import { PaymentCompleteComponent } from './components/payment-complete/payment-complete.component';
 
 @NgModule({
-    declarations: [DonateButtonComponent, DonateModalComponent, SafePipe, DonateLoadingComponent, EnterInvoiceAmountComponent, InvoicePendingComponent, InvoiceErrorComponent],
+    declarations: [DonateButtonComponent, DonateModalComponent, SafePipe, DonateLoadingComponent, EnterInvoiceAmountComponent, InvoicePendingComponent, InvoiceErrorComponent, PaymentCompleteComponent],
     imports: [
         CommonModule,
         MaterialModule,
