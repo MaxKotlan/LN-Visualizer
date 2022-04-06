@@ -1,0 +1,46 @@
+<ng-container *ngIf="(isLoading$ | async) === false && selectInvoice$ | async">
+    <div style="display: flex; width: 100%">
+        <mat-form-field appearance="fill" style="width: 190px">
+            <mat-label>Payment Method</mat-label>
+            <mat-select
+                [value]="selectedPaymentMethodName$ | async"
+                [ngModel]="selectedPaymentMethodName$ | async"
+                (selectionChange)="updateSelectedPayment($event)"
+            >
+                <mat-option *ngFor="let paymentMethod of paymentMethods$ | async">
+                    <mat-option [value]="paymentMethod.paymentMethod">{{
+                        paymentMethod.paymentMethod
+                    }}</mat-option>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button
+            style="margin-bottom: 1.34375em; height: 52.063px; margin-left: 0.4rem"
+            mat-button
+            color="primary"
+            (click)="cancelInvoice()"
+        >
+            Cancel
+        </button>
+    </div>
+    <div *ngIf="selectedPaymentMethod$ | async as paymentMethod">
+        <div>Amount: {{ paymentMethod.amount }}</div>
+        <!-- <div>Due: {{ paymentMethod.due }}</div>
+        <div>TotalPaid: {{ paymentMethod.totalPaid }}</div> -->
+        <a *ngIf="paymentMethod.destination" [href]="paymentMethod.paymentLink | safeUrl">
+            <qrcode
+                [qrdata]="paymentMethod.destination"
+                [width]="256"
+                [errorCorrectionLevel]="'M'"
+            ></qrcode>
+        </a>
+        <button
+            style="width: 100%"
+            (click)="clickToCopy(paymentMethod.destination)"
+            mat-raised-button
+            color="primary"
+        >
+            Copy {{ paymentMethod.paymentMethod === 'BTC' ? 'Address' : 'Invoice' }}
+        </button>
+    </div>
+</ng-container>
