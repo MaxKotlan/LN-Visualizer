@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { filter, Observable } from 'rxjs';
@@ -7,6 +8,7 @@ import { PaymentMethod } from '../../models';
 import { DonateState } from '../../reducers';
 import {
     selectInvoice,
+    selectInvoiceError,
     selectIsLoading,
     selectPaymentMethods,
     selectSelectedPaymentMethod,
@@ -31,6 +33,8 @@ export class DonateModalComponent {
     public selectInvoice$ = this.store$.select(selectInvoice);
 
     public amount: number;
+
+    public error$: Observable<HttpErrorResponse> = this.store$.select(selectInvoiceError);
 
     public selectedPaymentMethodName$: Observable<string> = this.store$
         .select(selectSelectedPaymentMethodName)

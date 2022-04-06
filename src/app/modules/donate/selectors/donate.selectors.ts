@@ -19,6 +19,11 @@ export const selectSelectedPaymentMethodName = createSelector(
     (state) => state.selectedPaymentMethod,
 );
 
+export const selectInvoiceError = createSelector(
+    donateStateSelector,
+    (state) => state.invoiceError,
+);
+
 export const selectSelectedPaymentMethod = createSelector(
     selectPaymentMethods,
     selectSelectedPaymentMethodName,
