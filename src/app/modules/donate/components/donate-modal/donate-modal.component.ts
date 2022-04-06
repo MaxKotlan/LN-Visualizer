@@ -1,8 +1,9 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { filter, Observable } from 'rxjs';
 import { cancelInvoice, createInvoice, selectPaymentMethod } from '../../actions/donate.actions';
+import { PaymentMethod } from '../../models';
 import { DonateState } from '../../reducers';
 import {
     selectInvoice,
@@ -12,8 +13,6 @@ import {
     selectSelectedPaymentMethodName,
 } from '../../selectors/donate.selectors';
 import { DonateApiService } from '../../services/donate-api.service';
-import { PaymentMethod } from '../models';
-import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
     selector: 'app-donate-modal',
