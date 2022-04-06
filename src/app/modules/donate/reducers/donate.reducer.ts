@@ -22,10 +22,10 @@ const initialState: DonateState = {
 export const reducer = createReducer(
     initialState,
     on(createInvoice, (state) => ({ ...state, isLoading: true })),
-    on(createInvoiceSuccess, (state, { invoice }) => ({ ...state, invoice })),
+    on(createInvoiceSuccess, (state, { invoice }) => ({ ...state, invoice, isLoading: false })),
     on(selectPaymentMethod, (state, { paymentMethodName }) => ({
         ...state,
         selectedPaymentMethod: paymentMethodName,
     })),
-    on(cancelInvoice, (state) => initialState),
+    on(cancelInvoice, () => initialState),
 );

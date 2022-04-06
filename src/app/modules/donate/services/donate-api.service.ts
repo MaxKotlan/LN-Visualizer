@@ -9,7 +9,7 @@ import { LnVisInvoice } from '../models';
 export class DonateApiService {
     constructor(private httpClient: HttpClient) {}
 
-    public readonly baseUrl = 'http://umbrel.local:8551/createInvoice';
+    public readonly baseUrl = 'http://127.0.0.1:8506/createInvoice';
 
     public createInvoice(amount: number): Observable<LnVisInvoice> {
         const url = `${this.baseUrl}`;
