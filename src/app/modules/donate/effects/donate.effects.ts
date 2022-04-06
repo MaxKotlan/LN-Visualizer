@@ -1,7 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
-import { combineLatest, filter, from, map, mergeMap, of, tap } from 'rxjs';
-import { cancelInvoice, createInvoice, createInvoiceSuccess } from '../actions/donate.actions';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, combineLatest, filter, from, map, mergeMap, of, tap } from 'rxjs';
+import {
+    cancelInvoice,
+    createInvoice,
+    createInvoiceError,
+    createInvoiceSuccess,
+} from '../actions/donate.actions';
 import { LnVisInvoice } from '../models';
 import { DonateApiService } from '../services/donate-api.service';
 
@@ -12,22 +18,20 @@ export class DonateEffects {
     createInvoice$ = createEffect(() =>
         this.actions$.pipe(
             ofType(createInvoice),
-            mergeMap(({ amount }) => this.donateApiService.createInvoice(amount)),
-            tap(console.log),
-            map((invoice: LnVisInvoice) => createInvoiceSuccess({ invoice })),
+            mergeMap(({ amount }) =>
+                this.donateApiService.createInvoice(amount).pipe(
+                    map((invoice: LnVisInvoice) => createInvoiceSuccess({ invoice })),
+                    catchError((error: HttpErrorResponse) => of(createInvoiceError({ error }))),
+                ),
+            ),
         ),
     );
 
     saveInvoiceAndPayment$ = createEffect(
         () =>
-            combineLatest([this.actions$.pipe(ofType(createInvoiceSuccess))]).pipe(
-                map(([invoice]) => [invoice.invoice]),
-                tap(([invoice, paymentMethods]) =>
-                    localStorage.setItem(
-                        'paymentInfo',
-                        JSON.stringify({ invoice, paymentMethods }),
-                    ),
-                ),
+            this.actions$.pipe(ofType(createInvoiceSuccess)).pipe(
+                map((invoice) => invoice.invoice),
+                tap((invoice) => localStorage.setItem('paymentInfo', JSON.stringify({ invoice }))),
             ),
         { dispatch: false },
     );
@@ -37,7 +41,7 @@ export class DonateEffects {
             of('init').pipe(
                 map(() => JSON.parse(localStorage.getItem('paymentInfo'))),
                 filter((info) => !!info),
-                mergeMap((info) => from([createInvoiceSuccess({ invoice: info.invoice })])),
+                map((info) => createInvoiceSuccess({ invoice: info.invoice })),
             ),
         { dispatch: true },
     );

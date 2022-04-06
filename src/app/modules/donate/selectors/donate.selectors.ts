@@ -9,7 +9,7 @@ export const selectInvoice = createSelector(donateStateSelector, (state) => stat
 export const selectPaymentMethods = createSelector(
     donateStateSelector,
     (state) =>
-        state.invoice.checkout.paymentMethods.filter((pm) => pm.activated) as PaymentMethod[],
+        state?.invoice?.checkout?.paymentMethods?.filter((pm) => pm.activated) as PaymentMethod[],
 );
 
 export const selectIsLoading = createSelector(donateStateSelector, (state) => state.isLoading);
@@ -23,5 +23,5 @@ export const selectSelectedPaymentMethod = createSelector(
     selectPaymentMethods,
     selectSelectedPaymentMethodName,
     (paymentMethods, selectedName) =>
-        paymentMethods.find((pm) => pm.paymentMethod === selectedName),
+        paymentMethods?.find((pm) => pm.paymentMethod === selectedName),
 );
