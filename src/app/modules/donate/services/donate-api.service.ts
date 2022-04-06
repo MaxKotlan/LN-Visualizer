@@ -13,6 +13,6 @@ export class DonateApiService {
 
     public createInvoice(amount: number): Observable<LnVisInvoice> {
         const url = `${this.baseUrl}`;
-        return this.httpClient.post(url, { amount }) as Observable<LnVisInvoice>;
+        return this.httpClient.post<LnVisInvoice>(url, { amount });
     }
 }
