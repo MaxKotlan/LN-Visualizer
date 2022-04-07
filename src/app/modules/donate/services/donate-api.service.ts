@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
+import { webSocket } from 'rxjs/webSocket';
 import { LnVisInvoice } from '../models';
 
 @Injectable({
@@ -14,5 +15,11 @@ export class DonateApiService {
     public createInvoice(amount: number): Observable<LnVisInvoice> {
         const url = `${this.baseUrl}`;
         return this.httpClient.post<LnVisInvoice>(url, { amount });
+    }
+
+    public subscribeToInvoiceUpdates(invoiceId: string): Observable<LnVisInvoice> {
+        return webSocket(`ws://127.0.0.1:2345?invoiceId=${invoiceId}`)
+            .asObservable()
+            .pipe(tap(console.log));
     }
 }

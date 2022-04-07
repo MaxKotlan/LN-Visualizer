@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, combineLatest, filter, from, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, combineLatest, filter, from, map, mergeMap, of, take, tap } from 'rxjs';
 import {
     cancelInvoice,
     createInvoice,
     createInvoiceError,
     createInvoiceSuccess,
+    subscribeToInvoiceUpdates,
 } from '../actions/donate.actions';
 import { LnVisInvoice } from '../models';
 import { DonateApiService } from '../services/donate-api.service';
@@ -23,6 +24,24 @@ export class DonateEffects {
                     map((invoice: LnVisInvoice) => createInvoiceSuccess({ invoice })),
                     catchError((error: HttpErrorResponse) => of(createInvoiceError({ error }))),
                 ),
+            ),
+        ),
+    );
+
+    mapToInvoiceUpdate$ = createEffect(() =>
+        this.actions$.pipe(ofType(createInvoiceSuccess), take(1)).pipe(
+            map((invoice) => invoice.invoice.id),
+            map((id) => subscribeToInvoiceUpdates({ id })),
+        ),
+    );
+
+    listenToInvoiceUpdates$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(subscribeToInvoiceUpdates),
+            mergeMap((action) =>
+                this.donateApiService
+                    .subscribeToInvoiceUpdates(action.id)
+                    .pipe(map((invoice) => createInvoiceSuccess({ invoice }))),
             ),
         ),
     );

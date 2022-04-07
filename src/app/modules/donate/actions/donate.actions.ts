@@ -9,6 +9,11 @@ export const createInvoiceSuccess = createAction(
     props<{ invoice: LnVisInvoice }>(),
 );
 
+export const subscribeToInvoiceUpdates = createAction(
+    '[donate] subscribeToInvoiceUpdates',
+    props<{ id: string }>(),
+);
+
 export const createInvoiceError = createAction(
     '[donate] createInvoiceError',
     props<{ error: HttpErrorResponse }>(),

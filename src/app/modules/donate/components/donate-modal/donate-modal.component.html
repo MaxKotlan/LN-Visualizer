@@ -1,12 +1,15 @@
 <div>
-    <p>
-        If you value my work and wish to help future development then feel free to enter an amount
-        and submit a payment. This screen is currently a WIP. Will not let you know when the payment
-        is complete.
-    </p>
-    <app-invoice-error></app-invoice-error>
-    <app-enter-invoice-amount></app-enter-invoice-amount>
-    <app-donate-loading></app-donate-loading>
-    <app-invoice-pending></app-invoice-pending>
-    <app-payment-complete></app-payment-complete>
+    <app-payment-complete
+        *ngIf="paymentIsSettled$ | async; else paymentPending"
+    ></app-payment-complete>
+    <ng-template #paymentPending>
+        <p>
+            If you value my work and wish to help future development then feel free to enter an
+            amount and submit a payment
+        </p>
+        <app-invoice-error></app-invoice-error>
+        <app-enter-invoice-amount></app-enter-invoice-amount>
+        <app-donate-loading></app-donate-loading>
+        <app-invoice-pending></app-invoice-pending>
+    </ng-template>
 </div>

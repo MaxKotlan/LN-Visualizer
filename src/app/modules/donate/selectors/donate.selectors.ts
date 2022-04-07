@@ -24,6 +24,11 @@ export const selectInvoiceError = createSelector(
     (state) => state.invoiceError,
 );
 
+export const paymentSettled = createSelector(
+    donateStateSelector,
+    (state) => state?.invoice?.status === 'Settled',
+);
+
 export const selectSelectedPaymentMethod = createSelector(
     selectPaymentMethods,
     selectSelectedPaymentMethodName,
