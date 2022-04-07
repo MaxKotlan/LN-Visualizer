@@ -10,7 +10,7 @@ import { LnVisInvoice } from '../models';
 export class DonateApiService {
     constructor(private httpClient: HttpClient) {}
 
-    public readonly baseUrl = 'http://127.0.0.1:8506/createInvoice';
+    public readonly baseUrl = 'https://lnvisualizer.com/donate/createInvoice';
 
     public createInvoice(amount: number): Observable<LnVisInvoice> {
         const url = `${this.baseUrl}`;
@@ -18,7 +18,7 @@ export class DonateApiService {
     }
 
     public subscribeToInvoiceUpdates(invoiceId: string): Observable<LnVisInvoice> {
-        return webSocket(`ws://127.0.0.1:8506/ws/?invoiceId=${invoiceId}`)
+        return webSocket(`wss://lnvisualizer.com/donate/ws/?invoiceId=${invoiceId}`)
             .asObservable()
             .pipe(tap(console.log));
     }
