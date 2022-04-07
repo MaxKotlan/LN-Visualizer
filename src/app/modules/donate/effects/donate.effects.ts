@@ -86,6 +86,7 @@ export class DonateEffects {
                 map((action) => action.id),
                 tap((id) => console.log(`Unsubscribing to ${id}`)),
                 tap((id) => this.donateApiService.unsubscribeFromUpdates(id)),
+                tap(() => localStorage.removeItem('paymentInfo')),
             ),
         { dispatch: false },
     );
@@ -113,9 +114,11 @@ export class DonateEffects {
         () =>
             this.actions$.pipe(
                 ofType(cancelInvoice),
-                withLatestFrom(this.store$.select(selectActiveInvoiceId)),
-                tap(() => localStorage.removeItem('paymentInfo')),
-                map(([, invoiceId]) => unsubscribeToInvoiceUpdates({ id: invoiceId })),
+                map(() =>
+                    unsubscribeToInvoiceUpdates({
+                        id: JSON.parse(localStorage.getItem('paymentInfo')).invoice.id,
+                    }),
+                ),
             ),
         { dispatch: true },
     );
