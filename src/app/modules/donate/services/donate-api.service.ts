@@ -18,8 +18,7 @@ export class DonateApiService {
     }
 
     public subscribeToInvoiceUpdates(invoiceId: string): Observable<LnVisInvoice> {
-        return webSocket(`wss://lnvisualizer.com/donate/ws/?invoiceId=${invoiceId}`)
-            .asObservable()
-            .pipe(tap(console.log));
+        const url = `wss://lnvisualizer.com/donate/ws/?invoiceId=${invoiceId}`;
+        return webSocket(url).asObservable().pipe(tap(console.log));
     }
 }
