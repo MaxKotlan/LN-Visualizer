@@ -18,7 +18,7 @@ export class DonateApiService {
     }
 
     public subscribeToInvoiceUpdates(invoiceId: string): Observable<LnVisInvoice> {
-        return webSocket(`ws://127.0.0.1:2345?invoiceId=${invoiceId}`)
+        return webSocket(`ws://127.0.0.1:8506/ws/?invoiceId=${invoiceId}`)
             .asObservable()
             .pipe(tap(console.log));
     }
