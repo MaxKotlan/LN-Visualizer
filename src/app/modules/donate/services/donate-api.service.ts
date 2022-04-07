@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-import { webSocket } from 'rxjs/webSocket';
+import { Observable, tap } from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { LnVisInvoice } from '../models';
 
 @Injectable({
@@ -17,8 +17,23 @@ export class DonateApiService {
         return this.httpClient.post<LnVisInvoice>(url, { amount });
     }
 
+    protected activeConnections: Map<string, WebSocketSubject<LnVisInvoice>> = new Map<
+        string,
+        WebSocketSubject<LnVisInvoice>
+    >();
+
     public subscribeToInvoiceUpdates(invoiceId: string): Observable<LnVisInvoice> {
         const url = `wss://lnvisualizer.com/donate/ws/?invoiceId=${invoiceId}`;
-        return webSocket(url).asObservable().pipe(tap(console.log));
+        if (!this.activeConnections.has(invoiceId))
+            this.activeConnections.set(invoiceId, webSocket(url));
+
+        console.log('Attempting to connect to ', url);
+        const ws = this.activeConnections.get(invoiceId).asObservable();
+        console.log('ws', ws);
+        return ws;
+    }
+
+    public unsubscribeFromUpdates(invoiceId: string) {
+        this.activeConnections.get(invoiceId)?.complete();
     }
 }

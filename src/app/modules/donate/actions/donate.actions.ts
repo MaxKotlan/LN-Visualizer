@@ -14,6 +14,11 @@ export const subscribeToInvoiceUpdates = createAction(
     props<{ id: string }>(),
 );
 
+export const unsubscribeToInvoiceUpdates = createAction(
+    '[donate] unsubscribeToInvoiceUpdates',
+    props<{ id: string }>(),
+);
+
 export const createInvoiceError = createAction(
     '[donate] createInvoiceError',
     props<{ error: HttpErrorResponse }>(),

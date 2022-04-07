@@ -1,20 +1,42 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, combineLatest, filter, from, map, mergeMap, of, take, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import {
+    catchError,
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    from,
+    map,
+    mergeMap,
+    of,
+    pairwise,
+    startWith,
+    take,
+    tap,
+    withLatestFrom,
+} from 'rxjs';
 import {
     cancelInvoice,
     createInvoice,
     createInvoiceError,
     createInvoiceSuccess,
     subscribeToInvoiceUpdates,
+    unsubscribeToInvoiceUpdates,
 } from '../actions/donate.actions';
 import { LnVisInvoice } from '../models';
+import { DonateState } from '../reducers';
+import { selectActiveInvoiceId, selectInvoice } from '../selectors/donate.selectors';
 import { DonateApiService } from '../services/donate-api.service';
 
 @Injectable()
 export class DonateEffects {
-    constructor(private actions$: Actions, private donateApiService: DonateApiService) {}
+    constructor(
+        private actions$: Actions,
+        private donateApiService: DonateApiService,
+        private store$: Store<DonateState>,
+    ) {}
 
     createInvoice$ = createEffect(() =>
         this.actions$.pipe(
@@ -29,21 +51,43 @@ export class DonateEffects {
     );
 
     mapToInvoiceUpdate$ = createEffect(() =>
-        this.actions$.pipe(ofType(createInvoiceSuccess), take(1)).pipe(
+        this.actions$.pipe(
+            ofType(createInvoiceSuccess),
             map((invoice) => invoice.invoice.id),
-            map((id) => subscribeToInvoiceUpdates({ id })),
+            distinctUntilChanged(),
+            startWith(null),
+            pairwise(),
+            mergeMap(([oldId, newId]) => {
+                return from([
+                    unsubscribeToInvoiceUpdates({ id: oldId }),
+                    subscribeToInvoiceUpdates({ id: newId }),
+                ]);
+            }),
         ),
     );
 
-    listenToInvoiceUpdates$ = createEffect(() =>
+    subscribeToInvoiceUpdates$ = createEffect(() =>
         this.actions$.pipe(
             ofType(subscribeToInvoiceUpdates),
-            mergeMap((action) =>
+            map((action) => action.id),
+            tap((id) => console.log(`Subscribing to ${id}`)),
+            mergeMap((id) =>
                 this.donateApiService
-                    .subscribeToInvoiceUpdates(action.id)
+                    .subscribeToInvoiceUpdates(id)
                     .pipe(map((invoice) => createInvoiceSuccess({ invoice }))),
             ),
         ),
+    );
+
+    unsubscribeToInvoiceUpdates$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(unsubscribeToInvoiceUpdates),
+                map((action) => action.id),
+                tap((id) => console.log(`Unsubscribing to ${id}`)),
+                tap((id) => this.donateApiService.unsubscribeFromUpdates(id)),
+            ),
+        { dispatch: false },
     );
 
     saveInvoiceAndPayment$ = createEffect(
@@ -69,8 +113,10 @@ export class DonateEffects {
         () =>
             this.actions$.pipe(
                 ofType(cancelInvoice),
+                withLatestFrom(this.store$.select(selectActiveInvoiceId)),
                 tap(() => localStorage.removeItem('paymentInfo')),
+                map(([, invoiceId]) => unsubscribeToInvoiceUpdates({ id: invoiceId })),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 }
