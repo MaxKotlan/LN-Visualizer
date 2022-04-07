@@ -1,10 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import {
     catchError,
-    combineLatest,
     distinctUntilChanged,
     filter,
     from,
@@ -13,9 +11,7 @@ import {
     of,
     pairwise,
     startWith,
-    take,
     tap,
-    withLatestFrom,
 } from 'rxjs';
 import {
     cancelInvoice,
@@ -26,17 +22,11 @@ import {
     unsubscribeToInvoiceUpdates,
 } from '../actions/donate.actions';
 import { LnVisInvoice } from '../models';
-import { DonateState } from '../reducers';
-import { selectActiveInvoiceId, selectInvoice } from '../selectors/donate.selectors';
 import { DonateApiService } from '../services/donate-api.service';
 
 @Injectable()
 export class DonateEffects {
-    constructor(
-        private actions$: Actions,
-        private donateApiService: DonateApiService,
-        private store$: Store<DonateState>,
-    ) {}
+    constructor(private actions$: Actions, private donateApiService: DonateApiService) {}
 
     createInvoice$ = createEffect(() =>
         this.actions$.pipe(

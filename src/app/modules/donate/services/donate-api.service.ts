@@ -28,9 +28,7 @@ export class DonateApiService {
             this.activeConnections.set(invoiceId, webSocket(url));
 
         console.log('Attempting to connect to ', url);
-        const ws = this.activeConnections.get(invoiceId).asObservable();
-        console.log('ws', ws);
-        return ws;
+        return this.activeConnections.get(invoiceId).asObservable();
     }
 
     public unsubscribeFromUpdates(invoiceId: string) {
