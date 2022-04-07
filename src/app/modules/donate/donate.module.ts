@@ -11,9 +11,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { DonateEffects } from './effects/donate.effects';
 import { QRCodeModule } from 'angularx-qrcode';
 import { SafePipe } from './pipe/safe.pipe';
+import { DonateLoadingComponent } from './components/donate-loading/donate-loading.component';
+import { EnterInvoiceAmountComponent } from './components/enter-invoice-amount/enter-invoice-amount.component';
+import { InvoicePendingComponent } from './components/invoice-pending/invoice-pending.component';
+import { InvoiceErrorComponent } from './components/invoice-error/invoice-error.component';
+import { PaymentCompleteComponent } from './components/payment-complete/payment-complete.component';
 
 @NgModule({
-    declarations: [DonateButtonComponent, DonateModalComponent, SafePipe],
+    declarations: [DonateButtonComponent, DonateModalComponent, SafePipe, DonateLoadingComponent, EnterInvoiceAmountComponent, InvoicePendingComponent, InvoiceErrorComponent, PaymentCompleteComponent],
     imports: [
         CommonModule,
         MaterialModule,

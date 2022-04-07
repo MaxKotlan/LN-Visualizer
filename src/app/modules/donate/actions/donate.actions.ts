@@ -1,21 +1,22 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { Invoice, PaymentMethod } from '../components/models';
+import { LnVisInvoice } from '../models';
 
 export const createInvoice = createAction('[donate] createInvoice', props<{ amount: number }>());
 
 export const createInvoiceSuccess = createAction(
     '[donate] createInvoiceSuccess',
-    props<{ invoice: Invoice }>(),
+    props<{ invoice: LnVisInvoice }>(),
 );
 
-export const getPaymentMethods = createAction(
-    '[donate] getPaymentMethods',
-    props<{ invoiceId: string }>(),
+export const subscribeToInvoiceUpdates = createAction(
+    '[donate] subscribeToInvoiceUpdates',
+    props<{ id: string }>(),
 );
 
-export const getPaymentMethodsSuccess = createAction(
-    '[donate] getPaymentMethodsSuccess',
-    props<{ paymentMethods: PaymentMethod[] }>(),
+export const createInvoiceError = createAction(
+    '[donate] createInvoiceError',
+    props<{ error: HttpErrorResponse }>(),
 );
 
 export const selectPaymentMethod = createAction(

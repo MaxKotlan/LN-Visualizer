@@ -1,14 +1,15 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
-import { combineLatest, filter, from, map, mergeMap, of, tap } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, combineLatest, filter, from, map, mergeMap, of, take, tap } from 'rxjs';
 import {
     cancelInvoice,
     createInvoice,
+    createInvoiceError,
     createInvoiceSuccess,
-    getPaymentMethods,
-    getPaymentMethodsSuccess,
+    subscribeToInvoiceUpdates,
 } from '../actions/donate.actions';
-import { Invoice, PaymentMethod } from '../components/models';
+import { LnVisInvoice } from '../models';
 import { DonateApiService } from '../services/donate-api.service';
 
 @Injectable()
@@ -18,43 +19,38 @@ export class DonateEffects {
     createInvoice$ = createEffect(() =>
         this.actions$.pipe(
             ofType(createInvoice),
-            mergeMap(({ amount }) => this.donateApiService.createInvoice(amount)),
-            tap(console.log),
-            map((invoice: Invoice) => createInvoiceSuccess({ invoice })),
+            mergeMap(({ amount }) =>
+                this.donateApiService.createInvoice(amount).pipe(
+                    map((invoice: LnVisInvoice) => createInvoiceSuccess({ invoice })),
+                    catchError((error: HttpErrorResponse) => of(createInvoiceError({ error }))),
+                ),
+            ),
         ),
     );
 
-    invoiceToPaymentMethods$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(createInvoiceSuccess),
-            map(({ invoice }) => getPaymentMethods({ invoiceId: invoice.id })),
+    mapToInvoiceUpdate$ = createEffect(() =>
+        this.actions$.pipe(ofType(createInvoiceSuccess), take(1)).pipe(
+            map((invoice) => invoice.invoice.id),
+            map((id) => subscribeToInvoiceUpdates({ id })),
         ),
     );
 
-    getPaymentMethods$ = createEffect(() =>
+    listenToInvoiceUpdates$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(getPaymentMethods),
-            mergeMap(({ invoiceId }) => this.donateApiService.getPaymentMethods(invoiceId)),
-            map((paymentMethods: PaymentMethod[]) => getPaymentMethodsSuccess({ paymentMethods })),
+            ofType(subscribeToInvoiceUpdates),
+            mergeMap((action) =>
+                this.donateApiService
+                    .subscribeToInvoiceUpdates(action.id)
+                    .pipe(map((invoice) => createInvoiceSuccess({ invoice }))),
+            ),
         ),
     );
 
     saveInvoiceAndPayment$ = createEffect(
         () =>
-            combineLatest([
-                this.actions$.pipe(ofType(createInvoiceSuccess)),
-                this.actions$.pipe(ofType(getPaymentMethodsSuccess)),
-            ]).pipe(
-                map(([invoice, paymentMethods]) => [
-                    invoice.invoice,
-                    paymentMethods.paymentMethods,
-                ]),
-                tap(([invoice, paymentMethods]) =>
-                    localStorage.setItem(
-                        'paymentInfo',
-                        JSON.stringify({ invoice, paymentMethods }),
-                    ),
-                ),
+            this.actions$.pipe(ofType(createInvoiceSuccess)).pipe(
+                map((invoice) => invoice.invoice),
+                tap((invoice) => localStorage.setItem('paymentInfo', JSON.stringify({ invoice }))),
             ),
         { dispatch: false },
     );
@@ -64,12 +60,7 @@ export class DonateEffects {
             of('init').pipe(
                 map(() => JSON.parse(localStorage.getItem('paymentInfo'))),
                 filter((info) => !!info),
-                mergeMap((info) =>
-                    from([
-                        createInvoiceSuccess({ invoice: info.invoice }),
-                        getPaymentMethodsSuccess({ paymentMethods: info.paymentMethods }),
-                    ]),
-                ),
+                map((info) => createInvoiceSuccess({ invoice: info.invoice })),
             ),
         { dispatch: true },
     );

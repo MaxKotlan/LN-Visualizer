@@ -1,0 +1,24 @@
+<div
+    style="display: flex; justify-content: center; height: 300px"
+    *ngIf="(selectInvoice$ | async) === undefined && (isLoading$ | async) === false"
+>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Amount (SATS)</mat-label>
+        <input
+            [(ngModel)]="amount"
+            #input
+            type="text"
+            placeholder="Pick one"
+            aria-label="Public Key or Alias"
+            matInput
+        />
+    </mat-form-field>
+    <button
+        style="margin-bottom: 1.34375em; height: 52.063px; margin-left: 0.4rem"
+        mat-button
+        color="primary"
+        (click)="getData()"
+    >
+        Pay
+    </button>
+</div>
