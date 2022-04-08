@@ -1,6 +1,16 @@
 <div
     *ngIf="isLoading$ | async"
-    style="display: flex; justify-content: center; width: 100%; height: 300px; align-items: center"
+    style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 300px;
+        align-items: center;
+    "
 >
     <mat-spinner> </mat-spinner>
+    <div style="margin-top: 4rem; width: 136px; overflow-x: visible">
+        Contacting my node{{ elipsies$ | async }}
+    </div>
 </div>
