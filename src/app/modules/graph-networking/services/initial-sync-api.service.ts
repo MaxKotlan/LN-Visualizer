@@ -22,7 +22,6 @@ export class InitialSyncApiService {
 
     public sendSyncCommand() {
         this.createWsSubject();
-        console.log('lol');
         this.subject.next('initsync' as unknown as Chunk<LndNode | LndChannel>);
     }
 
