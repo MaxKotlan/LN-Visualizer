@@ -48,4 +48,8 @@ export class InitialSyncService {
             );
         });
     }
+
+    public sendRequestComplete(ws: WebSocket) {
+        ws.send('requestComplete');
+    }
 }
