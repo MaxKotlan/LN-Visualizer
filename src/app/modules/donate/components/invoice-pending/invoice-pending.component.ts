@@ -4,14 +4,16 @@ import { cancelInvoice, selectPaymentMethod } from '../../actions/donate.actions
 import { DonateState } from '../../reducers';
 import {
     selectInvoice,
+    selectInvoiceStatus,
     selectIsLoading,
     selectPaymentMethods,
     selectSelectedPaymentMethod,
     selectSelectedPaymentMethodName,
 } from '../../selectors/donate.selectors';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { filter, Observable } from 'rxjs';
+import { combineLatest, filter, interval, map, Observable, startWith, timer } from 'rxjs';
 import { PaymentMethod } from '../../models/payment-methods.inteface';
+import moment from 'moment';
 
 @Component({
     selector: 'app-invoice-pending',
@@ -26,8 +28,18 @@ export class InvoicePendingComponent {
         .pipe(filter((x) => !!x));
 
     public selectInvoice$ = this.store$.select(selectInvoice);
+    public selectInvoiceStatus$ = this.store$.select(selectInvoiceStatus);
     public paymentMethods$ = this.store$.select(selectPaymentMethods);
     public isLoading$ = this.store$.select(selectIsLoading);
+
+    public expiresIn = combineLatest([timer(0, 1000), this.selectInvoice$]).pipe(
+        map(([, invoice]) => {
+            const diff = invoice?.expirationTime - moment().unix();
+            if (diff < 0) return '0:00';
+            const time = moment.utc(diff * 1000).format('m:ss');
+            return time;
+        }),
+    );
 
     public selectedPaymentMethod$: Observable<PaymentMethod> = this.store$.select(
         selectSelectedPaymentMethod,

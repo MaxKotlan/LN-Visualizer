@@ -25,8 +25,8 @@
     </div>
     <div *ngIf="selectedPaymentMethod$ | async as paymentMethod">
         <div>Amount: {{ paymentMethod.amount }}</div>
-        <!-- <div>Due: {{ paymentMethod.due }}</div>
-        <div>TotalPaid: {{ paymentMethod.totalPaid }}</div> -->
+        <div>Status: {{ selectInvoiceStatus$ | async }}</div>
+        <div>Expires in: {{ expiresIn | async }}</div>
         <a *ngIf="paymentMethod.destination" [href]="paymentMethod.paymentLink | safeUrl">
             <qrcode
                 [qrdata]="paymentMethod.destination"
