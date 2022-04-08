@@ -4,22 +4,27 @@ import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { from, of } from 'rxjs';
-import { catchError, delay, filter, map, mergeMap } from 'rxjs/operators';
-import { LndApiServiceService } from 'src/app/services/lnd-api-service.service';
+import { catchError, delay, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as alertActions from '../../alerts/actions/alerts.actions';
-import * as graphActions from '../actions/graph.actions';
+import * as graphActions from '../../graph-renderer/actions/graph.actions';
+import { InitialSyncApiService } from '../services';
 
 @Injectable()
 export class NetworkEffects {
-    constructor(private actions$: Actions, private lndApiServiceService: LndApiServiceService) {}
+    constructor(private actions$: Actions, private initialSyncApiService: InitialSyncApiService) {}
 
     retrieveGraph$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.initializeGraphSyncProcess),
+                tap(() => this.initialSyncApiService.sendSyncCommand()),
                 mergeMap(() =>
-                    this.lndApiServiceService.initialChunkSync().pipe(
+                    this.initialSyncApiService.listenToStream().pipe(
                         map((data) => {
+                            if ((data as unknown as string) === 'requestComplete') {
+                                this.initialSyncApiService.completeRequest();
+                                return;
+                            }
                             switch (data.type) {
                                 case 'chunkInfo':
                                     return graphActions.processChunkInfo({

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AtftModule } from 'atft';
+import { GraphNetworkingModule } from '../graph-networking/graph-networking.module';
 import { GraphEdgeMeshComponent } from './components/graph-edge-mesh/graph-edge-mesh.component';
 import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-mesh.component';
 import { GraphNodeMeshComponent } from './components/graph-node-mesh/graph-node-mesh.component';
@@ -12,7 +13,7 @@ import {
     LndRaycasterEnableDirective,
     LndRaycasterSceneDirective,
 } from './directives';
-import { ChannelEffects, NetworkEffects, NodeEffects } from './effects';
+import { ChannelEffects, NodeEffects } from './effects';
 import { graphStatisticsReducer, nodeStatisticsReducer, reducer } from './reducer';
 import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
 
@@ -30,7 +31,8 @@ import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from 
     imports: [
         CommonModule,
         AtftModule,
-        EffectsModule.forFeature([NodeEffects, ChannelEffects, NetworkEffects]),
+        GraphNetworkingModule,
+        EffectsModule.forFeature([NodeEffects, ChannelEffects]),
         StoreModule.forFeature('graphState', reducer),
         StoreModule.forFeature('graphStatisticsState', graphStatisticsReducer.reducer),
         StoreModule.forFeature('nodeStatisticsState', nodeStatisticsReducer.reducer),
