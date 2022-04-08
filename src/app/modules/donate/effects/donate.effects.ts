@@ -106,7 +106,7 @@ export class DonateEffects {
                 ofType(cancelInvoice),
                 map(() =>
                     unsubscribeToInvoiceUpdates({
-                        id: JSON.parse(localStorage.getItem('paymentInfo')).invoice.id,
+                        id: JSON.parse(localStorage.getItem('paymentInfo'))?.invoice?.id,
                     }),
                 ),
             ),

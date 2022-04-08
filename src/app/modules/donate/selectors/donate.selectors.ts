@@ -4,7 +4,9 @@ import { DonateState } from '../reducers';
 
 export const donateStateSelector = createFeatureSelector<DonateState>('donate');
 
-export const selectInvoice = createSelector(donateStateSelector, (state) => state.invoice);
+export const selectInvoice = createSelector(donateStateSelector, (state) => state?.invoice);
+
+export const selectInvoiceStatus = createSelector(selectInvoice, (invoice) => invoice?.status);
 
 export const selectPaymentMethods = createSelector(
     donateStateSelector,
@@ -27,11 +29,6 @@ export const selectInvoiceError = createSelector(
 export const paymentSettled = createSelector(
     donateStateSelector,
     (state) => state?.invoice?.status === 'Settled',
-);
-
-export const selectActiveInvoiceId = createSelector(
-    donateStateSelector,
-    (state) => state?.invoice?.id,
 );
 
 export const selectSelectedPaymentMethod = createSelector(
