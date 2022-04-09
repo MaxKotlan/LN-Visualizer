@@ -32,16 +32,6 @@ export const selectChunkRemainingPercentage = createSelector(
 
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
 
-export const selectChannelVertexBuffer = createSelector(
-    graphSelector,
-    (state) => state.channelVertexBuffer,
-);
-
-export const selectChannelColorBuffer = createSelector(
-    graphSelector,
-    (state) => state.channelColorBuffer,
-);
-
 export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => state.nodeSet);
 
 export const selectChannelSetKeyValue = createSelector(graphSelector, (state) => state.channelSet);
