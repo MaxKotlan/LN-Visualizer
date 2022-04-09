@@ -28,12 +28,7 @@
                 [useSprite]="(selectPointUseIcon$ | async) || false"
                 [shouldRender]="(shouldRenderNodes$ | async) || false"
             ></app-graph-node-mesh>
-            <app-graph-edge-mesh
-                *ngIf="true"
-                [shouldRender]="(shouldRenderEdges$ | async) || false"
-                [dashedLines]="(selectEdgeDottedLine$ | async) || false"
-                [depthTest]="(selectEdgeDepthTest$ | async) || false"
-            ></app-graph-edge-mesh>
+            <app-graph-edge-mesh *ngIf="true"></app-graph-edge-mesh>
         </atft-scene>
     </atft-renderer-canvas>
 </atft-orbit-controls>

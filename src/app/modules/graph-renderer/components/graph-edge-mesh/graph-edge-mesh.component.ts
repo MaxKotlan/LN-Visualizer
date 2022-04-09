@@ -2,7 +2,11 @@ import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/co
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { shouldRenderEdges } from 'src/app/modules/controls-channel/selectors';
+import {
+    selectEdgeDepthTest,
+    selectEdgeDottedLine,
+    shouldRenderEdges,
+} from 'src/app/modules/controls-channel/selectors';
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
@@ -14,9 +18,8 @@ import { ChannelBuffersService } from '../../services/channel-buffers/channel-bu
     template: '<ng-content></ng-content>',
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
-    @Input() shouldRender: boolean = false;
-    @Input() dashedLines: boolean = true;
-    @Input() depthTest: boolean = false;
+    dashedLines: boolean = true;
+    depthTest: boolean = true;
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
     private material: THREE.LineDashedMaterial | THREE.LineBasicMaterial;
@@ -75,7 +78,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     }
 
     private handleUpdates() {
-        let currentDrawRange = 0;
+        let currentDrawRange;
         let currentShouldRender;
         //Update position and color buffers on color buffer update
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
@@ -88,6 +91,18 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
             currentShouldRender = shouldRender;
             this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(selectEdgeDottedLine).subscribe((renderDottedLine) => {
+            this.dashedLines = renderDottedLine;
+            this.generateMaterial();
+            this.rendererService.render();
+        });
+
+        this.store$.select(selectEdgeDepthTest).subscribe((depthTest) => {
+            this.depthTest = depthTest;
+            this.material.depthTest = depthTest;
             this.rendererService.render();
         });
     }
