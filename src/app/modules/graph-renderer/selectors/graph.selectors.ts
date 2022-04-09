@@ -183,3 +183,12 @@ export const selectNodeCapacityBufferSize = createSelector(
     graphSelector,
     (state) => state.nodeCapacityBufferSize,
 );
+
+export const selectChannelVertexBufferSize = createSelector(
+    graphSelector,
+    (state) => state.channelVertexBufferSize,
+);
+export const selectChannelColorBufferSize = createSelector(
+    graphSelector,
+    (state) => state.channelColorBufferSize,
+);

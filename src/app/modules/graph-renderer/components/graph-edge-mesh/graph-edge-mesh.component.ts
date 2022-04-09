@@ -3,6 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
+import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
 
 @UntilDestroy()
 @Component({
@@ -11,15 +12,16 @@ import * as THREE from 'three';
     template: '<ng-content></ng-content>',
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
-    @Input() edgeVertices!: [BufferRef<Uint8Array>, BufferRef<Float32Array>];
     @Input() shouldRender: boolean = false;
     @Input() dashedLines: boolean = true;
     @Input() depthTest: boolean = false;
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
+    private material: THREE.LineDashedMaterial | THREE.LineBasicMaterial;
 
     constructor(
         protected override rendererService: RendererService,
+        private channelBufferService: ChannelBuffersService,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);
@@ -28,37 +30,34 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     override ngOnChanges(simpleChanges: SimpleChanges) {
         const obj: THREE.LineSegments = this.getObject();
         if (obj) {
-            const a = this.generateGeometry();
-            if (a) {
-                (obj as any)['geometry'] = this.geometry;
-                (obj as any)['material'] = this.generateMaterial();
-                obj.geometry.computeBoundingBox();
-                obj.computeLineDistances();
-            }
+            // const a = this.generateGeometry();
+            // if (a) {
+            this.generateGeometry();
+            (obj as any)['geometry'] = this.geometry;
+            (obj as any)['material'] = this.generateMaterial();
+            obj.geometry.computeBoundingBox();
+            obj.computeLineDistances();
+            //}
         }
         this.rendererService.render();
         super.ngOnChanges(simpleChanges);
     }
 
     protected generateGeometry() {
-        if (!this.edgeVertices) return;
-        if (!this.edgeVertices[1]) return;
-        if (!this.edgeVertices[0]) return;
         this.geometry.setAttribute(
             'color',
-            new THREE.BufferAttribute(this.edgeVertices[0].bufferRef, 3, true),
+            new THREE.BufferAttribute(this.channelBufferService.color.data, 3, true),
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(this.edgeVertices[1].bufferRef, 3),
+            new THREE.BufferAttribute(this.channelBufferService.vertex.data, 3),
         );
-        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices[1].size : 0);
-        this.geometry.attributes['color'].needsUpdate = true;
-        this.geometry.attributes['position'].needsUpdate = true;
+        // this.geometry.setDrawRange(0, this.shouldRender ? this.channelBufferService.color.size : 0);
+        // this.geometry.attributes['color'].needsUpdate = true;
+        // this.geometry.attributes['position'].needsUpdate = true;
 
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
-        return true;
     }
 
     protected generateMaterial() {
@@ -78,39 +77,38 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
               });
 
         material.depthTest = this.depthTest;
-        return material;
+        this.material = material;
     }
 
     protected newObject3DInstance(): THREE.LineSegments {
-        const material = this.dashedLines
-            ? new THREE.LineDashedMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: false,
-                  scale: 1,
-                  dashSize: 1,
-                  gapSize: 3,
-              })
-            : new THREE.LineBasicMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: false,
-              });
-
-        material.depthTest = this.depthTest;
-
-        // const geometry = new THREE.BufferGeometry()
-        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-        //     .scale(100, 100, 100);
-        // geometry.setAttribute(
-        //     'color',
-        //     new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
-        // );
-
         this.generateGeometry();
-        const mesh = new THREE.LineSegments(this.geometry, material);
-        //mesh.computeLineDistances();
+        this.generateMaterial();
+        const mesh = new THREE.LineSegments(this.geometry, this.material);
         mesh.renderOrder = -1;
+
+        console.log('booom shakalaka');
+
+        this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
+            this.geometry.attributes['position'].needsUpdate = true;
+            this.geometry.setDrawRange(0, drawRange);
+            this.geometry.computeBoundingBox();
+            this.geometry.computeBoundingSphere();
+            this.object.computeLineDistances();
+            (this.object as any)['geometry'] = this.geometry;
+            (this.object as any)['material'] = this.material;
+            this.rendererService.render();
+        });
+        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
+            this.geometry.attributes['color'].needsUpdate = true;
+            (this.object as any)['geometry'] = this.geometry;
+            (this.object as any)['material'] = this.material;
+            this.geometry.setDrawRange(0, drawRange);
+            this.geometry.computeBoundingBox();
+            this.geometry.computeBoundingSphere();
+            this.object.computeLineDistances();
+            this.rendererService.render();
+        });
+
         return mesh;
     }
 }
