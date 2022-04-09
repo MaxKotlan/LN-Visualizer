@@ -1,8 +1,10 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { BufferRef } from 'src/app/types/bufferRef.interface';
+import { shouldRenderEdges } from 'src/app/modules/controls-channel/selectors';
 import * as THREE from 'three';
+import { GraphState } from '../../reducer';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
 
 @UntilDestroy()
@@ -22,28 +24,13 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     constructor(
         protected override rendererService: RendererService,
         private channelBufferService: ChannelBuffersService,
+        private store$: Store<GraphState>,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);
     }
 
-    override ngOnChanges(simpleChanges: SimpleChanges) {
-        const obj: THREE.LineSegments = this.getObject();
-        if (obj) {
-            // const a = this.generateGeometry();
-            // if (a) {
-            this.generateGeometry();
-            (obj as any)['geometry'] = this.geometry;
-            (obj as any)['material'] = this.generateMaterial();
-            obj.geometry.computeBoundingBox();
-            obj.computeLineDistances();
-            //}
-        }
-        this.rendererService.render();
-        super.ngOnChanges(simpleChanges);
-    }
-
-    protected generateGeometry() {
+    protected updateGeometry() {
         this.geometry.setAttribute(
             'color',
             new THREE.BufferAttribute(this.channelBufferService.color.data, 3, true),
@@ -52,10 +39,8 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             'position',
             new THREE.BufferAttribute(this.channelBufferService.vertex.data, 3),
         );
-        // this.geometry.setDrawRange(0, this.shouldRender ? this.channelBufferService.color.size : 0);
-        // this.geometry.attributes['color'].needsUpdate = true;
-        // this.geometry.attributes['position'].needsUpdate = true;
-
+        this.geometry.attributes['color'].needsUpdate = true;
+        this.geometry.attributes['position'].needsUpdate = true;
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
     }
@@ -81,34 +66,29 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     }
 
     protected newObject3DInstance(): THREE.LineSegments {
-        this.generateGeometry();
+        this.updateGeometry();
         this.generateMaterial();
         const mesh = new THREE.LineSegments(this.geometry, this.material);
         mesh.renderOrder = -1;
-
-        console.log('booom shakalaka');
-
-        this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
-            this.geometry.attributes['position'].needsUpdate = true;
-            this.geometry.setDrawRange(0, drawRange);
-            this.geometry.computeBoundingBox();
-            this.geometry.computeBoundingSphere();
-            this.object.computeLineDistances();
-            (this.object as any)['geometry'] = this.geometry;
-            (this.object as any)['material'] = this.material;
-            this.rendererService.render();
-        });
-        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
-            this.geometry.attributes['color'].needsUpdate = true;
-            (this.object as any)['geometry'] = this.geometry;
-            (this.object as any)['material'] = this.material;
-            this.geometry.setDrawRange(0, drawRange);
-            this.geometry.computeBoundingBox();
-            this.geometry.computeBoundingSphere();
-            this.object.computeLineDistances();
-            this.rendererService.render();
-        });
-
+        this.handleUpdates();
         return mesh;
+    }
+
+    private handleUpdates() {
+        let currentDrawRange = 0;
+        let currentShouldRender;
+        //Update position and color buffers on color buffer update
+        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
+            currentDrawRange = drawRange;
+            this.updateGeometry();
+            this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
+            currentShouldRender = shouldRender;
+            this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            this.rendererService.render();
+        });
     }
 }
