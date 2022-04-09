@@ -95,7 +95,7 @@ export class GraphNodeMeshComponent
             .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
             .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
 
-        console.log('ddd', this.getObject());
+        //console.log('ddd', this.getObject());
         this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
             this.initializePart1();
             this.geometry.attributes['position'].needsUpdate = true;
