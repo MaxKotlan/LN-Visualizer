@@ -32,21 +32,6 @@ export const selectChunkRemainingPercentage = createSelector(
 
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
 
-export const selectNodeVertexBuffer = createSelector(
-    graphSelector,
-    (state) => state.nodeVertexBuffer,
-);
-
-export const selectNodeColorBuffer = createSelector(
-    graphSelector,
-    (state) => state.nodeColorBuffer,
-);
-
-export const selectNodeCapacityBuffer = createSelector(
-    graphSelector,
-    (state) => state.nodeCapacityBuffer,
-);
-
 export const selectChannelVertexBuffer = createSelector(
     graphSelector,
     (state) => state.channelVertexBuffer,
@@ -58,19 +43,8 @@ export const selectChannelColorBuffer = createSelector(
 );
 
 export const selectNodeSetKeyValue = createSelector(graphSelector, (state) => state.nodeSet);
-// export const selectNodeSetValue = createSelector(selectNodeSetKeyValue, (keyValueNodeSet) => {
-//     console.log(keyValueNodeSet);
-//     return Object.values(keyValueNodeSet);
-// });
-export const selectChannelSetKeyValue = createSelector(graphSelector, (state) => state.channelSet);
-// export const selectChannelSetValue = createSelector(selectChannelSetKeyValue, (keyValueNodeSet) =>
-//     Object.values(keyValueNodeSet),
-// );
 
-// export const selectFilterChannelByCapacity = createSelector(
-//     selectChannelSetValue,
-//     (keyValueNodeSet) => keyValueNodeSet.filter((c) => c.capacity > 0),
-// );
+export const selectChannelSetKeyValue = createSelector(graphSelector, (state) => state.channelSet);
 
 export const selectPossibleNodesFromSearch = createSelector(
     selectNodeSetKeyValue,
