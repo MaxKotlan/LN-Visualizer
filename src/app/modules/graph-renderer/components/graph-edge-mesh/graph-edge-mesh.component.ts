@@ -52,20 +52,6 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     }
 
     protected generateMaterial() {
-        // const material = this.dashedLines
-        //     ? new THREE.LineDashedMaterial({
-        //           color: 0xffffff,
-        //           linewidth: 1,
-        //           vertexColors: true,
-        //           scale: 1,
-        //           dashSize: 1,
-        //           gapSize: 3,
-        //       })
-        //     : new THREE.LineBasicMaterial({
-        //           color: 0xffffff,
-        //           linewidth: 1,
-        //           vertexColors: true,
-        //       });
         const wowShader = ChannelShader;
         const material = new THREE.ShaderMaterial(wowShader);
 
@@ -113,6 +99,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         this.store$.select(selectEdgeDepthTest).subscribe((depthTest) => {
             this.depthTest = depthTest;
             this.material.depthTest = depthTest;
+            this.material.needsUpdate = true;
             this.rendererService.render();
         });
     }
