@@ -38,18 +38,6 @@ export class GraphNodeMeshComponent
     extends AbstractObject3D<THREE.Points | THREE.Mesh>
     implements OnChanges, OnInit
 {
-    @Input() positions!: BufferRef<Float32Array> | null;
-    @Input() colors!: BufferRef<Uint8Array> | null;
-
-    private capBuff: BufferRef<Float32Array> | undefined;
-
-    @Input() set capacity(newCapacity: BufferRef<Float32Array> | null) {
-        if (!newCapacity) return;
-        this.capBuff = newCapacity;
-        if (!this.geometry.attributes['averageCapacityRatio']) return;
-        this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
-    }
-
     @Input() set uniformNodeSize(uniformNodeSize: boolean) {
         if (!this.material) return;
         this.material.uniforms['uniformSize'] = { value: uniformNodeSize };
@@ -75,7 +63,6 @@ export class GraphNodeMeshComponent
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
     private material: THREE.ShaderMaterial | null = null;
-    private materialMoving: any;
 
     constructor(
         protected override rendererService: RendererService,
@@ -90,6 +77,19 @@ export class GraphNodeMeshComponent
         this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
             if (this.geometry.attributes['position'])
                 this.geometry.attributes['position'].needsUpdate = true;
+            this.ngOnChanges({});
+        });
+
+        this.nodeBuffersService.color.onUpdate.subscribe(() => {
+            if (this.geometry.attributes['nodeColor'])
+                this.geometry.attributes['nodeColor'].needsUpdate = true;
+            this.ngOnChanges({});
+        });
+
+        this.nodeBuffersService.capacity.onUpdate.subscribe(() => {
+            if (this.geometry.attributes['averageCapacityRatio'])
+                this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
+            this.ngOnChanges({});
         });
     }
 
@@ -122,10 +122,6 @@ export class GraphNodeMeshComponent
     }
 
     private onMouseExit() {
-        // this.mouseExit.emit({
-        //   component: this
-        // });
-        //document.body.style.cursor = '';
         this.toolTipService.close();
         document.body.style.cursor = null as unknown as string;
     }
@@ -179,11 +175,9 @@ export class GraphNodeMeshComponent
     }
 
     protected generatePointGeometryReal() {
-        //if (!this.positions) return;
-        if (!this.colors) return;
         this.geometry.setAttribute(
             'nodeColor',
-            new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
+            new THREE.BufferAttribute(this.nodeBuffersService.color.data, 3, true),
         );
         this.geometry.setAttribute(
             'position',
@@ -194,7 +188,11 @@ export class GraphNodeMeshComponent
         );
         this.geometry.setAttribute(
             'averageCapacityRatio',
-            new THREE.BufferAttribute(this.capBuff?.bufferRef || new Float32Array(), 1, false),
+            new THREE.BufferAttribute(
+                this.nodeBuffersService.capacity.data || new Float32Array(),
+                1,
+                false,
+            ),
         );
         this.geometry.setDrawRange(0, this.nodeBuffersService.vertex.size);
         this.geometry.attributes['nodeColor'].needsUpdate = true;

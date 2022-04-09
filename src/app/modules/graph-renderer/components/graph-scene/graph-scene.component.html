@@ -12,13 +12,6 @@
         >
         </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
-            <!-- <app-graph-font-mesh
-                *ngIf="false"
-                [positions]="positions$ | async"
-                [colors]="(colors$ | async) || []"
-                [aliases]="(selectAliases$ | async) || []"
-                [shouldRender]="(shouldRenderLabels$ | async) || false"
-            ></app-graph-font-mesh> -->
             <atft-grid-helper
                 *ngIf="showGrid$ | async"
                 [translateY]="0"
@@ -28,9 +21,6 @@
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-graph-node-mesh
                 *ngIf="true"
-                [positions]="positions$ | async"
-                [colors]="colors$ | async"
-                [capacity]="selectNodeCapacity$ | async"
                 [uniformNodeSize]="selectUniformNodeSize$ | async"
                 [minimumNodeSize]="selectMinimumNodeSize$ | async"
                 [spriteSize]="(selectNodeSize$ | async) || 0"
@@ -45,8 +35,6 @@
                 [dashedLines]="(selectEdgeDottedLine$ | async) || false"
                 [depthTest]="(selectEdgeDepthTest$ | async) || false"
             ></app-graph-edge-mesh>
-            <!-- <atft-axes-helper [size]=200></atft-axes-helper> -->
-            <!-- <atft-grid-helper [translateY]="-50" [size]=300 [divisions]=100></atft-grid-helper> -->
         </atft-scene>
     </atft-renderer-canvas>
 </atft-orbit-controls>

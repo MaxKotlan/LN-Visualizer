@@ -12,19 +12,12 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { meshScale } from '../../../../constants/mesh-scale.constant';
 import { BufferRef } from '../../../../types/bufferRef.interface';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
-import {
-    cacheProcessedGraphNodeChunk,
-    setFilteredNodeChannels,
-    setFilteredNodes,
-} from '../../actions/graph.actions';
+import { setFilteredNodeChannels, setFilteredNodes } from '../../actions/graph.actions';
 import { GraphState } from '../../reducer/graph.reducer';
 import { selectMinMax } from '../../selectors';
 import {
     selectChannelColorBuffer,
     selectChannelVertexBuffer,
-    selectNodeCapacityBuffer,
-    selectNodeColorBuffer,
-    selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
 import { ChannelColorService } from '../channel-color';
 import { NodeBuffersService } from '../node-buffers/node-buffers.service';
@@ -38,7 +31,9 @@ export class GraphMeshStateService {
         private filterEvaluationService: FilterEvaluatorService,
         private nodeBuffersService: NodeBuffersService,
     ) {
-        //this.nodeVertices$.subscribe();
+        this.nodeVertices$.subscribe();
+        this.nodeColors$.subscribe();
+        this.nodeCapacity$.subscribe();
     }
 
     readonly throttleTimeMs: number = 500;
@@ -66,52 +61,41 @@ export class GraphMeshStateService {
         parseInt(hexString[5] + hexString[6], 16),
     ];
 
-    nodeColors$ = combineLatest([
-        this.actions$.pipe(ofType(setFilteredNodes)),
-        this.store$.select(selectNodeColorBuffer),
-    ]).pipe(
+    nodeColors$ = this.actions$.pipe(ofType(setFilteredNodes)).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, colorBuffer]) => {
-            if (!colorBuffer || !graphState.nodeSet) return null;
+        map((graphState) => {
+            if (!this.nodeBuffersService.color || !graphState.nodeSet) return null;
+
             let i = 0;
             graphState.nodeSet.forEach((currentNode) => {
                 const color = this.fromHexString(currentNode.color);
-                colorBuffer[i * 3] = color[0];
-                colorBuffer[i * 3 + 1] = color[1];
-                colorBuffer[i * 3 + 2] = color[2];
+                this.nodeBuffersService.color.data[i * 3] = color[0];
+                this.nodeBuffersService.color.data[i * 3 + 1] = color[1];
+                this.nodeBuffersService.color.data[i * 3 + 2] = color[2];
                 i++;
             });
-            return {
-                bufferRef: colorBuffer,
-                size: graphState.nodeSet.size,
-            } as BufferRef<Uint8Array>;
+
+            this.nodeBuffersService.color.onUpdate.next();
         }),
     );
 
     nodeCapacity$ = combineLatest([
         this.actions$.pipe(ofType(setFilteredNodes)),
-        this.store$.select(selectNodeCapacityBuffer),
         this.store$.select(selectMinMax('node_capacity')),
     ]).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, capacityBuffer, minMaxNodeCapacity]) => {
-            if (!capacityBuffer || !graphState.nodeSet) return null;
+        map(([graphState, minMaxNodeCapacity]) => {
+            if (!this.nodeBuffersService.capacity || !graphState.nodeSet) return null;
 
             let i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                capacityBuffer[i] = Math.sqrt(currentNode.node_capacity / minMaxNodeCapacity.max);
-
-                // capacityBuffer[i] =
-                //     (Math.log10(currentNode.node_capacity) - Math.log10(minMaxNodeCapacity.min)) /
-                //     (Math.log10(minMaxNodeCapacity.max) - Math.log10(minMaxNodeCapacity.min));
-
+                this.nodeBuffersService.capacity.data[i] = Math.sqrt(
+                    currentNode.node_capacity / minMaxNodeCapacity.max,
+                );
                 i++;
             });
 
-            return {
-                bufferRef: capacityBuffer,
-                size: graphState.nodeSet.size,
-            } as BufferRef<Float32Array>;
+            this.nodeBuffersService.capacity.onUpdate.next();
         }),
     );
 
