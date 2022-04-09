@@ -196,3 +196,16 @@ export const selectClosestPoint = (point: THREE.Vector3) =>
         if (minDistanceIndex === null) return;
         return nodeSetValue.get(minDistanceIndex);
     });
+
+export const selectNodeVertexBufferSize = createSelector(
+    graphSelector,
+    (state) => state.nodeVertexBufferSize,
+);
+export const selectNodeColorBufferSize = createSelector(
+    graphSelector,
+    (state) => state.nodeColorBufferSize,
+);
+export const selectNodeCapacityBufferSize = createSelector(
+    graphSelector,
+    (state) => state.nodeCapacityBufferSize,
+);

@@ -16,6 +16,7 @@ import {
 import { ChannelEffects, NodeEffects } from './effects';
 import { graphStatisticsReducer, nodeStatisticsReducer, reducer } from './reducer';
 import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
+import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,12 @@ import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from 
         LndRaycasterCameraDirective,
         LndRaycasterSceneDirective,
     ],
-    providers: [LndRaycasterService, GraphMeshStateService, ChannelColorService],
+    providers: [
+        LndRaycasterService,
+        GraphMeshStateService,
+        ChannelColorService,
+        NodeBuffersService,
+    ],
     imports: [
         CommonModule,
         AtftModule,
@@ -39,4 +45,6 @@ import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from 
     ],
     exports: [GraphSceneComponent],
 })
-export class GraphRendererModule {}
+export class GraphRendererModule {
+    constructor(nod: NodeBuffersService) {}
+}

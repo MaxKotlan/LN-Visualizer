@@ -27,6 +27,7 @@ import {
     selectNodeVertexBuffer,
 } from '../../selectors/graph.selectors';
 import { ChannelColorService } from '../channel-color';
+import { NodeBuffersService } from '../node-buffers/node-buffers.service';
 
 @Injectable()
 export class GraphMeshStateService {
@@ -35,6 +36,7 @@ export class GraphMeshStateService {
         private actions$: Actions,
         private channelColorService: ChannelColorService,
         private filterEvaluationService: FilterEvaluatorService,
+        private nodeBuffersService: NodeBuffersService,
     ) {}
 
     readonly throttleTimeMs: number = 500;
