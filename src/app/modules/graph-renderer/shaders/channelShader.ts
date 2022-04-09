@@ -1,8 +1,11 @@
-import * as THREE from 'three';
 import { Shader } from 'three';
 
 export const ChannelShader = {
+    uniforms: {
+        sinTime: { value: 0.0 },
+    },
     vertexShader: /*glsl*/ `
+    uniform float sinTime;
     attribute vec3 color;
 
     varying vec3 vColor;
@@ -10,8 +13,8 @@ export const ChannelShader = {
     void main() {
 
         vColor = color;
-
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        vec3 moveFactor = vec3(position.x, position.y, position.z);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + .01*sinTime*moveFactor+.5, 1.0 );
 
     }`,
 

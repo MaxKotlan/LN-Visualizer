@@ -32,7 +32,7 @@ export const NodeShader = {
         float invertedCap = (1.-averageCapacityRatio);
         vec3 moveFactor = vec3(position.x, position.y, position.z);
 
-        vec4 mvPosition = modelViewMatrix * vec4( position + .01*sinTime*invertedCap*moveFactor+.5, 1.0 );
+        vec4 mvPosition = modelViewMatrix * vec4( position + .01*sinTime/**invertedCap*/*moveFactor+.5, 1.0 );
 
         gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
 
