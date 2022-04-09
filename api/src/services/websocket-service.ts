@@ -29,6 +29,7 @@ export class WebSocketService {
                     this.initialSyncService.performInitialNodeSync(ws);
                     this.initialSyncService.performInitialChannelSync(ws);
                     this.initialSyncService.sendRequestComplete(ws);
+                    ws.close();
                 }
             });
         });

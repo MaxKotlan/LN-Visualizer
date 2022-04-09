@@ -18,7 +18,14 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { take, TimestampProvider } from 'rxjs';
+import { animationFrames, map, take, TimestampProvider } from 'rxjs';
+import {
+    selectMinimumNodeSize,
+    selectNodeSize,
+    selectPointAttenuation,
+    selectUniformNodeSize,
+    shouldRenderNodes,
+} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -26,6 +33,8 @@ import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { selectClosestPoint } from '../../selectors';
 import { LndRaycasterService } from '../../services';
+import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
+import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
 import { NodeShader } from '../../shaders';
 
 @Component({
@@ -37,36 +46,6 @@ export class GraphNodeMeshComponent
     extends AbstractObject3D<THREE.Points | THREE.Mesh>
     implements OnChanges, OnInit
 {
-    @Input() positions!: BufferRef<Float32Array> | null;
-    @Input() colors!: BufferRef<Uint8Array> | null;
-
-    private capBuff: BufferRef<Float32Array> | undefined;
-
-    @Input() set capacity(newCapacity: BufferRef<Float32Array> | null) {
-        if (!newCapacity) return;
-        this.capBuff = newCapacity;
-        if (!this.geometry.attributes['averageCapacityRatio']) return;
-        this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
-    }
-
-    @Input() set uniformNodeSize(uniformNodeSize: boolean) {
-        if (!this.material) return;
-        this.material.uniforms['uniformSize'] = { value: uniformNodeSize };
-    }
-
-    @Input() set minimumNodeSize(minimumNodeSize: number) {
-        if (!this.material) return;
-        this.material.uniforms['minimumSize'] = { value: minimumNodeSize };
-    }
-
-    @Input() shouldRender: boolean = true;
-    @Input() set pointSizeAttenuation(pointAttenuation: boolean) {
-        if (!this.material) return;
-        this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
-    }
-    @Input() useSprite: boolean = true;
-    @Input() spriteSize: number = 3;
-
     @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
     @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
     // eslint-disable-next-line @angular-eslint/no-output-native
@@ -74,7 +53,6 @@ export class GraphNodeMeshComponent
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
     private material: THREE.ShaderMaterial | null = null;
-    private materialMoving: any;
 
     constructor(
         protected override rendererService: RendererService,
@@ -82,6 +60,8 @@ export class GraphNodeMeshComponent
         private raycasterService: LndRaycasterService,
         private store$: Store<GraphState>,
         public toolTipService: ToolTipService,
+        private nodeBuffersService: NodeBuffersService,
+        private animationTimeService: AnimationTimeService,
     ) {
         super(rendererService, parent);
     }
@@ -94,17 +74,6 @@ export class GraphNodeMeshComponent
         super.ngOnInit();
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
-
-        let now = 0;
-        const customTSProvider: TimestampProvider = {
-            now() {
-                return now++;
-            },
-        };
-
-        // animationFrames(customTSProvider)
-        //     .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
-        //     .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
     }
 
     private subscribeEvents() {
@@ -115,29 +84,12 @@ export class GraphNodeMeshComponent
     }
 
     private onMouseExit() {
-        // this.mouseExit.emit({
-        //   component: this
-        // });
-        //document.body.style.cursor = '';
         this.toolTipService.close();
         document.body.style.cursor = null as unknown as string;
     }
 
     private onMouseEnter(event: any) {
         document.body.style.cursor = 'pointer';
-        //console.log('RaycasterGroupDirective.onMouseEnter', event);
-        // this.mouseEnter.emit({
-        //   component: this,
-        //   face: event.face
-        // });
-        // this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
-        //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-        //   console.log('Closest Node is: ', node);
-        // })
-        // const intersection = (event as THREE.Intersection);
-        // this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
-        //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-        // })
         const intersection = event as THREE.Intersection;
         this.store$
             .select(selectClosestPoint(intersection.point))
@@ -165,166 +117,90 @@ export class GraphNodeMeshComponent
             });
     }
 
-    override ngOnChanges(simpleChanges: SimpleChanges) {
-        const obj: THREE.Object3D = this.getObject();
-        if (obj) {
-            this.generatePointGeometryReal();
-            (obj as any)['geometry'] = this.geometry;
-            //const newInstance = this.newObject3DInstance();
-            //(obj as any)['geometry'] = newInstance.geometry;
-            (obj as any)['material'] = this.generateMaterial();
-            //(obj as any)['material'].needsUpdate = true;
-        }
-        this.rendererService.render();
-        super.ngOnChanges(simpleChanges);
-    }
-
     protected newObject3DInstance(): THREE.Points | THREE.Mesh {
-        this.generatePointGeometryReal();
-        return this.generatePointGeometry();
+        this.updateGeometry();
+        this.generateMaterial();
+        this.handleUpdates();
+        return new THREE.Points(this.geometry, this.material);
     }
 
-    protected generatePointGeometryReal() {
-        if (!this.positions) return;
-        if (!this.colors) return;
+    private handleUpdates() {
+        let currentDrawRange;
+        let currentShouldRender = true;
+
+        this.animationTimeService.sinTime$.subscribe(
+            (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
+        );
+
+        this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
+            this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
+        });
+
+        this.store$.select(selectUniformNodeSize).subscribe((uniformSize) => {
+            this.material.uniforms['uniformSize'] = { value: uniformSize };
+        });
+
+        this.store$.select(selectNodeSize).subscribe((nodeSize) => {
+            this.material.uniforms['size'] = { value: nodeSize };
+        });
+
+        this.store$.select(selectMinimumNodeSize).subscribe((minimumSize) => {
+            this.material.uniforms['minimumSize'] = { value: minimumSize };
+        });
+
+        this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {
+            currentDrawRange = drawRange;
+            this.updateGeometry();
+            this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(shouldRenderNodes).subscribe((shouldRender) => {
+            currentShouldRender = shouldRender;
+            this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.nodeBuffersService.color.onUpdate.subscribe(() => {
+            this.geometry.attributes['nodeColor'].needsUpdate = true;
+            this.rendererService.render();
+        });
+
+        this.nodeBuffersService.capacity.onUpdate.subscribe(() => {
+            this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
+            this.rendererService.render();
+        });
+    }
+
+    protected updateGeometry() {
         this.geometry.setAttribute(
             'nodeColor',
-            new THREE.BufferAttribute(this.colors.bufferRef, 3, true),
+            new THREE.BufferAttribute(this.nodeBuffersService.color.data, 3, true),
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(
-                this.shouldRender ? this.positions.bufferRef : new Float32Array(),
-                3,
-            ),
+            new THREE.BufferAttribute(this.nodeBuffersService.vertex.data, 3),
         );
         this.geometry.setAttribute(
             'averageCapacityRatio',
-            new THREE.BufferAttribute(this.capBuff?.bufferRef || new Float32Array(), 1, false),
+            new THREE.BufferAttribute(this.nodeBuffersService.capacity.data, 1, false),
         );
-        this.geometry.setDrawRange(0, this.positions.size);
-        this.geometry.attributes['nodeColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
-        // this.geometry.setAttribute(
-        //     'color',
-        //     new BufferAttribute(this.colors || new Uint8Array([]), 3, false),
-        // );
+        this.geometry.attributes['nodeColor'].needsUpdate = true;
+        this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
-        //console.log('NEW POOSS', this.positions.size);
-        //this.geometry.attributes['color'].needsUpdate = true;
-        // this.colorData.array = this.colors || new Uint8Array([]);
-        // this.colorData.itemSize = 3;
-        // this.colorData.count = (this.colors || new Uint8Array([])).length;
-        // this.geometry.attributes['color'] = this.colorData;
-        // this.geometry.attributes['color'].needsUpdate = true;
-        return this.geometry;
     }
 
     protected generateMaterial() {
-        if (!this.material) {
-            const wowShader = NodeShader;
-            wowShader.uniforms['pointTexture'] = { value: this.spriteTexture };
-            wowShader.uniforms['size'] = { value: this.spriteSize };
-            wowShader.uniforms['uniformSize'] = { value: false };
-
-            this.material = new THREE.ShaderMaterial(
-                wowShader,
-                //{
-
-                //size: this.spriteSize,
-                // sizeAttenuation: this.pointSizeAttenuation,
-                // map: this.useSprite ? this.spriteTexture : undefined,
-                // vertexColors: true,
-                // alphaTest: 0.5,
-                // transparent: this.useSprite ? true : false,
-                //}
-            );
-        }
-        // this.material.size = this.spriteSize;
-        // this.material.sizeAttenuation = this.pointSizeAttenuation;
-        // (this.material.map = this.useSprite ? this.spriteTexture || null : null),
-        //     (this.material.vertexColors = true);
-        this.material.uniforms['size'] = { value: this.spriteSize };
-
+        const nodeShader = NodeShader;
+        nodeShader.uniforms['pointTexture'] = { value: this.spriteTexture };
+        nodeShader.uniforms['size'] = { value: 20 };
+        nodeShader.uniforms['uniformSize'] = { value: true };
+        this.material = new THREE.ShaderMaterial(nodeShader);
+        this.material.uniforms['size'] = { value: 20 };
         this.material.alphaTest = 0.5;
-        this.material.transparent = this.useSprite;
+        this.material.transparent = true;
         this.material.needsUpdate = true;
-
-        // this.materialMoving = extendMaterial.extendMaterial(this.material, {
-        //     vertexShader: '',
-        //     fragmentShader: '',
-        // });
-
-        return this.material;
     }
-
-    protected generatePointGeometry(): THREE.Points {
-        // const geometry = new THREE.BufferGeometry()
-        //     .setFromPoints(this.shouldRender ? this.positions : [])
-        //     .scale(100, 100, 100);
-        // geometry.setAttribute(
-        //     'color',
-        //     new THREE.BufferAttribute(this.colors || new Uint8Array([]), 3, true),
-        // );
-
-        return new THREE.Points(this.geometry, this.generateMaterial());
-    }
-
-    // protected generateSphereGeometry(): THREE.Mesh {
-    //     let wow: THREE.BufferGeometry = new THREE.BufferGeometry();
-    //     let sphereGeometries: THREE.BufferGeometry[] = [];
-
-    //     const sphere = new THREE.SphereGeometry(this.spriteSize, 8, 4);
-
-    //     this.positions.forEach((center: THREE.Vector3) => {
-    //         const matrix = new THREE.Matrix4().set(
-    //             1,
-    //             0,
-    //             0,
-    //             center.x * 100,
-    //             0,
-    //             1,
-    //             0,
-    //             center.y * 100,
-    //             0,
-    //             0,
-    //             1,
-    //             center.z * 100,
-    //             0,
-    //             0,
-    //             0,
-    //             1,
-    //         );
-
-    //         let geom = sphere.clone().applyMatrix4(matrix);
-    //         geom = geom.deleteAttribute('uv');
-    //         //wow.merge(geom);
-
-    //         wow = BufferGeometryUtils.mergeBufferGeometries([wow, geom], false);
-    //         // console.log(geom);
-
-    //         // sphereGeometries.push(
-    //         //   geom
-    //         // );
-    //     });
-
-    //     //const geometry = BufferGeometryUtils.mergeBufferGeometries(sphereGeometries, false);
-    //     //geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
-    //     //geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
-    //     //geometry.computeVertexNormals();
-    //     //geometry.setDrawRange(0, newCoords.length);
-
-    //     const txtmap = new THREE.TextureLoader().load('assets/txttest.png');
-
-    //     const material = new THREE.MeshBasicMaterial({
-    //         //map: txtmap,
-    //         //alphaTest: 0.5,
-    //         transparent: false,
-    //         color: '#FFFFFF',
-    //         //depthWrite: true,
-    //         //side: THREE.DoubleSide
-    //     });
-    //     return new THREE.Mesh(wow, material);
-    // }
 }

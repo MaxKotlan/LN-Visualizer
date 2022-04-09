@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
@@ -11,18 +11,9 @@ import {
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import {
-    selectEdgeDepthTest,
-    selectEdgeDottedLine,
-    shouldRenderEdges,
-} from 'src/app/modules/controls-channel/selectors';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
 import {
-    selectMinimumNodeSize,
-    selectNodeSize,
-    selectPointAttenuation,
     selectPointUseIcon,
-    selectUniformNodeSize,
     shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
@@ -59,19 +50,12 @@ export class GraphSceneComponent implements AfterViewInit {
 
     public positions$ = this.graphMeshStateService.nodeVertices$;
     public colors$ = this.graphMeshStateService.nodeColors$;
-    public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public selectChannelData$ = this.graphMeshStateService.channelData$;
-    public selectNodeSize$ = this.store$.select(selectNodeSize);
     public selectNodeCapacity$ = this.graphMeshStateService.nodeCapacity$;
-    public selectUniformNodeSize$ = this.store$.select(selectUniformNodeSize);
-    public selectPointAttenuation$ = this.store$.select(selectPointAttenuation);
-    public selectMinimumNodeSize$ = this.store$.select(selectMinimumNodeSize);
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
     public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
     public selectCameraFov$ = this.store$.select(selectCameraFov);
-    public selectEdgeDepthTest$ = this.store$.select(selectEdgeDepthTest);
-    public selectEdgeDottedLine$ = this.store$.select(selectEdgeDottedLine);
     public showGrid$ = this.store$.select(selectShowGrid);
     public showAxis$ = this.store$.select(selectShowAxis);
 

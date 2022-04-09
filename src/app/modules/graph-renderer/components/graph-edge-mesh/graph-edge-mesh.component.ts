@@ -1,8 +1,17 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { BufferRef } from 'src/app/types/bufferRef.interface';
+import {
+    selectEdgeDepthTest,
+    selectEdgeDottedLine,
+    shouldRenderEdges,
+} from 'src/app/modules/controls-channel/selectors';
 import * as THREE from 'three';
+import { GraphState } from '../../reducer';
+import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
+import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
+import { ChannelShader } from '../../shaders';
 
 @UntilDestroy()
 @Component({
@@ -11,106 +20,87 @@ import * as THREE from 'three';
     template: '<ng-content></ng-content>',
 })
 export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments> {
-    @Input() edgeVertices!: [BufferRef<Uint8Array>, BufferRef<Float32Array>];
-    @Input() shouldRender: boolean = false;
-    @Input() dashedLines: boolean = true;
-    @Input() depthTest: boolean = false;
+    dashedLines: boolean = true;
+    depthTest: boolean = true;
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
+    private material: THREE.ShaderMaterial;
 
     constructor(
         protected override rendererService: RendererService,
+        private channelBufferService: ChannelBuffersService,
+        private store$: Store<GraphState>,
+        private animationTimeService: AnimationTimeService,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);
     }
 
-    override ngOnChanges(simpleChanges: SimpleChanges) {
-        const obj: THREE.LineSegments = this.getObject();
-        if (obj) {
-            const a = this.generateGeometry();
-            if (a) {
-                (obj as any)['geometry'] = this.geometry;
-                (obj as any)['material'] = this.generateMaterial();
-                obj.geometry.computeBoundingBox();
-                obj.computeLineDistances();
-            }
-        }
-        this.rendererService.render();
-        super.ngOnChanges(simpleChanges);
-    }
-
-    protected generateGeometry() {
-        if (!this.edgeVertices) return;
-        if (!this.edgeVertices[1]) return;
-        if (!this.edgeVertices[0]) return;
+    protected updateGeometry() {
         this.geometry.setAttribute(
             'color',
-            new THREE.BufferAttribute(this.edgeVertices[0].bufferRef, 3, true),
+            new THREE.BufferAttribute(this.channelBufferService.color.data, 3, true),
         );
         this.geometry.setAttribute(
             'position',
-            new THREE.BufferAttribute(this.edgeVertices[1].bufferRef, 3),
+            new THREE.BufferAttribute(this.channelBufferService.vertex.data, 3),
         );
-        this.geometry.setDrawRange(0, this.shouldRender ? this.edgeVertices[1].size : 0);
         this.geometry.attributes['color'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
-
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
-        return true;
     }
 
     protected generateMaterial() {
-        const material = this.dashedLines
-            ? new THREE.LineDashedMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
-                  scale: 1,
-                  dashSize: 1,
-                  gapSize: 3,
-              })
-            : new THREE.LineBasicMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
-              });
+        const wowShader = ChannelShader;
+        const material = new THREE.ShaderMaterial(wowShader);
 
         material.depthTest = this.depthTest;
-        return material;
+        this.material = material;
     }
 
     protected newObject3DInstance(): THREE.LineSegments {
-        const material = this.dashedLines
-            ? new THREE.LineDashedMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: false,
-                  scale: 1,
-                  dashSize: 1,
-                  gapSize: 3,
-              })
-            : new THREE.LineBasicMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: false,
-              });
-
-        material.depthTest = this.depthTest;
-
-        // const geometry = new THREE.BufferGeometry()
-        //     .setFromPoints(this.shouldRender ? this.edgeVertices : [])
-        //     .scale(100, 100, 100);
-        // geometry.setAttribute(
-        //     'color',
-        //     new THREE.BufferAttribute(this.edgeColor || new Uint8Array(), 3, true),
-        // );
-
-        this.generateGeometry();
-        const mesh = new THREE.LineSegments(this.geometry, material);
-        //mesh.computeLineDistances();
+        this.updateGeometry();
+        this.generateMaterial();
+        const mesh = new THREE.LineSegments(this.geometry, this.material);
         mesh.renderOrder = -1;
+        this.handleUpdates();
         return mesh;
+    }
+
+    private handleUpdates() {
+        let currentDrawRange;
+        let currentShouldRender;
+
+        this.animationTimeService.sinTime$.subscribe(
+            (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
+        );
+
+        //Update position and color buffers on color buffer update
+        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
+            currentDrawRange = drawRange;
+            this.updateGeometry();
+            this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
+            currentShouldRender = shouldRender;
+            this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(selectEdgeDottedLine).subscribe((renderDottedLine) => {
+            this.dashedLines = renderDottedLine;
+            this.generateMaterial();
+            this.rendererService.render();
+        });
+
+        this.store$.select(selectEdgeDepthTest).subscribe((depthTest) => {
+            this.depthTest = depthTest;
+            this.material.depthTest = depthTest;
+            this.material.needsUpdate = true;
+            this.rendererService.render();
+        });
     }
 }

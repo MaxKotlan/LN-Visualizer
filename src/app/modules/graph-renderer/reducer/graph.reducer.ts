@@ -8,11 +8,14 @@ export interface GraphState {
     chunkInfo: ChunkInfo | null;
     nodeChunksProcessed: number;
     channelChunksProcessed: number;
-    nodeVertexBuffer: Float32Array | null;
-    nodeColorBuffer: Uint8Array | null;
-    nodeCapacityBuffer: Float32Array | null;
-    channelVertexBuffer: Float32Array | null;
-    channelColorBuffer: Uint8Array | null;
+
+    nodeVertexBufferSize: number;
+    nodeColorBufferSize: number;
+    nodeCapacityBufferSize: number;
+
+    channelVertexBufferSize: number;
+    channelColorBufferSize: number;
+
     nodeSet: Map<string, LndNodeWithPosition>;
     channelSet: Map<string, LndChannel>;
     nodeCount: number;
@@ -27,11 +30,11 @@ const initialState: GraphState = {
     chunkInfo: null,
     nodeChunksProcessed: 0,
     channelChunksProcessed: 0,
-    nodeVertexBuffer: null,
-    nodeColorBuffer: null,
-    nodeCapacityBuffer: null,
-    channelVertexBuffer: null,
-    channelColorBuffer: null,
+    nodeVertexBufferSize: 0,
+    nodeColorBufferSize: 0,
+    nodeCapacityBufferSize: 0,
+    channelVertexBufferSize: 0,
+    channelColorBufferSize: 0,
     nodeSet: new Map<string, LndNodeWithPosition>(),
     channelSet: new Map<string, LndChannel>(),
     nodeCount: 0,
@@ -50,15 +53,11 @@ export const reducer = createReducer(
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
-        nodeVertexBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
-        nodeColorBuffer: new Uint8Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3),
-        nodeCapacityBuffer: new Float32Array(Math.floor(chunkInfo.nodes * bufferOverheadStorage)),
-        channelVertexBuffer: new Float32Array(
-            Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
-        ),
-        channelColorBuffer: new Uint8Array(
-            Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
-        ),
+        nodeVertexBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
+        nodeColorBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
+        nodeCapacityBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
+        channelVertexBufferSize: Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
+        channelColorBufferSize: Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
     })),
     on(graphActions.processGraphNodeChunk, (state) => ({
         ...state,
