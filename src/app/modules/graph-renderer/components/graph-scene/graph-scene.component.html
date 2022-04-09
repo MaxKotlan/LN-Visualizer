@@ -19,15 +19,13 @@
                 [divisions]="100"
             ></atft-grid-helper>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
-            <app-graph-node-mesh
-                *ngIf="true"
-                [uniformNodeSize]="selectUniformNodeSize$ | async"
+            <app-graph-node-mesh *ngIf="true"></app-graph-node-mesh>
+            <!-- [uniformNodeSize]="selectUniformNodeSize$ | async"
                 [minimumNodeSize]="selectMinimumNodeSize$ | async"
                 [spriteSize]="(selectNodeSize$ | async) || 0"
                 [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
                 [useSprite]="(selectPointUseIcon$ | async) || false"
-                [shouldRender]="(shouldRenderNodes$ | async) || false"
-            ></app-graph-node-mesh>
+                [shouldRender]="(shouldRenderNodes$ | async) || false" -->
             <app-graph-edge-mesh></app-graph-edge-mesh>
         </atft-scene>
     </atft-renderer-canvas>
