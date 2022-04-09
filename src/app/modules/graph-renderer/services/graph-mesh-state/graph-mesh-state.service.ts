@@ -37,30 +37,26 @@ export class GraphMeshStateService {
         private channelColorService: ChannelColorService,
         private filterEvaluationService: FilterEvaluatorService,
         private nodeBuffersService: NodeBuffersService,
-    ) {}
+    ) {
+        //this.nodeVertices$.subscribe();
+    }
 
     readonly throttleTimeMs: number = 500;
 
-    nodeVertices$ = combineLatest([
-        this.actions$.pipe(ofType(setFilteredNodes)),
-        this.store$.select(selectNodeVertexBuffer),
-    ]).pipe(
+    nodeVertices$ = this.actions$.pipe(ofType(setFilteredNodes)).pipe(
         sampleTime(this.throttleTimeMs),
-        map(([graphState, vertexBuffer]) => {
-            if (!vertexBuffer || !graphState.nodeSet) return null;
+        map((graphState) => {
+            if (!this.nodeBuffersService.vertex || !graphState.nodeSet) return null;
 
             let i = 0;
             graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
-                vertexBuffer[i * 3] = currentNode.position.x * meshScale;
-                vertexBuffer[i * 3 + 1] = currentNode.position.y * meshScale;
-                vertexBuffer[i * 3 + 2] = currentNode.position.z * meshScale;
+                this.nodeBuffersService.vertex.data[i * 3] = currentNode.position.x * meshScale;
+                this.nodeBuffersService.vertex.data[i * 3 + 1] = currentNode.position.y * meshScale;
+                this.nodeBuffersService.vertex.data[i * 3 + 2] = currentNode.position.z * meshScale;
                 i++;
             });
 
-            return {
-                bufferRef: vertexBuffer,
-                size: graphState.nodeSet.size,
-            } as BufferRef<Float32Array>;
+            this.nodeBuffersService.vertex.onUpdate.next();
         }),
     );
 

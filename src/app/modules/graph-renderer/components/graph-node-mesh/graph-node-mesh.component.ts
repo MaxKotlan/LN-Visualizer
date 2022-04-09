@@ -26,6 +26,7 @@ import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { selectClosestPoint } from '../../selectors';
 import { LndRaycasterService } from '../../services';
+import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
 import { NodeShader } from '../../shaders';
 
 @Component({
@@ -82,8 +83,14 @@ export class GraphNodeMeshComponent
         private raycasterService: LndRaycasterService,
         private store$: Store<GraphState>,
         public toolTipService: ToolTipService,
+        private nodeBuffersService: NodeBuffersService,
     ) {
         super(rendererService, parent);
+
+        this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
+            if (this.geometry.attributes['position'])
+                this.geometry.attributes['position'].needsUpdate = true;
+        });
     }
 
     protected spriteTexture: THREE.Texture | undefined;
@@ -125,19 +132,6 @@ export class GraphNodeMeshComponent
 
     private onMouseEnter(event: any) {
         document.body.style.cursor = 'pointer';
-        //console.log('RaycasterGroupDirective.onMouseEnter', event);
-        // this.mouseEnter.emit({
-        //   component: this,
-        //   face: event.face
-        // });
-        // this.store$.select(selectClosestPoint(intersection.point)).subscribe((node) => {
-        //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-        //   console.log('Closest Node is: ', node);
-        // })
-        // const intersection = (event as THREE.Intersection);
-        // this.store$.select(selectClosestPoint(intersection.point)).pipe(take(1)).subscribe((node) => {
-        //   this.store$.dispatch(searchGraph({searchText: node.alias}));
-        // })
         const intersection = event as THREE.Intersection;
         this.store$
             .select(selectClosestPoint(intersection.point))
@@ -185,7 +179,7 @@ export class GraphNodeMeshComponent
     }
 
     protected generatePointGeometryReal() {
-        if (!this.positions) return;
+        //if (!this.positions) return;
         if (!this.colors) return;
         this.geometry.setAttribute(
             'nodeColor',
@@ -194,7 +188,7 @@ export class GraphNodeMeshComponent
         this.geometry.setAttribute(
             'position',
             new THREE.BufferAttribute(
-                this.shouldRender ? this.positions.bufferRef : new Float32Array(),
+                this.shouldRender ? this.nodeBuffersService.vertex.data : new Float32Array(),
                 3,
             ),
         );
@@ -202,22 +196,11 @@ export class GraphNodeMeshComponent
             'averageCapacityRatio',
             new THREE.BufferAttribute(this.capBuff?.bufferRef || new Float32Array(), 1, false),
         );
-        this.geometry.setDrawRange(0, this.positions.size);
+        this.geometry.setDrawRange(0, this.nodeBuffersService.vertex.size);
         this.geometry.attributes['nodeColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
-        // this.geometry.setAttribute(
-        //     'color',
-        //     new BufferAttribute(this.colors || new Uint8Array([]), 3, false),
-        // );
         this.geometry.computeBoundingBox();
         this.geometry.computeBoundingSphere();
-        //console.log('NEW POOSS', this.positions.size);
-        //this.geometry.attributes['color'].needsUpdate = true;
-        // this.colorData.array = this.colors || new Uint8Array([]);
-        // this.colorData.itemSize = 3;
-        // this.colorData.count = (this.colors || new Uint8Array([])).length;
-        // this.geometry.attributes['color'] = this.colorData;
-        // this.geometry.attributes['color'].needsUpdate = true;
         return this.geometry;
     }
 
@@ -260,71 +243,6 @@ export class GraphNodeMeshComponent
     }
 
     protected generatePointGeometry(): THREE.Points {
-        // const geometry = new THREE.BufferGeometry()
-        //     .setFromPoints(this.shouldRender ? this.positions : [])
-        //     .scale(100, 100, 100);
-        // geometry.setAttribute(
-        //     'color',
-        //     new THREE.BufferAttribute(this.colors || new Uint8Array([]), 3, true),
-        // );
-
         return new THREE.Points(this.geometry, this.generateMaterial());
     }
-
-    // protected generateSphereGeometry(): THREE.Mesh {
-    //     let wow: THREE.BufferGeometry = new THREE.BufferGeometry();
-    //     let sphereGeometries: THREE.BufferGeometry[] = [];
-
-    //     const sphere = new THREE.SphereGeometry(this.spriteSize, 8, 4);
-
-    //     this.positions.forEach((center: THREE.Vector3) => {
-    //         const matrix = new THREE.Matrix4().set(
-    //             1,
-    //             0,
-    //             0,
-    //             center.x * 100,
-    //             0,
-    //             1,
-    //             0,
-    //             center.y * 100,
-    //             0,
-    //             0,
-    //             1,
-    //             center.z * 100,
-    //             0,
-    //             0,
-    //             0,
-    //             1,
-    //         );
-
-    //         let geom = sphere.clone().applyMatrix4(matrix);
-    //         geom = geom.deleteAttribute('uv');
-    //         //wow.merge(geom);
-
-    //         wow = BufferGeometryUtils.mergeBufferGeometries([wow, geom], false);
-    //         // console.log(geom);
-
-    //         // sphereGeometries.push(
-    //         //   geom
-    //         // );
-    //     });
-
-    //     //const geometry = BufferGeometryUtils.mergeBufferGeometries(sphereGeometries, false);
-    //     //geometry.setAttribute('color', new THREE.BufferAttribute( this.colors, 3, true));
-    //     //geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvCoordinates), 2));
-    //     //geometry.computeVertexNormals();
-    //     //geometry.setDrawRange(0, newCoords.length);
-
-    //     const txtmap = new THREE.TextureLoader().load('assets/txttest.png');
-
-    //     const material = new THREE.MeshBasicMaterial({
-    //         //map: txtmap,
-    //         //alphaTest: 0.5,
-    //         transparent: false,
-    //         color: '#FFFFFF',
-    //         //depthWrite: true,
-    //         //side: THREE.DoubleSide
-    //     });
-    //     return new THREE.Mesh(wow, material);
-    // }
 }
