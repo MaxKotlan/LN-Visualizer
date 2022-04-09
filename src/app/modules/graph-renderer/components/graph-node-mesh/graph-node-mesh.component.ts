@@ -73,24 +73,6 @@ export class GraphNodeMeshComponent
         private nodeBuffersService: NodeBuffersService,
     ) {
         super(rendererService, parent);
-
-        this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
-            if (this.geometry.attributes['position'])
-                this.geometry.attributes['position'].needsUpdate = true;
-            this.ngOnChanges({});
-        });
-
-        this.nodeBuffersService.color.onUpdate.subscribe(() => {
-            if (this.geometry.attributes['nodeColor'])
-                this.geometry.attributes['nodeColor'].needsUpdate = true;
-            this.ngOnChanges({});
-        });
-
-        this.nodeBuffersService.capacity.onUpdate.subscribe(() => {
-            if (this.geometry.attributes['averageCapacityRatio'])
-                this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
-            this.ngOnChanges({});
-        });
     }
 
     protected spriteTexture: THREE.Texture | undefined;
@@ -112,6 +94,23 @@ export class GraphNodeMeshComponent
         animationFrames(customTSProvider)
             .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
             .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
+
+        console.log('ddd', this.getObject());
+        this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
+            this.initializePart1();
+            this.geometry.attributes['position'].needsUpdate = true;
+        });
+
+        this.nodeBuffersService.color.onUpdate.subscribe(() => {
+            this.initializePart1();
+            this.geometry.attributes['nodeColor'].needsUpdate = true;
+        });
+
+        this.nodeBuffersService.capacity.onUpdate.subscribe(() => {
+            this.initializePart1();
+
+            this.geometry.attributes['averageCapacityRatio'].needsUpdate = true;
+        });
     }
 
     private subscribeEvents() {
@@ -155,26 +154,37 @@ export class GraphNodeMeshComponent
             });
     }
 
-    override ngOnChanges(simpleChanges: SimpleChanges) {
+    public initializePart1() {
         const obj: THREE.Object3D = this.getObject();
         if (obj) {
-            this.generatePointGeometryReal();
-            (obj as any)['geometry'] = this.geometry;
+            (obj as any)['geometry'] = this.generatePointGeometryReal();
             //const newInstance = this.newObject3DInstance();
             //(obj as any)['geometry'] = newInstance.geometry;
-            (obj as any)['material'] = this.generateMaterial();
-            //(obj as any)['material'].needsUpdate = true;
+            // (obj as any)['material'] = this.generateMaterial();
         }
-        this.rendererService.render();
-        super.ngOnChanges(simpleChanges);
+        //(obj as any)['material'].needsUpdate = true;
     }
+
+    // override ngOnChanges(simpleChanges: SimpleChanges) {
+    //     // const obj: THREE.Object3D = this.getObject();
+    //     // if (obj) {
+    //     //     this.generatePointGeometryReal();
+    //     //     (obj as any)['geometry'] = this.geometry;
+    //     //     //const newInstance = this.newObject3DInstance();
+    //     //     //(obj as any)['geometry'] = newInstance.geometry;
+    //     //     (obj as any)['material'] = this.generateMaterial();
+    //     //     //(obj as any)['material'].needsUpdate = true;
+    //     // }
+    //     //this.rendererService.render();
+    //     //super.ngOnChanges(simpleChanges);
+    // }
 
     protected newObject3DInstance(): THREE.Points | THREE.Mesh {
         this.generatePointGeometryReal();
         return this.generatePointGeometry();
     }
 
-    protected generatePointGeometryReal() {
+    protected initializeBufferAtribbutes() {
         this.geometry.setAttribute(
             'nodeColor',
             new THREE.BufferAttribute(this.nodeBuffersService.color.data, 3, true),
@@ -194,6 +204,10 @@ export class GraphNodeMeshComponent
                 false,
             ),
         );
+    }
+
+    protected generatePointGeometryReal() {
+        this.initializeBufferAtribbutes();
         this.geometry.setDrawRange(0, this.nodeBuffersService.vertex.size);
         this.geometry.attributes['nodeColor'].needsUpdate = true;
         this.geometry.attributes['position'].needsUpdate = true;
