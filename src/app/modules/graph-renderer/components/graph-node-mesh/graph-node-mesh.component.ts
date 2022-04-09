@@ -19,7 +19,12 @@ import {
     SphereMeshComponent,
 } from 'atft';
 import { animationFrames, map, take, TimestampProvider } from 'rxjs';
-import { selectPointAttenuation } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+import {
+    selectMinimumNodeSize,
+    selectNodeSize,
+    selectPointAttenuation,
+    selectUniformNodeSize,
+} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -128,6 +133,18 @@ export class GraphNodeMeshComponent
 
         this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
             this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
+        });
+
+        this.store$.select(selectUniformNodeSize).subscribe((uniformSize) => {
+            this.material.uniforms['uniformSize'] = { value: uniformSize };
+        });
+
+        this.store$.select(selectNodeSize).subscribe((nodeSize) => {
+            this.material.uniforms['size'] = { value: nodeSize };
+        });
+
+        this.store$.select(selectMinimumNodeSize).subscribe((minimumSize) => {
+            this.material.uniforms['minimumSize'] = { value: minimumSize };
         });
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {
