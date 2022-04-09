@@ -24,6 +24,7 @@ import {
     selectNodeSize,
     selectPointAttenuation,
     selectUniformNodeSize,
+    shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
@@ -151,6 +152,12 @@ export class GraphNodeMeshComponent
             currentDrawRange = drawRange;
             this.updateGeometry();
             this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.rendererService.render();
+        });
+
+        this.store$.select(shouldRenderNodes).subscribe((shouldRender) => {
+            currentShouldRender = shouldRender;
+            this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
             this.rendererService.render();
         });
 
