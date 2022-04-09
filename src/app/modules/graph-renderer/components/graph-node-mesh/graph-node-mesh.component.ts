@@ -18,7 +18,7 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { take, TimestampProvider } from 'rxjs';
+import { animationFrames, map, take, TimestampProvider } from 'rxjs';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -102,9 +102,9 @@ export class GraphNodeMeshComponent
             },
         };
 
-        // animationFrames(customTSProvider)
-        //     .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
-        //     .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
+        animationFrames(customTSProvider)
+            .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
+            .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
     }
 
     private subscribeEvents() {
