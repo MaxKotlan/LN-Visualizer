@@ -26,6 +26,7 @@ import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { selectClosestPoint } from '../../selectors';
 import { LndRaycasterService } from '../../services';
+import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
 import { NodeShader } from '../../shaders';
 
@@ -71,6 +72,7 @@ export class GraphNodeMeshComponent
         private store$: Store<GraphState>,
         public toolTipService: ToolTipService,
         private nodeBuffersService: NodeBuffersService,
+        private animationTimeService: AnimationTimeService,
     ) {
         super(rendererService, parent);
     }
@@ -84,16 +86,9 @@ export class GraphNodeMeshComponent
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
 
-        let now = 0;
-        const customTSProvider: TimestampProvider = {
-            now() {
-                return now++;
-            },
-        };
-
-        animationFrames(customTSProvider)
-            .pipe(map(({ elapsed }) => Math.sin(elapsed * 0.01)))
-            .subscribe((elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }));
+        this.animationTimeService.sinTime$.subscribe(
+            (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
+        );
 
         this.nodeBuffersService.vertex.onUpdate.subscribe(() => {
             this.initializePart1();

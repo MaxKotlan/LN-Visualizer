@@ -9,6 +9,7 @@ import {
 } from 'src/app/modules/controls-channel/selectors';
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
+import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
 import { ChannelShader } from '../../shaders';
 
@@ -29,6 +30,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         protected override rendererService: RendererService,
         private channelBufferService: ChannelBuffersService,
         private store$: Store<GraphState>,
+        private animationTimeService: AnimationTimeService,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);
@@ -83,6 +85,11 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     private handleUpdates() {
         let currentDrawRange;
         let currentShouldRender;
+
+        this.animationTimeService.sinTime$.subscribe(
+            (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
+        );
+
         //Update position and color buffers on color buffer update
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
