@@ -10,6 +10,7 @@ import {
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
+import { ChannelShader } from '../../shaders';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +23,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     depthTest: boolean = true;
 
     private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
-    private material: THREE.LineDashedMaterial | THREE.LineBasicMaterial;
+    private material: THREE.ShaderMaterial;
 
     constructor(
         protected override rendererService: RendererService,
@@ -49,20 +50,22 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
     }
 
     protected generateMaterial() {
-        const material = this.dashedLines
-            ? new THREE.LineDashedMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
-                  scale: 1,
-                  dashSize: 1,
-                  gapSize: 3,
-              })
-            : new THREE.LineBasicMaterial({
-                  color: 0xffffff,
-                  linewidth: 1,
-                  vertexColors: true,
-              });
+        // const material = this.dashedLines
+        //     ? new THREE.LineDashedMaterial({
+        //           color: 0xffffff,
+        //           linewidth: 1,
+        //           vertexColors: true,
+        //           scale: 1,
+        //           dashSize: 1,
+        //           gapSize: 3,
+        //       })
+        //     : new THREE.LineBasicMaterial({
+        //           color: 0xffffff,
+        //           linewidth: 1,
+        //           vertexColors: true,
+        //       });
+        const wowShader = ChannelShader;
+        const material = new THREE.ShaderMaterial(wowShader);
 
         material.depthTest = this.depthTest;
         this.material = material;
