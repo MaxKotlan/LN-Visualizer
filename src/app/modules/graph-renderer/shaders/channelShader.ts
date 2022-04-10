@@ -10,11 +10,18 @@ export const ChannelShader = {
 
     varying vec3 vColor;
 
+    float rand(vec2 st) {
+        return fract(sin(dot(st.xy,
+                             vec2(12.9898,78.233)))*
+            43758.5453123);
+    }
+
     void main() {
 
         vColor = color;
         vec3 moveFactor = vec3(position.x, position.y, position.z);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + .01*sinTime*moveFactor+.5, 1.0 );
+        float rnd = rand( vec2( position.x, position.z ) )-.5;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + .005*sinTime*moveFactor*rnd+.5, 1.0 );
 
     }`,
 
