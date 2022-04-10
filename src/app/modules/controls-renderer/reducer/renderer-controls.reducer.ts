@@ -13,7 +13,7 @@ export interface RendererControlState {
 const initialState: RendererControlState = {
     showGrid: true,
     showAxis: false,
-    showGraphAnimation: false,
+    showGraphAnimation: true,
     nodeMotionIntensity: 0.03,
     nodeTimeIntensity: 0.001,
 };
