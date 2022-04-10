@@ -5,11 +5,13 @@ import * as renderControlActions from '../actions';
 export interface RendererControlState {
     showGrid: boolean;
     showAxis: boolean;
+    showGraphAnimation: boolean;
 }
 
 const initialState: RendererControlState = {
     showGrid: true,
     showAxis: false,
+    showGraphAnimation: false,
 };
 
 export const reducer = createReducer(
@@ -26,5 +28,9 @@ export const reducer = createReducer(
     on(renderControlActions.setShowAxis, (state, { value }) => ({
         ...state,
         showAxis: value,
+    })),
+    on(renderControlActions.setShowGraphAnimation, (state, { value }) => ({
+        ...state,
+        showGraphAnimation: value,
     })),
 );

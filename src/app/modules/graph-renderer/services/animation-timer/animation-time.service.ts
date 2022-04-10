@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { animationFrames, map, Observable, TimestampProvider } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { animationFrames, map, Observable, of, switchMap, TimestampProvider } from 'rxjs';
+import { selectShowGraphAnimation } from 'src/app/modules/controls-renderer/selectors';
 
 @Injectable({
     providedIn: 'root',
@@ -7,16 +9,24 @@ import { animationFrames, map, Observable, TimestampProvider } from 'rxjs';
 export class AnimationTimeService {
     public customTSProvider: TimestampProvider;
 
-    constructor() {
+    constructor(private store$: Store<any>) {
         let now = 0;
         this.customTSProvider = {
             now() {
                 return now++;
             },
         };
-        this.sinTime$ = animationFrames(this.customTSProvider).pipe(
-            map(({ elapsed }) => Math.sin(elapsed * 0.01)),
-        );
+        this.sinTime$ = this.store$
+            .select(selectShowGraphAnimation)
+            .pipe(
+                switchMap((shouldShow) =>
+                    shouldShow
+                        ? animationFrames(this.customTSProvider).pipe(
+                              map(({ elapsed }) => Math.sin(elapsed * 0.01)),
+                          )
+                        : of(0),
+                ),
+            );
     }
 
     public sinTime$: Observable<number>;

@@ -6,4 +6,7 @@
     <mat-checkbox [ngModel]="showAxis$ | async" (change)="setShowAxis($event)"
         >Show Axis</mat-checkbox
     >
+    <mat-checkbox [ngModel]="showGraphAnimation$ | async" (change)="setShowGraphAnimation($event)"
+        >Show Graph Animation</mat-checkbox
+    >
 </section>
