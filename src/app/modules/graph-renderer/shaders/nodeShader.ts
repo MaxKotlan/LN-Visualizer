@@ -11,6 +11,7 @@ export const NodeShader = {
         minimumSize: { value: 0.01 },
         uniformSize: { value: false },
         sinTime: { value: 0.0 },
+        motionIntensity: { value: 0.0 },
     },
     vertexShader: /*glsl*/ `
     // attribute float size;
@@ -22,8 +23,15 @@ export const NodeShader = {
     uniform bool uniformSize;
     attribute vec3 nodeColor;
     attribute float averageCapacityRatio;
+    uniform float motionIntensity;
 
     varying vec3 vColor;
+
+    float rand(vec2 st) {
+        return fract(sin(dot(st.xy,
+                             vec2(12.9898,78.233)))*
+            43758.5453123);
+    }
 
     void main() {
 
@@ -31,8 +39,9 @@ export const NodeShader = {
 
         float invertedCap = (1.-averageCapacityRatio);
         vec3 moveFactor = vec3(position.x, position.y, position.z);
+        float rnd = rand( vec2( position.x, position.z ) )-.5;
 
-        vec4 mvPosition = modelViewMatrix * vec4( position + .01*sinTime/**invertedCap*/*moveFactor+.5, 1.0 );
+        vec4 mvPosition = modelViewMatrix * vec4( position + motionIntensity*sinTime/**invertedCap*/*moveFactor*rnd+.5, 1.0 );
 
         gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
 

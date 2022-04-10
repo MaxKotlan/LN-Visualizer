@@ -7,6 +7,7 @@ import {
     selectEdgeDottedLine,
     shouldRenderEdges,
 } from 'src/app/modules/controls-channel/selectors';
+import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
@@ -88,6 +89,10 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             currentShouldRender = shouldRender;
             this.geometry.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
             this.rendererService.render();
+        });
+
+        this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
+            this.material.uniforms['motionIntensity'] = { value: intensity };
         });
 
         this.store$.select(selectEdgeDottedLine).subscribe((renderDottedLine) => {

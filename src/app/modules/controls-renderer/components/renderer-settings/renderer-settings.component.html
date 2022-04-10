@@ -6,7 +6,36 @@
     <mat-checkbox [ngModel]="showAxis$ | async" (change)="setShowAxis($event)"
         >Show Axis</mat-checkbox
     >
-    <mat-checkbox [ngModel]="showGraphAnimation$ | async" (change)="setShowGraphAnimation($event)"
-        >Show Graph Animation</mat-checkbox
+    <mat-checkbox
+        #nodeMotion
+        [ngModel]="showGraphAnimation$ | async"
+        (change)="setShowGraphAnimation($event)"
+        >Enable Node Motion</mat-checkbox
     >
+    <span *ngIf="nodeMotion.checked">
+        <span style="margin-right: 0.4rem">Motion Intensity (Be careful)</span>
+        <mat-slider
+            [ngModel]="nodeMotionIntensity$ | async"
+            (change)="setNodeMotionIntensity($event)"
+            #maxNodeSize
+            min="0"
+            max="3"
+            step="0.0001"
+            value="1"
+        ></mat-slider>
+        {{ maxNodeSize.value }}
+    </span>
+    <span *ngIf="nodeMotion.checked">
+        <span style="margin-right: 0.4rem">Time Intensity (Be careful)</span>
+        <mat-slider
+            [ngModel]="nodeTimeIntensity$ | async"
+            (change)="setNodeTimeIntensity($event)"
+            #maxNodeSize
+            min="0"
+            max=".1"
+            step="0.00001"
+            value=".0001"
+        ></mat-slider>
+        {{ maxNodeSize.value }}
+    </span>
 </section>
