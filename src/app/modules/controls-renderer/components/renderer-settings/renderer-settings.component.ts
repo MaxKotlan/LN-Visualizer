@@ -4,6 +4,7 @@ import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import {
     setNodeMotionIntensity,
+    setNodeTimeIntensity,
     setShowAxis,
     setShowGraphAnimation,
     setShowGrid,
@@ -11,6 +12,7 @@ import {
 import { RendererControlState } from '../../reducer';
 import {
     selectNodeMotionIntensity,
+    selectNodeTimeIntensity,
     selectShowAxis,
     selectShowGraphAnimation,
     selectShowGrid,
@@ -28,6 +30,7 @@ export class RendererSettingsComponent {
     public showAxis$ = this.store$.select(selectShowAxis);
     public showGraphAnimation$ = this.store$.select(selectShowGraphAnimation);
     public nodeMotionIntensity$ = this.store$.select(selectNodeMotionIntensity);
+    public nodeTimeIntensity$ = this.store$.select(selectNodeTimeIntensity);
 
     setShowGrid(event: MatCheckboxChange) {
         this.store$.dispatch(setShowGrid({ value: event.checked }));
@@ -43,5 +46,8 @@ export class RendererSettingsComponent {
 
     setNodeMotionIntensity(event: MatSliderChange) {
         this.store$.dispatch(setNodeMotionIntensity({ value: event.value || 0.005 }));
+    }
+    setNodeTimeIntensity(event: MatSliderChange) {
+        this.store$.dispatch(setNodeTimeIntensity({ value: event.value || 0.005 }));
     }
 }

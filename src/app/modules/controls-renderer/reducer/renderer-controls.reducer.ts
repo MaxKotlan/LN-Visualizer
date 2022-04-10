@@ -7,6 +7,7 @@ export interface RendererControlState {
     showAxis: boolean;
     showGraphAnimation: boolean;
     nodeMotionIntensity: number;
+    nodeTimeIntensity: number;
 }
 
 const initialState: RendererControlState = {
@@ -14,6 +15,7 @@ const initialState: RendererControlState = {
     showAxis: false,
     showGraphAnimation: false,
     nodeMotionIntensity: 0.03,
+    nodeTimeIntensity: 0.001,
 };
 
 export const reducer = createReducer(
@@ -38,5 +40,9 @@ export const reducer = createReducer(
     on(renderControlActions.setNodeMotionIntensity, (state, { value }) => ({
         ...state,
         nodeMotionIntensity: value,
+    })),
+    on(renderControlActions.setNodeTimeIntensity, (state, { value }) => ({
+        ...state,
+        nodeTimeIntensity: value,
     })),
 );

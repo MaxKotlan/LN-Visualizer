@@ -19,3 +19,8 @@ export const setNodeMotionIntensity = createAction(
     '[controls] setNodeMotionIntensity',
     props<{ value: number }>(),
 );
+
+export const setNodeTimeIntensity = createAction(
+    '[controls] setNodeTimeIntensity',
+    props<{ value: number }>(),
+);

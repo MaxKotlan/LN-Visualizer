@@ -14,3 +14,8 @@ export const selectNodeMotionIntensity = createSelector(
     renderControlsSelector,
     (state) => state.nodeMotionIntensity,
 );
+
+export const selectNodeTimeIntensity = createSelector(
+    renderControlsSelector,
+    (state) => state.nodeTimeIntensity || 0,
+);
