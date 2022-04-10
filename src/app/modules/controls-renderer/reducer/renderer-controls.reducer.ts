@@ -6,12 +6,14 @@ export interface RendererControlState {
     showGrid: boolean;
     showAxis: boolean;
     showGraphAnimation: boolean;
+    nodeMotionIntensity: number;
 }
 
 const initialState: RendererControlState = {
     showGrid: true,
     showAxis: false,
     showGraphAnimation: false,
+    nodeMotionIntensity: 0.03,
 };
 
 export const reducer = createReducer(
@@ -32,5 +34,9 @@ export const reducer = createReducer(
     on(renderControlActions.setShowGraphAnimation, (state, { value }) => ({
         ...state,
         showGraphAnimation: value,
+    })),
+    on(renderControlActions.setNodeMotionIntensity, (state, { value }) => ({
+        ...state,
+        nodeMotionIntensity: value,
     })),
 );

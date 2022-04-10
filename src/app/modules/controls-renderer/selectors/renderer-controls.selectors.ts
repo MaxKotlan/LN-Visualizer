@@ -9,3 +9,8 @@ export const selectShowGraphAnimation = createSelector(
     renderControlsSelector,
     (state) => state.showGraphAnimation,
 );
+
+export const selectNodeMotionIntensity = createSelector(
+    renderControlsSelector,
+    (state) => state.nodeMotionIntensity,
+);

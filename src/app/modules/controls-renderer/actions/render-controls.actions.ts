@@ -14,3 +14,8 @@ export const setShowGraphAnimation = createAction(
     '[render-controls] setShowGraphAnimation',
     props<{ value: boolean }>(),
 );
+
+export const setNodeMotionIntensity = createAction(
+    '[controls] setNodeMotionIntensity',
+    props<{ value: number }>(),
+);

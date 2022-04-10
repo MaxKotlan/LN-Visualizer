@@ -26,6 +26,7 @@ import {
     selectUniformNodeSize,
     shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
@@ -146,6 +147,10 @@ export class GraphNodeMeshComponent
 
         this.store$.select(selectMinimumNodeSize).subscribe((minimumSize) => {
             this.material.uniforms['minimumSize'] = { value: minimumSize };
+        });
+
+        this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
+            this.material.uniforms['motionIntensity'] = { value: intensity };
         });
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {

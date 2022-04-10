@@ -1,9 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
-import { setShowAxis, setShowGraphAnimation, setShowGrid } from '../../actions';
+import {
+    setNodeMotionIntensity,
+    setShowAxis,
+    setShowGraphAnimation,
+    setShowGrid,
+} from '../../actions';
 import { RendererControlState } from '../../reducer';
-import { selectShowAxis, selectShowGraphAnimation, selectShowGrid } from '../../selectors';
+import {
+    selectNodeMotionIntensity,
+    selectShowAxis,
+    selectShowGraphAnimation,
+    selectShowGrid,
+} from '../../selectors';
 
 @Component({
     selector: 'app-renderer-settings',
@@ -16,6 +27,7 @@ export class RendererSettingsComponent {
     public showGrid$ = this.store$.select(selectShowGrid);
     public showAxis$ = this.store$.select(selectShowAxis);
     public showGraphAnimation$ = this.store$.select(selectShowGraphAnimation);
+    public nodeMotionIntensity$ = this.store$.select(selectNodeMotionIntensity);
 
     setShowGrid(event: MatCheckboxChange) {
         this.store$.dispatch(setShowGrid({ value: event.checked }));
@@ -27,5 +39,9 @@ export class RendererSettingsComponent {
 
     setShowGraphAnimation(event: MatCheckboxChange) {
         this.store$.dispatch(setShowGraphAnimation({ value: event.checked }));
+    }
+
+    setNodeMotionIntensity(event: MatSliderChange) {
+        this.store$.dispatch(setNodeMotionIntensity({ value: event.value || 0.005 }));
     }
 }

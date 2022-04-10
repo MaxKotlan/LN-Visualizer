@@ -3,9 +3,11 @@ import { Shader } from 'three';
 export const ChannelShader = {
     uniforms: {
         sinTime: { value: 0.0 },
+        motionIntensity: { value: 0.0 },
     },
     vertexShader: /*glsl*/ `
     uniform float sinTime;
+    uniform float motionIntensity;
     attribute vec3 color;
 
     varying vec3 vColor;
@@ -21,7 +23,7 @@ export const ChannelShader = {
         vColor = color;
         vec3 moveFactor = vec3(position.x, position.y, position.z);
         float rnd = rand( vec2( position.x, position.z ) )-.5;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + .005*sinTime*moveFactor*rnd+.5, 1.0 );
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + motionIntensity*sinTime*moveFactor*rnd+.5, 1.0 );
 
     }`,
 
