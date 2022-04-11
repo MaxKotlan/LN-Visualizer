@@ -1,4 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
+import { Ray } from 'three';
 import * as controlActions from '../../controls/actions';
 import * as renderControlActions from '../actions';
 
@@ -8,6 +9,7 @@ export interface RendererControlState {
     showGraphAnimation: boolean;
     nodeMotionIntensity: number;
     nodeTimeIntensity: number;
+    mouseRay: Ray;
 }
 
 const initialState: RendererControlState = {
@@ -16,6 +18,7 @@ const initialState: RendererControlState = {
     showGraphAnimation: true,
     nodeMotionIntensity: 0.01,
     nodeTimeIntensity: 0.001,
+    mouseRay: undefined,
 };
 
 export const reducer = createReducer(
@@ -44,5 +47,9 @@ export const reducer = createReducer(
     on(renderControlActions.setNodeTimeIntensity, (state, { value }) => ({
         ...state,
         nodeTimeIntensity: value,
+    })),
+    on(renderControlActions.setMouseRay, (state, { value }) => ({
+        ...state,
+        mouseRay: value,
     })),
 );

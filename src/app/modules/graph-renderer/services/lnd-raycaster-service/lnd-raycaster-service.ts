@@ -1,7 +1,9 @@
 import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } from 'atft';
 import { fromEvent, sampleTime } from 'rxjs';
+import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
 
 interface NearestIntersection {
@@ -24,7 +26,7 @@ export class LndRaycasterService implements OnDestroy {
     private paused = false;
     private canvas: ElementRef | undefined;
 
-    constructor(private renderService: RendererService) {
+    constructor(private renderService: RendererService, private store$: Store<any>) {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onTouchStart = this.onTouchStart.bind(this);
@@ -180,6 +182,9 @@ export class LndRaycasterService implements OnDestroy {
         y = -(y / this.canvas.nativeElement.clientHeight) * 2 + 1;
         const mouseVector = new THREE.Vector3(x, y, 0.5);
         this.raycaster.setFromCamera(mouseVector, this.camera?.camera);
+        // console.log(this.raycaster.ray);
+
+        this.store$.dispatch(setMouseRay({ value: this.raycaster.ray }));
 
         let nearestIntersection: THREE.Intersection | undefined | null;
         for (let k = 0; k < this.groups.length; k++) {
