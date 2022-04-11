@@ -32,7 +32,7 @@ import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
-import { selectClosestPoint } from '../../selectors';
+import { selectClosestPoint, selectFinalPositionFromSearch } from '../../selectors';
 import { LndRaycasterService } from '../../services';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
@@ -151,6 +151,10 @@ export class GraphNodeMeshComponent
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
             this.material.uniforms['motionIntensity'] = { value: intensity };
+        });
+
+        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+            this.material.uniforms['motionOrigin'] = position;
         });
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {

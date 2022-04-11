@@ -9,6 +9,7 @@ export const ChannelShader = {
     uniform float sinTime;
     uniform float motionIntensity;
     attribute vec3 color;
+    uniform vec3 motionOrigin;
 
     varying vec3 vColor;
 
@@ -21,9 +22,10 @@ export const ChannelShader = {
     void main() {
 
         vColor = color;
-        vec3 moveFactor = vec3(position.x, position.y, position.z);
+        vec3 moveFactor = position;
+        float dist = sqrt(distance(position, motionOrigin));
         float rnd = rand( vec2( position.x, position.z ) )-.5;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + motionIntensity*sinTime*moveFactor*rnd+.5, 1.0 );
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + dist*motionIntensity*sinTime*moveFactor*rnd+.5, 1.0 );
 
     }`,
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Shader } from 'three';
+import { Shader, Vector3 } from 'three';
 
 export const NodeShader = {
     uniforms: {
@@ -24,6 +24,7 @@ export const NodeShader = {
     attribute vec3 nodeColor;
     attribute float averageCapacityRatio;
     uniform float motionIntensity;
+    uniform vec3 motionOrigin;
 
     varying vec3 vColor;
 
@@ -38,10 +39,11 @@ export const NodeShader = {
         vColor = nodeColor;
 
         float invertedCap = (1.-averageCapacityRatio);
-        vec3 moveFactor = vec3(position.x, position.y, position.z);
+        vec3 moveFactor = position;// motionOrigin;//vec3(position.x, position.y, position.z);
+        float dist = sqrt(distance(position, motionOrigin));
         float rnd = rand( vec2( position.x, position.z ) )-.5;
 
-        vec4 mvPosition = modelViewMatrix * vec4( position + motionIntensity*sinTime/**invertedCap*/*moveFactor*rnd+.5, 1.0 );
+        vec4 mvPosition = modelViewMatrix * vec4( position + dist*motionIntensity*sinTime/**invertedCap*/*moveFactor*rnd+.5, 1.0 );
 
         gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
 

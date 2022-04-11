@@ -3,6 +3,7 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { meshScale } from '../../../constants/mesh-scale.constant';
 import { GraphState } from '../reducer/graph.reducer';
 import { selectSearchString } from '../../controls/selectors/controls.selectors';
+import { Uniform, Vector3 } from 'three';
 
 export const graphSelector = createFeatureSelector<GraphState>('graphState');
 
@@ -73,6 +74,12 @@ export const selectFinalMatcheNodesFromSearch = createSelector(
 export const selectFinalMatchAliasFromSearch = createSelector(
     selectFinalMatcheNodesFromSearch,
     (nodeMatch) => nodeMatch?.alias || '',
+);
+
+export const selectFinalPositionFromSearch = createSelector(
+    selectFinalMatcheNodesFromSearch,
+    (nodeMatch) =>
+        new Uniform(nodeMatch?.position.clone().multiplyScalar(meshScale) || new Vector3(0, 0, 0)),
 );
 
 // /*Can be optimized by using registry instead*/

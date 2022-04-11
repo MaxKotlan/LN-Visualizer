@@ -10,6 +10,7 @@ import {
 import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import * as THREE from 'three';
 import { GraphState } from '../../reducer';
+import { selectFinalPositionFromSearch } from '../../selectors/graph.selectors';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
 import { ChannelShader } from '../../shaders';
@@ -83,6 +84,10 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             this.updateGeometry();
             this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
             this.rendererService.render();
+        });
+
+        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+            this.material.uniforms['motionOrigin'] = position;
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
