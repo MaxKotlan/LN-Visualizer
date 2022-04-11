@@ -23,7 +23,6 @@ export class SearchComponent {
     }
 
     onTextChange(event: any) {
-        console.log(event);
         if (!!event?.target?.value || event?.target?.value === '')
             this.store$.dispatch(searchGraph({ searchText: event.target.value }));
     }
