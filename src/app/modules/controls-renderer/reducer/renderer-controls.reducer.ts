@@ -14,7 +14,7 @@ const initialState: RendererControlState = {
     showGrid: true,
     showAxis: false,
     showGraphAnimation: true,
-    nodeMotionIntensity: 0.03,
+    nodeMotionIntensity: 0.01,
     nodeTimeIntensity: 0.001,
 };
 
