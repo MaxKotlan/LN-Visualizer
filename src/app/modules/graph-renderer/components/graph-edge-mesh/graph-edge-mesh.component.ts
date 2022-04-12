@@ -82,6 +82,13 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
         );
 
+        // this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
+        //     currentDrawRange = drawRange;
+        //     this.updateGeometry();
+        //     this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+        //     this.rendererService.render();
+        // });
+
         //Update position and color buffers on color buffer update
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
