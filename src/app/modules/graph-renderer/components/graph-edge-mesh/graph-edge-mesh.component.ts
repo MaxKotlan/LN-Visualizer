@@ -82,6 +82,10 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
         );
 
+        this.animationTimeService.cosTime$.subscribe(
+            (elapsed) => (this.material.uniforms['cosTime'] = { value: elapsed }),
+        );
+
         // this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
         //     currentDrawRange = drawRange;
         //     this.updateGeometry();

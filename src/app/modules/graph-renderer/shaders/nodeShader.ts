@@ -11,6 +11,7 @@ export const NodeShader = {
         minimumSize: { value: 0.01 },
         uniformSize: { value: false },
         sinTime: { value: 0.0 },
+        cosTime: { value: 0.0 },
         motionIntensity: { value: 0.0 },
     },
     vertexShader: /*glsl*/ `
@@ -20,6 +21,7 @@ export const NodeShader = {
     uniform bool pointAttenuation;
     uniform float minimumSize;
     uniform float sinTime;
+    uniform float cosTime;
     uniform bool uniformSize;
     attribute vec3 nodeColor;
     attribute float averageCapacityRatio;
@@ -125,7 +127,9 @@ export const NodeShader = {
         float dist = sqrt(distance(position, motionOrigin));
         float rnd = rand( vec2( position.x, position.z ) )-.5;
 
-        vec3 newPos = lnDist*dist*motionIntensity*sinTime/**invertedCap*/*moveFactor*rnd+.5;
+        vec3 timeVec = vec3(sinTime, cosTime, cosTime );
+
+        vec3 newPos = lnDist*dist*motionIntensity*timeVec/**invertedCap*/*moveFactor*rnd+.5;
         // float crazy = minDistanceToLine( newPos, mouseRayOrigin, mouseRayDirection );
 
         vec4 mvPosition = modelViewMatrix * vec4( position + newPos, 1.0 );

@@ -141,6 +141,10 @@ export class GraphNodeMeshComponent
             (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
         );
 
+        this.animationTimeService.cosTime$.subscribe(
+            (elapsed) => (this.material.uniforms['cosTime'] = { value: elapsed }),
+        );
+
         this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
             this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
         });
