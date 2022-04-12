@@ -5,6 +5,7 @@ import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } fro
 import { fromEvent, sampleTime } from 'rxjs';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
+import { Camera, Ray, Vector3 } from 'three';
 
 interface NearestIntersection {
     intersection: THREE.Intersection | undefined | null;
@@ -182,9 +183,17 @@ export class LndRaycasterService implements OnDestroy {
         y = -(y / this.canvas.nativeElement.clientHeight) * 2 + 1;
         const mouseVector = new THREE.Vector3(x, y, 0.5);
         this.raycaster.setFromCamera(mouseVector, this.camera?.camera);
-        // console.log(this.raycaster.ray);
+        //console.log(this.camera.camera.position);
 
-        this.store$.dispatch(setMouseRay({ value: this.raycaster.ray }));
+        this.store$.dispatch(
+            setMouseRay({
+                value: this.raycaster.ray.clone(),
+                //  new Ray(
+                //     (this.camera.camera as Camera).position,
+                //     (this.camera.camera as Camera).rotation.toVector3().normalize(),
+                // ),
+            }),
+        );
 
         let nearestIntersection: THREE.Intersection | undefined | null;
         for (let k = 0; k < this.groups.length; k++) {
