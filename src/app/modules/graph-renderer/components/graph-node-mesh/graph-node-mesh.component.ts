@@ -166,8 +166,12 @@ export class GraphNodeMeshComponent
         });
 
         this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
-            this.material.uniforms['mouseRayOrigin'] = new Uniform(ray.value.origin);
-            this.material.uniforms['mouseRayDirection'] = new Uniform(ray.value.direction);
+            this.material.uniforms['mouseRayOrigin'] = new Uniform(
+                ray.value.origin || new THREE.Vector3(0, 0, 0),
+            );
+            this.material.uniforms['mouseRayDirection'] = new Uniform(
+                ray.value.direction || new THREE.Vector3(0, 0, 0),
+            );
         });
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {
