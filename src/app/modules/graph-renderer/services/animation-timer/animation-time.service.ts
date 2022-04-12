@@ -38,7 +38,18 @@ export class AnimationTimeService {
                     : of(0),
             ),
         );
+        this.cosTime$ = this.store$.select(selectShowGraphAnimation).pipe(
+            switchMap((shouldShow) =>
+                shouldShow
+                    ? animationFrames(this.customTSProvider).pipe(
+                          withLatestFrom(this.store$.select(selectNodeTimeIntensity)),
+                          map(([{ elapsed }, timeIntensity]) => Math.cos(elapsed * timeIntensity)),
+                      )
+                    : of(0),
+            ),
+        );
     }
 
     public sinTime$: Observable<number>;
+    public cosTime$: Observable<number>;
 }

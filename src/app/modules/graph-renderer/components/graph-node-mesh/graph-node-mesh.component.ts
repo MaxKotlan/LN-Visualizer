@@ -9,6 +9,7 @@ import {
     SimpleChanges,
     SkipSelf,
 } from '@angular/core';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     AbstractObject3D,
@@ -26,13 +27,18 @@ import {
     selectUniformNodeSize,
     shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
-import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
+import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
+import {
+    selectMouseRay,
+    selectNodeMotionIntensity,
+} from 'src/app/modules/controls-renderer/selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
+import { Uniform } from 'three';
 import { GraphState } from '../../reducer';
-import { selectClosestPoint } from '../../selectors';
+import { selectClosestPoint, selectFinalPositionFromSearch } from '../../selectors';
 import { LndRaycasterService } from '../../services';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
@@ -63,6 +69,7 @@ export class GraphNodeMeshComponent
         public toolTipService: ToolTipService,
         private nodeBuffersService: NodeBuffersService,
         private animationTimeService: AnimationTimeService,
+        private actions: Actions,
     ) {
         super(rendererService, parent);
     }
@@ -107,6 +114,7 @@ export class GraphNodeMeshComponent
 
     private onClick(event: any) {
         const intersection = event as THREE.Intersection;
+        console.log(intersection);
         this.store$
             .select(selectClosestPoint(intersection.point))
             .pipe(take(1))
@@ -133,6 +141,10 @@ export class GraphNodeMeshComponent
             (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
         );
 
+        this.animationTimeService.cosTime$.subscribe(
+            (elapsed) => (this.material.uniforms['cosTime'] = { value: elapsed }),
+        );
+
         this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
             this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
         });
@@ -151,6 +163,19 @@ export class GraphNodeMeshComponent
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
             this.material.uniforms['motionIntensity'] = { value: intensity };
+        });
+
+        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+            this.material.uniforms['motionOrigin'] = position;
+        });
+
+        this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
+            this.material.uniforms['mouseRayOrigin'] = new Uniform(
+                ray.value.origin || new THREE.Vector3(0, 0, 0),
+            );
+            this.material.uniforms['mouseRayDirection'] = new Uniform(
+                ray.value.direction || new THREE.Vector3(0, 0, 0),
+            );
         });
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {

@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { Ray } from 'three';
 
 export const setShowGrid = createAction(
     '[render-controls] setShowGrid',
@@ -24,3 +25,5 @@ export const setNodeTimeIntensity = createAction(
     '[controls] setNodeTimeIntensity',
     props<{ value: number }>(),
 );
+
+export const setMouseRay = createAction('[controls] setMouseRay', props<{ value: Ray }>());

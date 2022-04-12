@@ -127,7 +127,7 @@ export class GraphMeshStateService {
                     }
                 }
             });
-            this.channelBufferService.vertex.onUpdate.next(i);
+            this.channelBufferService.vertex.onUpdate.next(i * 2);
         }),
     );
 
@@ -160,7 +160,7 @@ export class GraphMeshStateService {
                     }
                 }
             });
-            this.channelBufferService.color.onUpdate.next(i);
+            this.channelBufferService.color.onUpdate.next(i * 2);
         }),
     );
 

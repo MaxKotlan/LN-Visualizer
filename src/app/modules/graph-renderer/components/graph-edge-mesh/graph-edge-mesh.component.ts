@@ -1,5 +1,6 @@
 import { Component, Input, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import {
@@ -7,9 +8,12 @@ import {
     selectEdgeDottedLine,
     shouldRenderEdges,
 } from 'src/app/modules/controls-channel/selectors';
+import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import * as THREE from 'three';
+import { Uniform } from 'three';
 import { GraphState } from '../../reducer';
+import { selectFinalPositionFromSearch } from '../../selectors/graph.selectors';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { ChannelBuffersService } from '../../services/channel-buffers/channel-buffers.service';
 import { ChannelShader } from '../../shaders';
@@ -32,6 +36,7 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         private channelBufferService: ChannelBuffersService,
         private store$: Store<GraphState>,
         private animationTimeService: AnimationTimeService,
+        private actions: Actions,
         @SkipSelf() @Optional() protected override parent: AbstractObject3D<any>,
     ) {
         super(rendererService, parent);
@@ -77,12 +82,36 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
             (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
         );
 
+        this.animationTimeService.cosTime$.subscribe(
+            (elapsed) => (this.material.uniforms['cosTime'] = { value: elapsed }),
+        );
+
+        // this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
+        //     currentDrawRange = drawRange;
+        //     this.updateGeometry();
+        //     this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
+        //     this.rendererService.render();
+        // });
+
         //Update position and color buffers on color buffer update
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
             this.updateGeometry();
             this.geometry.setDrawRange(0, currentShouldRender ? drawRange : 0);
             this.rendererService.render();
+        });
+
+        this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
+            this.material.uniforms['mouseRayOrigin'] = new Uniform(
+                ray.value.origin || new THREE.Vector3(0, 0, 0),
+            );
+            this.material.uniforms['mouseRayDirection'] = new Uniform(
+                ray.value.direction || new THREE.Vector3(0, 0, 0),
+            );
+        });
+
+        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+            this.material.uniforms['motionOrigin'] = position;
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
