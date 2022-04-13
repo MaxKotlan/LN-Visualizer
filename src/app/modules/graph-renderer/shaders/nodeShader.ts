@@ -32,11 +32,11 @@ export const NodeShader = {
 
     varying vec3 vColor;
 
-    float rand(vec2 st) {
-        return fract(sin(dot(st.xy,
-                             vec2(12.9898,78.233)))*
-            43758.5453123);
-    }
+    // float rand(vec2 st) {
+    //     return fract(sin(dot(st.xy,
+    //                          vec2(12.9898,78.233)))*
+    //         43758.5453123);
+    // }
 
     float dline( vec2 p, vec2 a, vec2 b ) {
     
@@ -125,11 +125,11 @@ export const NodeShader = {
         float invertedCap = (1.-averageCapacityRatio);
         vec3 moveFactor = position;// motionOrigin;//vec3(position.x, position.y, position.z);
         float dist = sqrt(distance(position, motionOrigin));
-        float rnd = rand( vec2( position.x, position.z ) )-.5;
+        // float rnd = rand( vec2( position.x, position.z ) )-.5;
 
         vec3 timeVec = vec3(sinTime, cosTime, cosTime );
 
-        vec3 newPos = lnDist*dist*motionIntensity*timeVec/**invertedCap*/*moveFactor*rnd+.5;
+        vec3 newPos = lnDist*dist*motionIntensity*timeVec/**invertedCap*/*moveFactor;
         // float crazy = minDistanceToLine( newPos, mouseRayOrigin, mouseRayDirection );
 
         vec4 mvPosition = modelViewMatrix * vec4( position + newPos, 1.0 );

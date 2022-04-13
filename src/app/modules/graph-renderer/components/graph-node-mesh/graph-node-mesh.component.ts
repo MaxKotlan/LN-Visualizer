@@ -1,12 +1,10 @@
 import {
     Component,
     EventEmitter,
-    Input,
     OnChanges,
     OnInit,
     Optional,
     Output,
-    SimpleChanges,
     SkipSelf,
 } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
@@ -19,7 +17,7 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { animationFrames, map, take, TimestampProvider } from 'rxjs';
+import { take } from 'rxjs';
 import {
     selectMinimumNodeSize,
     selectNodeSize,
@@ -28,13 +26,9 @@ import {
     shouldRenderNodes,
 } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
-import {
-    selectMouseRay,
-    selectNodeMotionIntensity,
-} from 'src/app/modules/controls-renderer/selectors';
+import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
-import { BufferRef } from 'src/app/types/bufferRef.interface';
 import * as THREE from 'three';
 import { Uniform } from 'three';
 import { GraphState } from '../../reducer';
@@ -43,6 +37,7 @@ import { LndRaycasterService } from '../../services';
 import { AnimationTimeService } from '../../services/animation-timer/animation-time.service';
 import { NodeBuffersService } from '../../services/node-buffers/node-buffers.service';
 import { NodeShader } from '../../shaders';
+import { NodePoint } from '../../three-js-objects/NodePoint';
 
 @Component({
     selector: 'app-graph-node-mesh',
@@ -50,7 +45,7 @@ import { NodeShader } from '../../shaders';
     template: '<ng-content></ng-content>',
 })
 export class GraphNodeMeshComponent
-    extends AbstractObject3D<THREE.Points | THREE.Mesh>
+    extends AbstractObject3D<NodePoint>
     implements OnChanges, OnInit
 {
     @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
@@ -126,24 +121,26 @@ export class GraphNodeMeshComponent
             });
     }
 
-    protected newObject3DInstance(): THREE.Points | THREE.Mesh {
+    protected newObject3DInstance(): NodePoint {
         this.updateGeometry();
         this.generateMaterial();
         this.handleUpdates();
-        return new THREE.Points(this.geometry, this.material);
+        return new NodePoint(this.geometry, this.material);
     }
 
     private handleUpdates() {
         let currentDrawRange;
         let currentShouldRender = true;
 
-        this.animationTimeService.sinTime$.subscribe(
-            (elapsed) => (this.material.uniforms['sinTime'] = { value: elapsed }),
-        );
+        this.animationTimeService.sinTime$.subscribe((elapsed) => {
+            this.material.uniforms['sinTime'] = { value: elapsed };
+            this.object?.setSinTime(elapsed);
+        });
 
-        this.animationTimeService.cosTime$.subscribe(
-            (elapsed) => (this.material.uniforms['cosTime'] = { value: elapsed }),
-        );
+        this.animationTimeService.cosTime$.subscribe((elapsed) => {
+            this.material.uniforms['cosTime'] = { value: elapsed };
+            this.object?.setCosTime(elapsed);
+        });
 
         this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
             this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
@@ -162,11 +159,14 @@ export class GraphNodeMeshComponent
         });
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
-            this.material.uniforms['motionIntensity'] = { value: intensity };
+            const updatedIntensity = intensity / 1000.0;
+            this.material.uniforms['motionIntensity'] = { value: updatedIntensity };
+            this.object?.setMotionIntenstiy(updatedIntensity);
         });
 
         this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
             this.material.uniforms['motionOrigin'] = position;
+            this.object?.setMotionOrigin(position.value);
         });
 
         this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
