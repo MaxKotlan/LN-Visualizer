@@ -2,10 +2,11 @@ import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } from 'atft';
-import { fromEvent, sampleTime } from 'rxjs';
+import { combineLatest, fromEvent, map, sampleTime } from 'rxjs';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
 import { Camera, Ray, Vector3 } from 'three';
+import { AnimationTimeService } from '../animation-timer/animation-time.service';
 
 interface NearestIntersection {
     intersection: THREE.Intersection | undefined | null;
@@ -27,7 +28,11 @@ export class LndRaycasterService implements OnDestroy {
     private paused = false;
     private canvas: ElementRef | undefined;
 
-    constructor(private renderService: RendererService, private store$: Store<any>) {
+    constructor(
+        private animationTimeService: AnimationTimeService,
+        private renderService: RendererService,
+        private store$: Store<any>,
+    ) {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onTouchStart = this.onTouchStart.bind(this);
@@ -46,8 +51,15 @@ export class LndRaycasterService implements OnDestroy {
         //this.canvas?.nativeElement.addEventListener('mousemove', this.onMouseMove);
         //this.canvas?.nativeElement.addEventListener('touchstart', this.onTouchStart);
 
-        fromEvent(this.canvas?.nativeElement, 'mousemove')
-            .pipe(untilDestroyed(this), sampleTime(100))
+        combineLatest([
+            this.animationTimeService.sinTime$,
+            fromEvent(this.canvas?.nativeElement, 'mousemove'),
+        ])
+            .pipe(
+                untilDestroyed(this),
+                map(([a, b]) => b),
+                sampleTime(100),
+            )
             .subscribe((e) => {
                 this.drag = true;
                 this.onMouseMove(e);
