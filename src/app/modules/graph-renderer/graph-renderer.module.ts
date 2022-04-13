@@ -18,6 +18,7 @@ import { graphStatisticsReducer, nodeStatisticsReducer, reducer } from './reduce
 import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
 import { ChannelBuffersService } from './services/channel-buffers/channel-buffers.service';
 import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
+import { RaycasterRayComponent } from './components/raycaster-ray/raycaster-ray.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { NodeBuffersService } from './services/node-buffers/node-buffers.service
         LndRaycasterEnableDirective,
         LndRaycasterCameraDirective,
         LndRaycasterSceneDirective,
+        RaycasterRayComponent,
     ],
     providers: [
         LndRaycasterService,

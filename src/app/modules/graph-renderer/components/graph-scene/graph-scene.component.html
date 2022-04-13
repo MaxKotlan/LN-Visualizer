@@ -6,7 +6,7 @@
             [far]="11000"
             [positionX]="20"
             [positionY]="50"
-            [positionZ]="350"
+            [positionZ]="650"
             lnd-raycaster-enable
             lnd-raycaster-camera
         >
@@ -20,13 +20,8 @@
             ></atft-grid-helper>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-graph-node-mesh *ngIf="true"></app-graph-node-mesh>
-            <!-- [uniformNodeSize]="selectUniformNodeSize$ | async"
-                [minimumNodeSize]="selectMinimumNodeSize$ | async"
-                [spriteSize]="(selectNodeSize$ | async) || 0"
-                [pointSizeAttenuation]="(selectPointAttenuation$ | async) || false"
-                [useSprite]="(selectPointUseIcon$ | async) || false"
-                [shouldRender]="(shouldRenderNodes$ | async) || false" -->
             <app-graph-edge-mesh></app-graph-edge-mesh>
+            <!-- <app-raycaster-ray></app-raycaster-ray> -->
         </atft-scene>
     </atft-renderer-canvas>
 </atft-orbit-controls>
