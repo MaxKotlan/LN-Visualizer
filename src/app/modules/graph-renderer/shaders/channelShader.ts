@@ -17,11 +17,11 @@ export const ChannelShader = {
 
     varying vec3 vColor;
 
-    float rand(vec2 st) {
-        return fract(sin(dot(st.xy,
-                             vec2(12.9898,78.233)))*
-            43758.5453123);
-    }
+    // float rand(vec2 st) {
+    //     return fract(sin(dot(st.xy,
+    //                          vec2(12.9898,78.233)))*
+    //         43758.5453123);
+    // }
 
     float dline( vec2 p, vec2 a, vec2 b ) {
         
@@ -53,8 +53,8 @@ export const ChannelShader = {
         vec3 moveFactor = position;
         vec3 timeVec = vec3(sinTime, cosTime, cosTime );
         float dist = sqrt(distance(position, motionOrigin));
-        float rnd = rand( vec2( position.x, position.z ) )-.5;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + lnDist*dist*motionIntensity*timeVec*moveFactor*rnd+.5, 1.0 );
+        //float rnd = rand( vec2( position.x, position.z ) )-.5;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position + lnDist*dist*motionIntensity*timeVec*moveFactor, 1.0 );
 
     }`,
 
