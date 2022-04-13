@@ -2,7 +2,7 @@ import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } from 'atft';
-import { combineLatest, fromEvent, map, sampleTime } from 'rxjs';
+import { combineLatest, fromEvent, map, sampleTime, tap } from 'rxjs';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
 import { Camera, Ray, Vector3 } from 'three';
@@ -53,7 +53,11 @@ export class LndRaycasterService implements OnDestroy {
 
         combineLatest([
             this.animationTimeService.sinTime$,
-            fromEvent(this.canvas?.nativeElement, 'mousemove'),
+            fromEvent(this.canvas?.nativeElement, 'mousemove').pipe(
+                tap(() => {
+                    this.drag = true;
+                }),
+            ),
         ])
             .pipe(
                 untilDestroyed(this),
@@ -61,16 +65,15 @@ export class LndRaycasterService implements OnDestroy {
                 sampleTime(100),
             )
             .subscribe((e) => {
-                this.drag = true;
                 this.onMouseMove(e);
             });
 
         fromEvent(this.canvas?.nativeElement, 'mousedown')
-            .pipe(untilDestroyed(this), sampleTime(100))
+            .pipe(untilDestroyed(this))
             .subscribe(() => (this.drag = false));
 
         fromEvent(this.canvas?.nativeElement, 'mouseup')
-            .pipe(untilDestroyed(this), sampleTime(100))
+            .pipe(untilDestroyed(this))
             .subscribe(this.onClick.bind(this));
 
         //fromEvent(this.canvas?.nativeElement, 'dragenter').subscribe((e) => console.log('drag', e));
