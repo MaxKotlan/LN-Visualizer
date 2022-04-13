@@ -5,3 +5,7 @@ mat-form-field {
 :host ::ng-deep .mat-form-field-infix {
     width: unset;
 }
+
+:host {
+    width: 100%;
+}
