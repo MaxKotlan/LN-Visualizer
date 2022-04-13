@@ -124,8 +124,10 @@ export class GraphNodeMeshComponent
     protected newObject3DInstance(): NodePoint {
         this.updateGeometry();
         this.generateMaterial();
+        const mesh = new NodePoint(this.geometry, this.material);
+        this.object = mesh;
         this.handleUpdates();
-        return new NodePoint(this.geometry, this.material);
+        return mesh;
     }
 
     private handleUpdates() {
