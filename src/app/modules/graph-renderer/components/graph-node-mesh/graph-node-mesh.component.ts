@@ -109,7 +109,6 @@ export class GraphNodeMeshComponent
 
     private onClick(event: any) {
         const intersection = event as THREE.Intersection;
-        console.log(intersection);
         this.store$
             .select(selectClosestPoint(intersection.point))
             .pipe(take(1))
