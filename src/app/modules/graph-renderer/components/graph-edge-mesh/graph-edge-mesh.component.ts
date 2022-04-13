@@ -121,7 +121,8 @@ export class GraphEdgeMeshComponent extends AbstractObject3D<THREE.LineSegments>
         });
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
-            this.material.uniforms['motionIntensity'] = { value: intensity };
+            const updatedIntensity = intensity / 1000.0;
+            this.material.uniforms['motionIntensity'] = { value: updatedIntensity };
         });
 
         this.store$.select(selectEdgeDottedLine).subscribe((renderDottedLine) => {
