@@ -7,7 +7,6 @@ import {
     Output,
     SkipSelf,
 } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     AbstractObject3D,
@@ -41,7 +40,6 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
     @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() click = new EventEmitter<RaycasterEmitEvent>();
-    private material: THREE.ShaderMaterial | null = null;
 
     constructor(
         protected override rendererService: RendererService,
@@ -52,16 +50,11 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
         private nodeGeometry: NodeGeometry,
         private nodeMaterial: NodeMaterial,
         private animationTimeService: AnimationTimeService,
-        private actions: Actions,
     ) {
         super(rendererService, parent);
     }
 
-    protected spriteTexture: THREE.Texture | undefined;
-
     override ngOnInit(): void {
-        this.spriteTexture = new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg');
-        this.spriteTexture.flipY = false;
         super.ngOnInit();
         this.raycasterService.addGroup(this);
         this.subscribeEvents();
@@ -111,7 +104,6 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
     }
 
     protected newObject3DInstance(): NodePoint {
-        // this.generateMaterial();
         const mesh = new NodePoint(this.nodeGeometry, this.nodeMaterial);
         this.object = mesh;
         this.handleUpdates();
@@ -120,65 +112,17 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
     }
 
     private handleUpdates() {
-        let currentDrawRange;
-        let currentShouldRender = true;
+        this.animationTimeService.sinTime$.subscribe((elapsed) => this.object?.setSinTime(elapsed));
 
-        this.animationTimeService.sinTime$.subscribe((elapsed) => {
-            // this.material.uniforms['sinTime'] = { value: elapsed };
-            this.object?.setSinTime(elapsed);
-        });
-
-        this.animationTimeService.cosTime$.subscribe((elapsed) => {
-            // this.material.uniforms['cosTime'] = { value: elapsed };
-            this.object?.setCosTime(elapsed);
-        });
-
-        // this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
-        //     this.material.uniforms['pointAttenuation'] = { value: pointAttenuation };
-        // });
-
-        // this.store$.select(selectUniformNodeSize).subscribe((uniformSize) => {
-        //     this.material.uniforms['uniformSize'] = { value: uniformSize };
-        // });
-
-        // this.store$.select(selectNodeSize).subscribe((nodeSize) => {
-        //     this.material.uniforms['size'] = { value: nodeSize };
-        // });
-
-        // this.store$.select(selectMinimumNodeSize).subscribe((minimumSize) => {
-        //     this.material.uniforms['minimumSize'] = { value: minimumSize };
-        // });
+        this.animationTimeService.cosTime$.subscribe((elapsed) => this.object?.setCosTime(elapsed));
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
             const updatedIntensity = intensity / 1000.0;
-            // this.material.uniforms['motionIntensity'] = { value: updatedIntensity };
             this.object?.setMotionIntenstiy(updatedIntensity);
         });
 
         this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
-            // this.material.uniforms['motionOrigin'] = position;
             this.object?.setMotionOrigin(position.value);
         });
-
-        // this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
-        //     this.material.uniforms['mouseRayOrigin'] = new Uniform(
-        //         ray.value.origin || new THREE.Vector3(0, 0, 0),
-        //     );
-        //     this.material.uniforms['mouseRayDirection'] = new Uniform(
-        //         ray.value.direction || new THREE.Vector3(0, 0, 0),
-        //     );
-        // });
     }
-
-    // protected generateMaterial() {
-    //     const nodeShader = NodeShader;
-    //     nodeShader.uniforms['pointTexture'] = { value: this.spriteTexture };
-    //     nodeShader.uniforms['size'] = { value: 20 };
-    //     nodeShader.uniforms['uniformSize'] = { value: true };
-    //     this.material = new THREE.ShaderMaterial(nodeShader);
-    //     this.material.uniforms['size'] = { value: 20 };
-    //     this.material.alphaTest = 0.5;
-    //     this.material.transparent = true;
-    //     this.material.needsUpdate = true;
-    // }
 }

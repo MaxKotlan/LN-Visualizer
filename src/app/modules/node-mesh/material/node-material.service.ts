@@ -40,45 +40,41 @@ export class NodeMaterial extends THREE.ShaderMaterial {
     }
 
     private handleUpdates() {
-        // let currentDrawRange;
-        // let currentShouldRender = true;
+        this.animationTimeService.sinTime$.subscribe(
+            (elapsed) => (this.uniforms['sinTime'] = { value: elapsed }),
+        );
 
-        this.animationTimeService.sinTime$.subscribe((elapsed) => {
-            this.uniforms['sinTime'] = { value: elapsed };
-            // this.object?.setSinTime(elapsed);
-        });
+        this.animationTimeService.cosTime$.subscribe(
+            (elapsed) => (this.uniforms['cosTime'] = { value: elapsed }),
+        );
 
-        this.animationTimeService.cosTime$.subscribe((elapsed) => {
-            this.uniforms['cosTime'] = { value: elapsed };
-            // this.object?.setCosTime(elapsed);
-        });
+        this.store$
+            .select(selectPointAttenuation)
+            .subscribe(
+                (pointAttenuation) =>
+                    (this.uniforms['pointAttenuation'] = { value: pointAttenuation }),
+            );
 
-        this.store$.select(selectPointAttenuation).subscribe((pointAttenuation) => {
-            this.uniforms['pointAttenuation'] = { value: pointAttenuation };
-        });
+        this.store$
+            .select(selectUniformNodeSize)
+            .subscribe((uniformSize) => (this.uniforms['uniformSize'] = { value: uniformSize }));
 
-        this.store$.select(selectUniformNodeSize).subscribe((uniformSize) => {
-            this.uniforms['uniformSize'] = { value: uniformSize };
-        });
+        this.store$
+            .select(selectNodeSize)
+            .subscribe((nodeSize) => (this.uniforms['size'] = { value: nodeSize }));
 
-        this.store$.select(selectNodeSize).subscribe((nodeSize) => {
-            this.uniforms['size'] = { value: nodeSize };
-        });
-
-        this.store$.select(selectMinimumNodeSize).subscribe((minimumSize) => {
-            this.uniforms['minimumSize'] = { value: minimumSize };
-        });
+        this.store$
+            .select(selectMinimumNodeSize)
+            .subscribe((minimumSize) => (this.uniforms['minimumSize'] = { value: minimumSize }));
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
             const updatedIntensity = intensity / 1000.0;
             this.uniforms['motionIntensity'] = { value: updatedIntensity };
-            // this.object?.setMotionIntenstiy(updatedIntensity);
         });
 
-        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
-            this.uniforms['motionOrigin'] = position;
-            // this.object?.setMotionOrigin(position.value);
-        });
+        this.store$
+            .select(selectFinalPositionFromSearch)
+            .subscribe((position) => (this.uniforms['motionOrigin'] = position));
 
         this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
             this.uniforms['mouseRayOrigin'] = new Uniform(
