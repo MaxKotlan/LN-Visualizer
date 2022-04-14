@@ -27,7 +27,7 @@ import { GraphState } from '../../graph-renderer/reducer';
 import { selectClosestPoint, selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { LndRaycasterService } from '../../graph-renderer/services';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { NodePoint } from '../../graph-renderer/three-js-objects/NodePoint';
+import { NodePoint } from '../three-js-objects/NodePoint';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 
