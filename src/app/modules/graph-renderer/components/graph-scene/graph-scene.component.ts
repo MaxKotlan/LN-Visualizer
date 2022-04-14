@@ -27,7 +27,7 @@ import { Vector3 } from 'three';
 import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { selectFinalMatcheNodesFromSearch } from '../../selectors';
-import { GraphMeshStateService } from '../../services';
+// import { GraphMeshStateService } from '../../services';
 
 @Component({
     selector: 'app-graph-scene',
@@ -44,14 +44,14 @@ export class GraphSceneComponent implements AfterViewInit {
         private store$: Store<GraphState>,
         private actions$: Actions,
         private animationService: AnimationService,
-        private graphMeshStateService: GraphMeshStateService,
+        // private graphMeshStateService: GraphMeshStateService,
         public toolTipService: ToolTipService,
     ) {}
 
-    public positions$ = this.graphMeshStateService.nodeVertices$;
-    public colors$ = this.graphMeshStateService.nodeColors$;
-    public selectChannelData$ = this.graphMeshStateService.channelData$;
-    public selectNodeCapacity$ = this.graphMeshStateService.nodeCapacity$;
+    // public positions$ = this.graphMeshStateService.nodeVertices$;
+    // public colors$ = this.graphMeshStateService.nodeColors$;
+    // public selectChannelData$ = this.graphMeshStateService.channelData$;
+    // public selectNodeCapacity$ = this.graphMeshStateService.nodeCapacity$;
     public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
     public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);

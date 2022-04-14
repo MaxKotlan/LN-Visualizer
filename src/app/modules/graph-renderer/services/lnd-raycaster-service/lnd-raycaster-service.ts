@@ -5,7 +5,7 @@ import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } fro
 import { combineLatest, fromEvent, map, sampleTime, tap } from 'rxjs';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
-import { Camera, Ray, Vector3 } from 'three';
+import { Camera, Intersection, Ray, Vector3 } from 'three';
 import { AnimationTimeService } from '../animation-timer/animation-time.service';
 
 interface NearestIntersection {
@@ -27,6 +27,7 @@ export class LndRaycasterService implements OnDestroy {
     private groups: Array<AbstractObject3D<any>> = [];
     private paused = false;
     private canvas: ElementRef | undefined;
+    private lastIntersection: Intersection;
 
     constructor(
         private animationTimeService: AnimationTimeService,
@@ -130,13 +131,16 @@ export class LndRaycasterService implements OnDestroy {
             return;
         }
         event.preventDefault();
-        //console.log(event);
         const i = this.getFirstIntersectedGroup(event.layerX, event.layerY);
-        if (!this.selected || this.selected !== i?.object) {
-            if (this.selected) {
-                this.selected.dispatchEvent({ type: RaycasterEvent.mouseExit });
-                this.selected = null;
-            }
+
+        if (
+            this.selected &&
+            (this.selected?.id !== i?.object?.id || this.lastIntersection.index !== i.index)
+        ) {
+            this.selected.dispatchEvent({ type: RaycasterEvent.mouseExit });
+            this.selected = null;
+        }
+        if (!this.selected) {
             if (i && i.object) {
                 this.selected = i.object;
                 this.selected.dispatchEvent({
@@ -144,8 +148,10 @@ export class LndRaycasterService implements OnDestroy {
                     ...i,
                     mouseEvent: event,
                 });
+                this.lastIntersection = i;
             }
         }
+
         //console.log(event);
         // if (!this.isReady(true)) {
         //     return;
@@ -177,6 +183,7 @@ export class LndRaycasterService implements OnDestroy {
             return;
         }
         //event.preventDefault();
+        if (this.drag) return;
         const i = this.getFirstIntersectedGroup(event.touches[0].clientX, event.touches[0].clientY);
         if (i && i.object) {
             i.object.dispatchEvent({ type: RaycasterEvent.click, ...i, mouseEvent: event });

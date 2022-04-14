@@ -18,6 +18,7 @@ import {
     SphereMeshComponent,
 } from 'atft';
 import { take } from 'rxjs';
+import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import {
     selectMinimumNodeSize,
     selectNodeSize,
@@ -30,7 +31,7 @@ import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/sel
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
-import { Uniform } from 'three';
+import { Uniform, Vector3 } from 'three';
 import { GraphState } from '../../reducer';
 import { selectClosestPoint, selectFinalPositionFromSearch } from '../../selectors';
 import { LndRaycasterService } from '../../services';
@@ -87,6 +88,7 @@ export class GraphNodeMeshComponent
     }
 
     private onMouseExit() {
+        this.handleHoverUpdate(new Vector3(0, 0, 0));
         this.toolTipService.close();
         document.body.style.cursor = null as unknown as string;
     }
@@ -99,6 +101,7 @@ export class GraphNodeMeshComponent
             .pipe(take(1))
             .subscribe((node) => {
                 if (!node) return;
+                this.handleHoverUpdate(node.position);
                 this.toolTipService.open(
                     event.mouseEvent.clientX,
                     event.mouseEvent.clientY,
@@ -126,7 +129,14 @@ export class GraphNodeMeshComponent
         const mesh = new NodePoint(this.geometry, this.material);
         this.object = mesh;
         this.handleUpdates();
+        this.handleHoverUpdate(new Vector3(0, 0, 0));
         return mesh;
+    }
+
+    private handleHoverUpdate(position: Vector3) {
+        this.material.uniforms['hoverOrigin'] = new Uniform(
+            position.clone().multiplyScalar(meshScale),
+        );
     }
 
     private handleUpdates() {

@@ -15,10 +15,12 @@ import {
 } from './directives';
 import { ChannelEffects, NodeEffects } from './effects';
 import { graphStatisticsReducer, nodeStatisticsReducer, reducer } from './reducer';
-import { ChannelColorService, GraphMeshStateService, LndRaycasterService } from './services';
+import { ChannelColorService, LndRaycasterService } from './services';
 import { ChannelBuffersService } from './services/channel-buffers/channel-buffers.service';
 import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
 import { RaycasterRayComponent } from './components/raycaster-ray/raycaster-ray.component';
+import { NodeMeshEffects } from './effects/node-mesh.effects';
+import { ChannelMeshEffects } from './effects/channel-mesh.effects';
 
 @NgModule({
     declarations: [
@@ -33,7 +35,6 @@ import { RaycasterRayComponent } from './components/raycaster-ray/raycaster-ray.
     ],
     providers: [
         LndRaycasterService,
-        GraphMeshStateService,
         ChannelColorService,
         NodeBuffersService,
         ChannelBuffersService,
@@ -42,7 +43,12 @@ import { RaycasterRayComponent } from './components/raycaster-ray/raycaster-ray.
         CommonModule,
         AtftModule,
         GraphNetworkingModule,
-        EffectsModule.forFeature([NodeEffects, ChannelEffects]),
+        EffectsModule.forFeature([
+            NodeEffects,
+            ChannelEffects,
+            NodeMeshEffects,
+            ChannelMeshEffects,
+        ]),
         StoreModule.forFeature('graphState', reducer),
         StoreModule.forFeature('graphStatisticsState', graphStatisticsReducer.reducer),
         StoreModule.forFeature('nodeStatisticsState', nodeStatisticsReducer.reducer),

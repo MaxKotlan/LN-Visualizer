@@ -29,6 +29,7 @@ export const NodeShader = {
     uniform vec3 motionOrigin;
     uniform vec3 mouseRayOrigin;
     uniform vec3 mouseRayDirection;
+    uniform vec3 hoverOrigin;
 
     varying vec3 vColor;
 
@@ -127,6 +128,11 @@ export const NodeShader = {
         float dist = sqrt(distance(position, motionOrigin));
         // float rnd = rand( vec2( position.x, position.z ) )-.5;
 
+        float hoversize = 0.0;
+
+        if (position == hoverOrigin)
+            hoversize = 8.0;
+
         vec3 timeVec = vec3(sinTime, cosTime, cosTime );
 
         vec3 newPos = lnDist*dist*motionIntensity*timeVec/**invertedCap*/*moveFactor;
@@ -134,7 +140,9 @@ export const NodeShader = {
 
         vec4 mvPosition = modelViewMatrix * vec4( position + newPos, 1.0 );
 
-        gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) );
+
+
+        gl_PointSize = (size * (uniformSize ? 1. : averageCapacityRatio) + minimumSize) *  ( 500.0 / (pointAttenuation ? -mvPosition.z : 500.0 ) )+hoversize;
 
         gl_Position = projectionMatrix * mvPosition;
 
