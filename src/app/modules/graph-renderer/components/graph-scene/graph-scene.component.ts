@@ -12,22 +12,14 @@ import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
-import {
-    selectPointUseIcon,
-    shouldRenderNodes,
-} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
-import {
-    selectCameraFov,
-    shouldRenderLabels,
-} from 'src/app/modules/controls/selectors/controls.selectors';
+import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { selectFinalMatcheNodesFromSearch } from '../../selectors';
-// import { GraphMeshStateService } from '../../services';
 
 @Component({
     selector: 'app-graph-scene',
@@ -44,17 +36,9 @@ export class GraphSceneComponent implements AfterViewInit {
         private store$: Store<GraphState>,
         private actions$: Actions,
         private animationService: AnimationService,
-        // private graphMeshStateService: GraphMeshStateService,
         public toolTipService: ToolTipService,
     ) {}
 
-    // public positions$ = this.graphMeshStateService.nodeVertices$;
-    // public colors$ = this.graphMeshStateService.nodeColors$;
-    // public selectChannelData$ = this.graphMeshStateService.channelData$;
-    // public selectNodeCapacity$ = this.graphMeshStateService.nodeCapacity$;
-    public selectPointUseIcon$ = this.store$.select(selectPointUseIcon);
-    public shouldRenderLabels$ = this.store$.select(shouldRenderLabels);
-    public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
     public selectCameraFov$ = this.store$.select(selectCameraFov);
     public showGrid$ = this.store$.select(selectShowGrid);
     public showAxis$ = this.store$.select(selectShowAxis);
