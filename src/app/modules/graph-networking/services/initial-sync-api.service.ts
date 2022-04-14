@@ -16,7 +16,7 @@ export class InitialSyncApiService {
                 `${location.origin.replace('http://', 'ws://').replace('https://', 'wss://')}/api/`,
             );
         } else {
-            this.subject = webSocket(`wss://lnvisualizer.com/api/`);
+            this.subject = webSocket(`ws://localhost:5647`);
         }
     }
 

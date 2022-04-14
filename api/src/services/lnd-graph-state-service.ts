@@ -1,9 +1,10 @@
 import { injectable } from 'inversify';
-import { LndAuthService } from './lnd-auth-service';
 import * as lightning from 'lightning';
 import { fromEvent } from 'rxjs';
-import { GetNetworkGraphResult } from 'lightning';
+import { GraphRegistryService } from './graph-registry.service';
+import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
+import { PositionCalculatorService } from './position-calculator.service';
 import { WebSocketService } from './websocket-service';
 
 @injectable()
@@ -12,20 +13,22 @@ export class LndGraphStateService {
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
         private websocketService: WebSocketService,
+        private positionCalculatorService: PositionCalculatorService,
+        private graphRegistryService: GraphRegistryService,
     ) {}
 
     public async init() {
         await this.initialGraphSync();
-        //this.subscribeToGraphChanges();
     }
 
     protected async initialGraphSync() {
         console.log('Starting Graph Sync');
         try {
-            const graphData: GetNetworkGraphResult = await lightning.getNetworkGraph(
+            this.graphRegistryService.graphState = await lightning.getNetworkGraph(
                 this.lndAuthService.authenticatedLnd,
             );
-            this.chunkTrackerService.splitGraphIntoChunks(graphData);
+            this.chunkTrackerService.calculateChunkInfo(this.graphRegistryService.graphState);
+            this.positionCalculatorService.calculatePositions(this.graphRegistryService.graphState);
             console.log('Done with Graph Sync');
         } catch (e) {
             console.error(e);

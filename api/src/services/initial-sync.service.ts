@@ -1,52 +1,66 @@
 import { injectable } from 'inversify';
 import { WebSocket } from 'ws';
 import { Chunk, LndChannel, LndNode } from '../models';
+import { GraphRegistryService } from './graph-registry.service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 
 @injectable()
 export class InitialSyncService {
-    constructor(private lndChunkTrackerService: LndChunkTrackerService) {}
+    constructor(
+        private lndChunkTrackerService: LndChunkTrackerService,
+        private graphRegistryService: GraphRegistryService,
+    ) {}
 
     public sendChunkInfo(ws: WebSocket) {
         ws.send(JSON.stringify(this.lndChunkTrackerService.chunkInfo));
     }
 
     public performInitialNodeSync(ws: WebSocket) {
-        this.lndChunkTrackerService.nodeChunks.forEach(async (chunk: Chunk<LndNode>) => {
-            ws.send(
-                JSON.stringify({
-                    index: chunk.index,
-                    type: chunk.type,
-                    data: chunk.data.map(
-                        (node) =>
-                            ({
-                                color: node.color,
-                                public_key: node.public_key,
-                                alias: node.alias,
-                            } as Partial<LndNode>),
-                    ),
-                } as Partial<Chunk<LndNode>>),
+        if (!this.graphRegistryService.graphState) return;
+        for (
+            let i = 0;
+            i <
+            Math.ceil(
+                this.graphRegistryService.graphState.nodes.length /
+                    this.lndChunkTrackerService.chunkSize,
             );
-        });
+            i++
+        ) {
+            const chunk: Chunk<LndNode> = {
+                index: i,
+                type: 'node',
+                data: this.graphRegistryService.graphState.nodes.slice(
+                    i * this.lndChunkTrackerService.chunkSize,
+                    (i + 1) * this.lndChunkTrackerService.chunkSize,
+                ),
+                registry: {},
+            };
+            ws.send(JSON.stringify(chunk));
+        }
     }
 
     public performInitialChannelSync(ws: WebSocket) {
-        this.lndChunkTrackerService.channelChunks.forEach(async (chunk) => {
-            ws.send(
-                JSON.stringify({
-                    index: chunk.index,
-                    type: chunk.type,
-                    data: chunk.data.map(
-                        (channel) =>
-                            ({
-                                id: channel.id,
-                                capacity: channel.capacity,
-                                policies: channel.policies,
-                            } as Partial<LndChannel>),
-                    ),
-                } as Partial<Chunk<LndChannel>>),
+        if (!this.graphRegistryService.graphState) return;
+        for (
+            let i = 0;
+            i <
+            Math.ceil(
+                this.graphRegistryService.graphState.channels.length /
+                    this.lndChunkTrackerService.chunkSize,
             );
-        });
+            i++
+        ) {
+            const chunk: Chunk<LndChannel> = {
+                index: i,
+                type: 'channel',
+                data: this.graphRegistryService.graphState.channels.slice(
+                    i * this.lndChunkTrackerService.chunkSize,
+                    (i + 1) * this.lndChunkTrackerService.chunkSize,
+                ),
+                registry: {},
+            };
+            ws.send(JSON.stringify(chunk));
+        }
     }
 
     public sendRequestComplete(ws: WebSocket) {
