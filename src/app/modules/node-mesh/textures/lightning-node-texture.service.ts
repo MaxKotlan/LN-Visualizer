@@ -5,13 +5,12 @@ import * as THREE from 'three';
     providedIn: 'root',
 })
 export class NodeTextures {
-    protected registry: Record<string, THREE.Texture> = {};
+    protected registry: Record<string, THREE.Texture> = {
+        lightningIcon: new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg'),
+    };
 
     constructor() {
-        this.registry['lightningIcon'] = new THREE.TextureLoader().load(
-            'assets/Lightning_Network_dark.svg',
-        );
-        this.registry['lightningIcon'].flipY = false;
+        this.registry.lightningIcon.flipY = false;
     }
 
     getTexture(textureName: string) {

@@ -22,8 +22,6 @@ import { NodeTextures } from '../textures/lightning-node-texture.service';
     providedIn: 'root',
 })
 export class NodeMaterial extends THREE.ShaderMaterial {
-    protected spriteTexture: THREE.Texture | undefined;
-
     constructor(
         private store$: Store<GraphState>,
         private animationTimeService: AnimationTimeService,
