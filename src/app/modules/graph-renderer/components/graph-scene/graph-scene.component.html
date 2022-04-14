@@ -19,7 +19,7 @@
                 [divisions]="100"
             ></atft-grid-helper>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
-            <app-graph-node-mesh *ngIf="true"></app-graph-node-mesh>
+            <app-nodes-object></app-nodes-object>
             <app-graph-edge-mesh></app-graph-edge-mesh>
             <!-- <app-raycaster-ray></app-raycaster-ray> -->
         </atft-scene>
