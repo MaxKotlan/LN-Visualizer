@@ -95,7 +95,7 @@ export class GraphSceneComponent implements AfterViewInit {
                 new Vector3(0, 1, 0),
             );
             const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
-            const rotationKF = new THREE.VectorKeyframeTrack(
+            const rotationKF = new THREE.QuaternionKeyframeTrack(
                 '.quaternion',
                 [0, zoomTiming],
                 [
@@ -152,7 +152,7 @@ export class GraphSceneComponent implements AfterViewInit {
                 THREE.InterpolateSmooth,
             );
 
-            const rotationKF = new THREE.VectorKeyframeTrack(
+            const rotationKF = new THREE.QuaternionKeyframeTrack(
                 '.quaternion',
                 [0, zoomTiming],
                 [
