@@ -8,7 +8,7 @@ import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { GraphState } from '../../graph-renderer/reducer';
 import { selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { ChannelShader } from '../../graph-renderer/shaders';
+import { ChannelShader } from '../shaders';
 
 @Injectable({
     providedIn: 'root',
