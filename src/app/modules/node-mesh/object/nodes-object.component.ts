@@ -7,7 +7,7 @@ import {
     Output,
     SkipSelf,
 } from '@angular/core';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     AbstractObject3D,
@@ -18,26 +18,15 @@ import {
     SphereMeshComponent,
 } from 'atft';
 import { take } from 'rxjs';
-import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import {
-    selectMinimumNodeSize,
-    selectNodeSize,
-    selectPointAttenuation,
-    selectUniformNodeSize,
-    shouldRenderNodes,
-} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
-import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
-import { Uniform, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import { GraphState } from '../../graph-renderer/reducer';
 import { selectClosestPoint, selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { LndRaycasterService } from '../../graph-renderer/services';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { NodeBuffersService } from '../../graph-renderer/services/node-buffers/node-buffers.service';
-import { NodeShader } from '../../graph-renderer/shaders';
 import { NodePoint } from '../../graph-renderer/three-js-objects/NodePoint';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
@@ -86,7 +75,7 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
     }
 
     private onMouseExit() {
-        // this.handleHoverUpdate(new Vector3(0, 0, 0));
+        this.nodeMaterial.handleHoverUpdate(new Vector3(0, 0, 0));
         this.toolTipService.close();
         document.body.style.cursor = null as unknown as string;
     }
@@ -99,7 +88,7 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
             .pipe(take(1))
             .subscribe((node) => {
                 if (!node) return;
-                // this.handleHoverUpdate(node.position);
+                this.nodeMaterial.handleHoverUpdate(node.position);
                 this.toolTipService.open(
                     event.mouseEvent.clientX,
                     event.mouseEvent.clientY,
@@ -126,15 +115,9 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
         const mesh = new NodePoint(this.nodeGeometry, this.nodeMaterial);
         this.object = mesh;
         this.handleUpdates();
-        // this.handleHoverUpdate(new Vector3(0, 0, 0));
+        this.nodeMaterial.handleHoverUpdate(new Vector3(0, 0, 0));
         return mesh;
     }
-
-    // private handleHoverUpdate(position: Vector3) {
-    //     this.material.uniforms['hoverOrigin'] = new Uniform(
-    //         position.clone().multiplyScalar(meshScale),
-    //     );
-    // }
 
     private handleUpdates() {
         let currentDrawRange;

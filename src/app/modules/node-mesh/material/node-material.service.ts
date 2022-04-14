@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import * as THREE from 'three';
-import { Uniform } from 'three';
+import { Uniform, Vector3 } from 'three';
 import {
     selectMinimumNodeSize,
     selectNodeSize,
@@ -32,6 +33,10 @@ export class NodeMaterial extends THREE.ShaderMaterial {
         super(NodeShader);
         this.uniforms['pointTexture'] = { value: this.nodeTextures.getTexture('lightningIcon') };
         this.handleUpdates();
+    }
+
+    public handleHoverUpdate(position: Vector3) {
+        this.uniforms['hoverOrigin'] = new Uniform(position.clone().multiplyScalar(meshScale));
     }
 
     private handleUpdates() {
