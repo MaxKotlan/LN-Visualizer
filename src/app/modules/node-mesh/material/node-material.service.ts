@@ -15,7 +15,7 @@ import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { GraphState } from '../../graph-renderer/reducer';
 import { selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { NodeShader } from '../../graph-renderer/shaders';
+import { NodeShader } from '../shaders';
 import { NodeTextures } from '../textures/lightning-node-texture.service';
 
 @Injectable({

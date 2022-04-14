@@ -2,6 +2,7 @@ import {
     Component,
     EventEmitter,
     OnChanges,
+    OnDestroy,
     OnInit,
     Optional,
     Output,
@@ -35,7 +36,10 @@ import { NodeMaterial } from '../material/node-material.service';
     providers: [provideParent(SphereMeshComponent)],
     template: '<ng-content></ng-content>',
 })
-export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements OnChanges, OnInit {
+export class NodesObjectComponent
+    extends AbstractObject3D<NodePoint>
+    implements OnChanges, OnInit, OnDestroy
+{
     @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
     @Output() mouseExit = new EventEmitter<RaycasterEmitEvent>();
     // eslint-disable-next-line @angular-eslint/no-output-native
@@ -60,11 +64,21 @@ export class NodesObjectComponent extends AbstractObject3D<NodePoint> implements
         this.subscribeEvents();
     }
 
+    override ngOnDestroy(): void {
+        this.unsubscribeEvents();
+        super.ngOnDestroy();
+    }
+
     private subscribeEvents() {
-        const obj = this.getObject();
-        obj.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
-        obj.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit.bind(this));
-        obj.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
+        this.object.addEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
+        this.object.addEventListener(RaycasterEvent.mouseExit, this.onMouseExit.bind(this));
+        this.object.addEventListener(RaycasterEvent.click, this.onClick.bind(this));
+    }
+
+    private unsubscribeEvents() {
+        this.object.removeEventListener(RaycasterEvent.mouseEnter, this.onMouseEnter.bind(this));
+        this.object.removeEventListener(RaycasterEvent.mouseExit, this.onMouseExit.bind(this));
+        this.object.removeEventListener(RaycasterEvent.click, this.onClick.bind(this));
     }
 
     private onMouseExit() {

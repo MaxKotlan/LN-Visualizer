@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { NodeGeometry } from './geometry/node-geometry.service';
+import { NodeGeometry } from './geometry';
 import { NodesObjectComponent } from './object';
-import { NodeTextures } from './textures/lightning-node-texture.service';
+import { NodeTextures } from './textures';
 
 @NgModule({
     declarations: [NodesObjectComponent],
