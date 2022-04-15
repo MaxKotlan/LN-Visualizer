@@ -12,6 +12,7 @@ export class InitialSyncService {
     ) {}
 
     public sendChunkInfo(ws: WebSocket) {
+        console.log('trying');
         ws.send(JSON.stringify(this.lndChunkTrackerService.chunkInfo));
     }
 
