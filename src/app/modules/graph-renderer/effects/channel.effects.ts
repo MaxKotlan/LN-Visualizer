@@ -18,10 +18,10 @@ export class ChannelEffects {
     concatinateChannelChunk$ = createEffect(
         () =>
             this.actions$.pipe(
-                ofType(graphActions.concatinateChannelChunk),
+                ofType(graphActions.processGraphChannelChunk),
                 withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
                 map(([action, channelState]) => {
-                    action.channelSubSet.forEach((channel) => {
+                    action.chunk.data.forEach((channel) => {
                         this.minMaxCaluclator.checkChannel(channel);
                         channelState.set(channel.id, channel);
                     });
@@ -34,24 +34,24 @@ export class ChannelEffects {
         { dispatch: true },
     );
 
-    recalculatePosition$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.cacheProcessedChannelChunk),
-                withLatestFrom(
-                    this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
-                ),
-                throttleTime(200),
-                map(([, nodeRegistry]) => {
-                    // return of(
-                    return graphActions.graphNodePositionRecalculate({
-                        nodeSet: nodeRegistry.nodeSet,
-                    });
-                    //)
-                }),
-            ),
-        { dispatch: true },
-    );
+    // recalculatePosition$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.cacheProcessedChannelChunk),
+    //             withLatestFrom(
+    //                 this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
+    //             ),
+    //             throttleTime(200),
+    //             map(([, nodeRegistry]) => {
+    //                 // return of(
+    //                 return graphActions.graphNodePositionRecalculate({
+    //                     nodeSet: nodeRegistry.nodeSet,
+    //                 });
+    //                 //)
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
     // channelClosedEvent$ = createEffect(
     //     () =>

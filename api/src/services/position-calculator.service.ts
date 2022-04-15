@@ -69,6 +69,7 @@ export class PositionCalculatorService {
                     this.connectedChannels[potentialParent1.public_key].size() &&
                 !this.connectedChannels[node1.public_key]
             ) {
+                console.log('adding parent');
                 this.nodeParents[node1.public_key] = potentialParent1;
                 this.children[this.nodeParents[node1.public_key].public_key].set(
                     node1.public_key,
@@ -178,8 +179,11 @@ export class PositionCalculatorService {
         const queue: LndNode[] = [];
         const visited: LndNode[] = [];
 
+        let i = 0;
+
         this.graphRegistryService.nodeMap.forEach((node) => {
             if (!this.nodeParents[node.public_key]) {
+                i++;
                 createSpherePoint(
                     0.4,
                     new THREE.Vector3(0, 0, 0),
@@ -192,7 +196,6 @@ export class PositionCalculatorService {
 
         while (queue.length > 0) {
             const v = queue.pop();
-
             if (v?.public_key)
                 this.children[v.public_key]?.forEach((w) => {
                     if (!visited.includes(w.public_key)) {

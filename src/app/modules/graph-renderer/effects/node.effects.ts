@@ -17,6 +17,7 @@ import { selectNodeSetKeyValue } from '../selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
+import { Vector3 } from 'three';
 
 @Injectable()
 export class NodeEffects {
@@ -94,7 +95,7 @@ export class NodeEffects {
                 map((filteredNodes) => {
                     this.filterNodeCache.clear();
                     filteredNodes.nodeSet.forEach((node) => {
-                        node.connectedChannels.toArray().forEach((channel) => {
+                        node.connectedChannels.forEach((channel) => {
                             this.filterNodeCache.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
@@ -116,25 +117,32 @@ export class NodeEffects {
                 ofType(graphActions.processGraphNodeChunk),
                 map((action) => {
                     return action.chunk.data.map((lnNode: LndNode) => {
-                        const initPos = new THREE.Vector3(0, 0, 0);
-                        createSpherePoint(
-                            initialSphereSize,
-                            this.origin,
-                            lnNode.public_key,
-                            initPos,
-                        );
+                        // const initPos = new THREE.Vector3(0, 0, 0);
+                        // createSpherePoint(
+                        //     initialSphereSize,
+                        //     this.origin,
+                        //     lnNode.public_key,
+                        //     initPos,
+                        // );
+
                         return {
                             ...lnNode,
-                            position: initPos,
-                            connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
-                                this.getNodeQueueComparitor(),
+                            position: new Vector3(
+                                lnNode['position'].x,
+                                lnNode['position'].y,
+                                lnNode['position'].z,
                             ),
-                            parent: null,
-                            children: new Map<string, LndNodeWithPosition>(),
+                            // position: initPos,
+                            connectedChannels: new Map(),
+                            // connectedChannels: new MaxPriorityQueue<LndChannelWithParent>(
+                            //     this.getNodeQueueComparitor(),
+                            // ),
+                            // parent: null,
+                            // children: new Map<string, LndNodeWithPosition>(),
                             node_capacity: 0,
                             channel_count: 0,
-                            visited: false,
-                            depth: 1,
+                            // visited: false,
+                            // depth: 1,
                         } as LndNodeWithPosition;
                     });
                 }),
@@ -143,116 +151,116 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    calculateNodeHeirarchy$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.processGraphChannelChunk),
-                withLatestFrom(
-                    this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
-                ),
-                map(([action, nodeRegistry]) => {
-                    action.chunk.data.forEach((channel: LndChannel) => {
-                        const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
-                        const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
+    // calculateNodeHeirarchy$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.processGraphChannelChunk),
+    //             withLatestFrom(
+    //                 this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
+    //             ),
+    //             map(([action, nodeRegistry]) => {
+    //                 action.chunk.data.forEach((channel: LndChannel) => {
+    //                     const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
+    //                     const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
 
-                        if (!node1) return;
-                        if (!node2) return;
+    //                     if (!node1) return;
+    //                     if (!node2) return;
 
-                        this.enqueueChannel(node1, node1, channel);
+    //                     this.enqueueChannel(node1, node1, channel);
 
-                        const chnl: LndChannelWithParent =
-                            node1.connectedChannels.front() as LndChannelWithParent;
-                        const potentialParent1 = nodeRegistry.nodeSet.get(
-                            this.selectOtherNodeInChannel(node1.public_key, chnl),
-                        );
+    //                     const chnl: LndChannelWithParent =
+    //                         node1.connectedChannels.front() as LndChannelWithParent;
+    //                     const potentialParent1 = nodeRegistry.nodeSet.get(
+    //                         this.selectOtherNodeInChannel(node1.public_key, chnl),
+    //                     );
 
-                        if (
-                            potentialParent1 &&
-                            node1.connectedChannels.size() <
-                                potentialParent1.connectedChannels.size() &&
-                            !node1.parent
-                        ) {
-                            node1.parent = potentialParent1;
-                            node1.parent.children.set(node1.public_key, node1);
-                        }
+    //                     if (
+    //                         potentialParent1 &&
+    //                         node1.connectedChannels.size() <
+    //                             potentialParent1.connectedChannels.size() &&
+    //                         !node1.parent
+    //                     ) {
+    //                         node1.parent = potentialParent1;
+    //                         node1.parent.children.set(node1.public_key, node1);
+    //                     }
 
-                        this.enqueueChannel(node2, node2, channel);
+    //                     this.enqueueChannel(node2, node2, channel);
 
-                        const chn2: LndChannelWithParent =
-                            node2.connectedChannels.front() as LndChannelWithParent;
-                        const potentialParent2 = nodeRegistry.nodeSet.get(
-                            this.selectOtherNodeInChannel(node2.public_key, chn2),
-                        );
+    //                     const chn2: LndChannelWithParent =
+    //                         node2.connectedChannels.front() as LndChannelWithParent;
+    //                     const potentialParent2 = nodeRegistry.nodeSet.get(
+    //                         this.selectOtherNodeInChannel(node2.public_key, chn2),
+    //                     );
 
-                        if (
-                            potentialParent2 &&
-                            node2.connectedChannels.size() <
-                                potentialParent2.connectedChannels.size() &&
-                            !node2.parent
-                        ) {
-                            node2.parent = potentialParent2;
-                            node2.parent.children.set(node2.public_key, node2);
-                        }
-                    });
-                    return graphActions.concatinateChannelChunk({
-                        channelSubSet: action.chunk.data,
-                    });
-                }),
-            ),
-        { dispatch: true },
-    );
+    //                     if (
+    //                         potentialParent2 &&
+    //                         node2.connectedChannels.size() <
+    //                             potentialParent2.connectedChannels.size() &&
+    //                         !node2.parent
+    //                     ) {
+    //                         node2.parent = potentialParent2;
+    //                         node2.parent.children.set(node2.public_key, node2);
+    //                     }
+    //                 });
+    //                 return graphActions.concatinateChannelChunk({
+    //                     channelSubSet: action.chunk.data,
+    //                 });
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
-    positionRecalculate$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.graphNodePositionRecalculate),
-                map((action) => {
-                    const queue: LndNodeWithPosition[] = [];
+    // positionRecalculate$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.graphNodePositionRecalculate),
+    //             map((action) => {
+    //                 const queue: LndNodeWithPosition[] = [];
 
-                    action.nodeSet.forEach((node) => {
-                        node.visited = false;
-                        if (!node.parent) {
-                            createSpherePoint(
-                                initialSphereSize,
-                                this.origin,
-                                node.public_key.slice(0, 10),
-                                node.position,
-                            );
-                            queue.push(node);
-                        }
-                    });
+    //                 action.nodeSet.forEach((node) => {
+    //                     node.visited = false;
+    //                     if (!node.parent) {
+    //                         createSpherePoint(
+    //                             initialSphereSize,
+    //                             this.origin,
+    //                             node.public_key.slice(0, 10),
+    //                             node.position,
+    //                         );
+    //                         queue.push(node);
+    //                     }
+    //                 });
 
-                    while (queue.length > 0) {
-                        const v = queue.pop();
+    //                 while (queue.length > 0) {
+    //                     const v = queue.pop();
 
-                        v.children.forEach((w) => {
-                            if (!w.visited) {
-                                w.depth = v.depth + 1;
-                                createSpherePoint(
-                                    initialSphereSize / w.depth,
-                                    v.position,
-                                    w.public_key.slice(0, 10),
-                                    w.position,
-                                );
-                                queue.push(w);
-                                w.visited = true;
-                            }
-                        });
-                    }
+    //                     v.children.forEach((w) => {
+    //                         if (!w.visited) {
+    //                             w.depth = v.depth + 1;
+    //                             createSpherePoint(
+    //                                 initialSphereSize / w.depth,
+    //                                 v.position,
+    //                                 w.public_key.slice(0, 10),
+    //                                 w.position,
+    //                             );
+    //                             queue.push(w);
+    //                             w.visited = true;
+    //                         }
+    //                     });
+    //                 }
 
-                    return graphActions.cacheProcessedGraphNodeChunk({
-                        //do I need to sort the map?
-                        nodeSet: new Map(
-                            [...action.nodeSet.entries()].sort(
-                                (a, b) =>
-                                    b[1].connectedChannels.size() - a[1].connectedChannels.size(),
-                            ),
-                        ),
-                    });
-                }),
-            ),
-        { dispatch: true },
-    );
+    //                 return graphActions.cacheProcessedGraphNodeChunk({
+    //                     //do I need to sort the map?
+    //                     nodeSet: new Map(
+    //                         [...action.nodeSet.entries()].sort(
+    //                             (a, b) =>
+    //                                 b[1].connectedChannels.size() - a[1].connectedChannels.size(),
+    //                         ),
+    //                     ),
+    //                 });
+    //             }),
+    //         ),
+    //     { dispatch: true },
+    // );
 
     addNodeFilter$ = createEffect(
         () =>
@@ -284,36 +292,36 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {
-        if (channel.policies[0].public_key === selfPubkey) return channel.policies[1].public_key;
-        if (channel.policies[1].public_key === selfPubkey) return channel.policies[0].public_key;
-        throw new Error('Public Key is not either of the nodes in the channel');
-    }
+    // private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {
+    //     if (channel.policies[0].public_key === selfPubkey) return channel.policies[1].public_key;
+    //     if (channel.policies[1].public_key === selfPubkey) return channel.policies[0].public_key;
+    //     throw new Error('Public Key is not either of the nodes in the channel');
+    // }
 
-    private enqueueChannel(
-        lndNode: LndNodeWithPosition,
-        otherNode: LndNodeWithPosition,
-        channel: LndChannel,
-    ) {
-        if (!lndNode) return;
-        const lndPar = channel as LndChannelWithParent;
-        lndPar.parent = otherNode;
-        lndNode.node_capacity += channel.capacity;
-        lndNode.channel_count += 1;
-        lndNode.connectedChannels.enqueue(lndPar);
-    }
+    // private enqueueChannel(
+    //     lndNode: LndNodeWithPosition,
+    //     otherNode: LndNodeWithPosition,
+    //     channel: LndChannel,
+    // ) {
+    //     if (!lndNode) return;
+    //     const lndPar = channel as LndChannelWithParent;
+    //     lndPar.parent = otherNode;
+    //     lndNode.node_capacity += channel.capacity;
+    //     lndNode.channel_count += 1;
+    //     lndNode.connectedChannels.enqueue(lndPar);
+    // }
 
-    private getNodeQueueComparitor() {
-        return {
-            compare: (a: LndChannelWithParent, b: LndChannelWithParent): number => {
-                if (!b.parent.parent?.children.size && !a.parent.parent?.children.size) return 0;
-                if (b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
-                if (!b.parent.parent?.children.size && a.parent.parent?.children.size) return 1;
+    // private getNodeQueueComparitor() {
+    //     return {
+    //         compare: (a: LndChannelWithParent, b: LndChannelWithParent): number => {
+    //             if (!b.parent.parent?.children.size && !a.parent.parent?.children.size) return 0;
+    //             if (b.parent.parent?.children.size && !a.parent.parent?.children.size) return -1;
+    //             if (!b.parent.parent?.children.size && a.parent.parent?.children.size) return 1;
 
-                if (b.parent.parent!.children.size > a.parent.parent!.children.size) return -1;
-                if (a.parent.parent!.children.size > b.parent.parent!.children.size) return 1;
-                return b.parent.children.size - a.parent.children.size;
-            },
-        };
-    }
+    //             if (b.parent.parent!.children.size > a.parent.parent!.children.size) return -1;
+    //             if (a.parent.parent!.children.size > b.parent.parent!.children.size) return 1;
+    //             return b.parent.children.size - a.parent.children.size;
+    //         },
+    //     };
+    // }
 }
