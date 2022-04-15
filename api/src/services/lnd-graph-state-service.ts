@@ -24,11 +24,12 @@ export class LndGraphStateService {
     protected async initialGraphSync() {
         console.log('Starting Graph Sync');
         try {
-            this.graphRegistryService.graphState = await lightning.getNetworkGraph(
+            const graphState = await lightning.getNetworkGraph(
                 this.lndAuthService.authenticatedLnd,
             );
-            this.chunkTrackerService.calculateChunkInfo(this.graphRegistryService.graphState);
-            this.positionCalculatorService.calculatePositions(this.graphRegistryService.graphState);
+            this.graphRegistryService.mapToRegistry(graphState);
+            this.chunkTrackerService.calculateChunkInfo(graphState);
+            this.positionCalculatorService.calculatePositions(graphState);
             console.log('Done with Graph Sync');
         } catch (e) {
             console.error(e);

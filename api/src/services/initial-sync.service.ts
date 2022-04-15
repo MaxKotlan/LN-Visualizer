@@ -16,20 +16,12 @@ export class InitialSyncService {
     }
 
     public performInitialNodeSync(ws: WebSocket) {
-        if (!this.graphRegistryService.graphState) return;
-        for (
-            let i = 0;
-            i <
-            Math.ceil(
-                this.graphRegistryService.graphState.nodes.length /
-                    this.lndChunkTrackerService.chunkSize,
-            );
-            i++
-        ) {
+        const nodes: Array<any> = this.graphRegistryService.nodesToArray();
+        for (let i = 0; i < Math.ceil(nodes.length / this.lndChunkTrackerService.chunkSize); i++) {
             const chunk: Chunk<LndNode> = {
                 index: i,
                 type: 'node',
-                data: this.graphRegistryService.graphState.nodes.slice(
+                data: nodes.slice(
                     i * this.lndChunkTrackerService.chunkSize,
                     (i + 1) * this.lndChunkTrackerService.chunkSize,
                 ),
@@ -40,20 +32,16 @@ export class InitialSyncService {
     }
 
     public performInitialChannelSync(ws: WebSocket) {
-        if (!this.graphRegistryService.graphState) return;
+        const channels: Array<any> = this.graphRegistryService.channelsToArray();
         for (
             let i = 0;
-            i <
-            Math.ceil(
-                this.graphRegistryService.graphState.channels.length /
-                    this.lndChunkTrackerService.chunkSize,
-            );
+            i < Math.ceil(channels.length / this.lndChunkTrackerService.chunkSize);
             i++
         ) {
             const chunk: Chunk<LndChannel> = {
                 index: i,
                 type: 'channel',
-                data: this.graphRegistryService.graphState.channels.slice(
+                data: channels.slice(
                     i * this.lndChunkTrackerService.chunkSize,
                     (i + 1) * this.lndChunkTrackerService.chunkSize,
                 ),
