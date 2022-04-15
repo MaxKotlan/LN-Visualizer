@@ -18,7 +18,7 @@ export class PositionCalculatorService {
     private connectedChannels: Map<NodePublicKey, MaxPriorityQueue<LndChannel>> = new Map();
     private children: Map<NodePublicKey, LndNode> = new Map();
     private nodeParents: Map<NodePublicKey, LndNode> = new Map();
-    private channelParents: Map<NodePublicKey, LndNode> = new Map();
+    private channelParents: Map<ChannelId, LndNode> = new Map();
     private depth: Map<NodePublicKey, number> = new Map();
 
     public calculatePositions() {
@@ -52,6 +52,7 @@ export class PositionCalculatorService {
             this.checkAndInitializeMap(node1.public_key, this.connectedChannels);
 
             const chnl = this.connectedChannels[node1.public_key].front();
+
             const potentialParent1 = this.graphRegistryService.nodeMap.get(
                 this.selectOtherNodeInChannel(node1.public_key, chnl),
             );
@@ -67,14 +68,12 @@ export class PositionCalculatorService {
                 potentialParent1 &&
                 this.connectedChannels[node1.public_key].size() <
                     this.connectedChannels[potentialParent1.public_key].size() &&
-                !this.connectedChannels[node1.public_key]
+                !this.nodeParents[node1.public_key]
             ) {
-                console.log('adding parent');
                 this.nodeParents[node1.public_key] = potentialParent1;
-                this.children[this.nodeParents[node1.public_key].public_key].set(
-                    node1.public_key,
-                    node1,
-                );
+                const h = this.nodeParents[node1.public_key].public_key;
+                this.checkAndInitializeMap(h, this.children);
+                this.children[h].set(node1.public_key, node1);
             }
 
             this.enqueueChannel(node2, node2, channel);
@@ -97,13 +96,12 @@ export class PositionCalculatorService {
                 potentialParent2 &&
                 this.connectedChannels[node2.public_key].size() <
                     this.connectedChannels[potentialParent2.public_key].size() &&
-                !this.connectedChannels[node2.public_key]
+                !this.nodeParents[node2.public_key]
             ) {
                 this.nodeParents[node2.public_key] = potentialParent2;
-                this.children[this.nodeParents[node2.public_key].public_key].set(
-                    node2.public_key,
-                    node2,
-                );
+                const h = this.nodeParents[node2.public_key].public_key;
+                this.checkAndInitializeMap(h, this.children);
+                this.children[h].set(node2.public_key, node2);
             }
         });
     }
@@ -125,11 +123,7 @@ export class PositionCalculatorService {
         // lndNode.node_capacity += channel.capacity;
         // lndNode.channel_count += 1;
 
-        if (!this.connectedChannels[lndNode.public_key])
-            this.connectedChannels[lndNode.public_key] = new MaxPriorityQueue<LndChannel>(
-                this.getNodeQueueComparitor(), //this might break some stuff
-            );
-
+        this.checkAndInitializePriorityQueue(lndNode.public_key, this.connectedChannels);
         this.connectedChannels[lndNode.public_key].enqueue(lndPar);
         // lndNode.connectedChannels.enqueue(lndPar);
     }
@@ -153,6 +147,7 @@ export class PositionCalculatorService {
                     if (!this.children[h]) this.children[h] = new Map<string, LndNode>();
                     return this.children[h].size;
                 };
+                u.bind(this);
 
                 if (!u(b) && !u(a)) return 0;
                 if (u(b) && !u(a)) return -1;
@@ -179,11 +174,10 @@ export class PositionCalculatorService {
         const queue: LndNode[] = [];
         const visited: LndNode[] = [];
 
-        let i = 0;
-
+        let parentCount = 0;
         this.graphRegistryService.nodeMap.forEach((node) => {
             if (!this.nodeParents[node.public_key]) {
-                i++;
+                parentCount++;
                 createSpherePoint(
                     0.4,
                     new THREE.Vector3(0, 0, 0),
@@ -194,11 +188,15 @@ export class PositionCalculatorService {
             }
         });
 
+        console.log('Unparented Nodes: ', parentCount);
+
+        let parented = 0;
         while (queue.length > 0) {
             const v = queue.pop();
             if (v?.public_key)
                 this.children[v.public_key]?.forEach((w) => {
                     if (!visited.includes(w.public_key)) {
+                        if (!this.depth[v.public_key]) this.depth[v.public_key] = 1;
                         this.depth[w.public_key] = this.depth[v.public_key] + 1;
                         createSpherePoint(
                             0.4 / this.depth[w.public_key],
@@ -206,10 +204,13 @@ export class PositionCalculatorService {
                             w.public_key.slice(0, 10),
                             this.positionRegistry[w.public_key],
                         );
+                        parented++;
                         queue.push(w);
                         visited.push(w.public_key);
                     }
                 });
         }
+
+        console.log('Parented Nodes', parented);
     }
 }
