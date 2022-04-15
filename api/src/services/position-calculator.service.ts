@@ -16,13 +16,15 @@ export class PositionCalculatorService {
     private positionRegistry: Map<NodePublicKey, Vector3> = new Map();
     private connectedNode: Map<ChannelId, MaxPriorityQueue<any>> = new Map();
     private connectedChannels: Map<NodePublicKey, MaxPriorityQueue<LndChannel>> = new Map();
-    private children: Map<string, LndNode> = new Map();
+    private children: Map<NodePublicKey, LndNode> = new Map();
     private nodeParents: Map<NodePublicKey, LndNode> = new Map();
     private channelParents: Map<NodePublicKey, LndNode> = new Map();
+    private depth: Map<NodePublicKey, number> = new Map();
 
     public calculatePositions() {
         this.initPositions();
         this.calculateHeirarchy();
+        this.calculatePositionFromHeiarchy();
     }
 
     public initPositions() {
@@ -98,23 +100,7 @@ export class PositionCalculatorService {
                     node2,
                 );
             }
-
-            // const chn2: LndChannelWithParent =
-            //     node2.connectedChannels.front() as LndChannelWithParent;
-            // const potentialParent2 = nodeRegistry.nodeSet.get(
-            //     this.selectOtherNodeInChannel(node2.public_key, chn2),
-            // );
-
-            // if (
-            //     potentialParent2 &&
-            //     node2.connectedChannels.size() < potentialParent2.connectedChannels.size() &&
-            //     !node2.parent
-            // ) {
-            //     node2.parent = potentialParent2;
-            //     node2.parent.children.set(node2.public_key, node2);
-            // }
         });
-        console.log(this);
     }
 
     private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {
@@ -182,5 +168,41 @@ export class PositionCalculatorService {
         };
         j.compare.bind(this);
         return j;
+    }
+
+    public calculatePositionFromHeiarchy() {
+        const queue: LndNode[] = [];
+        const visited: LndNode[] = [];
+
+        this.graphRegistryService.nodeMap.forEach((node) => {
+            if (!this.nodeParents[node.public_key]) {
+                createSpherePoint(
+                    0.4,
+                    new THREE.Vector3(0, 0, 0),
+                    node.public_key.slice(0, 10),
+                    this.positionRegistry[node.public_key],
+                );
+                queue.push(node);
+            }
+        });
+
+        while (queue.length > 0) {
+            const v = queue.pop();
+
+            if (v?.public_key)
+                this.children[v.public_key]?.forEach((w) => {
+                    if (!visited.includes(w.public_key)) {
+                        this.depth[w.public_key] = this.depth[v.public_key] + 1;
+                        createSpherePoint(
+                            0.4 / this.depth[w.public_key],
+                            this.positionRegistry[v.public_key],
+                            w.public_key.slice(0, 10),
+                            this.positionRegistry[w.public_key],
+                        );
+                        queue.push(w);
+                        visited.push(w.public_key);
+                    }
+                });
+        }
     }
 }
