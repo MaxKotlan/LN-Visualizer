@@ -8,7 +8,7 @@ import { PositionCalculatorService } from './position-calculator.service';
 import { WebSocketService } from './websocket-service';
 
 @injectable()
-export class LndGraphStateService {
+export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
@@ -29,7 +29,7 @@ export class LndGraphStateService {
             );
             this.graphRegistryService.mapToRegistry(graphState);
             this.chunkTrackerService.calculateChunkInfo(graphState);
-            this.positionCalculatorService.calculatePositions(graphState);
+            this.positionCalculatorService.calculatePositions();
             console.log('Done with Graph Sync');
         } catch (e) {
             console.error(e);
