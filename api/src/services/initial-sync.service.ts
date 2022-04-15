@@ -16,7 +16,7 @@ export class InitialSyncService {
     }
 
     public performInitialNodeSync(ws: WebSocket) {
-        const nodes: Array<any> = this.graphRegistryService.nodesToArray();
+        const nodes: Array<any> = this.graphRegistryService.nodeArray;
         for (let i = 0; i < Math.ceil(nodes.length / this.lndChunkTrackerService.chunkSize); i++) {
             const chunk: Chunk<LndNode> = {
                 index: i,
@@ -32,7 +32,7 @@ export class InitialSyncService {
     }
 
     public performInitialChannelSync(ws: WebSocket) {
-        const channels: Array<any> = this.graphRegistryService.channelsToArray();
+        const channels: Array<any> = this.graphRegistryService.channelArray;
         for (
             let i = 0;
             i < Math.ceil(channels.length / this.lndChunkTrackerService.chunkSize);

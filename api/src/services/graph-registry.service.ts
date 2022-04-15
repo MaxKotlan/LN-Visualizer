@@ -10,6 +10,8 @@ export class GraphRegistryService {
         gstate.channels.forEach((channel) => {
             this.channelMap.set(channel.id, channel as any);
         });
+        this.recalculateNodeArray();
+        this.recalculateChannelArray();
     }
 
     public nodeMap: Map<
@@ -73,11 +75,14 @@ export class GraphRegistryService {
         }
     > = new Map();
 
-    public nodesToArray() {
-        return Array.from(this.nodeMap.values());
+    public nodeArray;
+    public channelArray;
+
+    protected recalculateNodeArray() {
+        this.nodeArray = Array.from(this.nodeMap.values());
     }
 
-    public channelsToArray() {
-        return Array.from(this.channelMap.values());
+    protected recalculateChannelArray() {
+        this.channelArray = Array.from(this.channelMap.values());
     }
 }
