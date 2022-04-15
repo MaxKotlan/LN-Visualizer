@@ -13,7 +13,7 @@ type ChannelId = string;
 export class PositionCalculatorService {
     constructor(public graphRegistryService: GraphRegistryService) {}
 
-    private positionRegistry: Map<NodePublicKey, Vector3> = new Map();
+    public positionRegistry: Map<NodePublicKey, Vector3> = new Map();
     private connectedNode: Map<ChannelId, MaxPriorityQueue<any>> = new Map();
     private connectedChannels: Map<NodePublicKey, MaxPriorityQueue<LndChannel>> = new Map();
     private children: Map<NodePublicKey, LndNode> = new Map();
@@ -25,6 +25,10 @@ export class PositionCalculatorService {
         this.initPositions();
         this.calculateHeirarchy();
         this.calculatePositionFromHeiarchy();
+
+        this.graphRegistryService.nodeMap.forEach(
+            (n) => (n['position'] = this.positionRegistry[n.public_key]),
+        );
     }
 
     public initPositions() {
