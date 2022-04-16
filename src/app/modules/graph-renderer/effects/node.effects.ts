@@ -15,6 +15,7 @@ import { GraphState } from '../reducer';
 import * as graphSelectors from '../selectors';
 import { selectNodeSetKeyValue } from '../selectors';
 import { FilteredChannelRegistryService } from '../services';
+import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
@@ -26,6 +27,7 @@ export class NodeEffects {
         private minMaxCaluclator: MinMaxCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
+        private filteredNodeRegistryService: FilteredNodeRegistryService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
     ) {}
 
@@ -59,8 +61,6 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    public filteredSet: Map<string, LndNodeWithPosition> = new Map<string, LndNodeWithPosition>();
-
     filterNodesCache$ = createEffect(
         () =>
             combineLatest([
@@ -68,13 +68,13 @@ export class NodeEffects {
                 this.store$.select(filterSelectors.activeNodeFilters).pipe(debounceTime(100)),
             ]).pipe(
                 map(([, activeNodeFilters]) => {
-                    this.filteredSet.clear();
+                    this.filteredNodeRegistryService.clear();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
-                            this.filteredSet.set(node.public_key, node);
+                            this.filteredNodeRegistryService.set(node.public_key, node);
                     });
                     return graphActions.setFilteredNodes({
-                        nodeSet: this.filteredSet,
+                        nodeSet: this.filteredNodeRegistryService,
                     });
                 }),
             ),
