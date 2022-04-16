@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
-import { searchGraph } from '../../../../controls/actions';
+import { searchGraph } from '../../../controls/actions';
 
 @Component({
     selector: 'app-search',

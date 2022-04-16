@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchAndGoComponent, SearchComponent } from './components';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../material';
+import { MaterialModule } from '../material';
 
 @NgModule({
     declarations: [SearchAndGoComponent, SearchComponent],

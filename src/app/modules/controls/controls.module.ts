@@ -6,7 +6,7 @@ import { ControlsChannelModule } from '../controls-channel/controls-channel.modu
 import { ControlsMiscModule } from '../controls-misc/controls-misc.module';
 import { ControlsNodeModule } from '../controls-node/controls-node.module';
 import { ControlsRendererModule } from '../controls-renderer/controls-renderer.module';
-import { ControlsSearchModule } from '../controls-search/controls-search/controls-search.module';
+import { ControlsSearchModule } from '../controls-search/controls-search.module';
 import { MaterialModule } from '../material';
 import { ScreenSizeModule } from '../screen-size/screen-size.module';
 import {
