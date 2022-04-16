@@ -4,31 +4,21 @@ import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     animationFrames,
-    combineLatest,
+    distinctUntilChanged,
     filter,
-    fromEvent,
-    iif,
     map,
-    of,
     switchMap,
-    take,
     takeUntil,
-    tap,
     throttleTime,
     timer,
 } from 'rxjs';
 import { FilterModalComponent } from '../../controls-graph-filter/components/filter-modal/filter-modal.component';
 import * as graphActions from '../../graph-renderer/actions';
 import { ScreenSizeService } from '../../screen-size/services';
-import { setModalClose, setModalPreference } from '../actions';
-import { filterScriptsId, quickControlsId } from '../constants/windowIds';
+import * as windowManagementActions from '../actions';
+import { quickControlsId } from '../constants/windowIds';
 import { WindowManagerState } from '../reducers';
-import {
-    selectAllModalState,
-    selectModalPreference,
-    selectModalState,
-    windowManagementSelector,
-} from '../selectors';
+import { selectAllModalState } from '../selectors';
 
 @Injectable()
 export class WindowManagerEffects {
@@ -72,6 +62,14 @@ export class WindowManagerEffects {
     //         ),
     //     { dispatch: true },
     // );
+
+    $closeOnSwitch = createEffect(() =>
+        this.screenSizeService.isMobile$.pipe(
+            distinctUntilChanged(),
+            filter((x) => x),
+            map(() => windowManagementActions.setModalClose({ modalId: quickControlsId })),
+        ),
+    );
 
     public openedModal: MatDialogRef<FilterModalComponent>;
 
