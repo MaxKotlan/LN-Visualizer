@@ -5,8 +5,8 @@ import * as THREE from 'three';
 import { Uniform } from 'three';
 import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
+import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
-import { selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
 import { ChannelShader } from '../shaders';
 
@@ -18,6 +18,7 @@ export class ChannelMaterial extends THREE.ShaderMaterial {
         private animationTimeService: AnimationTimeService,
         private actions: Actions,
         private store$: Store<GraphState>,
+        private nodeSearch: NodeSearchEffects,
     ) {
         super(ChannelShader);
         this.handleUpdates();
@@ -41,7 +42,7 @@ export class ChannelMaterial extends THREE.ShaderMaterial {
             );
         });
 
-        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+        this.nodeSearch.selectFinalPositionFromSearch$.subscribe((position) => {
             this.uniforms['motionOrigin'] = position;
         });
 

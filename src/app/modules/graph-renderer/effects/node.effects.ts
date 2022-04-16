@@ -6,7 +6,6 @@ import { LndChannel } from 'src/app/types/channels.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { LndNode } from 'src/app/types/node.interface';
 import { Vector3 } from 'three';
-import * as filterActions from '../../controls-graph-filter/actions';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
 import * as graphActions from '../actions/graph.actions';
@@ -118,36 +117,6 @@ export class NodeEffects {
                     });
                 }),
                 map((nodeSubSet) => graphActions.concatinateNodeChunk({ nodeSubSet })),
-            ),
-        { dispatch: true },
-    );
-
-    addNodeFilter$ = createEffect(
-        () =>
-            this.store$.select(graphSelectors.selectFinalMatcheNodesFromSearch).pipe(
-                mergeMap((c) => {
-                    let addPubKeyFilter = [];
-                    if (c)
-                        addPubKeyFilter.push(
-                            filterActions.addChannelFilter({
-                                value: {
-                                    interpreter: 'javascript',
-                                    source: `return (channel) => 
-    channel.policies.some((p) => 
-        p.public_key === "${c.public_key}")
-`.trim(),
-                                    function: (channel: LndChannel) =>
-                                        channel.policies.some((p) => p.public_key === c.public_key),
-                                    issueId: 'addNodeFilter',
-                                },
-                            }),
-                        );
-
-                    return from([
-                        filterActions.removeChannelFilterByIssueId({ issueId: 'addNodeFilter' }),
-                        ...addPubKeyFilter,
-                    ]);
-                }),
             ),
         { dispatch: true },
     );

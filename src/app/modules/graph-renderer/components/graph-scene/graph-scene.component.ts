@@ -18,8 +18,8 @@ import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import * as graphActions from '../../actions';
+import { NodeSearchEffects } from '../../effects/node-search.effects';
 import { GraphState } from '../../reducer';
-import { selectFinalMatcheNodesFromSearch } from '../../selectors';
 
 @Component({
     selector: 'app-graph-scene',
@@ -37,6 +37,7 @@ export class GraphSceneComponent implements AfterViewInit {
         private actions$: Actions,
         private animationService: AnimationService,
         public toolTipService: ToolTipService,
+        private nodeSearchEffects: NodeSearchEffects,
     ) {}
 
     public selectCameraFov$ = this.store$.select(selectCameraFov);
@@ -45,7 +46,7 @@ export class GraphSceneComponent implements AfterViewInit {
 
     public gotoCoordinates$: Observable<THREE.Vector3> = this.actions$.pipe(
         ofType(gotoNode),
-        withLatestFrom(this.store$.select(selectFinalMatcheNodesFromSearch)),
+        withLatestFrom(this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$),
         map(([, node]) => node?.position),
         filter((pos) => !!pos),
         map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(meshScale)),
@@ -67,7 +68,7 @@ export class GraphSceneComponent implements AfterViewInit {
             this.cameraComponent?.camera.updateProjectionMatrix();
         });
 
-        this.store$.select(selectFinalMatcheNodesFromSearch).subscribe((newTarget) => {
+        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.subscribe((newTarget) => {
             if (!this.cameraComponent || !this.orbitControlsComponent) return;
             if (!newTarget?.position) return;
 

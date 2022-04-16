@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { map, throttleTime, withLatestFrom } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
-import { selectChannelSetKeyValue } from '../selectors';
+import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
@@ -15,22 +15,20 @@ export class ChannelEffects {
         private store$: Store<GraphState>,
         private minMaxCaluclator: MinMaxCalculatorService,
         private nodeRegistry: NodeRegistryService,
+        private channelRegistry: ChannelRegistryService,
     ) {}
 
     concatinateChannelChunk$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.processGraphChannelChunk),
-                withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
-                map(([action, channelState]) => {
+                map((action) => {
                     action.chunk.data.forEach((channel) => {
                         this.minMaxCaluclator.checkChannel(channel);
-                        channelState.set(channel.id, channel);
+                        this.channelRegistry.set(channel.id, channel);
                     });
                     this.minMaxCaluclator.updateStore();
-                    return graphActions.cacheProcessedChannelChunk({
-                        channelSet: channelState,
-                    });
+                    return graphActions.cacheProcessedChannelChunk();
                 }),
             ),
         { dispatch: true },
@@ -40,8 +38,8 @@ export class ChannelEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedChannelChunk),
-                map((channels) => {
-                    channels.channelSet.forEach((channel) => {
+                map(() => {
+                    this.channelRegistry.forEach((channel) => {
                         channel.policies.forEach((policy) => {
                             const node = this.nodeRegistry.get(policy.public_key);
                             if (node) {

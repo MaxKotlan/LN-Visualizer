@@ -47,10 +47,7 @@ export const concatinateChannelChunk = createAction(
     props<{ channelSubSet: LndChannel[] }>(),
 );
 
-export const cacheProcessedChannelChunk = createAction(
-    '[graph] cacheProcessedChannelChunk',
-    props<{ channelSet: Map<string, LndChannel> }>(),
-);
+export const cacheProcessedChannelChunk = createAction('[graph] cacheProcessedChannelChunk');
 
 export const graphNodePositionRecalculate = createAction('[graph] graphNodePositionRecalculate');
 
