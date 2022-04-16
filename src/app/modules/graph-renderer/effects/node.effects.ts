@@ -2,22 +2,20 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, debounceTime, from, map, mergeMap, withLatestFrom } from 'rxjs';
-import { initialSphereSize } from 'src/app/constants/mesh-scale.constant';
-import { GraphState } from '../reducer';
-import { createSpherePoint } from '../utils';
+import { LndChannel } from 'src/app/types/channels.interface';
+import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { LndNode } from 'src/app/types/node.interface';
 import * as THREE from 'three';
-import * as graphActions from '../actions/graph.actions';
-import * as graphSelectors from '../selectors';
+import { Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
-import { LndNode } from 'src/app/types/node.interface';
-import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
-import { selectNodeSetKeyValue } from '../selectors';
-import { LndChannel } from 'src/app/types/channels.interface';
-import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
-import { Vector3 } from 'three';
+import * as graphActions from '../actions/graph.actions';
+import { GraphState } from '../reducer';
+import * as graphSelectors from '../selectors';
+import { selectNodeSetKeyValue } from '../selectors';
+import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
 @Injectable()
@@ -28,6 +26,7 @@ export class NodeEffects {
         private minMaxCaluclator: MinMaxCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
+        private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
@@ -86,26 +85,22 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    public filterNodeCache: Map<string, LndChannel> = new Map<string, LndChannel>();
-
     filterNodesChannelCache$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
                 map((filteredNodes) => {
-                    this.filterNodeCache.clear();
+                    this.filteredNodeRegistry.clear();
                     filteredNodes.nodeSet.forEach((node) => {
                         node.connectedChannels.forEach((channel) => {
-                            this.filterNodeCache.set(
+                            this.filteredNodeRegistry.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
                             );
                         });
                     });
-                    return graphActions.setFilteredNodeChannels({
-                        channelSet: this.filterNodeCache,
-                    });
+                    return graphActions.setFilteredNodeChannels();
                 }),
             ),
         { dispatch: true },

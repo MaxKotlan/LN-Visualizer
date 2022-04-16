@@ -43,10 +43,7 @@ export const setFilteredNodes = createAction(
     props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
-export const setFilteredNodeChannels = createAction(
-    '[graph] setFilteredNodeChannels',
-    props<{ channelSet: Map<string, LndChannel> }>(),
-);
+export const setFilteredNodeChannels = createAction('[graph] setFilteredNodeChannels');
 
 export const concatinateChannelChunk = createAction(
     '[graph] concatinateChannelChunk',
