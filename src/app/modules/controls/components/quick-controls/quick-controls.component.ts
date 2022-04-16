@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { searchGraph, sortOrderChange } from '../../actions';
-import * as channelControlActions from '../../../controls-channel/actions';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
-import {
-    selectNodesSearchResults,
-    selectFinalMatcheNodesFromSearch,
-} from 'src/app/modules/graph-renderer/selectors';
 import { renderNodes, gotoNode } from 'src/app/modules/controls-node/actions';
 import { shouldRenderNodes } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
 import { shouldRenderEdges } from 'src/app/modules/controls-channel/selectors';
 import { minEdgesRecompute, renderEdges } from 'src/app/modules/controls-channel/actions';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
+import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 
 @Component({
     selector: 'app-quick-controls',
@@ -22,13 +17,18 @@ import { ScreenSizeService } from 'src/app/modules/screen-size/services';
     styleUrls: ['./quick-controls.component.scss'],
 })
 export class QuickControlsComponent {
-    constructor(private store$: Store<GraphState>, public screenSizeService: ScreenSizeService) {}
+    constructor(
+        private store$: Store<GraphState>,
+        public screenSizeService: ScreenSizeService,
+        private nodeSearchEffects: NodeSearchEffects,
+    ) {}
 
-    public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
+    public nodeSearchResults$ = this.nodeSearchEffects.selectNodesSearchResults$;
     public shouldRenderEdges$ = this.store$.select(shouldRenderEdges);
     public shouldRenderNodes$ = this.store$.select(shouldRenderNodes);
 
-    public selectFinalMatcheNodesFromSearch$ = this.store$.select(selectFinalMatcheNodesFromSearch);
+    public selectFinalMatcheNodesFromSearch$ =
+        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$;
 
     onTextChange(event: any) {
         if (event?.target?.value)

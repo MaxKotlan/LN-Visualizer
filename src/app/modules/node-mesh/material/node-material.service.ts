@@ -12,8 +12,8 @@ import {
 } from '../../controls-node/selectors/node-controls.selectors';
 import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
+import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
-import { selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
 import { NodeShader } from '../shaders';
 import { NodeTextures } from '../textures/lightning-node-texture.service';
@@ -27,6 +27,7 @@ export class NodeMaterial extends THREE.ShaderMaterial {
         private animationTimeService: AnimationTimeService,
         private nodeTextures: NodeTextures,
         private actions: Actions,
+        private nodeSearchEffects: NodeSearchEffects,
     ) {
         super(NodeShader);
         this.uniforms['pointTexture'] = { value: this.nodeTextures.getTexture('lightningIcon') };
@@ -70,9 +71,9 @@ export class NodeMaterial extends THREE.ShaderMaterial {
             this.uniforms['motionIntensity'] = { value: updatedIntensity };
         });
 
-        this.store$
-            .select(selectFinalPositionFromSearch)
-            .subscribe((position) => (this.uniforms['motionOrigin'] = position));
+        this.nodeSearchEffects.selectFinalPositionFromSearch$.subscribe(
+            (position) => (this.uniforms['motionOrigin'] = position),
+        );
 
         this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
             this.uniforms['mouseRayOrigin'] = new Uniform(

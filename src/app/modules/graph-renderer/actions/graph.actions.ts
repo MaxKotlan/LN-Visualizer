@@ -31,40 +31,25 @@ export const concatinateNodeChunk = createAction(
     props<{ nodeSubSet: LndNodeWithPosition[] }>(),
 );
 
-export const computeNodeStatistics = createAction(
-    '[graph] computeNodeStatistics',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const computeNodeStatistics = createAction('[graph] computeNodeStatistics');
 
-export const cacheProcessedGraphNodeChunk = createAction(
-    '[graph] cacheProcessedGraphNodeChunk',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
 
 export const setFilteredNodes = createAction(
     '[graph] setFilteredNodes',
     props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
-export const setFilteredNodeChannels = createAction(
-    '[graph] setFilteredNodeChannels',
-    props<{ channelSet: Map<string, LndChannel> }>(),
-);
+export const setFilteredNodeChannels = createAction('[graph] setFilteredNodeChannels');
 
 export const concatinateChannelChunk = createAction(
     '[graph] concatinateChannelChunk',
     props<{ channelSubSet: LndChannel[] }>(),
 );
 
-export const cacheProcessedChannelChunk = createAction(
-    '[graph] cacheProcessedChannelChunk',
-    props<{ channelSet: Map<string, LndChannel> }>(),
-);
+export const cacheProcessedChannelChunk = createAction('[graph] cacheProcessedChannelChunk');
 
-export const graphNodePositionRecalculate = createAction(
-    '[graph] graphNodePositionRecalculate',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const graphNodePositionRecalculate = createAction('[graph] graphNodePositionRecalculate');
 
 export const processGraphChannelChunk = createAction(
     '[graph] processGraphChannelChunk',

@@ -21,6 +21,7 @@ import { NodeMeshEffects } from './effects/node-mesh.effects';
 import { ChannelMeshEffects } from './effects/channel-mesh.effects';
 import { NodeMeshModule } from '../node-mesh/node-mesh.module';
 import { ChannelMeshModule } from '../channel-mesh/channel-mesh.module';
+import { NodeSearchEffects } from './effects/node-search.effects';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { ChannelMeshModule } from '../channel-mesh/channel-mesh.module';
             ChannelEffects,
             NodeMeshEffects,
             ChannelMeshEffects,
+            NodeSearchEffects,
         ]),
         StoreModule.forFeature('graphState', reducer),
         StoreModule.forFeature('graphStatisticsState', graphStatisticsReducer.reducer),

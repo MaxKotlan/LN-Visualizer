@@ -16,8 +16,8 @@ export interface GraphState {
     channelVertexBufferSize: number;
     channelColorBufferSize: number;
 
-    nodeSet: Map<string, LndNodeWithPosition>;
-    channelSet: Map<string, LndChannel>;
+    // nodeSet: Map<string, LndNodeWithPosition>;
+    // channelSet: Map<string, LndChannel>;
     nodeCount: number;
     channelCount: number;
     loadingText: string;
@@ -35,8 +35,8 @@ const initialState: GraphState = {
     nodeCapacityBufferSize: 0,
     channelVertexBufferSize: 0,
     channelColorBufferSize: 0,
-    nodeSet: new Map<string, LndNodeWithPosition>(),
-    channelSet: new Map<string, LndChannel>(),
+    // nodeSet: new Map<string, LndNodeWithPosition>(),
+    // channelSet: new Map<string, LndChannel>(),
     nodeCount: 0,
     channelCount: 0,
     loadingText: '',
@@ -46,7 +46,7 @@ const initialState: GraphState = {
 };
 
 //Allocate 10% extra buffer space for new channels and nodes
-const bufferOverheadStorage = 1.1;
+const bufferOverheadStorage = 1.0;
 
 export const reducer = createReducer(
     initialState,
@@ -71,24 +71,22 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
         ...state,
-        nodeSet,
         nodeChunksProcessed: state.nodeChunksProcessed + 1,
     })),
-    on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
+    on(graphActions.cacheProcessedChannelChunk, (state) => ({
         ...state,
-        channelSet,
         channelChunksProcessed: state.channelChunksProcessed + 1,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
-        ...state,
-        nodeCount: nodeSet.size,
-    })),
-    on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
-        ...state,
-        channelCount: channelSet.size,
-    })),
+    // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+    //     ...state,
+    //     nodeCount: nodeSet.size,
+    // })),
+    // on(graphActions.cacheProcessedChannelChunk, (state) => ({
+    //     ...state,
+    //     // channelCount: channelSet.size,
+    // })),
     on(graphActions.setTotalChannelCapacity, (state, { totalChannelCapacity }) => ({
         ...state,
         totalChannelCapacity,

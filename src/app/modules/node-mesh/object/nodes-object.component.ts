@@ -24,12 +24,12 @@ import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { GraphState } from '../../graph-renderer/reducer';
-import { selectClosestPoint, selectFinalPositionFromSearch } from '../../graph-renderer/selectors';
 import { LndRaycasterService } from '../../graph-renderer/services';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
 import { NodePoint } from '../three-js-objects/NodePoint';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
+import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 
 @Component({
     selector: 'app-nodes-object',
@@ -54,6 +54,7 @@ export class NodesObjectComponent
         private nodeGeometry: NodeGeometry,
         private nodeMaterial: NodeMaterial,
         private animationTimeService: AnimationTimeService,
+        private nodeSearchEffects: NodeSearchEffects,
     ) {
         super(rendererService, parent);
     }
@@ -90,31 +91,19 @@ export class NodesObjectComponent
     private onMouseEnter(event: any) {
         document.body.style.cursor = 'pointer';
         const intersection = event as THREE.Intersection;
-        this.store$
-            .select(selectClosestPoint(intersection.point))
-            .pipe(take(1))
-            .subscribe((node) => {
-                if (!node) return;
-                this.nodeMaterial.handleHoverUpdate(node.position);
-                this.toolTipService.open(
-                    event.mouseEvent.clientX,
-                    event.mouseEvent.clientY,
-                    node.alias,
-                );
-            });
+        const node = this.nodeSearchEffects.selectClosestPoint(intersection.point);
+        if (!node) return;
+        this.nodeMaterial.handleHoverUpdate(node.position);
+        this.toolTipService.open(event.mouseEvent.clientX, event.mouseEvent.clientY, node.alias);
     }
 
     private onClick(event: any) {
         const intersection = event as THREE.Intersection;
-        this.store$
-            .select(selectClosestPoint(intersection.point))
-            .pipe(take(1))
-            .subscribe((node) => {
-                if (!node) return;
-                this.toolTipService.close();
-                console.log(node);
-                this.store$.dispatch(searchGraph({ searchText: node.public_key }));
-            });
+        const node = this.nodeSearchEffects.selectClosestPoint(intersection.point);
+        if (!node) return;
+        this.toolTipService.close();
+        console.log(node);
+        this.store$.dispatch(searchGraph({ searchText: node.public_key }));
     }
 
     protected newObject3DInstance(): NodePoint {
@@ -135,7 +124,7 @@ export class NodesObjectComponent
             this.object?.setMotionIntenstiy(updatedIntensity);
         });
 
-        this.store$.select(selectFinalPositionFromSearch).subscribe((position) => {
+        this.nodeSearchEffects.selectFinalPositionFromSearch$.subscribe((position) => {
             this.object?.setMotionOrigin(position.value);
         });
     }

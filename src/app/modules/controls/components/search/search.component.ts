@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
-import {
-    selectNodesSearchResults,
-    selectFinalMatchAliasFromSearch,
-} from 'src/app/modules/graph-renderer/selectors';
 import { searchGraph } from '../../actions/controls.actions';
 
 @Component({
@@ -13,10 +10,10 @@ import { searchGraph } from '../../actions/controls.actions';
     styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent {
-    constructor(private store$: Store<GraphState>) {}
+    constructor(private store$: Store<GraphState>, private nodeSearchEffects: NodeSearchEffects) {}
 
-    public nodeSearchResults$ = this.store$.select(selectNodesSearchResults);
-    public selectSearchString$ = this.store$.select(selectFinalMatchAliasFromSearch);
+    public nodeSearchResults$ = this.nodeSearchEffects.selectNodesSearchResults$;
+    public selectSearchString$ = this.nodeSearchEffects.selectFinalMatchAliasFromSearch$;
 
     clear() {
         this.store$.dispatch(searchGraph({ searchText: '' }));
