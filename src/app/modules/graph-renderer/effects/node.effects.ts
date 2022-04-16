@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, from, map, mergeMap, withLatestFrom } from 'rxjs';
+import { combineLatest, debounceTime, from, map, mergeMap } from 'rxjs';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { LndNode } from 'src/app/types/node.interface';
-import * as THREE from 'three';
 import { Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
@@ -13,7 +12,6 @@ import { FilterEvaluatorService } from '../../controls-graph-filter/services/fil
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import * as graphSelectors from '../selectors';
-import { selectNodeSetKeyValue } from '../selectors';
 import { FilteredChannelRegistryService } from '../services';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
@@ -30,8 +28,6 @@ export class NodeEffects {
         private filteredNodeRegistryService: FilteredNodeRegistryService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
     ) {}
-
-    private readonly origin = new THREE.Vector3(0, 0, 0);
 
     concatinateNodeChunk$ = createEffect(
         () =>
