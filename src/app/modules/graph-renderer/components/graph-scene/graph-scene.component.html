@@ -3,7 +3,7 @@
         #mainRenderer
         lnd-raycaster-scene
         [style]="
-            (screenSizeService.isMobile$ | async)
+            (screenSizeService.isMobilePortrait$ | async)
                 ? 'height: calc(100vh - 52.063px);'
                 : 'height: 100vh'
         "

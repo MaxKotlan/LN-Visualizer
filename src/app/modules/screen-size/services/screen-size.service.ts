@@ -13,4 +13,8 @@ export class ScreenSizeService {
         .pipe(map((bs) => bs.matches));
 
     public isDesktop$: Observable<boolean> = this.isMobile$.pipe(map((s) => !s));
+
+    public isMobilePortrait$: Observable<boolean> = this.observer
+        .observe(Breakpoints.HandsetPortrait)
+        .pipe(map((bs) => bs.matches));
 }

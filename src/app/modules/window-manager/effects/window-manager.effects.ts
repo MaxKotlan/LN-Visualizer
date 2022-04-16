@@ -63,6 +63,14 @@ export class WindowManagerEffects {
     //     { dispatch: true },
     // );
 
+    $openOnSwitch = createEffect(() =>
+        this.screenSizeService.isDesktop$.pipe(
+            distinctUntilChanged(),
+            filter((x) => x),
+            map(() => windowManagementActions.setModalOpen({ modalId: quickControlsId })),
+        ),
+    );
+
     $closeOnSwitch = createEffect(() =>
         this.screenSizeService.isMobile$.pipe(
             distinctUntilChanged(),
