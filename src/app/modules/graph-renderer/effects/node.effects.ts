@@ -35,12 +35,10 @@ export class NodeEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.concatinateNodeChunk),
-                withLatestFrom(this.store$.select(selectNodeSetKeyValue)),
-                map(([action, nodeState]) => {
+                map((action) => {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
-
                     return graphActions.cacheProcessedGraphNodeChunk();
                 }),
             ),
@@ -55,9 +53,7 @@ export class NodeEffects {
                     this.nodeRegistry.forEach((node) => {
                         this.minMaxCaluclator.checkNode(node);
                     });
-                    return graphActions.computeNodeStatistics({
-                        nodeSet: this.nodeRegistry,
-                    });
+                    return graphActions.computeNodeStatistics();
                 }),
             ),
         { dispatch: true },
@@ -71,9 +67,9 @@ export class NodeEffects {
                 this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
                 this.store$.select(filterSelectors.activeNodeFilters).pipe(debounceTime(100)),
             ]).pipe(
-                map(([cacheProcessedGraphNodeChunk, activeNodeFilters]) => {
+                map(([, activeNodeFilters]) => {
                     this.filteredSet.clear();
-                    cacheProcessedGraphNodeChunk.nodeSet.forEach((node) => {
+                    this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
                             this.filteredSet.set(node.public_key, node);
                     });
