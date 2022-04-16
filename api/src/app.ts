@@ -1,16 +1,16 @@
 import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { LndGraphStateService, WebSocketService } from './services';
+import { LndGraphManagerService, WebSocketService } from './services';
 
 @injectable()
 export class App {
     constructor(
-        private graphStateService: LndGraphStateService,
+        private graphManagerService: LndGraphManagerService,
         private webSocketService: WebSocketService,
     ) {}
 
     public async init() {
-        await this.graphStateService.init();
+        await this.graphManagerService.init();
         this.webSocketService.init();
     }
 }

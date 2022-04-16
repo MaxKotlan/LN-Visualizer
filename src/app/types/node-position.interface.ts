@@ -5,13 +5,13 @@ import { LndChannel } from '../../../api/src/models';
 
 export interface LndNodeWithPosition extends LndNode {
     position: THREE.Vector3;
-    connectedChannels: MaxPriorityQueue<LndChannelWithParent>;
-    parent: LndNodeWithPosition | null;
-    children: Map<string, LndNodeWithPosition>;
+    connectedChannels: Map<string, LndChannel>;
+    // parent: LndNodeWithPosition | null;
+    // children: Map<string, LndNodeWithPosition>;
     node_capacity: number;
     channel_count: number;
-    visited: boolean;
-    depth: number;
+    // visited: boolean;
+    // depth: number;
 }
 
 export interface LndChannelWithParent extends LndChannel {

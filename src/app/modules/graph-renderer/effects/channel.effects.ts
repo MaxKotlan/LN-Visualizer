@@ -18,10 +18,10 @@ export class ChannelEffects {
     concatinateChannelChunk$ = createEffect(
         () =>
             this.actions$.pipe(
-                ofType(graphActions.concatinateChannelChunk),
+                ofType(graphActions.processGraphChannelChunk),
                 withLatestFrom(this.store$.select(selectChannelSetKeyValue)),
                 map(([action, channelState]) => {
-                    action.channelSubSet.forEach((channel) => {
+                    action.chunk.data.forEach((channel) => {
                         this.minMaxCaluclator.checkChannel(channel);
                         channelState.set(channel.id, channel);
                     });
@@ -41,16 +41,31 @@ export class ChannelEffects {
                 withLatestFrom(
                     this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
                 ),
-                throttleTime(200),
-                map(([, nodeRegistry]) => {
-                    // return of(
+                map(([channels, nodeRegistry]) => {
+                    channels.channelSet.forEach((channel) => {
+                        channel.policies.forEach((policy) => {
+                            const node = nodeRegistry.nodeSet.get(policy.public_key);
+                            if (node) {
+                                node.node_capacity += channel.capacity;
+                                node.channel_count += 1;
+                                node.connectedChannels.set(channel.id, channel);
+                            }
+                        });
+                    });
+
                     return graphActions.graphNodePositionRecalculate({
                         nodeSet: nodeRegistry.nodeSet,
                     });
-                    //)
                 }),
             ),
         { dispatch: true },
+    );
+
+    recomputestuff$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(graphActions.graphNodePositionRecalculate),
+            map((d) => graphActions.cacheProcessedGraphNodeChunk({ nodeSet: d.nodeSet })),
+        ),
     );
 
     // channelClosedEvent$ = createEffect(
