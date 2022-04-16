@@ -6,6 +6,7 @@ import { UiModule } from '../ui/ui.module';
 import { GraphViewComponent } from './components';
 import { DonateModule } from '../donate/donate.module';
 import { AlertsModule } from '../alerts/alerts.module';
+import { ControlsSearchModule } from '../controls-search/controls-search.module';
 
 @NgModule({
     declarations: [GraphViewComponent],
@@ -13,6 +14,7 @@ import { AlertsModule } from '../alerts/alerts.module';
         CommonModule,
         FloatingButtonMenuModule,
         GraphRendererModule,
+        ControlsSearchModule,
         UiModule,
         DonateModule,
         AlertsModule,

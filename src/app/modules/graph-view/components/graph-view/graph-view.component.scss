@@ -29,6 +29,11 @@ app-loading-bar {
 //     pointer-events: none;
 // }
 
+app-sidenav-open-button {
+    position: absolute;
+    z-index: 100;
+}
+
 app-floating-buttons {
     position: absolute;
     z-index: 100;

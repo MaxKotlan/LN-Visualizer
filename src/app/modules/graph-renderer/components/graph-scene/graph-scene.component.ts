@@ -14,6 +14,7 @@ import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
 import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
 import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
+import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
@@ -38,6 +39,7 @@ export class GraphSceneComponent implements AfterViewInit {
         private animationService: AnimationService,
         public toolTipService: ToolTipService,
         private nodeSearchEffects: NodeSearchEffects,
+        public screenSizeService: ScreenSizeService,
     ) {}
 
     public selectCameraFov$ = this.store$.select(selectCameraFov);
