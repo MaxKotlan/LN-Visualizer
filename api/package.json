@@ -23,6 +23,8 @@
         "ln-service": "^53.2.0",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.5.1",
+        "seedrandom": "^3.0.5",
+        "three": "^0.139.2",
         "ts-priority-queue": "^0.1.1",
         "ws": "^8.4.0"
     },
