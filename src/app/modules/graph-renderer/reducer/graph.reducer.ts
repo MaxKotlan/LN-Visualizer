@@ -71,20 +71,20 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
-        ...state,
-        nodeSet,
-        nodeChunksProcessed: state.nodeChunksProcessed + 1,
-    })),
+    // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+    //     ...state,
+    //     nodeSet,
+    //     nodeChunksProcessed: state.nodeChunksProcessed + 1,
+    // })),
     on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
         channelSet,
         channelChunksProcessed: state.channelChunksProcessed + 1,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
-        ...state,
-        nodeCount: nodeSet.size,
-    })),
+    // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
+    //     ...state,
+    //     nodeCount: nodeSet.size,
+    // })),
     on(graphActions.cacheProcessedChannelChunk, (state, { channelSet }) => ({
         ...state,
         channelCount: channelSet.size,

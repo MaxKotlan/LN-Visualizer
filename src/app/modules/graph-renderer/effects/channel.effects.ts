@@ -6,6 +6,7 @@ import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { selectChannelSetKeyValue } from '../selectors';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
+import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
 @Injectable()
 export class ChannelEffects {
@@ -13,6 +14,7 @@ export class ChannelEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private minMaxCaluclator: MinMaxCalculatorService,
+        private nodeRegistry: NodeRegistryService,
     ) {}
 
     concatinateChannelChunk$ = createEffect(
@@ -38,13 +40,10 @@ export class ChannelEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedChannelChunk),
-                withLatestFrom(
-                    this.actions$.pipe(ofType(graphActions.cacheProcessedGraphNodeChunk)),
-                ),
-                map(([channels, nodeRegistry]) => {
+                map((channels) => {
                     channels.channelSet.forEach((channel) => {
                         channel.policies.forEach((policy) => {
-                            const node = nodeRegistry.nodeSet.get(policy.public_key);
+                            const node = this.nodeRegistry.get(policy.public_key);
                             if (node) {
                                 node.node_capacity += channel.capacity;
                                 node.channel_count += 1;
@@ -52,10 +51,7 @@ export class ChannelEffects {
                             }
                         });
                     });
-
-                    return graphActions.graphNodePositionRecalculate({
-                        nodeSet: nodeRegistry.nodeSet,
-                    });
+                    return graphActions.graphNodePositionRecalculate();
                 }),
             ),
         { dispatch: true },
@@ -64,7 +60,7 @@ export class ChannelEffects {
     recomputestuff$ = createEffect(() =>
         this.actions$.pipe(
             ofType(graphActions.graphNodePositionRecalculate),
-            map((d) => graphActions.cacheProcessedGraphNodeChunk({ nodeSet: d.nodeSet })),
+            map((d) => graphActions.cacheProcessedGraphNodeChunk()),
         ),
     );
 

@@ -36,10 +36,7 @@ export const computeNodeStatistics = createAction(
     props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
 );
 
-export const cacheProcessedGraphNodeChunk = createAction(
-    '[graph] cacheProcessedGraphNodeChunk',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
 
 export const setFilteredNodes = createAction(
     '[graph] setFilteredNodes',
@@ -61,10 +58,7 @@ export const cacheProcessedChannelChunk = createAction(
     props<{ channelSet: Map<string, LndChannel> }>(),
 );
 
-export const graphNodePositionRecalculate = createAction(
-    '[graph] graphNodePositionRecalculate',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const graphNodePositionRecalculate = createAction('[graph] graphNodePositionRecalculate');
 
 export const processGraphChannelChunk = createAction(
     '[graph] processGraphChannelChunk',
