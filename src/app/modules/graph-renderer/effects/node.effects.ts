@@ -14,7 +14,7 @@ import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import * as graphSelectors from '../selectors';
 import { selectNodeSetKeyValue } from '../selectors';
-import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+import { FilteredChannelRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
@@ -26,7 +26,7 @@ export class NodeEffects {
         private minMaxCaluclator: MinMaxCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
-        private filteredNodeRegistry: FilteredNodeRegistryService,
+        private filteredChannelRegistryService: FilteredChannelRegistryService,
     ) {}
 
     private readonly origin = new THREE.Vector3(0, 0, 0);
@@ -90,10 +90,10 @@ export class NodeEffects {
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
                 map((filteredNodes) => {
-                    this.filteredNodeRegistry.clear();
+                    this.filteredChannelRegistryService.clear();
                     filteredNodes.nodeSet.forEach((node) => {
                         node.connectedChannels.forEach((channel) => {
-                            this.filteredNodeRegistry.set(
+                            this.filteredChannelRegistryService.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
