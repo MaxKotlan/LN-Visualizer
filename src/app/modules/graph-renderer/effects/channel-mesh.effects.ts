@@ -11,10 +11,9 @@ import {
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
 import { setFilteredNodeChannels, setFilteredNodes } from '../actions';
 import { GraphState } from '../reducer';
-import { ChannelColorService } from '../services';
+import { ChannelColorService, FilteredChannelRegistryService } from '../services';
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
-import { FilteredChannelRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
 @Injectable()
 export class ChannelMeshEffects {

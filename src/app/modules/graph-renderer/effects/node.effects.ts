@@ -14,7 +14,7 @@ import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import * as graphSelectors from '../selectors';
 import { selectNodeSetKeyValue } from '../selectors';
-import { FilteredChannelRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+import { FilteredChannelRegistryService } from '../services';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
