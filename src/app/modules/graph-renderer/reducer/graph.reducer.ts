@@ -46,7 +46,7 @@ const initialState: GraphState = {
 };
 
 //Allocate 10% extra buffer space for new channels and nodes
-const bufferOverheadStorage = 1.1;
+const bufferOverheadStorage = 1.0;
 
 export const reducer = createReducer(
     initialState,
@@ -71,11 +71,10 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
-    //     ...state,
-    //     nodeSet,
-    //     nodeChunksProcessed: state.nodeChunksProcessed + 1,
-    // })),
+    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
+        ...state,
+        nodeChunksProcessed: state.nodeChunksProcessed + 1,
+    })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({
         ...state,
         channelChunksProcessed: state.channelChunksProcessed + 1,
@@ -84,10 +83,10 @@ export const reducer = createReducer(
     //     ...state,
     //     nodeCount: nodeSet.size,
     // })),
-    on(graphActions.cacheProcessedChannelChunk, (state) => ({
-        ...state,
-        // channelCount: channelSet.size,
-    })),
+    // on(graphActions.cacheProcessedChannelChunk, (state) => ({
+    //     ...state,
+    //     // channelCount: channelSet.size,
+    // })),
     on(graphActions.setTotalChannelCapacity, (state, { totalChannelCapacity }) => ({
         ...state,
         totalChannelCapacity,

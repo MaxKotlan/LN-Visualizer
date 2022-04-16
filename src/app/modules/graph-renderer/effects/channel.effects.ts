@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { map, throttleTime, withLatestFrom } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
-import { GraphState } from '../reducer';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
@@ -12,7 +10,6 @@ import { NodeRegistryService } from '../services/node-registry/node-registry.ser
 export class ChannelEffects {
     constructor(
         private actions$: Actions,
-        private store$: Store<GraphState>,
         private minMaxCaluclator: MinMaxCalculatorService,
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
@@ -42,9 +39,9 @@ export class ChannelEffects {
                     this.channelRegistry.forEach((channel) => {
                         channel.policies.forEach((policy) => {
                             const node = this.nodeRegistry.get(policy.public_key);
-                            if (node) {
-                                node.node_capacity += channel.capacity;
+                            if (node && !node.connectedChannels.has(channel.id)) {
                                 node.channel_count += 1;
+                                node.node_capacity += channel.capacity;
                                 node.connectedChannels.set(channel.id, channel);
                             }
                         });
