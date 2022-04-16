@@ -16,7 +16,7 @@
 
 <!-- *ngIf="screenSizeService.isDesktop$ | async" -->
 <div *ngIf="true" class="desktop-card">
-    <span style="display: flex; align-items: center">
+    <!-- <span style="display: flex; align-items: center">
         <app-search></app-search>
         <button
             style="margin-bottom: 1.34375em; height: 52.063px; margin-left: 0.4rem"
@@ -27,7 +27,8 @@
         >
             Goto
         </button>
-    </span>
+    </span> -->
+    <app-search-and-go></app-search-and-go>
     <mat-divider></mat-divider>
     <div
         style="
