@@ -61,6 +61,8 @@ export const processChunkInfo = createAction(
     props<{ chunkInfo: ChunkInfo }>(),
 );
 
+export const initSyncRequestComplete = createAction('[graph] initSyncRequestComplete');
+
 export const setTotalChannelCapacity = createAction(
     '[graph] setTotalChannelCapacity',
     props<{ totalChannelCapacity: number }>(),

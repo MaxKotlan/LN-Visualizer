@@ -37,6 +37,7 @@
         "codemirror": "^5.65.2",
         "colormap": "^2.3.2",
         "dagre": "^0.8.5",
+        "localbase": "^0.7.5",
         "lodash": "^4.17.21",
         "moment": "^2.29.2",
         "rxjs": "~7.4.0",

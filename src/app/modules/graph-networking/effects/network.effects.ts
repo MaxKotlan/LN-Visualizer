@@ -21,11 +21,10 @@ export class NetworkEffects {
                 mergeMap(() =>
                     this.initialSyncApiService.listenToStream().pipe(
                         map((data) => {
-                            if ((data as unknown as string) === 'requestComplete') {
-                                this.initialSyncApiService.completeRequest();
-                                return;
-                            }
                             switch (data.type) {
+                                case 'requestComplete':
+                                    this.initialSyncApiService.completeRequest();
+                                    return graphActions.initSyncRequestComplete();
                                 case 'chunkInfo':
                                     return graphActions.processChunkInfo({
                                         chunkInfo: data as unknown as ChunkInfo,
@@ -56,6 +55,7 @@ export class NetworkEffects {
                             ]),
                         ),
                         catchError((e: ErrorEvent) => {
+                            console.log(e);
                             return of(
                                 alertActions.createAlert({
                                     alert: {
