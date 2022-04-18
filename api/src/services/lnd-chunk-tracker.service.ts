@@ -16,6 +16,5 @@ export class LndChunkTrackerService {
             edgeChunks: Math.ceil(graph.channels.length / this.chunkSize),
             type: 'chunkInfo',
         } as ChunkInfo;
-        console.log('CHUNK INFO:', this.chunkInfo);
     }
 }

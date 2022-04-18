@@ -19,13 +19,12 @@ export class LndGraphManagerService {
     ) {}
 
     public async init() {
-        await this.initialGraphSync();
-        //await this.subscribeToGraphChanges();
-        schedule.scheduleJob('0 0 * * *', () => this.initialGraphSync());
+        await this.graphSync(true);
+        schedule.scheduleJob('0 0 * * *', () => this.graphSync(false));
     }
 
-    protected async initialGraphSync() {
-        console.log('Starting Graph Sync');
+    protected async graphSync(isInitialSync: boolean) {
+        if (isInitialSync) console.log('Starting Graph Sync');
         try {
             const graphState = await lightning.getNetworkGraph(
                 this.lndAuthService.authenticatedLnd,
@@ -33,8 +32,10 @@ export class LndGraphManagerService {
             this.graphRegistryService.mapToRegistry(graphState);
             // console.log(this.graphRegistryService.channelMap)
             this.chunkTrackerService.calculateChunkInfo(graphState);
+            if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
             this.positionCalculatorService.calculatePositions();
-            console.log('Done with Graph Sync');
+            if (isInitialSync) console.log('Done with Graph Sync');
+            else console.log('Graph resynced');
         } catch (e) {
             console.error(e);
             process.exit(1);
