@@ -1,11 +1,12 @@
 import { injectable } from 'inversify';
 import * as lightning from 'lightning';
-import { fromEvent } from 'rxjs';
+import { fromEvent, take } from 'rxjs';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 import { PositionCalculatorService } from './position-calculator.service';
 import { WebSocketService } from './websocket-service';
+import schedule from 'node-schedule';
 
 @injectable()
 export class LndGraphManagerService {
@@ -19,6 +20,8 @@ export class LndGraphManagerService {
 
     public async init() {
         await this.initialGraphSync();
+        //await this.subscribeToGraphChanges();
+        schedule.scheduleJob('0 0 * * *', () => this.initialGraphSync());
     }
 
     protected async initialGraphSync() {
@@ -28,6 +31,7 @@ export class LndGraphManagerService {
                 this.lndAuthService.authenticatedLnd,
             );
             this.graphRegistryService.mapToRegistry(graphState);
+            // console.log(this.graphRegistryService.channelMap)
             this.chunkTrackerService.calculateChunkInfo(graphState);
             this.positionCalculatorService.calculatePositions();
             console.log('Done with Graph Sync');
@@ -42,17 +46,19 @@ export class LndGraphManagerService {
         //fromEvent(graphEvents, 'node_updated').subscribe((update) => {});
         //fromEvent(graphEvents, 'channel_updated').subscribe((update) => console.log(update));
         fromEvent(graphEvents, 'channel_closed').subscribe(async (event) => {
-            console.log(`${(event as any)?.id} channel closed`);
-            //await this.initialGraphSync();
+            // console.log(`${(event as any)?.id} channel closed`);
         });
         fromEvent(graphEvents, 'channel_updated').subscribe(async (event) => {
-            // console.log(`${(event as any)?.id} channel updated`);
-            this.websocketService.channelUpdated(`${(event as any)?.id}`);
-            //await this.initialGraphSync();
+            console.log(`${(event as any)?.id} channel updated`);
+            console.log('ev', event);
+            const ch = this.graphRegistryService.channelMap[(event as any)?.id];
+            console.log('ch', ch);
+            console.log(this.graphRegistryService.channelMap.get(`${(event as any)?.id}`));
+
+            // this.websocketService.channelUpdated(`${(event as any)?.id}`);
         });
         fromEvent(graphEvents, 'node_updated').subscribe(async (event) => {
-            console.log('node updated', event);
-            //await this.initialGraphSync();
+            // console.log('node updated', event);
         });
     }
 }
