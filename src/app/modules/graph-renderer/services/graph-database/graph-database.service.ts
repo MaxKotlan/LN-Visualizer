@@ -19,13 +19,13 @@ export class GraphDatabaseService {
         this.load();
     }
 
-    public save() {
+    public save(channels) {
         // console.log('Saving', channel);
         // this.dbService.bulkAdd('nodes', Array.from(this.nodeRegistry));
         // const channels = Array.from(this.channelRegistry.values());
         // console.log(channels);
         // console.log('setting');
-        // if (this.shouldLoad) this.db.collection('channels').set(channels);
+        if (this.shouldLoad) this.db.collection('channels').set(channels);
     }
 
     public shouldLoad = true;
