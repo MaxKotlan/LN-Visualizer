@@ -14,9 +14,9 @@ export class GraphDatabaseService {
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
     ) {
-        console.log(this.db);
+        // console.log(this.db);
         this.db.config.debug = false;
-        this.load();
+        // this.load();
     }
 
     public save() {
