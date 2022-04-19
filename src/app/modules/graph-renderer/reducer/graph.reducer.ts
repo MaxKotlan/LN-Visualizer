@@ -60,7 +60,6 @@ export const reducer = createReducer(
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
-        isRequestInitiating: false,
         nodeVertexBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeColorBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeCapacityBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
@@ -69,6 +68,7 @@ export const reducer = createReducer(
     })),
     on(graphActions.processGraphNodeChunk, (state) => ({
         ...state,
+        isRequestInitiating: false,
         loadingText: `Downloading Nodes ${state.nodeChunksProcessed + 1} / ${
             state.chunkInfo?.edgeChunks
         }`,
