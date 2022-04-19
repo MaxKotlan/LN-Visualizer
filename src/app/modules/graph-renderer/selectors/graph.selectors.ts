@@ -19,6 +19,11 @@ export const selectChannelChunksProcessed = createSelector(
 
 export const selectChunkInfo = createSelector(graphSelector, (state) => state.chunkInfo);
 
+export const isRequestInitiating = createSelector(
+    graphSelector,
+    (state) => state.isRequestInitiating,
+);
+
 export const selectChunkRemainingPercentage = createSelector(
     selectNodeChunksProcessed,
     selectChannelChunksProcessed,

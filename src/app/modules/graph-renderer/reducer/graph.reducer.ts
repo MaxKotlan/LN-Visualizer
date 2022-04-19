@@ -24,9 +24,11 @@ export interface GraphState {
     totalChannelCapacity: number;
     maximumChannelCapacity: number;
     minimumChannelCapacity: number;
+    isRequestInitiating: boolean;
 }
 
 const initialState: GraphState = {
+    isRequestInitiating: false,
     chunkInfo: null,
     nodeChunksProcessed: 0,
     channelChunksProcessed: 0,
@@ -50,9 +52,15 @@ const bufferOverheadStorage = 1.0;
 
 export const reducer = createReducer(
     initialState,
+    //on(graphActions)
+    on(graphActions.initializeGraphSyncProcess, (state) => ({
+        ...state,
+        isRequestInitiating: true,
+    })),
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
+        isRequestInitiating: false,
         nodeVertexBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeColorBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeCapacityBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,

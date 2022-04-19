@@ -4,13 +4,12 @@ app-floating-buttons {
     z-index: 1000;
 }
 
-mat-spinner {
+app-loading-spinner {
     position: absolute;
     transform: translateX(-50%) translateY(-50%);
     top: 50%;
     left: 50%;
     z-index: 100;
-    color: aquamarine;
 }
 
 app-loading-bar {

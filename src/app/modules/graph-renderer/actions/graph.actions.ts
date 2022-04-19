@@ -9,6 +9,8 @@ import { LndNode } from '../../../types/node.interface';
 
 export const requestGraph = createAction('[graph] requestGraph');
 
+export const initiateRequest = createAction('[graph] initiateRequest');
+
 export const requestGraphSuccess = createAction(
     '[graph] requestGraphSuccess',
     props<{ graph: LnGraph }>(),
