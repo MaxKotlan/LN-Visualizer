@@ -45,7 +45,6 @@ export class ChannelEffects {
                                 node.channel_count += 1;
                                 node.node_capacity += channel.capacity;
                                 node.connectedChannels.set(channel.id, channel);
-                                // this.graphDatabaseService.save(channel);
                             }
                         });
                     });
@@ -62,14 +61,14 @@ export class ChannelEffects {
         ),
     );
 
-    // saveToDatabase$ = createEffect(
-    //     () =>
-    //         this.actions$.pipe(
-    //             ofType(graphActions.initSyncRequestComplete),
-    //             tap(() => this.graphDatabaseService.save()),
-    //         ),
-    //     { dispatch: false },
-    // );
+    saveToDatabase$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.initSyncRequestComplete),
+                tap(() => this.graphDatabaseService.save()),
+            ),
+        { dispatch: false },
+    );
 
     // channelClosedEvent$ = createEffect(
     //     () =>
