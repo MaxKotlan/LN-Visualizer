@@ -50,6 +50,7 @@ export class NodeEffects {
                     this.nodeRegistry.forEach((node) => {
                         this.minMaxCaluclator.checkNode(node);
                     });
+                    this.minMaxCaluclator.updateStore();
                     return graphActions.computeNodeStatistics();
                 }),
             ),
