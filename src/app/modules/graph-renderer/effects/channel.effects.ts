@@ -94,7 +94,7 @@ export class ChannelEffects {
                     ),
                 ),
             ),
-        { dispatch: true },
+        { dispatch: false },
     );
 
     // channelClosedEvent$ = createEffect(

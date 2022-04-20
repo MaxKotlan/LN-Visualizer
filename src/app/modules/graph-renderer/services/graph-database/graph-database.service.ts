@@ -6,7 +6,13 @@ import { LndChannel, LndNode } from 'api/src/models';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { Store } from '@ngrx/store';
-import { processChunkInfo } from '../../actions';
+import {
+    concatinateChannelChunk,
+    concatinateNodeChunk,
+    processChunkInfo,
+    processGraphChannelChunk,
+    processGraphNodeChunk,
+} from '../../actions';
 import { Vector3 } from 'three';
 import { MinMaxCalculatorService } from '../min-max-calculator/min-max-calculator.service';
 
@@ -20,9 +26,8 @@ export class GraphDatabaseService {
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
         private store$: Store<any>,
-        private minMaxCaluclator: MinMaxCalculatorService,
     ) {
-        this.db.version(1).stores({
+        this.db.version(2).stores({
             /*For performance reasons, storing data as singular object*/
             chunkInfo: 'id,data',
             nodes: 'id,data',
@@ -39,11 +44,18 @@ export class GraphDatabaseService {
     }
 
     async save() {
-        this.db['nodes'].add({ id: 0, data: this.nodeRegistry }).catch((e) => {
+        const nReg = Array.from(this.nodeRegistry.values()).map((n: LndNodeWithPosition) => ({
+            ...n,
+            connectedChannels: undefined,
+            node_capacity: undefined,
+            channel_count: undefined,
+        }));
+        this.db['nodes'].add({ id: 0, data: nReg }).catch((e) => {
             if (e.message.contains('QuotaExceededError'))
                 localStorage.setItem('database-save-error', e);
         });
-        this.db['channels'].add({ id: 0, data: this.channelRegistry }).catch((e) => {
+        const cReg = Array.from(this.channelRegistry.values());
+        this.db['channels'].add({ id: 0, data: cReg }).catch((e) => {
             if (e.message.contains('QuotaExceededError'))
                 localStorage.setItem('database-save-error', e);
         });
@@ -51,22 +63,16 @@ export class GraphDatabaseService {
     }
 
     async load() {
+        let start = performance.now();
+
         const chunkInfo = await this.loadChunkInfo();
         this.store$.dispatch(processChunkInfo({ chunkInfo: chunkInfo.data }));
         const nodes = await this.loadNodes();
+        this.store$.dispatch(processGraphNodeChunk({ chunk: { data: nodes.data } as any }));
         const channels = await this.loadChannels();
-        new Map(nodes.data).forEach((n: LndNodeWithPosition) => {
-            const a = {
-                ...n,
-                position: new Vector3(n.position.x, n.position.y, n.position.z),
-            };
-            this.nodeRegistry.set(n.public_key, a);
-        });
-        new Map(channels.data).forEach((c: LndChannel) => {
-            this.minMaxCaluclator.checkChannel(c);
-            this.channelRegistry.set(c.id, c);
-        });
-        this.minMaxCaluclator.updateStore();
+        this.store$.dispatch(processGraphChannelChunk({ chunk: { data: channels.data } as any }));
+
+        console.log('Loading from cache', performance.now() - start);
     }
 
     async loadChunkInfo() {
