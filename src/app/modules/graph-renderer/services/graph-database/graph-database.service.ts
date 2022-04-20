@@ -8,6 +8,7 @@ import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { Store } from '@ngrx/store';
 import { processChunkInfo } from '../../actions';
 import { Vector3 } from 'three';
+import { MinMaxCalculatorService } from '../min-max-calculator/min-max-calculator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,6 +20,7 @@ export class GraphDatabaseService {
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
         private store$: Store<any>,
+        private minMaxCaluclator: MinMaxCalculatorService,
     ) {
         this.db.version(1).stores({
             /*For performance reasons, storing data as singular object*/
@@ -40,7 +42,6 @@ export class GraphDatabaseService {
 
     async load() {
         const chunkInfo = await this.loadChunkInfo();
-        console.log('loaded');
         this.store$.dispatch(processChunkInfo({ chunkInfo: chunkInfo.data }));
         const nodes = await this.loadNodes();
         const channels = await this.loadChannels();
@@ -49,12 +50,13 @@ export class GraphDatabaseService {
                 ...n,
                 position: new Vector3(n.position.x, n.position.y, n.position.z),
             };
-
             this.nodeRegistry.set(n.public_key, a);
         });
         new Map(channels.data).forEach((c: LndChannel) => {
+            this.minMaxCaluclator.checkChannel(c);
             this.channelRegistry.set(c.id, c);
         });
+        this.minMaxCaluclator.updateStore();
     }
 
     async loadChunkInfo() {

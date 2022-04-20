@@ -88,7 +88,12 @@ export class ChannelEffects {
                 ofType(graphActions.loadGraphFromStorage),
                 mergeMap(() =>
                     from(this.graphDatabaseService.load()).pipe(
-                        map(() => graphActions.graphNodePositionRecalculate()),
+                        mergeMap(() =>
+                            from([
+                                // graphActions.graphNodePositionRecalculate(),
+                                graphActions.cacheProcessedGraphNodeChunk(),
+                            ]),
+                        ),
                     ),
                 ),
             ),
