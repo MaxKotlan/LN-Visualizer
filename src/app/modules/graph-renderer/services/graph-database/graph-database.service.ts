@@ -31,12 +31,22 @@ export class GraphDatabaseService {
     }
 
     async saveChunkInfo(chunkInfo: ChunkInfo) {
-        if (chunkInfo) this.db['chunkInfo'].add({ id: 0, data: chunkInfo });
+        if (chunkInfo)
+            this.db['chunkInfo'].add({ id: 0, data: chunkInfo }).catch((e) => {
+                if (e.message.contains('QuotaExceededError'))
+                    localStorage.setItem('database-save-error', e);
+            });
     }
 
     async save() {
-        this.db['nodes'].add({ id: 0, data: this.nodeRegistry });
-        this.db['channels'].add({ id: 0, data: this.channelRegistry });
+        this.db['nodes'].add({ id: 0, data: this.nodeRegistry }).catch((e) => {
+            if (e.message.contains('QuotaExceededError'))
+                localStorage.setItem('database-save-error', e);
+        });
+        this.db['channels'].add({ id: 0, data: this.channelRegistry }).catch((e) => {
+            if (e.message.contains('QuotaExceededError'))
+                localStorage.setItem('database-save-error', e);
+        });
         localStorage.setItem('database-sync-time', new Date().toISOString());
     }
 
@@ -69,6 +79,11 @@ export class GraphDatabaseService {
 
     async loadNodes() {
         return await this.db['nodes'].get(0);
+    }
+
+    async databaseExists() {
+        const databaseError = localStorage.getItem('database-save-error');
+        return (await Dexie.exists('graph')) && !databaseError;
     }
 
     //     const channels = Array.from(this.channelRegistry.values()).map((c) => ({
