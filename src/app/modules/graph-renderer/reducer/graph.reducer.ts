@@ -57,6 +57,10 @@ export const reducer = createReducer(
         ...state,
         isRequestInitiating: true,
     })),
+    on(graphActions.loadGraphFromStorage, (state) => ({
+        ...state,
+        isRequestInitiating: true,
+    })),
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
@@ -79,9 +83,12 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state, { isFromDatabase }) => ({
         ...state,
-        nodeChunksProcessed: state.nodeChunksProcessed + 1,
+        nodeChunksProcessed: isFromDatabase
+            ? state.nodeChunksProcessed
+            : state.nodeChunksProcessed + 1,
+        isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({
         ...state,

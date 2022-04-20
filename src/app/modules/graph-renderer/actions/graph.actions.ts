@@ -37,7 +37,10 @@ export const concatinateNodeChunk = createAction(
 
 export const computeNodeStatistics = createAction('[graph] computeNodeStatistics');
 
-export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
+export const cacheProcessedGraphNodeChunk = createAction(
+    '[graph] cacheProcessedGraphNodeChunk',
+    props<{ isFromDatabase: boolean }>(),
+);
 
 export const setFilteredNodes = createAction(
     '[graph] setFilteredNodes',

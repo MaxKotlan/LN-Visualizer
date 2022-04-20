@@ -58,7 +58,7 @@ export class ChannelEffects {
     recomputestuff$ = createEffect(() =>
         this.actions$.pipe(
             ofType(graphActions.graphNodePositionRecalculate),
-            map((d) => graphActions.cacheProcessedGraphNodeChunk()),
+            map((d) => graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false })),
         ),
     );
 
@@ -88,11 +88,8 @@ export class ChannelEffects {
                 ofType(graphActions.loadGraphFromStorage),
                 mergeMap(() =>
                     from(this.graphDatabaseService.load()).pipe(
-                        mergeMap(() =>
-                            from([
-                                // graphActions.graphNodePositionRecalculate(),
-                                graphActions.cacheProcessedGraphNodeChunk(),
-                            ]),
+                        map(() =>
+                            graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: true }),
                         ),
                     ),
                 ),
