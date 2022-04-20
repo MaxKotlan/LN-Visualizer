@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
+import { GraphDatabaseService } from '../services/graph-database/graph-database.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
@@ -13,6 +15,7 @@ export class ChannelEffects {
         private minMaxCaluclator: MinMaxCalculatorService,
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
+        private graphDatabaseService: GraphDatabaseService,
     ) {}
 
     concatinateChannelChunk$ = createEffect(
@@ -55,8 +58,43 @@ export class ChannelEffects {
     recomputestuff$ = createEffect(() =>
         this.actions$.pipe(
             ofType(graphActions.graphNodePositionRecalculate),
-            map((d) => graphActions.cacheProcessedGraphNodeChunk()),
+            map((d) => graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false })),
         ),
+    );
+
+    saveToDatabase$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.initSyncRequestComplete),
+                tap(() => this.graphDatabaseService.save()),
+            ),
+        { dispatch: false },
+    );
+
+    saveChunkToDatabase$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.processChunkInfo),
+                tap((processChunkInfo) =>
+                    this.graphDatabaseService.saveChunkInfo(processChunkInfo.chunkInfo),
+                ),
+            ),
+        { dispatch: false },
+    );
+
+    loadFromDb$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.loadGraphFromStorage),
+                mergeMap(() =>
+                    from(this.graphDatabaseService.load()).pipe(
+                        map(() =>
+                            graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: true }),
+                        ),
+                    ),
+                ),
+            ),
+        { dispatch: true },
     );
 
     // channelClosedEvent$ = createEffect(

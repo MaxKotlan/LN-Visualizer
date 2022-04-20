@@ -36,7 +36,7 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
-                    return graphActions.cacheProcessedGraphNodeChunk();
+                    return graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false });
                 }),
             ),
         { dispatch: true },
@@ -50,6 +50,7 @@ export class NodeEffects {
                     this.nodeRegistry.forEach((node) => {
                         this.minMaxCaluclator.checkNode(node);
                     });
+                    this.minMaxCaluclator.updateStore();
                     return graphActions.computeNodeStatistics();
                 }),
             ),

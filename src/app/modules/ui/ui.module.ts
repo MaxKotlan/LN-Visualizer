@@ -9,6 +9,7 @@ import {
 import { MaterialModule } from '../material';
 import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 import { ErrorComponent } from './components/error';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { ErrorComponent } from './components/error';
         LoadingBarComponent,
         TooltipComponent,
         GraphStatsComponent,
+        LoadingSpinnerComponent,
     ],
     imports: [CommonModule, MaterialModule],
     exports: [
@@ -27,6 +29,7 @@ import { ErrorComponent } from './components/error';
         LoadingBarComponent,
         TooltipComponent,
         GraphStatsComponent,
+        LoadingSpinnerComponent,
     ],
 })
 export class UiModule {}

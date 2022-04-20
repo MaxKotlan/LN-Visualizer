@@ -52,6 +52,6 @@ export class InitialSyncService {
     }
 
     public sendRequestComplete(ws: WebSocket) {
-        ws.send('requestComplete');
+        ws.send(JSON.stringify({ type: 'requestComplete' }));
     }
 }

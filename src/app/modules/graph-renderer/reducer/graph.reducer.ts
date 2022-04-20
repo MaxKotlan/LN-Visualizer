@@ -24,9 +24,11 @@ export interface GraphState {
     totalChannelCapacity: number;
     maximumChannelCapacity: number;
     minimumChannelCapacity: number;
+    isRequestInitiating: boolean;
 }
 
 const initialState: GraphState = {
+    isRequestInitiating: false,
     chunkInfo: null,
     nodeChunksProcessed: 0,
     channelChunksProcessed: 0,
@@ -50,6 +52,15 @@ const bufferOverheadStorage = 1.0;
 
 export const reducer = createReducer(
     initialState,
+    //on(graphActions)
+    on(graphActions.initializeGraphSyncProcess, (state) => ({
+        ...state,
+        isRequestInitiating: true,
+    })),
+    on(graphActions.loadGraphFromStorage, (state) => ({
+        ...state,
+        isRequestInitiating: true,
+    })),
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
@@ -61,6 +72,7 @@ export const reducer = createReducer(
     })),
     on(graphActions.processGraphNodeChunk, (state) => ({
         ...state,
+        isRequestInitiating: false,
         loadingText: `Downloading Nodes ${state.nodeChunksProcessed + 1} / ${
             state.chunkInfo?.edgeChunks
         }`,
@@ -71,9 +83,12 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state, { isFromDatabase }) => ({
         ...state,
-        nodeChunksProcessed: state.nodeChunksProcessed + 1,
+        nodeChunksProcessed: isFromDatabase
+            ? state.nodeChunksProcessed
+            : state.nodeChunksProcessed + 1,
+        isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({
         ...state,

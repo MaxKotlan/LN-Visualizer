@@ -9,12 +9,16 @@ import { LndNode } from '../../../types/node.interface';
 
 export const requestGraph = createAction('[graph] requestGraph');
 
+export const initiateRequest = createAction('[graph] initiateRequest');
+
 export const requestGraphSuccess = createAction(
     '[graph] requestGraphSuccess',
     props<{ graph: LnGraph }>(),
 );
 
 export const initializeGraphSyncProcess = createAction('[graph] initializeGraphSyncProcess');
+
+export const loadGraphFromStorage = createAction('[graph] loadGraphFromStorage');
 
 export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
@@ -33,7 +37,10 @@ export const concatinateNodeChunk = createAction(
 
 export const computeNodeStatistics = createAction('[graph] computeNodeStatistics');
 
-export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
+export const cacheProcessedGraphNodeChunk = createAction(
+    '[graph] cacheProcessedGraphNodeChunk',
+    props<{ isFromDatabase: boolean }>(),
+);
 
 export const setFilteredNodes = createAction(
     '[graph] setFilteredNodes',
@@ -60,6 +67,8 @@ export const processChunkInfo = createAction(
     '[graph] processChunkInfo',
     props<{ chunkInfo: ChunkInfo }>(),
 );
+
+export const initSyncRequestComplete = createAction('[graph] initSyncRequestComplete');
 
 export const setTotalChannelCapacity = createAction(
     '[graph] setTotalChannelCapacity',
