@@ -61,6 +61,8 @@ export const reducer = createReducer(
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,
+        nodeCount: chunkInfo.nodes,
+        channelCount: chunkInfo.edges,
         nodeVertexBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeColorBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         nodeCapacityBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
