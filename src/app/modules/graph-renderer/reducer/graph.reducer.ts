@@ -1,8 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as graphActions from '../actions/graph.actions';
-import { LndChannel } from '../../../types/channels.interface';
 
 export interface GraphState {
     chunkInfo: ChunkInfo | null;
@@ -16,8 +14,6 @@ export interface GraphState {
     channelVertexBufferSize: number;
     channelColorBufferSize: number;
 
-    // nodeSet: Map<string, LndNodeWithPosition>;
-    // channelSet: Map<string, LndChannel>;
     nodeCount: number;
     channelCount: number;
     loadingText: string;
@@ -25,6 +21,7 @@ export interface GraphState {
     maximumChannelCapacity: number;
     minimumChannelCapacity: number;
     isRequestInitiating: boolean;
+    isLoadingFromStorage: boolean;
 }
 
 const initialState: GraphState = {
@@ -37,14 +34,13 @@ const initialState: GraphState = {
     nodeCapacityBufferSize: 0,
     channelVertexBufferSize: 0,
     channelColorBufferSize: 0,
-    // nodeSet: new Map<string, LndNodeWithPosition>(),
-    // channelSet: new Map<string, LndChannel>(),
     nodeCount: 0,
     channelCount: 0,
     loadingText: '',
     totalChannelCapacity: 0,
     maximumChannelCapacity: 0,
     minimumChannelCapacity: Infinity,
+    isLoadingFromStorage: false,
 };
 
 //Allocate 10% extra buffer space for new channels and nodes
@@ -60,6 +56,7 @@ export const reducer = createReducer(
     on(graphActions.loadGraphFromStorage, (state) => ({
         ...state,
         isRequestInitiating: true,
+        isLoadingFromStorage: true,
     })),
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
@@ -85,9 +82,10 @@ export const reducer = createReducer(
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state, { isFromDatabase }) => ({
         ...state,
-        nodeChunksProcessed: isFromDatabase
-            ? state.nodeChunksProcessed
-            : state.nodeChunksProcessed + 1,
+        nodeChunksProcessed:
+            isFromDatabase || state.isLoadingFromStorage
+                ? state.nodeChunksProcessed
+                : state.nodeChunksProcessed + 1,
         isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({
