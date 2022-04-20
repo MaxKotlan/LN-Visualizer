@@ -71,6 +71,17 @@ export class ChannelEffects {
         { dispatch: false },
     );
 
+    saveChunkToDatabase$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.processChunkInfo),
+                tap((processChunkInfo) =>
+                    this.graphDatabaseService.saveChunkInfo(processChunkInfo.chunkInfo),
+                ),
+            ),
+        { dispatch: false },
+    );
+
     loadFromDb$ = createEffect(
         () =>
             this.actions$.pipe(
@@ -78,7 +89,6 @@ export class ChannelEffects {
                 mergeMap(() =>
                     from(this.graphDatabaseService.load()).pipe(
                         map(() => graphActions.graphNodePositionRecalculate()),
-                        tap(() => console.log('yeah boii', this.channelRegistry)),
                     ),
                 ),
             ),

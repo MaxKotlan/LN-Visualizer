@@ -4,6 +4,9 @@ import { NodeRegistryService } from '../node-registry/node-registry.service';
 import Dexie from 'dexie';
 import { LndChannel, LndNode } from 'api/src/models';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
+import { Store } from '@ngrx/store';
+import { processChunkInfo } from '../../actions';
 
 @Injectable({
     providedIn: 'root',
@@ -14,12 +17,18 @@ export class GraphDatabaseService {
     constructor(
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
+        private store$: Store<any>,
     ) {
         this.db.version(1).stores({
             /*For performance reasons, storing data as singular object*/
+            chunkInfo: 'id,data',
             nodes: 'id,data',
             channels: 'id,data',
         });
+    }
+
+    async saveChunkInfo(chunkInfo: ChunkInfo) {
+        if (chunkInfo) this.db['chunkInfo'].add({ id: 0, data: chunkInfo });
     }
 
     async save() {
@@ -29,18 +38,21 @@ export class GraphDatabaseService {
     }
 
     async load() {
+        const chunkInfo = await this.loadChunkInfo();
+        console.log('loaded');
+        this.store$.dispatch(processChunkInfo({ chunkInfo: chunkInfo.data }));
         const nodes = await this.loadNodes();
         const channels = await this.loadChannels();
-        console.log(nodes.data);
         new Map(nodes.data).forEach((n: LndNodeWithPosition) => {
             this.nodeRegistry.set(n.public_key, n);
         });
         new Map(channels.data).forEach((c: LndChannel) => {
             this.channelRegistry.set(c.id, c);
         });
-        // this.channelRegistry = channels.data;
-        console.log('rolling rolling');
-        console.log(this.channelRegistry);
+    }
+
+    async loadChunkInfo() {
+        return await this.db['chunkInfo'].get(0);
     }
 
     async loadChannels() {

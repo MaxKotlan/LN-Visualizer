@@ -16,7 +16,7 @@ export class GraphNetworkingModule {
     constructor(private store$: Store<any>) {
         const lastInitSync = localStorage.getItem('database-sync-time');
         const initialSyncDays = moment().diff(lastInitSync, 'days');
-        if (initialSyncDays > 1) {
+        if (!lastInitSync || initialSyncDays > 1) {
             this.store$.dispatch(initializeGraphSyncProcess());
         } else {
             this.store$.dispatch(loadGraphFromStorage());
