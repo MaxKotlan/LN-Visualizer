@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, tap } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
 import { GraphDatabaseService } from '../services/graph-database/graph-database.service';
@@ -68,6 +69,20 @@ export class ChannelEffects {
                 tap(() => this.graphDatabaseService.save()),
             ),
         { dispatch: false },
+    );
+
+    loadFromDb$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.loadGraphFromStorage),
+                mergeMap(() =>
+                    from(this.graphDatabaseService.load()).pipe(
+                        map(() => graphActions.graphNodePositionRecalculate()),
+                        tap(() => console.log('yeah boii', this.channelRegistry)),
+                    ),
+                ),
+            ),
+        { dispatch: true },
     );
 
     // channelClosedEvent$ = createEffect(

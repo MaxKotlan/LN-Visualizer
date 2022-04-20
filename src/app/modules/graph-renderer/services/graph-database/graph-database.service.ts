@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ChannelRegistryService } from '../channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
 import Dexie from 'dexie';
+import { LndChannel, LndNode } from 'api/src/models';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -24,6 +26,21 @@ export class GraphDatabaseService {
         this.db['nodes'].add({ id: 0, data: this.nodeRegistry });
         this.db['channels'].add({ id: 0, data: this.channelRegistry });
         localStorage.setItem('database-sync-time', new Date().toISOString());
+    }
+
+    async load() {
+        const nodes = await this.loadNodes();
+        const channels = await this.loadChannels();
+        console.log(nodes.data);
+        new Map(nodes.data).forEach((n: LndNodeWithPosition) => {
+            this.nodeRegistry.set(n.public_key, n);
+        });
+        new Map(channels.data).forEach((c: LndChannel) => {
+            this.channelRegistry.set(c.id, c);
+        });
+        // this.channelRegistry = channels.data;
+        console.log('rolling rolling');
+        console.log(this.channelRegistry);
     }
 
     async loadChannels() {
