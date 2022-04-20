@@ -7,6 +7,7 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { Store } from '@ngrx/store';
 import { processChunkInfo } from '../../actions';
+import { Vector3 } from 'three';
 
 @Injectable({
     providedIn: 'root',
@@ -44,7 +45,12 @@ export class GraphDatabaseService {
         const nodes = await this.loadNodes();
         const channels = await this.loadChannels();
         new Map(nodes.data).forEach((n: LndNodeWithPosition) => {
-            this.nodeRegistry.set(n.public_key, n);
+            const a = {
+                ...n,
+                position: new Vector3(n.position.x, n.position.y, n.position.z),
+            };
+
+            this.nodeRegistry.set(n.public_key, a);
         });
         new Map(channels.data).forEach((c: LndChannel) => {
             this.channelRegistry.set(c.id, c);
