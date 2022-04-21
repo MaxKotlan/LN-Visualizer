@@ -1,52 +1,61 @@
 import { Injectable } from '@angular/core';
-import { createEffect } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
-import { combineLatest, from, map, mergeMap } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, from, map, mergeMap, share, tap } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Uniform, Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
 import { selectSearchString } from '../../controls/selectors/controls.selectors';
+import { setFilteredNodes } from '../actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+
+type NodeAlias = string;
+interface NodeKeyMap {
+    alias: NodeAlias;
+    public_key: string;
+}
 
 @Injectable()
 export class NodeSearchEffects {
     constructor(
         private filteredNodeRegistry: FilteredNodeRegistryService,
         private store$: Store<any>,
+        private actions$: Actions,
     ) {}
 
-    public selectPossibleNodesFromSearch$ = this.store$.select(selectSearchString).pipe(
-        map((searchString) => {
-            let possibleResults: LndNodeWithPosition[] = [];
-            this.filteredNodeRegistry.forEach((a) => {
-                if (
-                    a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
-                    a.alias.toUpperCase().includes(searchString.toUpperCase())
-                ) {
-                    possibleResults.push(a);
-                }
-            });
-            return possibleResults;
+    public generateSearchSubset$ = this.actions$.pipe(
+        ofType(setFilteredNodes),
+        map(() => {
+            console.log('expensive call');
+            return Array.from(this.filteredNodeRegistry.values()).map((c) => ({
+                alias: c.alias,
+                public_key: c.public_key,
+            })) as unknown as NodeKeyMap[];
         }),
+        share(),
     );
 
-    public selectFinalMatcheNodesFromSearch$ = combineLatest([
-        this.selectPossibleNodesFromSearch$,
+    public selectPossibleNodesFromSearch$ = combineLatest([
+        this.generateSearchSubset$,
         this.store$.select(selectSearchString),
     ]).pipe(
-        map(([nodes, searchString]) => {
-            if (nodes.length === 1) return nodes[0];
-            const exactMatch = nodes.find(
-                (node: LndNodeWithPosition) =>
-                    searchString &&
-                    searchString !== '' &&
-                    searchString.length > 2 &&
-                    (node.alias === searchString || node.public_key === searchString),
+        map(([subset, searchString]) => {
+            return subset.filter(
+                (a) =>
+                    a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
+                    a.alias.toUpperCase().includes(searchString.toUpperCase()),
             );
-            return exactMatch;
         }),
+        share(),
+    );
+
+    public selectFinalMatcheNodesFromSearch$ = this.selectPossibleNodesFromSearch$.pipe(
+        filter((nodes) => !!(nodes.length === 1 && nodes[0]?.public_key)),
+        map((nodes) => this.filteredNodeRegistry.get(nodes[0].public_key)),
+        share(),
+        distinctUntilChanged((a, b) => a?.public_key === b?.public_key),
     );
 
     selectFinalMatchAliasFromSearch$ = this.selectFinalMatcheNodesFromSearch$.pipe(
