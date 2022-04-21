@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { from } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
-import { GraphDatabaseService } from '../services/graph-database/graph-database.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
@@ -15,7 +13,6 @@ export class ChannelEffects {
         private minMaxCaluclator: MinMaxCalculatorService,
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
-        private graphDatabaseService: GraphDatabaseService,
     ) {}
 
     concatinateChannelChunk$ = createEffect(
