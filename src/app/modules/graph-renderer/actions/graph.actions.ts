@@ -18,8 +18,6 @@ export const requestGraphSuccess = createAction(
 
 export const initializeGraphSyncProcess = createAction('[graph] initializeGraphSyncProcess');
 
-export const loadGraphFromStorage = createAction('[graph] loadGraphFromStorage');
-
 export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
     props<{ error: HttpErrorResponse }>(),

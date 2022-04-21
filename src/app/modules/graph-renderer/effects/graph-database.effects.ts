@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, mergeMap, tap } from 'rxjs';
 import * as graphActions from '../actions/graph.actions';
+import * as graphDatabaseActions from '../actions/graph-database.actions';
 import { GraphDatabaseService } from '../services/graph-database/graph-database.service';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class GraphDatabaseEffects {
     loadFromDb$ = createEffect(
         () =>
             this.actions$.pipe(
-                ofType(graphActions.loadGraphFromStorage),
+                ofType(graphDatabaseActions.loadGraphFromStorage),
                 mergeMap(() => from(this.graphDatabaseService.load())),
             ),
         { dispatch: false },
