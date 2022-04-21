@@ -69,9 +69,7 @@ export class NodeEffects {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
                             this.filteredNodeRegistryService.set(node.public_key, node);
                     });
-                    return graphActions.setFilteredNodes({
-                        nodeSet: this.filteredNodeRegistryService,
-                    });
+                    return graphActions.setFilteredNodes();
                 }),
             ),
         { dispatch: true },
@@ -81,9 +79,9 @@ export class NodeEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
-                map((filteredNodes) => {
+                map(() => {
                     this.filteredChannelRegistryService.clear();
-                    filteredNodes.nodeSet.forEach((node) => {
+                    this.filteredNodeRegistryService.forEach((node) => {
                         node.connectedChannels.forEach((channel) => {
                             this.filteredChannelRegistryService.set(
                                 (channel as unknown as LndChannelWithParent)

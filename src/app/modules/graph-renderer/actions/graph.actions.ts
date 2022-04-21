@@ -37,10 +37,7 @@ export const computeNodeStatistics = createAction('[graph] computeNodeStatistics
 
 export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
 
-export const setFilteredNodes = createAction(
-    '[graph] setFilteredNodes',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const setFilteredNodes = createAction('[graph] setFilteredNodes');
 
 export const setFilteredNodeChannels = createAction('[graph] setFilteredNodeChannels');
 

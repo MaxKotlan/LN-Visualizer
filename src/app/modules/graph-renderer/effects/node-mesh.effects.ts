@@ -7,6 +7,7 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { setFilteredNodes } from '../actions';
 import { GraphState } from '../reducer';
 import { selectMinMax } from '../selectors';
+import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { NodeBuffersService } from '../services/node-buffers/node-buffers.service';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class NodeMeshEffects {
         private store$: Store<GraphState>,
         private actions$: Actions,
         private nodeBuffersService: NodeBuffersService,
+        private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
     readonly throttleTimeMs: number = 500;
@@ -23,11 +25,11 @@ export class NodeMeshEffects {
         () =>
             this.actions$.pipe(ofType(setFilteredNodes)).pipe(
                 sampleTime(this.throttleTimeMs),
-                map((graphState) => {
-                    if (!this.nodeBuffersService.vertex || !graphState.nodeSet) return null;
+                map(() => {
+                    if (!this.nodeBuffersService.vertex || !this.filteredNodeRegistry) return null;
 
                     let i = 0;
-                    graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
+                    this.filteredNodeRegistry.forEach((currentNode: LndNodeWithPosition) => {
                         this.nodeBuffersService.vertex.data[i * 3] =
                             currentNode.position.x * meshScale;
                         this.nodeBuffersService.vertex.data[i * 3 + 1] =
@@ -53,11 +55,11 @@ export class NodeMeshEffects {
         () =>
             this.actions$.pipe(ofType(setFilteredNodes)).pipe(
                 sampleTime(this.throttleTimeMs),
-                map((graphState) => {
-                    if (!this.nodeBuffersService.color || !graphState.nodeSet) return null;
+                map(() => {
+                    if (!this.nodeBuffersService.color || !this.filteredNodeRegistry) return null;
 
                     let i = 0;
-                    graphState.nodeSet.forEach((currentNode) => {
+                    this.filteredNodeRegistry.forEach((currentNode) => {
                         const color = this.fromHexString(currentNode.color);
                         this.nodeBuffersService.color.data[i * 3] = color[0];
                         this.nodeBuffersService.color.data[i * 3 + 1] = color[1];
@@ -78,11 +80,12 @@ export class NodeMeshEffects {
                 this.store$.select(selectMinMax('node_capacity')),
             ]).pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([graphState, minMaxNodeCapacity]) => {
-                    if (!this.nodeBuffersService.capacity || !graphState.nodeSet) return null;
+                map(([, minMaxNodeCapacity]) => {
+                    if (!this.nodeBuffersService.capacity || !this.filteredNodeRegistry)
+                        return null;
 
                     let i = 0;
-                    graphState.nodeSet.forEach((currentNode: LndNodeWithPosition) => {
+                    this.filteredNodeRegistry.forEach((currentNode: LndNodeWithPosition) => {
                         this.nodeBuffersService.capacity.data[i] = Math.sqrt(
                             currentNode.node_capacity / minMaxNodeCapacity.max,
                         );
