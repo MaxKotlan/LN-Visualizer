@@ -11,12 +11,6 @@ import { selectSearchString } from '../../controls/selectors/controls.selectors'
 import { setFilteredNodes } from '../actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
-type NodeAlias = string;
-interface NodeKeyMap {
-    alias: NodeAlias;
-    public_key: string;
-}
-
 @Injectable()
 export class NodeSearchEffects {
     constructor(
@@ -27,13 +21,7 @@ export class NodeSearchEffects {
 
     public generateSearchSubset$ = this.actions$.pipe(
         ofType(setFilteredNodes),
-        map(() => {
-            console.log('expensive call');
-            return Array.from(this.filteredNodeRegistry.values()).map((c) => ({
-                alias: c.alias,
-                public_key: c.public_key,
-            })) as unknown as NodeKeyMap[];
-        }),
+        map(() => Array.from(this.filteredNodeRegistry.values())),
         share(),
     );
 
@@ -53,7 +41,7 @@ export class NodeSearchEffects {
 
     public selectFinalMatcheNodesFromSearch$ = this.selectPossibleNodesFromSearch$.pipe(
         filter((nodes) => !!(nodes.length === 1 && nodes[0]?.public_key)),
-        map((nodes) => this.filteredNodeRegistry.get(nodes[0].public_key)),
+        map((nodes) => nodes[0]),
         share(),
         distinctUntilChanged((a, b) => a?.public_key === b?.public_key),
     );
