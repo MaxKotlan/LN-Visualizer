@@ -113,20 +113,4 @@ export class NodeSearchEffects {
             ),
         { dispatch: true },
     );
-
-    // selectNodeSetKeyValue,
-    // selectSearchString,
-    // (nodes, searchString) => {
-    //     let possibleResults: LndNodeWithPosition[] = [];
-    //     nodes.forEach((a) => {
-    //         if (
-    //             a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
-    //             a.alias.toUpperCase().includes(searchString.toUpperCase())
-    //         ) {
-    //             possibleResults.push(a);
-    //         }
-    //     });
-    //     //possibleResults.sort((a, b) => b.children.size - a.children.size);
-    //     return possibleResults;
-    // },
 }
