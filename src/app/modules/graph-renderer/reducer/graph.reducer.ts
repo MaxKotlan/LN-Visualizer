@@ -88,12 +88,11 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { isFromDatabase }) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
         ...state,
-        nodeChunksProcessed:
-            isFromDatabase || state.isLoadingFromStorage
-                ? state.nodeChunksProcessed
-                : state.nodeChunksProcessed + 1,
+        nodeChunksProcessed: state.isLoadingFromStorage
+            ? state.nodeChunksProcessed
+            : state.nodeChunksProcessed + 1,
         isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({

@@ -36,7 +36,7 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
-                    return graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false });
+                    return graphActions.cacheProcessedGraphNodeChunk();
                 }),
             ),
         { dispatch: true },

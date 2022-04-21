@@ -55,7 +55,7 @@ export class ChannelEffects {
     recomputestuff$ = createEffect(() =>
         this.actions$.pipe(
             ofType(graphActions.graphNodePositionRecalculate),
-            map((d) => graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false })),
+            map((d) => graphActions.cacheProcessedGraphNodeChunk()),
         ),
     );
 
