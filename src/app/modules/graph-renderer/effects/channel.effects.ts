@@ -62,41 +62,6 @@ export class ChannelEffects {
         ),
     );
 
-    saveToDatabase$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.initSyncRequestComplete),
-                tap(() => this.graphDatabaseService.save()),
-            ),
-        { dispatch: false },
-    );
-
-    saveChunkToDatabase$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.processChunkInfo),
-                tap((processChunkInfo) =>
-                    this.graphDatabaseService.saveChunkInfo(processChunkInfo.chunkInfo),
-                ),
-            ),
-        { dispatch: false },
-    );
-
-    loadFromDb$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.loadGraphFromStorage),
-                mergeMap(() =>
-                    from(this.graphDatabaseService.load()).pipe(
-                        map(() =>
-                            graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: true }),
-                        ),
-                    ),
-                ),
-            ),
-        { dispatch: false },
-    );
-
     // channelClosedEvent$ = createEffect(
     //     () =>
     //         this.actions$.pipe(
