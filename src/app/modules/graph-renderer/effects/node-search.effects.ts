@@ -53,6 +53,7 @@ export class NodeSearchEffects {
 
     selectFinalMatchAliasFromSearch$ = this.selectFinalMatcheNodesFromSearch$.pipe(
         map((nodeMatch) => nodeMatch?.alias || ''),
+        share(),
     );
 
     selectFinalPositionFromSearch$ = this.selectFinalMatcheNodesFromSearch$.pipe(
@@ -62,12 +63,14 @@ export class NodeSearchEffects {
                     nodeMatch?.position.clone().multiplyScalar(meshScale) || new Vector3(0, 0, 0),
                 ),
         ),
+        share(),
     );
 
     selectNodesSearchResults$ = this.selectPossibleNodesFromSearch$.pipe(
         map((nodes) =>
             nodes.map((a) => ({ publicKey: a.public_key, alias: a.alias })).slice(0, 100),
         ),
+        share(),
     );
 
     public selectClosestPoint(point: THREE.Vector3) {
