@@ -14,6 +14,7 @@ import { GraphState } from '../reducer';
 import { ChannelColorService, FilteredChannelRegistryService } from '../services';
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
+import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
 @Injectable()
 export class ChannelMeshEffects {
@@ -24,6 +25,7 @@ export class ChannelMeshEffects {
         private filterEvaluationService: FilterEvaluatorService,
         private channelBufferService: ChannelBuffersService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
+        private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
     readonly throttleTimeMs: number = 500;
@@ -36,14 +38,18 @@ export class ChannelMeshEffects {
                 this.actions$.pipe(ofType(setFilteredNodes)),
             ]).pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([filters, , nodeRegistry]) => {
+                map(([filters, ,]) => {
                     if (!this.channelBufferService.vertex || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
                     this.filteredChannelRegistryService.forEach((channel) => {
                         if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
-                            const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
-                            const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
+                            const node1 = this.filteredNodeRegistry.get(
+                                channel.policies[0].public_key,
+                            );
+                            const node2 = this.filteredNodeRegistry.get(
+                                channel.policies[1].public_key,
+                            );
                             if (node1 && node2) {
                                 this.channelBufferService.vertex.data[i * 6] =
                                     node1.position.x * meshScale;
@@ -78,14 +84,18 @@ export class ChannelMeshEffects {
                 this.store$.select(selectUseLogColorScale),
             ]).pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([filters, , nodeRegistry]) => {
+                map(([filters, ,]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
                     this.filteredChannelRegistryService.forEach((channel) => {
                         if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
-                            const node1 = nodeRegistry.nodeSet.get(channel.policies[0].public_key);
-                            const node2 = nodeRegistry.nodeSet.get(channel.policies[1].public_key);
+                            const node1 = this.filteredNodeRegistry.get(
+                                channel.policies[0].public_key,
+                            );
+                            const node2 = this.filteredNodeRegistry.get(
+                                channel.policies[1].public_key,
+                            );
                             if (node1 && node2) {
                                 const color = this.channelColorService.map(node1, node2, channel);
 

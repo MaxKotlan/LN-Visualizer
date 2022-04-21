@@ -18,8 +18,6 @@ export const requestGraphSuccess = createAction(
 
 export const initializeGraphSyncProcess = createAction('[graph] initializeGraphSyncProcess');
 
-export const loadGraphFromStorage = createAction('[graph] loadGraphFromStorage');
-
 export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',
     props<{ error: HttpErrorResponse }>(),
@@ -37,15 +35,9 @@ export const concatinateNodeChunk = createAction(
 
 export const computeNodeStatistics = createAction('[graph] computeNodeStatistics');
 
-export const cacheProcessedGraphNodeChunk = createAction(
-    '[graph] cacheProcessedGraphNodeChunk',
-    props<{ isFromDatabase: boolean }>(),
-);
+export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
 
-export const setFilteredNodes = createAction(
-    '[graph] setFilteredNodes',
-    props<{ nodeSet: Map<string, LndNodeWithPosition> }>(),
-);
+export const setFilteredNodes = createAction('[graph] setFilteredNodes');
 
 export const setFilteredNodeChannels = createAction('[graph] setFilteredNodeChannels');
 

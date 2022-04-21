@@ -1,20 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
+import Dexie from 'dexie';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { processChunkInfo, processGraphChannelChunk, processGraphNodeChunk } from '../../actions';
 import { ChannelRegistryService } from '../channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
-import Dexie from 'dexie';
-import { LndChannel, LndNode } from 'api/src/models';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
-import { Store } from '@ngrx/store';
-import {
-    concatinateChannelChunk,
-    concatinateNodeChunk,
-    processChunkInfo,
-    processGraphChannelChunk,
-    processGraphNodeChunk,
-} from '../../actions';
-import { Vector3 } from 'three';
-import { MinMaxCalculatorService } from '../min-max-calculator/min-max-calculator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -27,12 +18,20 @@ export class GraphDatabaseService {
         private channelRegistry: ChannelRegistryService,
         private store$: Store<any>,
     ) {
+        this.initDatabase();
+    }
+
+    public initDatabase() {
         this.db.version(2).stores({
             /*For performance reasons, storing data as singular object*/
             chunkInfo: 'id,data',
             nodes: 'id,data',
             channels: 'id,data',
         });
+    }
+
+    public deleteDatabase() {
+        this.db.delete();
     }
 
     async saveChunkInfo(chunkInfo: ChunkInfo) {

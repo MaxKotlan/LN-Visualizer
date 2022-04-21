@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
+import { deleteGraphDatabase } from 'src/app/modules/graph-renderer/actions/graph-database.actions';
 import { resetControlsToDefault } from '../../../controls/actions';
 import { GenericControlsState } from '../../../controls/reducers';
 import { setDonateLinkVisible } from '../../actions';
@@ -18,6 +19,10 @@ export class MiscSettingsComponent {
 
     resetSettingsToDefault() {
         this.store.dispatch(resetControlsToDefault());
+    }
+
+    deleteDatabase() {
+        this.store.dispatch(deleteGraphDatabase());
     }
 
     setDonateLinkVisible(event: MatCheckboxChange) {

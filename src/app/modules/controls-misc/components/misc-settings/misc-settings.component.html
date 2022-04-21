@@ -3,6 +3,9 @@
     <button (click)="resetSettingsToDefault()" mat-raised-button color="primary">
         Reset Settings to Default
     </button>
+    <button (click)="deleteDatabase()" mat-raised-button color="primary">
+        Delete Local Graph Database
+    </button>
     <mat-checkbox [ngModel]="donateLinkVisible$ | async" (change)="setDonateLinkVisible($event)">
         Show Donate Link
     </mat-checkbox>

@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import * as graphActions from '../actions/graph.actions';
+import * as graphDatabaseActions from '../actions/graph-database.actions';
 import * as alertActions from '../../alerts/actions/alerts.actions';
 
 export interface GraphState {
@@ -58,7 +59,7 @@ export const reducer = createReducer(
         ...state,
         isRequestInitiating: true,
     })),
-    on(graphActions.loadGraphFromStorage, (state) => ({
+    on(graphDatabaseActions.loadGraphFromStorage, (state) => ({
         ...state,
         isRequestInitiating: true,
         isLoadingFromStorage: true,
@@ -87,12 +88,11 @@ export const reducer = createReducer(
             state.chunkInfo?.edgeChunks
         }`,
     })),
-    on(graphActions.cacheProcessedGraphNodeChunk, (state, { isFromDatabase }) => ({
+    on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
         ...state,
-        nodeChunksProcessed:
-            isFromDatabase || state.isLoadingFromStorage
-                ? state.nodeChunksProcessed
-                : state.nodeChunksProcessed + 1,
+        nodeChunksProcessed: state.isLoadingFromStorage
+            ? state.nodeChunksProcessed
+            : state.nodeChunksProcessed + 1,
         isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({

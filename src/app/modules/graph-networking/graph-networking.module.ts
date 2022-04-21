@@ -4,9 +4,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { NetworkEffects } from './effects';
 import { InitialSyncApiService } from './services';
 import { Store } from '@ngrx/store';
-import { initializeGraphSyncProcess, loadGraphFromStorage } from '../graph-renderer/actions';
+import { initializeGraphSyncProcess } from '../graph-renderer/actions';
 import moment from 'moment';
 import { GraphDatabaseService } from '../graph-renderer/services/graph-database/graph-database.service';
+import { loadGraphFromStorage } from '../graph-renderer/actions/graph-database.actions';
 
 @NgModule({
     declarations: [],

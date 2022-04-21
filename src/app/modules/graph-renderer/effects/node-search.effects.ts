@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { createEffect } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
-import { combineLatest, from, map, mergeMap } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, from, map, mergeMap, share, tap } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Uniform, Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
 import { selectSearchString } from '../../controls/selectors/controls.selectors';
+import { setFilteredNodes } from '../actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
 @Injectable()
@@ -15,42 +16,44 @@ export class NodeSearchEffects {
     constructor(
         private filteredNodeRegistry: FilteredNodeRegistryService,
         private store$: Store<any>,
+        private actions$: Actions,
     ) {}
 
-    public selectPossibleNodesFromSearch$ = this.store$.select(selectSearchString).pipe(
-        map((searchString) => {
-            let possibleResults: LndNodeWithPosition[] = [];
-            this.filteredNodeRegistry.forEach((a) => {
-                if (
-                    a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
-                    a.alias.toUpperCase().includes(searchString.toUpperCase())
-                ) {
-                    possibleResults.push(a);
-                }
-            });
-            return possibleResults;
-        }),
+    public generateSearchSubset$ = this.actions$.pipe(
+        ofType(setFilteredNodes),
+        map(() =>
+            Array.from(this.filteredNodeRegistry.values()).sort(
+                (a, b) => b.node_capacity - a.node_capacity,
+            ),
+        ),
+        share(),
     );
 
-    public selectFinalMatcheNodesFromSearch$ = combineLatest([
-        this.selectPossibleNodesFromSearch$,
+    public selectPossibleNodesFromSearch$ = combineLatest([
+        this.generateSearchSubset$,
         this.store$.select(selectSearchString),
     ]).pipe(
-        map(([nodes, searchString]) => {
-            if (nodes.length === 1) return nodes[0];
-            const exactMatch = nodes.find(
-                (node: LndNodeWithPosition) =>
-                    searchString &&
-                    searchString !== '' &&
-                    searchString.length > 2 &&
-                    (node.alias === searchString || node.public_key === searchString),
+        map(([subset, searchString]) => {
+            return subset.filter(
+                (a) =>
+                    a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
+                    a.alias.toUpperCase().includes(searchString.toUpperCase()),
             );
-            return exactMatch;
         }),
+        share(),
+    );
+
+    public selectFinalMatcheNodesFromSearch$ = this.selectPossibleNodesFromSearch$.pipe(
+        map((nodes) => {
+            if (!!(nodes.length === 1 && nodes[0]?.public_key)) return nodes[0];
+        }),
+        share(),
+        distinctUntilChanged((a, b) => a?.public_key === b?.public_key),
     );
 
     selectFinalMatchAliasFromSearch$ = this.selectFinalMatcheNodesFromSearch$.pipe(
         map((nodeMatch) => nodeMatch?.alias || ''),
+        share(),
     );
 
     selectFinalPositionFromSearch$ = this.selectFinalMatcheNodesFromSearch$.pipe(
@@ -60,12 +63,14 @@ export class NodeSearchEffects {
                     nodeMatch?.position.clone().multiplyScalar(meshScale) || new Vector3(0, 0, 0),
                 ),
         ),
+        share(),
     );
 
     selectNodesSearchResults$ = this.selectPossibleNodesFromSearch$.pipe(
         map((nodes) =>
             nodes.map((a) => ({ publicKey: a.public_key, alias: a.alias })).slice(0, 100),
         ),
+        share(),
     );
 
     public selectClosestPoint(point: THREE.Vector3) {
@@ -113,20 +118,4 @@ export class NodeSearchEffects {
             ),
         { dispatch: true },
     );
-
-    // selectNodeSetKeyValue,
-    // selectSearchString,
-    // (nodes, searchString) => {
-    //     let possibleResults: LndNodeWithPosition[] = [];
-    //     nodes.forEach((a) => {
-    //         if (
-    //             a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
-    //             a.alias.toUpperCase().includes(searchString.toUpperCase())
-    //         ) {
-    //             possibleResults.push(a);
-    //         }
-    //     });
-    //     //possibleResults.sort((a, b) => b.children.size - a.children.size);
-    //     return possibleResults;
-    // },
 }

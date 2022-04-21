@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, from, map, mergeMap } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, from, map, mergeMap, take } from 'rxjs';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { LndNode } from 'src/app/types/node.interface';
@@ -10,11 +10,11 @@ import * as filterSelectors from '../../controls-graph-filter/selectors/filter.s
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
-import * as graphSelectors from '../selectors';
 import { FilteredChannelRegistryService } from '../services';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
+import _ from 'lodash';
 
 @Injectable()
 export class NodeEffects {
@@ -36,7 +36,7 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
-                    return graphActions.cacheProcessedGraphNodeChunk({ isFromDatabase: false });
+                    return graphActions.cacheProcessedGraphNodeChunk();
                 }),
             ),
         { dispatch: true },
@@ -61,7 +61,9 @@ export class NodeEffects {
         () =>
             combineLatest([
                 this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
-                this.store$.select(filterSelectors.activeNodeFilters).pipe(debounceTime(100)),
+                this.store$
+                    .select(filterSelectors.activeNodeFilters)
+                    .pipe(distinctUntilChanged(_.isEqual), debounceTime(100)),
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
@@ -69,9 +71,7 @@ export class NodeEffects {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
                             this.filteredNodeRegistryService.set(node.public_key, node);
                     });
-                    return graphActions.setFilteredNodes({
-                        nodeSet: this.filteredNodeRegistryService,
-                    });
+                    return graphActions.setFilteredNodes();
                 }),
             ),
         { dispatch: true },
@@ -81,9 +81,9 @@ export class NodeEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.setFilteredNodes),
-                map((filteredNodes) => {
+                map(() => {
                     this.filteredChannelRegistryService.clear();
-                    filteredNodes.nodeSet.forEach((node) => {
+                    this.filteredNodeRegistryService.forEach((node) => {
                         node.connectedChannels.forEach((channel) => {
                             this.filteredChannelRegistryService.set(
                                 (channel as unknown as LndChannelWithParent)
