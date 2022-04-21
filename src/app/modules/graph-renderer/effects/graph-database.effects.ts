@@ -37,4 +37,13 @@ export class GraphDatabaseEffects {
             ),
         { dispatch: false },
     );
+
+    deleteDatabase$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphDatabaseActions.deleteGraphDatabase),
+                tap(() => this.graphDatabaseService.deleteDatabase()),
+            ),
+        { dispatch: false },
+    );
 }
