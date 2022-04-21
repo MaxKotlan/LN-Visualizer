@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { LndChannel } from 'api/src/models';
 import { combineLatest, from, map, mergeMap } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Uniform, Vector3 } from 'three';
-import { selectSearchString } from '../../controls/selectors/controls.selectors';
-import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import * as filterActions from '../../controls-graph-filter/actions';
-import { LndChannel } from 'api/src/models';
+import { selectSearchString } from '../../controls/selectors/controls.selectors';
+import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
 @Injectable()
 export class NodeSearchEffects {
-    constructor(private nodeRegistry: NodeRegistryService, private store$: Store<any>) {}
+    constructor(
+        private filteredNodeRegistry: FilteredNodeRegistryService,
+        private store$: Store<any>,
+    ) {}
 
     public selectPossibleNodesFromSearch$ = this.store$.select(selectSearchString).pipe(
         map((searchString) => {
             let possibleResults: LndNodeWithPosition[] = [];
-            this.nodeRegistry.forEach((a) => {
+            this.filteredNodeRegistry.forEach((a) => {
                 if (
                     a.public_key.toUpperCase().includes(searchString.toUpperCase()) ||
                     a.alias.toUpperCase().includes(searchString.toUpperCase())
@@ -66,11 +69,11 @@ export class NodeSearchEffects {
     );
 
     public selectClosestPoint(point: THREE.Vector3) {
-        if (!this.nodeRegistry) return;
+        if (!this.filteredNodeRegistry) return;
         point.divideScalar(meshScale);
         let minDistance: null | number = null;
         let minDistanceIndex: null | string = null;
-        this.nodeRegistry.forEach((node: LndNodeWithPosition, pubkey) => {
+        this.filteredNodeRegistry.forEach((node: LndNodeWithPosition, pubkey) => {
             const pointDisance = node.position.distanceTo(point);
             if (minDistance === null || pointDisance < minDistance) {
                 minDistance = pointDisance;
@@ -78,7 +81,7 @@ export class NodeSearchEffects {
             }
         });
         if (minDistanceIndex === null) return;
-        return this.nodeRegistry.get(minDistanceIndex);
+        return this.filteredNodeRegistry.get(minDistanceIndex);
     }
 
     addNodeFilter$ = createEffect(

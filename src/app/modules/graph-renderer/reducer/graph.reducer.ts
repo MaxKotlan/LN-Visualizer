@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import * as graphActions from '../actions/graph.actions';
+import * as alertActions from '../../alerts/actions/alerts.actions';
 
 export interface GraphState {
     chunkInfo: ChunkInfo | null;
@@ -49,6 +50,10 @@ const bufferOverheadStorage = 1.0;
 export const reducer = createReducer(
     initialState,
     //on(graphActions)
+    on(alertActions.createAlert, (state) => ({
+        ...state,
+        isRequestInitiating: false,
+    })),
     on(graphActions.initializeGraphSyncProcess, (state) => ({
         ...state,
         isRequestInitiating: true,

@@ -62,7 +62,7 @@ export class NetworkEffects {
                                         id: 'websocket-connection-error',
                                         type: 'danger',
                                         message: `Could not connect to websocket at ${
-                                            (e.target as unknown as any).url
+                                            (e.target as unknown as any)?.url
                                         }. The server might be down`,
                                     },
                                 }),

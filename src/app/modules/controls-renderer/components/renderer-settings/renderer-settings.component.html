@@ -13,20 +13,20 @@
         >Enable Node Motion</mat-checkbox
     >
     <span *ngIf="nodeMotion.checked">
-        <span style="margin-right: 0.4rem">Motion Intensity (Be careful)</span>
+        <span style="margin-right: 0.4rem">Motion Intensity</span>
         <mat-slider
             [ngModel]="nodeMotionIntensity$ | async"
             (change)="setNodeMotionIntensity($event)"
             #maxNodeSize
             min="0"
-            max="3"
+            max="5"
             step="0.0001"
             value="1"
         ></mat-slider>
         {{ maxNodeSize.value }}
     </span>
     <span *ngIf="nodeMotion.checked">
-        <span style="margin-right: 0.4rem">Time Intensity (Be careful)</span>
+        <span style="margin-right: 0.4rem">Time Intensity</span>
         <mat-slider
             [ngModel]="nodeTimeIntensity$ | async"
             (change)="setNodeTimeIntensity($event)"

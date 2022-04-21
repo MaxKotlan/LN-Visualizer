@@ -22,6 +22,8 @@ export class ChannelObjectComponent extends AbstractObject3D<THREE.LineSegments>
     }
 
     protected newObject3DInstance(): THREE.LineSegments {
-        return new THREE.LineSegments(this.geometry, this.material);
+        const line = new THREE.LineSegments(this.geometry, this.material);
+        line.renderOrder = -1;
+        return line;
     }
 }
