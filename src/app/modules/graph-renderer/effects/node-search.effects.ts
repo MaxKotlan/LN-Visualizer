@@ -40,8 +40,9 @@ export class NodeSearchEffects {
     );
 
     public selectFinalMatcheNodesFromSearch$ = this.selectPossibleNodesFromSearch$.pipe(
-        filter((nodes) => !!(nodes.length === 1 && nodes[0]?.public_key)),
-        map((nodes) => nodes[0]),
+        map((nodes) => {
+            if (!!(nodes.length === 1 && nodes[0]?.public_key)) return nodes[0];
+        }),
         share(),
         distinctUntilChanged((a, b) => a?.public_key === b?.public_key),
     );
