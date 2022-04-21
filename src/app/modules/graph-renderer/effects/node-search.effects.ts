@@ -21,7 +21,11 @@ export class NodeSearchEffects {
 
     public generateSearchSubset$ = this.actions$.pipe(
         ofType(setFilteredNodes),
-        map(() => Array.from(this.filteredNodeRegistry.values())),
+        map(() =>
+            Array.from(this.filteredNodeRegistry.values()).sort(
+                (a, b) => b.node_capacity - a.node_capacity,
+            ),
+        ),
         share(),
     );
 
