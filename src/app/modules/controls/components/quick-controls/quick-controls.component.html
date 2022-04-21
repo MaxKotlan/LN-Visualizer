@@ -1,33 +1,4 @@
-<!-- <mat-card *ngIf="screenSizeService.isMobile$ | async" class="mobile-card">
-    <span style="display: flex; align-items: center">
-        <app-search style="width: 100%"></app-search>
-        <button
-            style="margin-bottom: 1.34375em; height: 52.063px; margin-left: 0.4rem"
-            (click)="gotoNode()"
-            mat-button
-            color="primary"
-            [disabled]="!(selectFinalMatcheNodesFromSearch$ | async)"
-        >
-            Goto
-        </button>
-        <app-settings [inline]="true"></app-settings>
-    </span>
-</mat-card> -->
-
-<!-- *ngIf="screenSizeService.isDesktop$ | async" -->
 <div *ngIf="true" class="desktop-card">
-    <!-- <span style="display: flex; align-items: center">
-        <app-search></app-search>
-        <button
-            style="margin-bottom: 1.34375em; height: 52.063px; margin-left: 0.4rem"
-            (click)="gotoNode()"
-            mat-button
-            color="primary"
-            [disabled]="!(selectFinalMatcheNodesFromSearch$ | async)"
-        >
-            Goto
-        </button>
-    </span> -->
     <app-search-and-go></app-search-and-go>
     <mat-divider style="margin-top: 1rem"></mat-divider>
     <div
@@ -49,32 +20,6 @@
             (change)="updateRenderEdges($event)"
             >Renderer Channels</mat-slide-toggle
         >
-        <!-- <mat-checkbox
-            disabled
-            [ngModel]="shouldFilterCapacity$ | async"
-            (change)="updateFilterCapacityEnable($event)"
-            >Filter Capacity</mat-checkbox
-        >
-        <span *ngIf="shouldFilterCapacity$ | async">
-            <span style="margin-right: 0.4rem">Minimum Capacity</span>
-            <mat-slider
-                disabled
-                [ngModel]="capacityFilterAmount$ | async"
-                (change)="setCapacityFiliterAmount($event)"
-                #slider
-                min="0"
-                max="1000000000"
-                step="1"
-                value="1"
-            ></mat-slider>
-            {{ slider.value }}
-        </span> -->
-        <!-- <span>
-            Min  Edges
-            <mat-slider (change)="filterConnections($event)" #slider min="0" max="1000" step="1" value="0"></mat-slider>
-            {{slider.value}}
-        </span> -->
-        <!-- <mat-slide-toggle (change)="connectionSortChanged($event)" #connectionSort>{{connectionSort.checked ? 'Lower' : 'Higher' }} connections towards center</mat-slide-toggle> -->
     </div>
     <mat-divider></mat-divider>
 </div>
