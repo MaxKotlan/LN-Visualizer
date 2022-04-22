@@ -6,13 +6,14 @@ import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 import { FastPositionAlgorithm } from './position-calculator.service';
+import { RandomPositionAlgorithm } from './random-position.service';
 
 @injectable()
 export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
-        private positionAlgorithm: FastPositionAlgorithm,
+        private positionAlgorithm: RandomPositionAlgorithm,
         private graphRegistryService: GraphRegistryService,
     ) {}
 
