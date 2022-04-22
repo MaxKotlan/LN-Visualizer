@@ -45,6 +45,7 @@ export class ChannelMaterial extends THREE.ShaderMaterial {
 
         this.nodeSearch.selectFinalPositionFromSearch$.subscribe((position) => {
             this.uniforms['motionOrigin'] = position;
+            this.dispose();
         });
 
         this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {

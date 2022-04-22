@@ -71,17 +71,19 @@ export class NodeMaterial extends THREE.ShaderMaterial {
             this.uniforms['motionIntensity'] = { value: updatedIntensity };
         });
 
-        this.nodeSearchEffects.selectFinalPositionFromSearch$.subscribe(
-            (position) => (this.uniforms['motionOrigin'] = position),
-        );
-
-        this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
-            this.uniforms['mouseRayOrigin'] = new Uniform(
-                ray.value.origin || new THREE.Vector3(0, 0, 0),
-            );
-            this.uniforms['mouseRayDirection'] = new Uniform(
-                ray.value.direction || new THREE.Vector3(0, 0, 0),
-            );
+        this.nodeSearchEffects.selectFinalPositionFromSearch$.subscribe((position) => {
+            this.uniforms['motionOrigin'] = position;
+            //for some reason I need to do this for the uniform to update
+            this.dispose();
         });
+
+        // this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
+        //     this.uniforms['mouseRayOrigin'] = new Uniform(
+        //         ray.value.origin || new THREE.Vector3(0, 0, 0),
+        //     );
+        //     this.uniforms['mouseRayDirection'] = new Uniform(
+        //         ray.value.direction || new THREE.Vector3(0, 0, 0),
+        //     );
+        // });
     }
 }
