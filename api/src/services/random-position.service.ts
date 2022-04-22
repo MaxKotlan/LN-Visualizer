@@ -13,9 +13,9 @@ export class RandomPositionAlgorithm extends PositionAlgorithm {
         this.graphRegistryService.nodeMap.forEach(
             (n) =>
                 (n['position'] = new Vector3(
-                    Math.random() - 0.5,
-                    Math.random() - 0.5,
-                    Math.random() - 0.5,
+                    2.0 * (Math.random() - 0.5),
+                    2.0 * (Math.random() - 0.5),
+                    2.0 * (Math.random() - 0.5),
                 )),
         );
     }
