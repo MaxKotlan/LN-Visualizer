@@ -5,13 +5,16 @@ import { GraphRegistryService } from './graph-registry.service';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { Vector3 } from 'three';
 import { LndChannel, LndNode } from '../models';
+import { PositionAlgorithm } from './position-algorithm';
 
 type NodePublicKey = string;
 type ChannelId = string;
 
 @injectable()
-export class PositionCalculatorService {
-    constructor(public graphRegistryService: GraphRegistryService) {}
+export class FastPositionAlgorithm extends PositionAlgorithm {
+    constructor(public graphRegistryService: GraphRegistryService) {
+        super(graphRegistryService);
+    }
 
     public positionRegistry: Map<NodePublicKey, Vector3> = new Map();
     private connectedNode: Map<ChannelId, MaxPriorityQueue<any>> = new Map();
@@ -25,10 +28,7 @@ export class PositionCalculatorService {
         this.initPositions();
         this.calculateHeirarchy();
         this.calculatePositionFromHeiarchy();
-
-        this.graphRegistryService.nodeMap.forEach(
-            (n) => (n['position'] = this.positionRegistry[n.public_key]),
-        );
+        this.updateNodePositions();
     }
 
     public initPositions() {

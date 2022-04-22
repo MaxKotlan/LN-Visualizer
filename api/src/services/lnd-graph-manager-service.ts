@@ -1,20 +1,18 @@
 import { injectable } from 'inversify';
 import * as lightning from 'lightning';
-import { fromEvent, take } from 'rxjs';
+import schedule from 'node-schedule';
+import { fromEvent } from 'rxjs';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
-import { PositionCalculatorService } from './position-calculator.service';
-import { WebSocketService } from './websocket-service';
-import schedule from 'node-schedule';
+import { FastPositionAlgorithm } from './position-calculator.service';
 
 @injectable()
 export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
-        private websocketService: WebSocketService,
-        private positionCalculatorService: PositionCalculatorService,
+        private positionAlgorithm: FastPositionAlgorithm,
         private graphRegistryService: GraphRegistryService,
     ) {}
 
@@ -33,7 +31,7 @@ export class LndGraphManagerService {
             // console.log(this.graphRegistryService.channelMap)
             this.chunkTrackerService.calculateChunkInfo(graphState);
             if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
-            this.positionCalculatorService.calculatePositions();
+            this.positionAlgorithm.calculatePositions();
             if (isInitialSync) console.log('Done with Graph Sync');
             else console.log('Graph resynced');
         } catch (e) {
