@@ -60,8 +60,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (!c) throw new Error('this should not happen');
             this.validateVector(delta);
             if (
-                c.position.distanceTo(delta) > 0.01 &&
-                c.position.distanceTo(new Vector3(0, 0, 0)) > 0.01
+                c.position.distanceTo(delta) > 0.1 &&
+                c.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
             ) {
                 delta.sub(c.position).multiplyScalar(this.learningRate);
                 c.position = c.position.clone().add(delta);
