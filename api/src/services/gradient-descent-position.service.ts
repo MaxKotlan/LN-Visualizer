@@ -91,9 +91,9 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             }
             // console.log(posBuffer.get(public_key));
         });
-        averageNeighborPositionBuffer.forEach((averageNeightborPosition, key) => {
-            const currentNodePos = this.posData.get(key);
-            if (!currentNodePos) throw new Error('this should not happen');
+        this.posData.forEach((currentNodePos, key) => {
+            const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
+            if (!averageNeightborPosition) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
