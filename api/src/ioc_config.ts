@@ -9,6 +9,7 @@ import {
 } from './services';
 import { ChannelCloseService } from './services/channel-close.service';
 import { ChannelUpdatedService } from './services/channel-updated.service';
+import { GradientDescentPositionAlgorithm } from './services/gradient-descent-position.service';
 import { GraphRegistryService } from './services/graph-registry.service';
 import { FastPositionAlgorithm } from './services/position-calculator.service';
 import { RandomPositionAlgorithm } from './services/random-position.service';
@@ -25,4 +26,8 @@ container.bind<ChannelUpdatedService>(ChannelUpdatedService).toSelf().inSingleto
 container.bind<FastPositionAlgorithm>(FastPositionAlgorithm).toSelf().inSingletonScope();
 container.bind<RandomPositionAlgorithm>(RandomPositionAlgorithm).toSelf().inSingletonScope();
 container.bind<GraphRegistryService>(GraphRegistryService).toSelf().inSingletonScope();
+container
+    .bind<GradientDescentPositionAlgorithm>(GradientDescentPositionAlgorithm)
+    .toSelf()
+    .inSingletonScope();
 export default container;

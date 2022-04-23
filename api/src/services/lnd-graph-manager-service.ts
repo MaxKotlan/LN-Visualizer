@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import * as lightning from 'lightning';
 import schedule from 'node-schedule';
 import { fromEvent } from 'rxjs';
+import { GradientDescentPositionAlgorithm } from './gradient-descent-position.service';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
@@ -13,7 +14,7 @@ export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
-        private positionAlgorithm: RandomPositionAlgorithm,
+        private positionAlgorithm: GradientDescentPositionAlgorithm,
         private graphRegistryService: GraphRegistryService,
     ) {}
 
