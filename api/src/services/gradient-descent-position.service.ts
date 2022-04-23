@@ -3,6 +3,8 @@ import { runInThisContext } from 'vm';
 import { LndNode } from '../models';
 import { GraphRegistryService } from './graph-registry.service';
 import { PositionAlgorithm } from './position-algorithm';
+import * as seedRandom from 'seedrandom';
+import { performance } from 'perf_hooks';
 
 type NodePublicKey = string;
 
@@ -29,8 +31,22 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         throw new Error('NAN Vector');
     }
 
+    public getClosestPosition(pointToCheck: Vector3) {
+        let minDist = Infinity;
+        let point: Vector3 | undefined = undefined;
+        this.posData.forEach((positionData, public_key) => {
+            const dSquared = positionData.position.distanceToSquared(pointToCheck);
+            if (dSquared < minDist) {
+                minDist = dSquared;
+                point = positionData.position;
+            }
+        });
+        return point;
+    }
+
     public epoch() {
-        const deltaBuffer: Map<NodePublicKey, Vector3> = new Map();
+        const closestPointBuffer: Map<NodePublicKey, Vector3> = new Map();
+        const averageNeighborPositionBuffer: Map<NodePublicKey, Vector3> = new Map();
         this.posData.forEach((positionData, public_key) => {
             const connectedNodes = this.connectedNodes.get(public_key);
             const delta = new Vector3(0, 0, 0);
@@ -52,21 +68,27 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (connectedNodes?.length && connectedNodes?.length > 0)
                 delta.divideScalar(connectedNodes.length);
             // else throw new Error('div zero');
-            deltaBuffer.set(public_key, delta);
+            averageNeighborPositionBuffer.set(public_key, delta);
+            // const closestPoint = this.getClosestPosition(positionData.position);
+            // if (closestPoint) closestPointBuffer.set(public_key, closestPoint);
             // console.log(posBuffer.get(public_key));
         });
-        deltaBuffer.forEach((delta, key) => {
-            const c = this.posData.get(key);
-            if (!c) throw new Error('this should not happen');
+        averageNeighborPositionBuffer.forEach((delta, key) => {
+            const acnp = this.posData.get(key);
+            const nearestNeighborPosition = closestPointBuffer.get(key);
+            if (!acnp) throw new Error('this should not happen');
+            // if (!nearestNeighborPosition) throw new Error('this should not happen');
             this.validateVector(delta);
             if (
-                c.position.distanceTo(delta) > 0.1 &&
-                c.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
+                acnp.position.distanceTo(delta) > 0.1 //&&
+                // averageConnectedNeighborPosition.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
             ) {
-                delta.sub(c.position).multiplyScalar(this.learningRate);
-                c.position = c.position.clone().add(delta);
+                // delta.add(nearestNeighborPosition);
+                delta.sub(acnp.position);
+                delta.multiplyScalar(this.learningRate);
+                acnp.position = acnp.position.clone().add(delta);
             }
-            this.validateVector(c.position);
+            this.validateVector(acnp.position);
             // c.position.set(pos.position.x, pos.position.y, pos.position.z);
             // c.delta.set(pos.delta.x, pos.delta.y, pos.delta.z);
         });
@@ -74,9 +96,12 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public calculatePositions() {
         this.initialize();
+        const startTime = performance.now();
         for (let i = 0; i < this.epochs; i++) {
             this.epoch();
-            if (i % 10 === 0) console.log(`done with epoch ${i}`);
+            if (i % 1 === 0) {
+                console.log(`done with epoch ${i} ${performance.now() - startTime}`);
+            }
         }
         this.save();
     }
@@ -96,12 +121,9 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         console.log('BAD NODES: ', nocount);
     }
 
-    public getRandomVector() {
-        const v = new Vector3(
-            2.0 * (Math.random() - 0.5),
-            2.0 * (Math.random() - 0.5),
-            2.0 * (Math.random() - 0.5),
-        );
+    public getRandomVector(seed) {
+        const rng = seedRandom.xor128(seed);
+        const v = new Vector3(2.0 * (rng() - 0.5), 2.0 * (rng() - 0.5), 2.0 * (rng() - 0.5));
         this.validateVector(v);
         return v;
     }
@@ -125,12 +147,12 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (node1) this.connectedNodes.get(node2Pub)?.push(node1);
 
             this.posData.set(node1Pub, {
-                position: this.getRandomVector(),
+                position: this.getRandomVector(node1Pub),
                 delta: new Vector3(0, 0, 0),
             });
 
             this.posData.set(node2Pub, {
-                position: this.getRandomVector(),
+                position: this.getRandomVector(node2Pub),
                 delta: new Vector3(0, 0, 0),
             });
         });
