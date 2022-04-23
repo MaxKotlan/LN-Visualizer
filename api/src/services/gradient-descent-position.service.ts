@@ -91,27 +91,55 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             }
             // console.log(posBuffer.get(public_key));
         });
-        averageNeighborPositionBuffer.forEach((delta, key) => {
-            const acnp = this.posData.get(key);
-            const nearestNeighborPosition = closestPointBuffer.get(key);
-            if (!acnp) throw new Error('this should not happen');
-            if (!nearestNeighborPosition) throw new Error('this should not happen');
-            // if (!nearestNeighborPosition) throw new Error('this should not happen');
-            this.validateVector(delta);
-            const d2 = delta;
-            if (
-                acnp.position.distanceTo(delta) > 0.1 //&&
-                // averageConnectedNeighborPosition.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
-            ) {
-                delta.add(nearestNeighborPosition);
-                delta.sub(acnp.position);
-                delta.multiplyScalar(this.learningRate);
-                acnp.position = acnp.position.clone().add(delta);
-            }
-            this.validateVector(acnp.position);
+        averageNeighborPositionBuffer.forEach((averageNeightborPosition, key) => {
+            const currentNodePos = this.posData.get(key);
+            if (!currentNodePos) throw new Error('this should not happen');
+            this.validateVector(averageNeightborPosition);
+            // if (
+            //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
+            //     currentNodePos.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
+            // ) {
+            //     averageNeightborPosition.sub(currentNodePos.position);
+            //     averageNeightborPosition.multiplyScalar(this.learningRate);
+            //     currentNodePos.position = currentNodePos.position
+            //         .clone()
+            //         .add(averageNeightborPosition);
+            // }
+            const positiveDelta = this.computePositiveDelta(
+                currentNodePos.position,
+                averageNeightborPosition,
+            );
+            currentNodePos.position = positiveDelta;
+            this.validateVector(currentNodePos.position);
             // c.position.set(pos.position.x, pos.position.y, pos.position.z);
             // c.delta.set(pos.delta.x, pos.delta.y, pos.delta.z);
         });
+        // closestPointBuffer.forEach((closestPosition, key) => {
+        //     const currentNodePos = this.posData.get(key);
+        //     if (!currentNodePos) throw new Error('this should not happen');
+        //     this.validateVector(closestPosition);
+        //     if (
+        //         currentNodePos.position.distanceTo(closestPosition) < 0.1 &&
+        //         currentNodePos.position.distanceTo(new Vector3(0, 0, 0)) < 2.0
+        //     ) {
+        //         closestPosition.sub(currentNodePos.position);
+        //         closestPosition.multiplyScalar(this.learningRate);
+        //         currentNodePos.position = currentNodePos.position.clone().sub(closestPosition);
+        //     }
+        //     this.validateVector(currentNodePos.position);
+        // });
+    }
+
+    public computePositiveDelta(currentNodePos: Vector3, averageNeightborPosition: Vector3) {
+        if (
+            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
+            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+        ) {
+            averageNeightborPosition.sub(currentNodePos);
+            averageNeightborPosition.multiplyScalar(this.learningRate);
+            return currentNodePos.clone().add(averageNeightborPosition);
+        }
+        return currentNodePos;
     }
 
     public calculatePositions() {
