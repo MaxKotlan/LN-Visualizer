@@ -60,7 +60,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public epoch() {
         const closestPointBuffer: Map<NodePublicKey, Vector3> = new Map();
         const averageNeighborPositionBuffer: Map<NodePublicKey, Vector3> = new Map();
-        const pointTree = this.buildKDTree();
+        //const pointTree = this.buildKDTree();
         this.posData.forEach((positionData, public_key) => {
             const connectedNodes = this.connectedNodes.get(public_key);
             const delta = new Vector3(0, 0, 0);
@@ -85,18 +85,18 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             averageNeighborPositionBuffer.set(public_key, delta);
             //positionData.position
             // console.log(pointTree);
-            const closestPoint = pointTree.nearest(positionData.position, 2)[0][0];
-            if (closestPoint) {
-                closestPointBuffer.set(public_key, closestPoint);
-            }
+            // const closestPoint = pointTree.nearest(positionData.position, 2)[0][0];
+            // if (closestPoint) {
+            //     closestPointBuffer.set(public_key, closestPoint);
+            // }
             // console.log(posBuffer.get(public_key));
         });
         this.posData.forEach((currentNodePos, key) => {
             const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
-            const closestPoint = closestPointBuffer.get(key);
+            // const closestPoint = closestPointBuffer.get(key);
 
             if (!averageNeightborPosition) throw new Error('this should not happen');
-            if (!closestPoint) throw new Error('this should not happen');
+            // if (!closestPoint) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
@@ -112,12 +112,14 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 currentNodePos.position,
                 averageNeightborPosition,
             );
-            const negativeDelta = this.computeNegativeDelta(currentNodePos.position, closestPoint);
+            // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
             // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
             // positiveDelta.normalize();
             // negativeDelta;//.multiplyScalar(0.01);
 
             //positiveDelta.sub(negativeDelta);
+            // positiveDelta.add(negativeDelta);
+            // positiveDelta.multiplyScalar(1 / 2);
             positiveDelta.multiplyScalar(this.learningRate);
             // console.log(negativeDelta);
             // this.validateVector(negativeDelta);
@@ -144,10 +146,17 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public computePositiveDelta(currentNodePos: Vector3, averageNeightborPosition: Vector3) {
         if (
-            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
-            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 //&&
+            // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
-            return averageNeightborPosition.clone().sub(currentNodePos);
+            const a = averageNeightborPosition.clone().sub(currentNodePos);
+            const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(1.5);
+            a.add(b);
+            a.divideScalar(2);
+            return a;
+
+            // const b = a.sub(new Vector3(0, 0, 0)).multiplyScalar(0.01);
+            // return b;
             // averageNeightborPosition.multiplyScalar(this.learningRate);
             // return currentNodePos.clone().add(averageNeightborPosition);
         }
@@ -160,7 +169,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             return closestPoint
                 .clone()
                 .sub(currentNodePos)
-                .multiplyScalar(1 / (d * d));
+                .multiplyScalar(-0.1 / (d + 0.1));
+            // .multiplyScalar(1 / (d + 1));
         }
         return new Vector3(0, 0, 0);
     }
