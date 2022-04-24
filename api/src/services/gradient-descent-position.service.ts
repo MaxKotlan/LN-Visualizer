@@ -14,8 +14,13 @@ interface PosData {
     delta: Vector3;
 }
 
-const distance = function (a, b) {
-    return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2);
+const tempA = new Vector3(0, 0, 0);
+const tempB = new Vector3(0, 0, 0);
+
+const distance = (a: Array<number>, b: Array<number>) => {
+    tempA.set(a[0], a[1], a[2]);
+    tempB.set(b[0], b[1], b[2]);
+    return tempA.distanceTo(tempB);
 };
 
 export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
@@ -50,17 +55,19 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     }
 
     public buildKDTree() {
-        const points: Array<Vector3> = [];
-        this.posData.forEach((p) => {
-            points.push(p.position);
-        });
-        return new kdTree.kdTree(points, distance, ['x', 'y', 'z']);
+        const points = Array.from(this.posData.entries()).map(([key, pos]) => [
+            pos.position.x,
+            pos.position.y,
+            pos.position.z,
+            key,
+        ]);
+        return new kdTree.kdTree(points, distance, ['0', '1', '2']);
     }
 
     public epoch() {
         const closestPointBuffer: Map<NodePublicKey, Vector3> = new Map();
         const averageNeighborPositionBuffer: Map<NodePublicKey, Vector3> = new Map();
-        //const pointTree = this.buildKDTree();
+        const pointTree = this.buildKDTree();
         this.posData.forEach((positionData, public_key) => {
             const connectedNodes = this.connectedNodes.get(public_key);
             const delta = new Vector3(0, 0, 0);
@@ -85,18 +92,26 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             averageNeighborPositionBuffer.set(public_key, delta);
             //positionData.position
             // console.log(pointTree);
-            // const closestPoint = pointTree.nearest(positionData.position, 2)[0][0];
-            // if (closestPoint) {
-            //     closestPointBuffer.set(public_key, closestPoint);
-            // }
+            const closestPoint = pointTree.nearest(
+                [positionData.position.x, positionData.position.y, positionData.position.z],
+                2,
+            )[0][0];
+            if (closestPoint) {
+                // console.log('checking for', public_key);
+                // console.log(closestPoint);
+                closestPointBuffer.set(
+                    public_key,
+                    new Vector3(closestPoint[0], closestPoint[1], closestPoint[2]),
+                );
+            }
             // console.log(posBuffer.get(public_key));
         });
         this.posData.forEach((currentNodePos, key) => {
             const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
-            // const closestPoint = closestPointBuffer.get(key);
+            const closestPoint = closestPointBuffer.get(key);
 
             if (!averageNeightborPosition) throw new Error('this should not happen');
-            // if (!closestPoint) throw new Error('this should not happen');
+            if (!closestPoint) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
@@ -112,7 +127,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 currentNodePos.position,
                 averageNeightborPosition,
             );
-            // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
+            const negativeDelta = this.computeNegativeDelta(currentNodePos.position, closestPoint);
             // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
             // positiveDelta.normalize();
             // negativeDelta;//.multiplyScalar(0.01);
@@ -120,6 +135,10 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             //positiveDelta.sub(negativeDelta);
             // positiveDelta.add(negativeDelta);
             // positiveDelta.multiplyScalar(1 / 2);
+            // if (!!negativeDelta.x || !!negativeDelta.y || !!negativeDelta.z)
+            //     console.log('pos', positiveDelta, 'neg', negativeDelta, 'cpoint', closestPoint);
+            positiveDelta.add(negativeDelta);
+            positiveDelta.divideScalar(2);
             positiveDelta.multiplyScalar(this.learningRate);
             // console.log(negativeDelta);
             // this.validateVector(negativeDelta);
@@ -146,11 +165,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public computePositiveDelta(currentNodePos: Vector3, averageNeightborPosition: Vector3) {
         if (
-            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 //&&
-            // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
+            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
-            const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(1.5);
+            const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(0.05);
             a.add(b);
             a.divideScalar(2);
             return a;
@@ -165,11 +184,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public computeNegativeDelta(currentNodePos: Vector3, closestPoint: Vector3) {
         const d = currentNodePos.distanceTo(closestPoint);
-        if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 2.0) {
-            return closestPoint
-                .clone()
-                .sub(currentNodePos)
-                .multiplyScalar(-0.1 / (d + 0.1));
+        if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 0.1) {
+            return closestPoint.clone().sub(currentNodePos).multiplyScalar(-1); //.divideScalar(d + 1);
+            // .clone()
+            // .sub(currentNodePos)
+            // .multiplyScalar(-0.1 / (d + 0.1));
             // .multiplyScalar(1 / (d + 1));
         }
         return new Vector3(0, 0, 0);
