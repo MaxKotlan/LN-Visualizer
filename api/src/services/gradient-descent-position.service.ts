@@ -85,7 +85,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             averageNeighborPositionBuffer.set(public_key, delta);
             //positionData.position
             // console.log(pointTree);
-            const closestPoint = pointTree.nearest(positionData.position, 1)[0][0];
+            const closestPoint = pointTree.nearest(positionData.position, 2)[0][0];
             if (closestPoint) {
                 closestPointBuffer.set(public_key, closestPoint);
             }
@@ -93,7 +93,10 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         });
         this.posData.forEach((currentNodePos, key) => {
             const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
+            const closestPoint = closestPointBuffer.get(key);
+
             if (!averageNeightborPosition) throw new Error('this should not happen');
+            if (!closestPoint) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
@@ -109,7 +112,16 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 currentNodePos.position,
                 averageNeightborPosition,
             );
-            currentNodePos.position = positiveDelta;
+            const negativeDelta = this.computeNegativeDelta(currentNodePos.position, closestPoint);
+            // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
+            // positiveDelta.normalize();
+            // negativeDelta;//.multiplyScalar(0.01);
+
+            //positiveDelta.sub(negativeDelta);
+            positiveDelta.multiplyScalar(this.learningRate);
+            // console.log(negativeDelta);
+            // this.validateVector(negativeDelta);
+            currentNodePos.position.add(positiveDelta);
             this.validateVector(currentNodePos.position);
             // c.position.set(pos.position.x, pos.position.y, pos.position.z);
             // c.delta.set(pos.delta.x, pos.delta.y, pos.delta.z);
@@ -135,11 +147,22 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
             currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
-            averageNeightborPosition.sub(currentNodePos);
-            averageNeightborPosition.multiplyScalar(this.learningRate);
-            return currentNodePos.clone().add(averageNeightborPosition);
+            return averageNeightborPosition.clone().sub(currentNodePos);
+            // averageNeightborPosition.multiplyScalar(this.learningRate);
+            // return currentNodePos.clone().add(averageNeightborPosition);
         }
-        return currentNodePos;
+        return new Vector3(0, 0, 0);
+    }
+
+    public computeNegativeDelta(currentNodePos: Vector3, closestPoint: Vector3) {
+        const d = currentNodePos.distanceTo(closestPoint);
+        if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 2.0) {
+            return closestPoint
+                .clone()
+                .sub(currentNodePos)
+                .multiplyScalar(1 / (d * d));
+        }
+        return new Vector3(0, 0, 0);
     }
 
     public calculatePositions() {
