@@ -30,6 +30,7 @@ import { NodePoint } from '../three-js-objects/NodePoint';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
+import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
 
 @Component({
     selector: 'app-nodes-object',
@@ -55,6 +56,7 @@ export class NodesObjectComponent
         private nodeMaterial: NodeMaterial,
         private animationTimeService: AnimationTimeService,
         private nodeSearchEffects: NodeSearchEffects,
+        private pointTreeService: PointTreeService,
     ) {
         super(rendererService, parent);
     }
@@ -91,7 +93,7 @@ export class NodesObjectComponent
     private onMouseEnter(event: any) {
         document.body.style.cursor = 'pointer';
         const intersection = event as THREE.Intersection;
-        const node = this.nodeSearchEffects.selectClosestPoint(intersection.point);
+        const node = this.pointTreeService.getNearestNeighbor(intersection.point);
         if (!node) return;
         this.nodeMaterial.handleHoverUpdate(node.position);
         this.toolTipService.open(event.mouseEvent.clientX, event.mouseEvent.clientY, node.alias);
@@ -99,7 +101,7 @@ export class NodesObjectComponent
 
     private onClick(event: any) {
         const intersection = event as THREE.Intersection;
-        const node = this.nodeSearchEffects.selectClosestPoint(intersection.point);
+        const node = this.pointTreeService.getNearestNeighbor(intersection.point);
         if (!node) return;
         this.toolTipService.close();
         console.log(node);
