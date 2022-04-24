@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import * as kdTree from 'kd-tree-javascript';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Vector3 } from 'three';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
 
+const tempA = new Vector3(0, 0, 0);
+const tempB = new Vector3(0, 0, 0);
+
 const distance = (a: Array<number>, b: Array<number>) => {
-    const c = new Vector3(a[0], a[1], a[2]);
-    const d = new Vector3(b[0], b[1], b[2]);
-    return c.distanceTo(d);
+    tempA.set(a[0], a[1], a[2]);
+    tempB.set(b[0], b[1], b[2]);
+    return tempA.distanceTo(tempB);
 };
 
 @Injectable({
