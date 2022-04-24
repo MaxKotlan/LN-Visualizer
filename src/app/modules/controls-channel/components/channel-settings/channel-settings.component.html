@@ -6,9 +6,9 @@
     <mat-checkbox [ngModel]="selectEdgeDepthTest$ | async" (change)="setDepthTest($event)"
         >Depth Test</mat-checkbox
     >
-    <mat-checkbox [ngModel]="selectEdgeDottedLine$ | async" (change)="setDottedLines($event)"
+    <!-- <mat-checkbox [ngModel]="selectEdgeDottedLine$ | async" (change)="setDottedLines($event)"
         >Dashed Lines</mat-checkbox
-    >
+    > -->
     <app-channel-color-dropdown></app-channel-color-dropdown>
     <app-channel-color-map-dropdown></app-channel-color-map-dropdown>
     <mat-checkbox [ngModel]="selectUseLogColorScale$ | async" (change)="setUseLogColorScale($event)"

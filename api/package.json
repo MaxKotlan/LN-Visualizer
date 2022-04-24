@@ -19,6 +19,7 @@
         "cors": "^2.8.5",
         "express": "^4.17.2",
         "inversify": "^6.0.1",
+        "kd-tree-javascript": "^1.0.3",
         "lightning": "^5.2.1",
         "ln-service": "^53.2.0",
         "node-schedule": "^2.1.0",

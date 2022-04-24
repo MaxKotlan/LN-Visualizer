@@ -15,6 +15,7 @@ import { FilteredNodeRegistryService } from '../services/filtered-node-registry/
 import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import _ from 'lodash';
+import { PointTreeService } from '../services/point-tree/point-tree.service';
 
 @Injectable()
 export class NodeEffects {
@@ -26,6 +27,7 @@ export class NodeEffects {
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
+        private pointTreeService: PointTreeService,
     ) {}
 
     concatinateNodeChunk$ = createEffect(
@@ -36,6 +38,7 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
+                    this.pointTreeService.buildKDTree();
                     return graphActions.cacheProcessedGraphNodeChunk();
                 }),
             ),
