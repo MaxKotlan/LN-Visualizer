@@ -5,13 +5,10 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { Vector3 } from 'three';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
 
-const tempVec1 = new Vector3(0, 0, 0);
-const tempVec2 = new Vector3(0, 0, 0);
-
 const distance = (a: Array<number>, b: Array<number>) => {
-    tempVec1.set(a[0], a[1], a[2]);
-    tempVec2.set(b[0], b[1], b[2]);
-    return tempVec1.distanceTo(tempVec2);
+    const c = new Vector3(a[0], a[1], a[2]);
+    const d = new Vector3(b[0], b[1], b[2]);
+    return c.distanceTo(d);
 };
 
 @Injectable({
