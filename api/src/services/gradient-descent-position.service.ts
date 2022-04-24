@@ -109,9 +109,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.posData.forEach((currentNodePos, key) => {
             const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
             const closestPoint = closestPointBuffer.get(key);
+            const connectedNodesLength = this.connectedNodes.get(key)?.length || 1.0;
 
             if (!averageNeightborPosition) throw new Error('this should not happen');
             if (!closestPoint) throw new Error('this should not happen');
+            if (!connectedNodesLength) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
@@ -126,6 +128,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const positiveDelta = this.computePositiveDelta(
                 currentNodePos.position,
                 averageNeightborPosition,
+                connectedNodesLength,
             );
             const negativeDelta = this.computeNegativeDelta(currentNodePos.position, closestPoint);
             // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
@@ -163,35 +166,44 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         // });
     }
 
-    public computePositiveDelta(currentNodePos: Vector3, averageNeightborPosition: Vector3) {
-        if (
-            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
-            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
-        ) {
-            const a = averageNeightborPosition.clone().sub(currentNodePos);
-            const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(0.05);
-            a.add(b);
-            a.divideScalar(2);
-            return a;
+    public computePositiveDelta(
+        currentNodePos: Vector3,
+        averageNeightborPosition: Vector3,
+        connectedNodesLength: number,
+    ) {
+        // if (
+        //     currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
+        //     currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+        // ) {
+        const a = averageNeightborPosition.clone().sub(currentNodePos);
+        const b = new Vector3(0, 0, 0)
+            .sub(currentNodePos)
+            .multiplyScalar(connectedNodesLength / 3143);
+        a.add(b);
+        a.divideScalar(2);
+        return a;
 
-            // const b = a.sub(new Vector3(0, 0, 0)).multiplyScalar(0.01);
-            // return b;
-            // averageNeightborPosition.multiplyScalar(this.learningRate);
-            // return currentNodePos.clone().add(averageNeightborPosition);
-        }
+        // const b = a.sub(new Vector3(0, 0, 0)).multiplyScalar(0.01);
+        // return b;
+        // averageNeightborPosition.multiplyScalar(this.learningRate);
+        // return currentNodePos.clone().add(averageNeightborPosition);
+        //   }
         return new Vector3(0, 0, 0);
     }
 
     public computeNegativeDelta(currentNodePos: Vector3, closestPoint: Vector3) {
         const d = currentNodePos.distanceTo(closestPoint);
-        if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 0.1) {
-            return closestPoint.clone().sub(currentNodePos).multiplyScalar(-1); //.divideScalar(d + 1);
-            // .clone()
-            // .sub(currentNodePos)
-            // .multiplyScalar(-0.1 / (d + 0.1));
-            // .multiplyScalar(1 / (d + 1));
-        }
-        return new Vector3(0, 0, 0);
+        // if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 0.1) {
+        return currentNodePos
+            .clone()
+            .sub(closestPoint)
+            .divideScalar(d + 1); //.divideScalar(d + 1);
+        // .clone()
+        // .sub(currentNodePos)
+        // .multiplyScalar(-0.1 / (d + 0.1));
+        // .multiplyScalar(1 / (d + 1));
+        // }
+        // return new Vector3(0, 0, 0);
     }
 
     public calculatePositions() {
