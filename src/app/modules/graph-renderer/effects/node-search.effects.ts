@@ -73,22 +73,6 @@ export class NodeSearchEffects {
         share(),
     );
 
-    public selectClosestPoint(point: THREE.Vector3) {
-        if (!this.filteredNodeRegistry) return;
-        point.divideScalar(meshScale);
-        let minDistance: null | number = null;
-        let minDistanceIndex: null | string = null;
-        this.filteredNodeRegistry.forEach((node: LndNodeWithPosition, pubkey) => {
-            const pointDisance = node.position.distanceTo(point);
-            if (minDistance === null || pointDisance < minDistance) {
-                minDistance = pointDisance;
-                minDistanceIndex = pubkey;
-            }
-        });
-        if (minDistanceIndex === null) return;
-        return this.filteredNodeRegistry.get(minDistanceIndex);
-    }
-
     addNodeFilter$ = createEffect(
         () =>
             this.selectFinalMatcheNodesFromSearch$.pipe(

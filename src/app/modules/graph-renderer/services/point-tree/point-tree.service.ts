@@ -30,7 +30,6 @@ export class PointTreeService {
             c.public_key,
         ]);
         this.tree = new kdTree.kdTree(a, distance, ['0', '1', '2']);
-        console.log(this.tree);
     }
 
     public getNearestNeighbor(position: Vector3) {
