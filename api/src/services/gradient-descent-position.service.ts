@@ -32,7 +32,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     }
 
     public epochs = 1024;
-    public learningRate = 0.01;
+    public learningRate = 0.03;
 
     public validateVector(vec: Vector3) {
         if (!Number.isNaN(vec.x)) return;
@@ -130,7 +130,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 averageNeightborPosition,
                 connectedNodesLength,
             );
-            const negativeDelta = this.computeNegativeDelta(currentNodePos.position, closestPoint);
+            const negativeDelta = this.computeNegativeDelta(
+                currentNodePos.position,
+                closestPoint,
+                connectedNodesLength,
+            );
             // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
             // positiveDelta.normalize();
             // negativeDelta;//.multiplyScalar(0.01);
@@ -171,17 +175,18 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         averageNeightborPosition: Vector3,
         connectedNodesLength: number,
     ) {
-        // if (
-        //     currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
-        //     currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
-        // ) {
-        const a = averageNeightborPosition.clone().sub(currentNodePos);
-        const b = new Vector3(0, 0, 0)
-            .sub(currentNodePos)
-            .multiplyScalar(connectedNodesLength / 3143);
-        a.add(b);
-        a.divideScalar(2);
-        return a;
+        if (
+            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
+            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+        ) {
+            const a = averageNeightborPosition.clone().sub(currentNodePos);
+            const b = new Vector3(0, 0, 0)
+                .sub(currentNodePos)
+                .multiplyScalar(connectedNodesLength / 3143);
+            a.add(b);
+            a.divideScalar(2);
+            return a;
+        }
 
         // const b = a.sub(new Vector3(0, 0, 0)).multiplyScalar(0.01);
         // return b;
@@ -191,13 +196,33 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         return new Vector3(0, 0, 0);
     }
 
-    public computeNegativeDelta(currentNodePos: Vector3, closestPoint: Vector3) {
+    public computeNegativeDelta(
+        currentNodePos: Vector3,
+        closestPoint: Vector3,
+        connectedNodesLength: number,
+    ) {
         const d = currentNodePos.distanceTo(closestPoint);
-        // if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 0.1) {
-        return currentNodePos
-            .clone()
-            .sub(closestPoint)
-            .divideScalar(d + 1); //.divideScalar(d + 1);
+        if (currentNodePos.distanceTo(new Vector3(0, 0, 0)) < 1) {
+            const h = currentNodePos
+                .clone()
+                .sub(closestPoint)
+                .divideScalar(d + 1); //.divideScalar(d + 1);
+
+            const j = new Vector3(0, 0, 0).sub(currentNodePos);
+
+            const factor = connectedNodesLength / 3143 - 1;
+
+            const l = j.multiplyScalar(factor * 0.025);
+
+            if (j.length() < 2) {
+                h.add(l);
+                h.divideScalar(2);
+            }
+
+            return j;
+        }
+        return new Vector3(0, 0, 0);
+
         // .clone()
         // .sub(currentNodePos)
         // .multiplyScalar(-0.1 / (d + 0.1));
