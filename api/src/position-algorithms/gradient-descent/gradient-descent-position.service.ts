@@ -180,7 +180,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         connectedNodesLength: number,
     ) {
         if (
-            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 //&&
+            currentNodePos.distanceTo(averageNeightborPosition) >
+            (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * 0.1 //&&
             // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
@@ -209,7 +210,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const h = currentNodePos
                 .clone()
                 .sub(closestPoint)
-                .divideScalar(d + 1)
+                .divideScalar(Math.log(d + 1) + 1)
                 .multiplyScalar(1.0); //.divideScalar(d + 1);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
@@ -218,10 +219,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
             const l = j.multiplyScalar(factor * 0.025);
 
-            if (j.length() < 2) {
-                h.add(l);
-                h.divideScalar(2);
-            }
+            h.add(l);
+            h.divideScalar(2);
 
             return j;
         }
