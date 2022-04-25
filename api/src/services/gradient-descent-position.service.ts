@@ -206,7 +206,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const h = currentNodePos
                 .clone()
                 .sub(closestPoint)
-                .divideScalar(d + 1); //.divideScalar(d + 1);
+                .divideScalar(d + 1)
+                .multiplyScalar(2.0); //.divideScalar(d + 1);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 
