@@ -176,8 +176,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         connectedNodesLength: number,
     ) {
         if (
-            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 &&
-            currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
+            currentNodePos.distanceTo(averageNeightborPosition) > 0.1 //&&
+            // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
             const b = new Vector3(0, 0, 0)
