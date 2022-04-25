@@ -109,11 +109,15 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.posData.forEach((currentNodePos, key) => {
             const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
             const closestPoint = closestPointBuffer.get(key);
-            const connectedNodesLength = this.connectedNodes.get(key)?.length || 1.0;
+            let connectedNodesLength = 0;
+            if (this.connectedNodes.get(key)?.length === undefined) connectedNodesLength = 0.0;
+            else
+                connectedNodesLength = (this.connectedNodes.get(key) as Array<any>)
+                    .length as number;
 
             if (!averageNeightborPosition) throw new Error('this should not happen');
             if (!closestPoint) throw new Error('this should not happen');
-            if (!connectedNodesLength) throw new Error('this should not happen');
+            if (connectedNodesLength === undefined) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
             // if (
             //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
@@ -180,9 +184,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
-            const b = new Vector3(0, 0, 0)
-                .sub(currentNodePos)
-                .multiplyScalar(connectedNodesLength / 3143);
+            const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
+            const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(h);
             a.add(b);
             a.divideScalar(2);
             return a;
@@ -207,11 +210,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 .clone()
                 .sub(closestPoint)
                 .divideScalar(d + 1)
-                .multiplyScalar(15.0); //.divideScalar(d + 1);
+                .multiplyScalar(1.0); //.divideScalar(d + 1);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 
-            const factor = connectedNodesLength / 3143 - 1;
+            const factor = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1) - 1;
 
             const l = j.multiplyScalar(factor * 0.025);
 
