@@ -1,8 +1,8 @@
 import { Vector3 } from 'three';
 import { runInThisContext } from 'vm';
-import { LndNode } from '../models';
-import { GraphRegistryService } from './graph-registry.service';
-import { PositionAlgorithm } from './position-algorithm';
+import { LndNode } from '../../models';
+import { GraphRegistryService } from '../../services/graph-registry.service';
+import { PositionAlgorithm } from '../position-algorithm';
 import * as seedRandom from 'seedrandom';
 import { performance } from 'perf_hooks';
 import * as kdTree from 'kd-tree-javascript';
@@ -207,7 +207,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 .clone()
                 .sub(closestPoint)
                 .divideScalar(d + 1)
-                .multiplyScalar(2.0); //.divideScalar(d + 1);
+                .multiplyScalar(15.0); //.divideScalar(d + 1);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 

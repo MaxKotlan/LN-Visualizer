@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { Vector3 } from 'three';
-import { GraphRegistryService } from './graph-registry.service';
+import { GraphRegistryService } from '../services/graph-registry.service';
 
 type NodePublicKey = string;
 @injectable()

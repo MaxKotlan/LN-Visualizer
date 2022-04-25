@@ -9,10 +9,10 @@ import {
 } from './services';
 import { ChannelCloseService } from './services/channel-close.service';
 import { ChannelUpdatedService } from './services/channel-updated.service';
-import { GradientDescentPositionAlgorithm } from './services/gradient-descent-position.service';
+import { GradientDescentPositionAlgorithm } from './position-algorithms/gradient-descent/gradient-descent-position.service';
 import { GraphRegistryService } from './services/graph-registry.service';
-import { FastPositionAlgorithm } from './services/position-calculator.service';
-import { RandomPositionAlgorithm } from './services/random-position.service';
+import { FastPositionAlgorithm } from './position-algorithms/fast/position-calculator.service';
+import { RandomPositionAlgorithm } from './position-algorithms/random/random-position.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
