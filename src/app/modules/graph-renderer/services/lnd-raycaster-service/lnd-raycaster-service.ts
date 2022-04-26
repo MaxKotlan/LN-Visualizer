@@ -37,7 +37,7 @@ export class LndRaycasterService implements OnDestroy {
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onTouchStart = this.onTouchStart.bind(this);
-        this.raycaster.params.Points.threshold = 0.5;
+        this.raycaster.params.Points.threshold = 1.0;
     }
 
     ngOnDestroy() {

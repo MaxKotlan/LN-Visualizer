@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Vector3 } from 'three';
-import { GraphRegistryService } from './graph-registry.service';
-import { PositionAlgorithm } from './position-algorithm';
+import { GraphRegistryService } from '../../services/graph-registry.service';
+import { PositionAlgorithm } from '../position-algorithm';
 
 @injectable()
 export class RandomPositionAlgorithm extends PositionAlgorithm {

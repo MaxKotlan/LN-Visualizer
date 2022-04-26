@@ -1,11 +1,11 @@
 import { injectable } from 'inversify';
 import * as THREE from 'three';
-import { createSpherePoint } from '../utils/create-sphere.util';
-import { GraphRegistryService } from './graph-registry.service';
+import { createSpherePoint } from '../../utils/create-sphere.util';
+import { GraphRegistryService } from '../../services/graph-registry.service';
 import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import { Vector3 } from 'three';
-import { LndChannel, LndNode } from '../models';
-import { PositionAlgorithm } from './position-algorithm';
+import { LndChannel, LndNode } from '../../models';
+import { PositionAlgorithm } from '../position-algorithm';
 
 type NodePublicKey = string;
 type ChannelId = string;
