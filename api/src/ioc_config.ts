@@ -13,6 +13,7 @@ import { GradientDescentPositionAlgorithm } from './position-algorithms/gradient
 import { GraphRegistryService } from './services/graph-registry.service';
 import { FastPositionAlgorithm } from './position-algorithms/fast/position-calculator.service';
 import { RandomPositionAlgorithm } from './position-algorithms/random/random-position.service';
+import { PositionSelectorService } from './services/position-selector.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -30,4 +31,5 @@ container
     .bind<GradientDescentPositionAlgorithm>(GradientDescentPositionAlgorithm)
     .toSelf()
     .inSingletonScope();
+container.bind<PositionSelectorService>(PositionSelectorService).toSelf().inSingletonScope();
 export default container;
