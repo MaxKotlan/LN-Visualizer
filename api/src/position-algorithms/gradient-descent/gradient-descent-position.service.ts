@@ -9,11 +9,6 @@ import * as kdTree from 'kd-tree-javascript';
 
 type NodePublicKey = string;
 
-interface PosData {
-    position: Vector3;
-    delta: Vector3;
-}
-
 const tempA = new Vector3(0, 0, 0);
 const tempB = new Vector3(0, 0, 0);
 
@@ -24,7 +19,7 @@ const distance = (a: Array<number>, b: Array<number>) => {
 };
 
 export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
-    public posData: Map<NodePublicKey, PosData> = new Map();
+    public posData: Map<NodePublicKey, Vector3> = new Map();
     public connectedNodes: Map<NodePublicKey, LndNode[]> = new Map();
 
     constructor(public graphRegistryService: GraphRegistryService) {
@@ -34,31 +29,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public epochs = 1024;
     public learningRate = 0.03;
 
-    public validateVector(vec: Vector3) {
-        if (!Number.isNaN(vec.x)) return;
-        if (!Number.isNaN(vec.y)) return;
-        if (!Number.isNaN(vec.z)) return;
-        throw new Error('NAN Vector');
-    }
-
-    public getClosestPosition(pointToCheck: Vector3) {
-        let minDist = Infinity;
-        let point: Vector3 | undefined = undefined;
-        this.posData.forEach((positionData, public_key) => {
-            const dSquared = positionData.position.distanceToSquared(pointToCheck);
-            if (dSquared < minDist) {
-                minDist = dSquared;
-                point = positionData.position;
-            }
-        });
-        return point;
-    }
-
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
-            pos.position.x,
-            pos.position.y,
-            pos.position.z,
+            pos.x,
+            pos.y,
+            pos.z,
             key,
         ]);
         return new kdTree.kdTree(points, distance, ['0', '1', '2']);
@@ -68,11 +43,9 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         const delta = new Vector3(0, 0, 0);
         const connectedNodes = this.connectedNodes.get(public_key);
         connectedNodes?.forEach((n) => {
-            const position = this.posData.get(n.public_key);
-            if (position?.position) {
-                this.validateVector(position?.position);
-                delta.add(position?.position);
-            }
+            const neighbor = this.posData.get(n.public_key);
+            if (!neighbor) throw new Error('Could not retrieve connected neighbors');
+            delta.add(neighbor);
         });
         if (connectedNodes?.length && connectedNodes?.length > 0)
             delta.divideScalar(connectedNodes.length);
@@ -84,7 +57,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const aveargeNeighborPosition = this.calculateAverageConnectedNeighbors(public_key);
             this.averageNeighborPositionBuffer.set(public_key, aveargeNeighborPosition);
             const closestPoint = this.pointTree.nearest(
-                [positionData.position.x, positionData.position.y, positionData.position.z],
+                [positionData.x, positionData.y, positionData.z],
                 2,
             )[0][0] as Array<number>;
             this.closestPointBuffer.set(
@@ -107,22 +80,20 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (!averageNeightborPosition) throw new Error('this should not happen');
             if (!closestPoint) throw new Error('this should not happen');
             if (connectedNodesLength === undefined) throw new Error('this should not happen');
-            this.validateVector(averageNeightborPosition);
             const positiveDelta = this.computePositiveDelta(
-                currentNodePos.position,
+                currentNodePos,
                 averageNeightborPosition,
                 connectedNodesLength,
             );
             const negativeDelta = this.computeNegativeDelta(
-                currentNodePos.position,
+                currentNodePos,
                 closestPoint,
                 connectedNodesLength,
             );
             positiveDelta.add(negativeDelta);
             positiveDelta.divideScalar(2);
             positiveDelta.multiplyScalar(this.learningRate);
-            currentNodePos.position.add(positiveDelta);
-            this.validateVector(currentNodePos.position);
+            currentNodePos.add(positiveDelta);
         });
     }
 
@@ -150,7 +121,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         if (
             currentNodePos.distanceTo(averageNeightborPosition) >
             (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * 0.1 //&&
-            // currentNodePos.distanceTo(new Vector3(0, 0, 0)) > 0.1
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
             const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
@@ -159,12 +129,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             a.divideScalar(2);
             return a;
         }
-
-        // const b = a.sub(new Vector3(0, 0, 0)).multiplyScalar(0.01);
-        // return b;
-        // averageNeightborPosition.multiplyScalar(this.learningRate);
-        // return currentNodePos.clone().add(averageNeightborPosition);
-        //   }
         return new Vector3(0, 0, 0);
     }
 
@@ -179,7 +143,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 .clone()
                 .sub(closestPoint)
                 .divideScalar(Math.log(d + 1) + 1)
-                .multiplyScalar(1.0); //.divideScalar(d + 1);
+                .multiplyScalar(1.0);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 
@@ -193,13 +157,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             return j;
         }
         return new Vector3(0, 0, 0);
-
-        // .clone()
-        // .sub(currentNodePos)
-        // .multiplyScalar(-0.1 / (d + 0.1));
-        // .multiplyScalar(1 / (d + 1));
-        // }
-        // return new Vector3(0, 0, 0);
     }
 
     public calculatePositions() {
@@ -217,7 +174,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public save() {
         this.posData.forEach((pos, key) => {
             const n = this.graphRegistryService.nodeMap.get(key);
-            if (n) n['position'] = pos.position;
+            if (n) n['position'] = pos;
         });
         let nocount = 0;
         this.graphRegistryService.nodeMap.forEach((c) => {
@@ -232,7 +189,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public getRandomVector(seed) {
         const rng = seedRandom.xor128(seed);
         const v = new Vector3(2.0 * (rng() - 0.5), 2.0 * (rng() - 0.5), 2.0 * (rng() - 0.5));
-        this.validateVector(v);
         return v;
     }
 
@@ -254,15 +210,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (node2) this.connectedNodes.get(node1Pub)?.push(node2);
             if (node1) this.connectedNodes.get(node2Pub)?.push(node1);
 
-            this.posData.set(node1Pub, {
-                position: this.getRandomVector(node1Pub),
-                delta: new Vector3(0, 0, 0),
-            });
-
-            this.posData.set(node2Pub, {
-                position: this.getRandomVector(node2Pub),
-                delta: new Vector3(0, 0, 0),
-            });
+            this.posData.set(node1Pub, this.getRandomVector(node1Pub));
+            this.posData.set(node2Pub, this.getRandomVector(node2Pub));
         });
     }
 }
