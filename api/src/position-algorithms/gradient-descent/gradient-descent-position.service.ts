@@ -64,51 +64,40 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         return new kdTree.kdTree(points, distance, ['0', '1', '2']);
     }
 
-    public epoch() {
-        const closestPointBuffer: Map<NodePublicKey, Vector3> = new Map();
-        const averageNeighborPositionBuffer: Map<NodePublicKey, Vector3> = new Map();
-        const pointTree = this.buildKDTree();
+    public calculateAverageConnectedNeighbors(public_key: string): Vector3 {
+        const delta = new Vector3(0, 0, 0);
+        const connectedNodes = this.connectedNodes.get(public_key);
+        connectedNodes?.forEach((n) => {
+            const position = this.posData.get(n.public_key);
+            if (position?.position) {
+                this.validateVector(position?.position);
+                delta.add(position?.position);
+            }
+        });
+        if (connectedNodes?.length && connectedNodes?.length > 0)
+            delta.divideScalar(connectedNodes.length);
+        return delta;
+    }
+
+    public calculateNewPositions() {
         this.posData.forEach((positionData, public_key) => {
-            const connectedNodes = this.connectedNodes.get(public_key);
-            const delta = new Vector3(0, 0, 0);
-            connectedNodes?.forEach((n) => {
-                const position = this.posData.get(n.public_key);
-                // if (position?.position.x) {
-                if (position?.position) {
-                    this.validateVector(position?.position);
-                    delta.add(position?.position);
-                }
-                // } else
-                //     throw new Error(
-                //         'No pos data' +
-                //             position?.position.x +
-                //             position?.position.y +
-                //             position?.position.z,
-                //     );
-            });
-            if (connectedNodes?.length && connectedNodes?.length > 0)
-                delta.divideScalar(connectedNodes.length);
-            // else throw new Error('div zero');
-            averageNeighborPositionBuffer.set(public_key, delta);
-            //positionData.position
-            // console.log(pointTree);
-            const closestPoint = pointTree.nearest(
+            const aveargeNeighborPosition = this.calculateAverageConnectedNeighbors(public_key);
+            this.averageNeighborPositionBuffer.set(public_key, aveargeNeighborPosition);
+            const closestPoint = this.pointTree.nearest(
                 [positionData.position.x, positionData.position.y, positionData.position.z],
                 2,
-            )[0][0];
-            if (closestPoint) {
-                // console.log('checking for', public_key);
-                // console.log(closestPoint);
-                closestPointBuffer.set(
-                    public_key,
-                    new Vector3(closestPoint[0], closestPoint[1], closestPoint[2]),
-                );
-            }
-            // console.log(posBuffer.get(public_key));
+            )[0][0] as Array<number>;
+            this.closestPointBuffer.set(
+                public_key,
+                new Vector3(closestPoint[0], closestPoint[1], closestPoint[2]),
+            );
         });
+    }
+
+    public applyNewPositions() {
         this.posData.forEach((currentNodePos, key) => {
-            const averageNeightborPosition = averageNeighborPositionBuffer.get(key);
-            const closestPoint = closestPointBuffer.get(key);
+            const averageNeightborPosition = this.averageNeighborPositionBuffer.get(key);
+            const closestPoint = this.closestPointBuffer.get(key);
             let connectedNodesLength = 0;
             if (this.connectedNodes.get(key)?.length === undefined) connectedNodesLength = 0.0;
             else
@@ -119,16 +108,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             if (!closestPoint) throw new Error('this should not happen');
             if (connectedNodesLength === undefined) throw new Error('this should not happen');
             this.validateVector(averageNeightborPosition);
-            // if (
-            //     currentNodePos.position.distanceTo(averageNeightborPosition) > 0.1 &&
-            //     currentNodePos.position.distanceTo(new Vector3(0, 0, 0)) > 0.1
-            // ) {
-            //     averageNeightborPosition.sub(currentNodePos.position);
-            //     averageNeightborPosition.multiplyScalar(this.learningRate);
-            //     currentNodePos.position = currentNodePos.position
-            //         .clone()
-            //         .add(averageNeightborPosition);
-            // }
             const positiveDelta = this.computePositiveDelta(
                 currentNodePos.position,
                 averageNeightborPosition,
@@ -139,39 +118,28 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 closestPoint,
                 connectedNodesLength,
             );
-            // const negativeDelta = this.computeNegativeDelta(positiveDelta, closestPoint);
-            // positiveDelta.normalize();
-            // negativeDelta;//.multiplyScalar(0.01);
-
-            //positiveDelta.sub(negativeDelta);
-            // positiveDelta.add(negativeDelta);
-            // positiveDelta.multiplyScalar(1 / 2);
-            // if (!!negativeDelta.x || !!negativeDelta.y || !!negativeDelta.z)
-            //     console.log('pos', positiveDelta, 'neg', negativeDelta, 'cpoint', closestPoint);
             positiveDelta.add(negativeDelta);
             positiveDelta.divideScalar(2);
             positiveDelta.multiplyScalar(this.learningRate);
-            // console.log(negativeDelta);
-            // this.validateVector(negativeDelta);
             currentNodePos.position.add(positiveDelta);
             this.validateVector(currentNodePos.position);
-            // c.position.set(pos.position.x, pos.position.y, pos.position.z);
-            // c.delta.set(pos.delta.x, pos.delta.y, pos.delta.z);
         });
-        // closestPointBuffer.forEach((closestPosition, key) => {
-        //     const currentNodePos = this.posData.get(key);
-        //     if (!currentNodePos) throw new Error('this should not happen');
-        //     this.validateVector(closestPosition);
-        //     if (
-        //         currentNodePos.position.distanceTo(closestPosition) < 0.1 &&
-        //         currentNodePos.position.distanceTo(new Vector3(0, 0, 0)) < 2.0
-        //     ) {
-        //         closestPosition.sub(currentNodePos.position);
-        //         closestPosition.multiplyScalar(this.learningRate);
-        //         currentNodePos.position = currentNodePos.position.clone().sub(closestPosition);
-        //     }
-        //     this.validateVector(currentNodePos.position);
-        // });
+    }
+
+    public pointTree: any;
+    public closestPointBuffer: Map<NodePublicKey, Vector3> = new Map();
+    public averageNeighborPositionBuffer: Map<NodePublicKey, Vector3> = new Map();
+
+    public resetData() {
+        this.closestPointBuffer.clear();
+        this.averageNeighborPositionBuffer.clear();
+        this.pointTree = this.buildKDTree();
+    }
+
+    public epoch() {
+        this.resetData();
+        this.calculateNewPositions();
+        this.applyNewPositions();
     }
 
     public computePositiveDelta(
