@@ -1,11 +1,12 @@
 import { Vector3 } from 'three';
-import { runInThisContext } from 'vm';
 import { LndNode } from '../../models';
 import { GraphRegistryService } from '../../services/graph-registry.service';
 import { PositionAlgorithm } from '../position-algorithm';
 import * as seedRandom from 'seedrandom';
 import { performance } from 'perf_hooks';
 import * as kdTree from 'kd-tree-javascript';
+import { ConfigService } from '../../services/config.service';
+import { injectable } from 'inversify';
 
 type NodePublicKey = string;
 
@@ -18,16 +19,28 @@ const distance = (a: Array<number>, b: Array<number>) => {
     return tempA.distanceTo(tempB);
 };
 
+@injectable()
 export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public posData: Map<NodePublicKey, Vector3> = new Map();
     public connectedNodes: Map<NodePublicKey, LndNode[]> = new Map();
 
-    constructor(public graphRegistryService: GraphRegistryService) {
+    constructor(
+        public graphRegistryService: GraphRegistryService,
+        public configService: ConfigService,
+    ) {
         super(graphRegistryService);
     }
 
-    public epochs = 1024;
-    public learningRate = 0.03;
+    public iterations = this.configService.getConfig().gradientDescentSettings.iterations;
+    public learningRate = this.configService.getConfig().gradientDescentSettings.learningRate;
+    public maxConnectedNodeDistance =
+        this.configService.getConfig().gradientDescentSettings.maxConnectedNodeDistance;
+    public minConnectedNodeDistance =
+        this.configService.getConfig().gradientDescentSettings.minConnectedNodeDistance;
+    public connecteNodeDistanceRange =
+        this.maxConnectedNodeDistance - this.minConnectedNodeDistance;
+    public invertConnectedRange =
+        this.configService.getConfig().gradientDescentSettings.invertConnectedRange;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -107,10 +120,19 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.pointTree = this.buildKDTree();
     }
 
-    public epoch() {
+    public iteration() {
         this.resetData();
         this.calculateNewPositions();
         this.applyNewPositions();
+    }
+
+    public getCutoffDistance(connectedNodesLength) {
+        const directionFactor = this.invertConnectedRange ? 1 : 0;
+        return (
+            (directionFactor - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) *
+                this.connecteNodeDistanceRange +
+            this.minConnectedNodeDistance
+        );
     }
 
     public computePositiveDelta(
@@ -120,7 +142,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     ) {
         if (
             currentNodePos.distanceTo(averageNeightborPosition) >
-            (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * 0.1 //&&
+            this.getCutoffDistance(connectedNodesLength)
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
             const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
@@ -162,12 +184,21 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public calculatePositions() {
         this.initialize();
         const startTime = performance.now();
-        for (let i = 0; i < this.epochs; i++) {
-            this.epoch();
-            if (i % 10 === 0) {
-                console.log(`done with epoch ${i} ${performance.now() - startTime}`);
+        let iterationTime: number | undefined = undefined;
+        for (let i = 0; i < this.iterations; i++) {
+            this.iteration();
+            if (
+                this.configService.getConfig().gradientDescentSettings.shouldLog &&
+                i % this.configService.getConfig().gradientDescentSettings.logRate === 0 &&
+                i !== 0
+            ) {
+                if (iterationTime)
+                    console.log(`done with iteration ${i} ${performance.now() - iterationTime}`);
+                iterationTime = performance.now();
             }
         }
+        if (this.configService.getConfig().gradientDescentSettings.shouldLog)
+            console.log(`total time ${performance.now() - startTime}`);
         this.save();
     }
 
