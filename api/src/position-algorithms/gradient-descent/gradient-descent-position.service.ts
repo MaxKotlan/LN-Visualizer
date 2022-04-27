@@ -112,7 +112,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.pointTree = this.buildKDTree();
     }
 
-    public epoch() {
+    public iteration() {
         this.resetData();
         this.calculateNewPositions();
         this.applyNewPositions();
@@ -168,7 +168,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.initialize();
         const startTime = performance.now();
         for (let i = 0; i < this.iterations; i++) {
-            this.epoch();
+            this.iteration();
             if (
                 this.configService.getConfig().gradientDescentSettings.shouldLog &&
                 i % this.configService.getConfig().gradientDescentSettings.logRate === 0
