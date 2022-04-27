@@ -41,6 +41,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.maxConnectedNodeDistance - this.minConnectedNodeDistance;
     public invertConnectedRange =
         this.configService.getConfig().gradientDescentSettings.invertConnectedRange;
+    // public randomnessFactor = 0.1;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -164,7 +165,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const h = currentNodePos
                 .clone()
                 .sub(closestPoint)
-                .divideScalar(Math.log(d + 1) + 1)
+                // .divideScalar(16 * Math.log(d + 1) + 1)
+                .multiplyScalar(-2 * d + 4)
                 .multiplyScalar(1.0);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
