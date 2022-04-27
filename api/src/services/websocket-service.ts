@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import { WebSocketServer } from 'ws';
 import { ChannelCloseService } from './channel-close.service';
 import { ChannelUpdatedService } from './channel-updated.service';
+import { ConfigService } from './config.service';
 import { InitialSyncService } from './initial-sync.service';
 
 @injectable()
@@ -12,9 +13,13 @@ export class WebSocketService {
         private initialSyncService: InitialSyncService,
         private channelCloseService: ChannelCloseService,
         private channelUpdatedService: ChannelUpdatedService,
+        private configService: ConfigService,
     ) {
         console.log('Initializing Websocket Server');
-        this.wss = new WebSocketServer({ port: 5647, host: '0.0.0.0' });
+        this.wss = new WebSocketServer({
+            port: this.configService.getConfig().port,
+            host: this.configService.getConfig().host,
+        });
     }
 
     public init() {
