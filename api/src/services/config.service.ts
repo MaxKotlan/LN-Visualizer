@@ -14,7 +14,9 @@ const initConfig: Config = {
     gradientDescentSettings: {
         iterations: 50,
         learningRate: 1.0,
-        logRate: 1,
+        logRate: 10,
+        maxNodeDistance: 0.1,
+        minNodeDistance: 0,
         shouldLog: true,
     } as GradientDescentSettings,
     port: 5647,

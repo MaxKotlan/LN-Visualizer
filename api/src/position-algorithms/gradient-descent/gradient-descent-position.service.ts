@@ -33,6 +33,9 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public iterations = this.configService.getConfig().gradientDescentSettings.iterations;
     public learningRate = this.configService.getConfig().gradientDescentSettings.learningRate;
+    public maxNodeDistance = this.configService.getConfig().gradientDescentSettings.maxNodeDistance;
+    public minNodeDistance = this.configService.getConfig().gradientDescentSettings.minNodeDistance;
+    public nodeDistanceRange = this.maxNodeDistance - this.minNodeDistance;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -125,7 +128,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     ) {
         if (
             currentNodePos.distanceTo(averageNeightborPosition) >
-            (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * 0.1 //&&
+            (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * this.nodeDistanceRange +
+                this.minNodeDistance
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
             const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
@@ -167,15 +171,21 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public calculatePositions() {
         this.initialize();
         const startTime = performance.now();
+        let iterationTime: number | undefined = undefined;
         for (let i = 0; i < this.iterations; i++) {
             this.iteration();
             if (
                 this.configService.getConfig().gradientDescentSettings.shouldLog &&
-                i % this.configService.getConfig().gradientDescentSettings.logRate === 0
+                i % this.configService.getConfig().gradientDescentSettings.logRate === 0 &&
+                i !== 0
             ) {
-                console.log(`done with epoch ${i} ${performance.now() - startTime}`);
+                if (iterationTime)
+                    console.log(`done with iteration ${i} ${performance.now() - iterationTime}`);
+                iterationTime = performance.now();
             }
         }
+        if (this.configService.getConfig().gradientDescentSettings.shouldLog)
+            console.log(`total time ${performance.now() - startTime}`);
         this.save();
     }
 
