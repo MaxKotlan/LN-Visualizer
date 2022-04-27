@@ -3,6 +3,7 @@ export interface GradientDescentSettings {
     learningRate: number;
     maxNodeDistance: number;
     minNodeDistance: number;
+    invertRange: boolean;
     logRate: number;
     shouldLog: boolean;
 }

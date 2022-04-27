@@ -36,6 +36,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public maxNodeDistance = this.configService.getConfig().gradientDescentSettings.maxNodeDistance;
     public minNodeDistance = this.configService.getConfig().gradientDescentSettings.minNodeDistance;
     public nodeDistanceRange = this.maxNodeDistance - this.minNodeDistance;
+    public invertRange = this.configService.getConfig().gradientDescentSettings.invertRange;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -121,6 +122,15 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.applyNewPositions();
     }
 
+    public getCutoffDistance(connectedNodesLength) {
+        const directionFactor = this.invertRange ? 1 : 0;
+        return (
+            (directionFactor - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) *
+                this.nodeDistanceRange +
+            this.minNodeDistance
+        );
+    }
+
     public computePositiveDelta(
         currentNodePos: Vector3,
         averageNeightborPosition: Vector3,
@@ -128,8 +138,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     ) {
         if (
             currentNodePos.distanceTo(averageNeightborPosition) >
-            (1 - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) * this.nodeDistanceRange +
-                this.minNodeDistance
+            this.getCutoffDistance(connectedNodesLength)
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
             const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
