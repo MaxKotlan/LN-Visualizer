@@ -169,7 +169,10 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         const startTime = performance.now();
         for (let i = 0; i < this.iterations; i++) {
             this.epoch();
-            if (i % this.configService.getConfig().gradientDescentSettings.logRate === 0) {
+            if (
+                this.configService.getConfig().gradientDescentSettings.shouldLog &&
+                i % this.configService.getConfig().gradientDescentSettings.logRate === 0
+            ) {
                 console.log(`done with epoch ${i} ${performance.now() - startTime}`);
             }
         }

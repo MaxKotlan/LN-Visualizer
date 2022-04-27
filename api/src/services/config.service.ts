@@ -12,9 +12,10 @@ export interface Config {
 const initConfig: Config = {
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
-        iterations: 1024,
-        learningRate: 0.03,
-        logRate: 10,
+        iterations: 50,
+        learningRate: 1.0,
+        logRate: 1,
+        shouldLog: true,
     } as GradientDescentSettings,
     port: 5647,
     host: '0.0.0.0',
