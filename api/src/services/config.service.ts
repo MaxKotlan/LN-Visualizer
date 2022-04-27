@@ -1,14 +1,21 @@
 import { injectable } from 'inversify';
 import config from 'config';
+import { GradientDescentSettings } from '../position-algorithms/gradient-descent/gd-settings.interface';
 
 export interface Config {
     positionAlgorithm: string;
+    gradientDescentSettings: GradientDescentSettings;
     port: number;
     host: string;
 }
 
 const initConfig: Config = {
     positionAlgorithm: 'gradient-descent',
+    gradientDescentSettings: {
+        iterations: 1024,
+        learningRate: 0.03,
+        logRate: 10,
+    } as GradientDescentSettings,
     port: 5647,
     host: '0.0.0.0',
 };

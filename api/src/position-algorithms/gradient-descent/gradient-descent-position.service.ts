@@ -1,11 +1,12 @@
 import { Vector3 } from 'three';
-import { runInThisContext } from 'vm';
 import { LndNode } from '../../models';
 import { GraphRegistryService } from '../../services/graph-registry.service';
 import { PositionAlgorithm } from '../position-algorithm';
 import * as seedRandom from 'seedrandom';
 import { performance } from 'perf_hooks';
 import * as kdTree from 'kd-tree-javascript';
+import { ConfigService } from '../../services/config.service';
+import { injectable } from 'inversify';
 
 type NodePublicKey = string;
 
@@ -18,16 +19,20 @@ const distance = (a: Array<number>, b: Array<number>) => {
     return tempA.distanceTo(tempB);
 };
 
+@injectable()
 export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public posData: Map<NodePublicKey, Vector3> = new Map();
     public connectedNodes: Map<NodePublicKey, LndNode[]> = new Map();
 
-    constructor(public graphRegistryService: GraphRegistryService) {
+    constructor(
+        public graphRegistryService: GraphRegistryService,
+        public configService: ConfigService,
+    ) {
         super(graphRegistryService);
     }
 
-    public epochs = 1024;
-    public learningRate = 0.03;
+    public iterations = this.configService.getConfig().gradientDescentSettings.iterations;
+    public learningRate = this.configService.getConfig().gradientDescentSettings.learningRate;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -162,9 +167,9 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public calculatePositions() {
         this.initialize();
         const startTime = performance.now();
-        for (let i = 0; i < this.epochs; i++) {
+        for (let i = 0; i < this.iterations; i++) {
             this.epoch();
-            if (i % 10 === 0) {
+            if (i % this.configService.getConfig().gradientDescentSettings.logRate === 0) {
                 console.log(`done with epoch ${i} ${performance.now() - startTime}`);
             }
         }
