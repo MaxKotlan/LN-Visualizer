@@ -9,6 +9,7 @@ export interface Config {
     host: string;
 }
 
+/*default values used if config file does is missing a value*/
 const initConfig: Config = {
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
