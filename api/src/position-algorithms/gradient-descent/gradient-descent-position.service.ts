@@ -130,7 +130,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public getCutoffDistance(connectedNodesLength) {
         const directionFactor = this.invertConnectedRange ? 1 : 0;
         return (
-            (directionFactor - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) *
+            (directionFactor -
+                Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1)) *
                 this.connecteNodeDistanceRange +
             this.minConnectedNodeDistance
         );
@@ -240,7 +241,6 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             // if (!node2) return;
 
             if (!this.connectedNodes.has(node1Pub)) this.connectedNodes.set(node1Pub, []);
-
             if (!this.connectedNodes.has(node2Pub)) this.connectedNodes.set(node2Pub, []);
 
             if (node2) {
