@@ -3,6 +3,7 @@ import { FastPositionAlgorithm } from '../position-algorithms/fast/position-calc
 import { GradientDescentPositionAlgorithm } from '../position-algorithms/gradient-descent/gradient-descent-position.service';
 import { PositionAlgorithm } from '../position-algorithms/position-algorithm';
 import { RandomPositionAlgorithm } from '../position-algorithms/random/random-position.service';
+import { ConfigService } from './config.service';
 
 @injectable()
 export class PositionSelectorService {
@@ -10,6 +11,7 @@ export class PositionSelectorService {
         private fastPosition: FastPositionAlgorithm,
         private randomPosition: RandomPositionAlgorithm,
         private gradientDescent: GradientDescentPositionAlgorithm,
+        private configService: ConfigService,
     ) {}
 
     private algorithmNameToClass(name: string) {
@@ -25,7 +27,8 @@ export class PositionSelectorService {
     }
 
     private getAlgorithm(): PositionAlgorithm {
-        let algorithmName = process.env['position-algorithm'] || 'fast';
+        let algorithmName =
+            this.configService.getConfig().positionAlgorithm?.toLowerCase() || 'fast';
         return this.algorithmNameToClass(algorithmName);
     }
 

@@ -2,9 +2,16 @@ import { injectable } from 'inversify';
 import config from 'config';
 
 export interface Config {
+    positionAlgorithm: string;
     port: number;
     host: string;
 }
+
+const initConfig: Config = {
+    positionAlgorithm: 'gradient-descent',
+    port: 5647,
+    host: '0.0.0.0',
+};
 
 @injectable()
 export class ConfigService {
@@ -32,8 +39,9 @@ export class ConfigService {
 
     private readConfig() {
         const configFile = this.getConfigFile();
-        this.overrideEnvironmentVariables(configFile);
-        this._config = configFile;
+        const configFileAndDefault = { ...initConfig, configFile };
+        this.overrideEnvironmentVariables(configFileAndDefault);
+        this._config = configFileAndDefault;
     }
 
     public getConfig(): Config {

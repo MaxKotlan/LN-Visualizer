@@ -7,7 +7,7 @@ import { InitialSyncService } from './initial-sync.service';
 
 @injectable()
 export class WebSocketService {
-    protected wss: WebSocketServer;
+    protected wss!: WebSocketServer;
 
     constructor(
         private initialSyncService: InitialSyncService,
@@ -15,10 +15,17 @@ export class WebSocketService {
         private channelUpdatedService: ChannelUpdatedService,
         private configService: ConfigService,
     ) {
-        console.log('Initializing Websocket Server');
+        this.initServer();
+    }
+
+    public initServer() {
+        const host = this.configService.getConfig().host;
+        const port = this.configService.getConfig().port;
+
+        console.log(`Initializing Websocket Server on ws://${host}:${port}`);
         this.wss = new WebSocketServer({
-            port: this.configService.getConfig().port,
-            host: this.configService.getConfig().host,
+            host: host,
+            port: port,
         });
     }
 
