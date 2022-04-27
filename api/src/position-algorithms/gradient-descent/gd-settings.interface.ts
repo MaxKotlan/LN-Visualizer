@@ -1,9 +1,9 @@
 export interface GradientDescentSettings {
     iterations: number;
     learningRate: number;
-    maxNodeDistance: number;
-    minNodeDistance: number;
-    invertRange: boolean;
+    maxConnectedNodeDistance: number;
+    minConnectedNodeDistance: number;
+    invertConnectedRange: boolean;
     logRate: number;
     shouldLog: boolean;
 }

@@ -33,10 +33,14 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
     public iterations = this.configService.getConfig().gradientDescentSettings.iterations;
     public learningRate = this.configService.getConfig().gradientDescentSettings.learningRate;
-    public maxNodeDistance = this.configService.getConfig().gradientDescentSettings.maxNodeDistance;
-    public minNodeDistance = this.configService.getConfig().gradientDescentSettings.minNodeDistance;
-    public nodeDistanceRange = this.maxNodeDistance - this.minNodeDistance;
-    public invertRange = this.configService.getConfig().gradientDescentSettings.invertRange;
+    public maxConnectedNodeDistance =
+        this.configService.getConfig().gradientDescentSettings.maxConnectedNodeDistance;
+    public minConnectedNodeDistance =
+        this.configService.getConfig().gradientDescentSettings.minConnectedNodeDistance;
+    public connecteNodeDistanceRange =
+        this.maxConnectedNodeDistance - this.minConnectedNodeDistance;
+    public invertConnectedRange =
+        this.configService.getConfig().gradientDescentSettings.invertConnectedRange;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -123,11 +127,11 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     }
 
     public getCutoffDistance(connectedNodesLength) {
-        const directionFactor = this.invertRange ? 1 : 0;
+        const directionFactor = this.invertConnectedRange ? 1 : 0;
         return (
             (directionFactor - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) *
-                this.nodeDistanceRange +
-            this.minNodeDistance
+                this.connecteNodeDistanceRange +
+            this.minConnectedNodeDistance
         );
     }
 
