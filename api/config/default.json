@@ -4,5 +4,16 @@
         "macaroon": "base64 encoded admin.macaroon",
         "socket": "127.0.0.1:10009"
     },
-    "port": 5647
+    "positionAlgorithm": "gradient-descent",
+    "gradientDescentSettings": {
+        "iterations": 50,
+        "learningRate": 1.0,
+        "logRate": 10,
+        "maxConnectedNodeDistance": 0.1,
+        "minConnectedNodeDistance": 0.04,
+        "invertConnectedRange": true,
+        "shouldLog": true
+    },
+    "port": 5647,
+    "host": "0.0.0.0"
 }
