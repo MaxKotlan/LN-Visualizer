@@ -1,8 +1,8 @@
 {
-  "macaroon": {
-    "cert": "base64 encoded tls.cert",
-    "macaroon": "base64 encoded admin.macaroon",
-    "socket": "127.0.0.1:10009"
-  },
-  "port": 8080
+    "macaroon": {
+        "cert": "base64 encoded tls.cert",
+        "macaroon": "base64 encoded admin.macaroon",
+        "socket": "127.0.0.1:10009"
+    },
+    "port": 5647
 }
