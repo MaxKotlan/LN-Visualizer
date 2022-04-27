@@ -6,13 +6,14 @@ import { GradientDescentPositionAlgorithm } from '../position-algorithms/gradien
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
+import { PositionSelectorService } from './position-selector.service';
 
 @injectable()
 export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
-        private positionAlgorithm: GradientDescentPositionAlgorithm,
+        private positionAlgorithmSelector: PositionSelectorService,
         private graphRegistryService: GraphRegistryService,
     ) {}
 
@@ -31,7 +32,7 @@ export class LndGraphManagerService {
             // console.log(this.graphRegistryService.channelMap)
             this.chunkTrackerService.calculateChunkInfo(graphState);
             if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
-            this.positionAlgorithm.calculatePositions();
+            this.positionAlgorithmSelector.recalculatePositionUsingSelectedAlgorithm();
             if (isInitialSync) console.log('Done with Graph Sync');
             else console.log('Graph resynced');
         } catch (e) {

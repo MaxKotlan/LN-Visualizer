@@ -6,6 +6,7 @@ import {
     OrbitControlsComponent,
     PerspectiveCameraComponent,
     RendererCanvasComponent,
+    RendererService,
     SceneComponent,
 } from 'atft';
 import { filter, map, Observable, Subscription, withLatestFrom } from 'rxjs';
@@ -55,6 +56,8 @@ export class GraphSceneComponent implements AfterViewInit {
     );
 
     public ngAfterViewInit() {
+        this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
+        console.log(this.scene);
         this.animate = this.animate.bind(this);
         this.animation = this.animationService.animate.subscribe(this.animate);
         this.animationService.start();
