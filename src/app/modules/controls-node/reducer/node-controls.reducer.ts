@@ -15,8 +15,8 @@ const initialState: NodeControlState = {
     renderNodes: true,
     uniformNodeSize: false,
     nodeSize: 20,
-    minNodeSize: 1.5,
-    pointAttenuation: true,
+    minNodeSize: 5.2,
+    pointAttenuation: false,
     pointUseIcon: true,
 };
 
