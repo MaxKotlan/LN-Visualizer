@@ -2,11 +2,11 @@ import { injectable } from 'inversify';
 import * as lightning from 'lightning';
 import schedule from 'node-schedule';
 import { fromEvent } from 'rxjs';
-import { GradientDescentPositionAlgorithm } from '../position-algorithms/gradient-descent/gradient-descent-position.service';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 import { PositionSelectorService } from './position-selector.service';
+import { ServerStatusService } from './server-status.service';
 
 @injectable()
 export class LndGraphManagerService {
@@ -15,6 +15,7 @@ export class LndGraphManagerService {
         private chunkTrackerService: LndChunkTrackerService,
         private positionAlgorithmSelector: PositionSelectorService,
         private graphRegistryService: GraphRegistryService,
+        private serverStatusService: ServerStatusService,
     ) {}
 
     public async init() {
@@ -29,10 +30,11 @@ export class LndGraphManagerService {
                 this.lndAuthService.authenticatedLnd,
             );
             this.graphRegistryService.mapToRegistry(graphState);
-            // console.log(this.graphRegistryService.channelMap)
             this.chunkTrackerService.calculateChunkInfo(graphState);
             if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
+            if (isInitialSync) this.serverStatusService.startCalculatingPositions();
             this.positionAlgorithmSelector.recalculatePositionUsingSelectedAlgorithm();
+            if (isInitialSync) this.serverStatusService.readyToDownload();
             if (isInitialSync) console.log('Done with Graph Sync');
             else console.log('Graph resynced');
         } catch (e) {

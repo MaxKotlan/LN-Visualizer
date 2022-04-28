@@ -22,6 +22,17 @@ export class NetworkEffects {
                     this.initialSyncApiService.listenToStream().pipe(
                         map((data) => {
                             switch (data.type) {
+                                case 'serverStatus':
+                                    if ((data as any).status === 'ready to download')
+                                        return alertActions.dismissAlert({ id: 'serverStatus' });
+                                    else
+                                        return alertActions.createAlert({
+                                            alert: {
+                                                id: 'serverStatus',
+                                                type: 'info',
+                                                message: (data as any).status,
+                                            },
+                                        });
                                 case 'requestComplete':
                                     this.initialSyncApiService.completeRequest();
                                     return graphActions.initSyncRequestComplete();

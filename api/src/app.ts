@@ -10,7 +10,7 @@ export class App {
     ) {}
 
     public async init() {
-        await this.graphManagerService.init();
         this.webSocketService.init();
+        await this.graphManagerService.init();
     }
 }

@@ -15,6 +15,7 @@ import { FastPositionAlgorithm } from './position-algorithms/fast/position-calcu
 import { RandomPositionAlgorithm } from './position-algorithms/random/random-position.service';
 import { PositionSelectorService } from './services/position-selector.service';
 import { ConfigService } from './services/config.service';
+import { ServerStatusService } from './services/server-status.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -34,4 +35,5 @@ container
     .inSingletonScope();
 container.bind<PositionSelectorService>(PositionSelectorService).toSelf().inSingletonScope();
 container.bind<ConfigService>(ConfigService).toSelf().inSingletonScope();
+container.bind<ServerStatusService>(ServerStatusService).toSelf().inSingletonScope();
 export default container;
