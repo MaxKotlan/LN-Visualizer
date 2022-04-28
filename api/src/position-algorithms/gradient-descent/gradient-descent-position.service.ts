@@ -41,6 +41,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         this.maxConnectedNodeDistance - this.minConnectedNodeDistance;
     public invertConnectedRange =
         this.configService.getConfig().gradientDescentSettings.invertConnectedRange;
+    // public randomnessFactor = 0.1;
 
     public buildKDTree() {
         const points = Array.from(this.posData.entries()).map(([key, pos]) => [
@@ -129,7 +130,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     public getCutoffDistance(connectedNodesLength) {
         const directionFactor = this.invertConnectedRange ? 1 : 0;
         return (
-            (directionFactor - Math.log(connectedNodesLength + 1) / Math.log(3143 + 1)) *
+            (directionFactor -
+                Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1)) *
                 this.connecteNodeDistanceRange +
             this.minConnectedNodeDistance
         );
@@ -145,7 +147,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             this.getCutoffDistance(connectedNodesLength)
         ) {
             const a = averageNeightborPosition.clone().sub(currentNodePos);
-            const h = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1);
+            const h = Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1);
             const b = new Vector3(0, 0, 0).sub(currentNodePos).multiplyScalar(h);
             a.add(b);
             a.divideScalar(2);
@@ -164,12 +166,14 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             const h = currentNodePos
                 .clone()
                 .sub(closestPoint)
-                .divideScalar(Math.log(d + 1) + 1)
+                // .divideScalar(16 * Math.log(d + 1) + 1)
+                .multiplyScalar(-2 * d + 4)
                 .multiplyScalar(1.0);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 
-            const factor = Math.log(connectedNodesLength + 1) / Math.log(3143 + 1) - 1;
+            const factor =
+                Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1) - 1;
 
             const l = j.multiplyScalar(factor * 0.025);
 
@@ -223,6 +227,8 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
         return v;
     }
 
+    public maxNeighborCount = 0;
+
     public initialize() {
         this.graphRegistryService.channelMap.forEach((channel) => {
             const node1Pub = channel.policies[0].public_key;
@@ -235,11 +241,20 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
             // if (!node2) return;
 
             if (!this.connectedNodes.has(node1Pub)) this.connectedNodes.set(node1Pub, []);
-
             if (!this.connectedNodes.has(node2Pub)) this.connectedNodes.set(node2Pub, []);
 
-            if (node2) this.connectedNodes.get(node1Pub)?.push(node2);
-            if (node1) this.connectedNodes.get(node2Pub)?.push(node1);
+            if (node2) {
+                const node1Neighbors = this.connectedNodes.get(node1Pub)!;
+                node1Neighbors.push(node2);
+                if (node1Neighbors.length > this.maxNeighborCount)
+                    this.maxNeighborCount = node1Neighbors.length;
+            }
+            if (node1) {
+                const node2Neighbors = this.connectedNodes.get(node2Pub)!;
+                node2Neighbors.push(node1);
+                if (node2Neighbors.length > this.maxNeighborCount)
+                    this.maxNeighborCount = node2Neighbors.length;
+            }
 
             this.posData.set(node1Pub, this.getRandomVector(node1Pub));
             this.posData.set(node2Pub, this.getRandomVector(node2Pub));
