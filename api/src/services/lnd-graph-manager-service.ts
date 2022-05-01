@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 import * as lightning from 'lightning';
 import schedule from 'node-schedule';
 import { fromEvent } from 'rxjs';
-import { Worker, workerData } from 'worker_threads';
-import container from '../ioc_config';
+import { Worker } from 'worker_threads';
+import { ConfigService } from './config.service';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
@@ -14,14 +14,16 @@ export class LndGraphManagerService {
     constructor(
         private lndAuthService: LndAuthService,
         private chunkTrackerService: LndChunkTrackerService,
-        // private positionAlgorithmSelector: PositionSelectorService,
         private graphRegistryService: GraphRegistryService,
         private serverStatusService: ServerStatusService,
+        private configService: ConfigService,
     ) {}
 
     public async init() {
         await this.graphSync(true);
-        schedule.scheduleJob('0 0 * * *', () => this.graphSync(false));
+        schedule.scheduleJob(this.configService.getConfig().resyncTimer, () =>
+            this.graphSync(true),
+        );
     }
 
     protected async graphSync(isInitialSync: boolean) {

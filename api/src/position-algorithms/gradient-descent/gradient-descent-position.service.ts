@@ -167,17 +167,21 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
                 .clone()
                 .sub(closestPoint)
                 // .divideScalar(16 * Math.log(d + 1) + 1)
-                .multiplyScalar(-2 * d + 4)
+                .multiplyScalar(-1 * d + 1)
                 .multiplyScalar(1.0);
 
             const j = new Vector3(0, 0, 0).sub(currentNodePos);
 
-            const factor =
-                Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1) - 1;
+            const factor = connectedNodesLength / this.maxNeighborCount;
+            // -Math.sqrt(-connectedNodesLength + this.maxNeighborCount) /
+            //     Math.sqrt(this.maxNeighborCount) +
+            // 1; // Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1);
 
             const l = j.multiplyScalar(factor * 0.025);
 
-            h.add(l);
+            const r = new Vector3(0, 0, 0).sub(l);
+
+            h.add(r);
             h.divideScalar(2);
 
             return j;

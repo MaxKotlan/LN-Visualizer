@@ -5,6 +5,7 @@ import { GradientDescentSettings } from '../position-algorithms/gradient-descent
 export interface Config {
     positionAlgorithm: string;
     gradientDescentSettings: GradientDescentSettings;
+    resyncTimer: string;
     port: number;
     host: string;
 }
@@ -21,6 +22,7 @@ const initConfig: Config = {
         invertConnectedRange: true,
         shouldLog: true,
     } as GradientDescentSettings,
+    resyncTimer: '0 0 * * *',
     port: 5647,
     host: '0.0.0.0',
 };

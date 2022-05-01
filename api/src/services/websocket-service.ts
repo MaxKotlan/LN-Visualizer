@@ -40,11 +40,11 @@ export class WebSocketService {
             });
             ws.on('message', async (data) => {
                 if (data.toString() === '"initsync"') {
-                    await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     console.log(
                         req.headers['x-forwarded-for'] || req.socket.remoteAddress,
                         'requesting initsync',
                     );
+                    await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);
                     this.initialSyncService.performInitialNodeSync(ws);
                     this.initialSyncService.performInitialChannelSync(ws);
