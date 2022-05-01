@@ -174,7 +174,7 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
 
             const factor = connectedNodesLength / this.maxNeighborCount; // Math.log(connectedNodesLength + 1) / Math.log(this.maxNeighborCount + 1);
 
-            const l = j.multiplyScalar(factor * 1.0);
+            const l = j.multiplyScalar(factor * 0.025);
 
             const r = new Vector3(0, 0, 0).sub(l);
 
