@@ -2,7 +2,8 @@ import { injectable } from 'inversify';
 import * as lightning from 'lightning';
 import schedule from 'node-schedule';
 import { fromEvent } from 'rxjs';
-import { Worker } from 'worker_threads';
+import { Worker, workerData } from 'worker_threads';
+import container from '../ioc_config';
 import { GraphRegistryService } from './graph-registry.service';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
@@ -33,25 +34,28 @@ export class LndGraphManagerService {
             this.chunkTrackerService.calculateChunkInfo(graphState);
             if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
             if (isInitialSync) this.serverStatusService.startCalculatingPositions();
-            // this.positionAlgorithmSelector.recalculatePositionUsingSelectedAlgorithm();
-
-            const workerFile = './build/position-calculator.js'; //'./build/position-calculator.js';
-
-            const worker = new Worker(workerFile);
-            worker.on('message', (msg) => {
-                console.log(msg);
-            });
-            worker.on('error', (msg) => {
-                console.log(msg);
-            });
-
-            if (isInitialSync) this.serverStatusService.readyToDownload();
-            if (isInitialSync) console.log('Done with Graph Sync');
-            else console.log('Graph resynced');
+            this.createPositionThread(isInitialSync);
         } catch (e) {
             console.error(e);
             process.exit(1);
         }
+    }
+
+    protected createPositionThread(isInitialSync: boolean) {
+        const workerFile = './build/position-calculator.js'; //'./build/position-calculator.js';
+
+        const worker = new Worker(workerFile, {
+            workerData: { graphRegistryService: this.graphRegistryService },
+        });
+        worker.on('message', (msg) => {
+            this.graphRegistryService.updateFromWorkerThread(msg);
+            if (isInitialSync) this.serverStatusService.readyToDownload();
+            if (isInitialSync) console.log('Done with Graph Sync');
+            else console.log('Graph resynced');
+        });
+        worker.on('error', (msg) => {
+            console.log(msg);
+        });
     }
 
     protected subscribeToGraphChanges() {

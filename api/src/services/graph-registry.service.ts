@@ -1,6 +1,7 @@
 import { injectable } from 'inversify/lib/annotation/injectable';
 import { GetNetworkGraphResult } from 'lightning';
 import { LndChannel, LndNode } from '../models';
+import 'reflect-metadata';
 
 @injectable()
 export class GraphRegistryService {
@@ -27,5 +28,12 @@ export class GraphRegistryService {
 
     protected recalculateChannelArray() {
         this.channelArray = Array.from(this.channelMap.values());
+    }
+
+    public updateFromWorkerThread(workerThreadState: GraphRegistryService) {
+        this.nodeMap = workerThreadState.nodeMap;
+        this.channelMap = workerThreadState.channelMap;
+        this.recalculateNodeArray();
+        this.recalculateChannelArray();
     }
 }

@@ -1,4 +1,5 @@
 import { Container } from 'inversify';
+import { workerData } from 'worker_threads';
 import { FastPositionAlgorithm } from './position-algorithms/fast/position-calculator.service';
 import { GradientDescentPositionAlgorithm } from './position-algorithms/gradient-descent/gradient-descent-position.service';
 import { RandomPositionAlgorithm } from './position-algorithms/random/random-position.service';
@@ -21,5 +22,7 @@ positionContainer
     .bind<RandomPositionAlgorithm>(RandomPositionAlgorithm)
     .toSelf()
     .inSingletonScope();
-positionContainer.bind<GraphRegistryService>(GraphRegistryService).toSelf().inSingletonScope();
+positionContainer
+    .bind<GraphRegistryService>(GraphRegistryService)
+    .toConstantValue(workerData.graphRegistryService);
 export default positionContainer;
