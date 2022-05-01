@@ -21,7 +21,7 @@ export class LndGraphManagerService {
 
     public async init() {
         await this.graphSync(true);
-        schedule.scheduleJob('0 0 * * *', () => this.graphSync(false));
+        schedule.scheduleJob('0 0 * * *', () => this.graphSync(true));
     }
 
     protected async graphSync(isInitialSync: boolean) {
