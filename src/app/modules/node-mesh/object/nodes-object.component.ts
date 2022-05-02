@@ -31,6 +31,7 @@ import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
+import { NodePositionOffsetService } from '../services/node-position-offset.service';
 
 @Component({
     selector: 'app-nodes-object',
@@ -54,9 +55,8 @@ export class NodesObjectComponent
         public toolTipService: ToolTipService,
         private nodeGeometry: NodeGeometry,
         private nodeMaterial: NodeMaterial,
-        private animationTimeService: AnimationTimeService,
-        private nodeSearchEffects: NodeSearchEffects,
         private pointTreeService: PointTreeService,
+        private nodePositionOffsetSevice: NodePositionOffsetService,
     ) {
         super(rendererService, parent);
     }
@@ -109,25 +109,13 @@ export class NodesObjectComponent
     }
 
     protected newObject3DInstance(): NodePoint {
-        const mesh = new NodePoint(this.nodeGeometry, this.nodeMaterial);
+        const mesh = new NodePoint(
+            this.nodePositionOffsetSevice,
+            this.nodeGeometry,
+            this.nodeMaterial,
+        );
         this.object = mesh;
-        this.handleUpdates();
         this.nodeMaterial.handleHoverUpdate(new Vector3(0, 0, 0));
         return mesh;
-    }
-
-    private handleUpdates() {
-        this.animationTimeService.sinTime$.subscribe((elapsed) => this.object?.setSinTime(elapsed));
-
-        this.animationTimeService.cosTime$.subscribe((elapsed) => this.object?.setCosTime(elapsed));
-
-        this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
-            const updatedIntensity = intensity / 1000.0;
-            this.object?.setMotionIntenstiy(updatedIntensity);
-        });
-
-        this.nodeSearchEffects.selectFinalPositionFromSearch$.subscribe((position) => {
-            this.object?.setMotionOrigin(position.value);
-        });
     }
 }

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { Matrix4, Ray, Sphere, Vector3 } from 'three';
+import { BufferGeometry, Material, Matrix4, Ray, Sphere, Vector3 } from 'three';
+import { NodePositionOffsetService } from '../services/node-position-offset.service';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
@@ -7,6 +8,14 @@ const _sphere = /*@__PURE__*/ new Sphere();
 const _position = /*@__PURE__*/ new Vector3();
 
 export class NodePoint extends THREE.Points {
+    constructor(
+        private nodePositionOffsetSevice: NodePositionOffsetService,
+        geometry?: BufferGeometry,
+        material?: Material,
+    ) {
+        super(geometry, material);
+    }
+
     override raycast(raycaster, intersects) {
         const geometry = this.geometry;
         const matrixWorld = this.matrixWorld;
@@ -45,7 +54,8 @@ export class NodePoint extends THREE.Points {
 
                     _position.fromBufferAttribute(positionAttribute, a);
 
-                    this.offsetPos(_position);
+                    console.log(this.nodePositionOffsetSevice);
+                    this.nodePositionOffsetSevice.applyOffset(_position);
 
                     testPoint(
                         _position,
@@ -64,7 +74,7 @@ export class NodePoint extends THREE.Points {
                 for (let i = start, l = end; i < l; i++) {
                     _position.fromBufferAttribute(positionAttribute, i);
 
-                    this.offsetPos(_position);
+                    this.nodePositionOffsetSevice.applyOffset(_position);
 
                     testPoint(
                         _position,
@@ -85,34 +95,34 @@ export class NodePoint extends THREE.Points {
     }
 
     private timeVec: Vector3 = new Vector3(0, 0, 0);
-    private motionOrigin: Vector3 = new Vector3(0, 0, 0);
-    private motionIntensity: number = 0.01;
+    // private motionOrigin: Vector3 = new Vector3(0, 0, 0);
+    // private motionIntensity: number = 0.01;
 
-    public offsetPos(vec3: Vector3) {
-        const test = vec3.clone();
-        const origDist = Math.sqrt(this.motionOrigin.distanceTo(test));
-        test.multiplyScalar(origDist).multiplyScalar(this.motionIntensity).multiply(this.timeVec);
+    // public offsetPos(vec3: Vector3) {
+    //     const test = vec3.clone();
+    //     const origDist = Math.sqrt(this.motionOrigin.distanceTo(test));
+    //     test.multiplyScalar(origDist).multiplyScalar(this.motionIntensity).multiply(this.timeVec);
 
-        vec3.add(test);
-        // .add(new Vector3(30, 0, 0));
-    }
+    //     vec3.add(test);
+    //     // .add(new Vector3(30, 0, 0));
+    // }
 
-    public setMotionIntenstiy(intensity: number) {
-        this.motionIntensity = intensity;
-    }
+    // public setMotionIntenstiy(intensity: number) {
+    //     this.motionIntensity = intensity;
+    // }
 
-    public setMotionOrigin(motionOrigin: Vector3) {
-        this.motionOrigin = motionOrigin;
-    }
+    // public setMotionOrigin(motionOrigin: Vector3) {
+    //     this.motionOrigin = motionOrigin;
+    // }
 
-    public setSinTime(sin: number) {
-        this.timeVec.setX(sin);
-    }
+    // public setSinTime(sin: number) {
+    //     this.timeVec.setX(sin);
+    // }
 
-    public setCosTime(cos: number) {
-        this.timeVec.setY(cos);
-        this.timeVec.setZ(cos);
-    }
+    // public setCosTime(cos: number) {
+    //     this.timeVec.setY(cos);
+    //     this.timeVec.setZ(cos);
+    // }
 }
 
 //NodePoint.prototype.isPoints = true;
