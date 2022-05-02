@@ -2,7 +2,7 @@ import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } from 'atft';
-import { combineLatest, fromEvent, map, sampleTime, tap } from 'rxjs';
+import { combineLatest, fromEvent, map, sampleTime, Subject, takeUntil, tap } from 'rxjs';
 import { setMouseRay } from 'src/app/modules/controls-renderer/actions';
 import * as THREE from 'three';
 import { Camera, Intersection, Ray, Vector3 } from 'three';
@@ -61,6 +61,7 @@ export class LndRaycasterService implements OnDestroy {
         ])
             .pipe(
                 untilDestroyed(this),
+                takeUntil(this.oldVersion.asObservable()),
                 map(([a, b]) => b),
                 sampleTime(100),
             )
@@ -69,11 +70,11 @@ export class LndRaycasterService implements OnDestroy {
             });
 
         fromEvent(this.canvas?.nativeElement, 'mousedown')
-            .pipe(untilDestroyed(this))
+            .pipe(untilDestroyed(this), takeUntil(this.oldVersion.asObservable()))
             .subscribe(() => (this.drag = false));
 
         fromEvent(this.canvas?.nativeElement, 'mouseup')
-            .pipe(untilDestroyed(this))
+            .pipe(untilDestroyed(this), takeUntil(this.oldVersion.asObservable()))
             .subscribe(this.onClick.bind(this));
 
         //fromEvent(this.canvas?.nativeElement, 'dragenter').subscribe((e) => console.log('drag', e));
@@ -110,9 +111,12 @@ export class LndRaycasterService implements OnDestroy {
         return this.enabled;
     }
 
+    public oldVersion = new Subject();
+
     public setCanvasObject(canvas: ElementRef) {
         // console.log('Add camera to raycaster', camera);
         this.canvas = canvas;
+        this.oldVersion.next(undefined);
         this.subscribe();
     }
 
