@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { BufferGeometry, Material, Matrix4, Ray, Sphere, Vector3 } from 'three';
-import { NodePositionOffsetService } from '../services/node-position-offset.service';
+import { NodePositionOffsetService } from '../services';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();

@@ -31,7 +31,7 @@ import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
-import { NodePositionOffsetService } from '../services/node-position-offset.service';
+import { NodePositionOffsetService } from '../services';
 
 @Component({
     selector: 'app-nodes-object',
