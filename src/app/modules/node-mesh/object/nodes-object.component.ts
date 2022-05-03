@@ -31,7 +31,7 @@ import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
-import { NodePositionOffsetService } from '../services';
+import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';
 
 @Component({
     selector: 'app-nodes-object',
@@ -57,6 +57,7 @@ export class NodesObjectComponent
         private nodeMaterial: NodeMaterial,
         private pointTreeService: PointTreeService,
         private nodePositionOffsetSevice: NodePositionOffsetService,
+        private nodeSizeOffsetService: NodeSizeOffsetService,
     ) {
         super(rendererService, parent);
     }
@@ -111,6 +112,7 @@ export class NodesObjectComponent
     protected newObject3DInstance(): NodePoint {
         const mesh = new NodePoint(
             this.nodePositionOffsetSevice,
+            this.nodeSizeOffsetService,
             this.nodeGeometry,
             this.nodeMaterial,
         );
