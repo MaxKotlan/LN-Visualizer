@@ -113,6 +113,7 @@ export class NodesObjectComponent
         const mesh = new NodePoint(
             this.nodePositionOffsetSevice,
             this.nodeSizeOffsetService,
+            this.pointTreeService,
             this.nodeGeometry,
             this.nodeMaterial,
         );

@@ -161,13 +161,6 @@ export const NodeShader = {
 
         vec4 txcord = renderIcon? texture2D( pointTexture, gl_PointCoord ) : gl_FragColor;
 
-        // if (txcord.r == 1.0 && 
-        //     txcord.g == 1.0 && 
-        //     txcord.b == 1.0) {
-        //     gl_FragColor = mix(vec4(1.0,1.0,1.0,1.0), gl_FragColor, .5);
-        // } else {
-        //     gl_FragColor = gl_FragColor * txcord;
-        // }
         gl_FragColor = gl_FragColor * txcord;
         if ( gl_FragColor.a < alphaTest ) discard;
 

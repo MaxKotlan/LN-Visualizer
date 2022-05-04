@@ -1,5 +1,7 @@
+import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import * as THREE from 'three';
 import { BufferGeometry, Material, Matrix4, Ray, Sphere, Vector3 } from 'three';
+import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
 import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
@@ -11,6 +13,7 @@ export class NodePoint extends THREE.Points {
     constructor(
         private nodePositionOffsetSevice: NodePositionOffsetService,
         private nodeSizeOffsetService: NodeSizeOffsetService,
+        private pointTreeService: PointTreeService,
         geometry?: BufferGeometry,
         material?: Material,
     ) {
@@ -29,7 +32,7 @@ export class NodePoint extends THREE.Points {
 
         _sphere.copy(geometry.boundingSphere);
         _sphere.applyMatrix4(matrixWorld);
-        _sphere.radius += threshold;
+        _sphere.radius += 1.0;
 
         if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
@@ -58,6 +61,7 @@ export class NodePoint extends THREE.Points {
 
                     this.nodePositionOffsetSevice.applyOffset(_position);
 
+                    console.log('testing');
                     testPoint(
                         _position,
                         a,
@@ -72,21 +76,38 @@ export class NodePoint extends THREE.Points {
                 const start = Math.max(0, drawRange.start);
                 const end = Math.min(positionAttribute.count, drawRange.start + drawRange.count);
 
-                for (let i = start, l = end; i < l; i++) {
-                    _position.fromBufferAttribute(positionAttribute, i);
+                this.nodePositionOffsetSevice.applyOffset(_position);
+                // console.log(_ray);
+                // const nearestNeighbor = this.pointTreeService.getNearestNeighbor(
+                //     _ray.clone().divideScalar(meshScale),
+                // );
+                const nearestNeighbor = this.pointTreeService.getNearestNeighborToRay(_ray);
+                intersects.push({
+                    node: nearestNeighbor,
+                    // distance: distance,
+                    // distanceToRay: Math.sqrt(rayPointDistanceSq),
+                    // point: intersectPoint,
+                    // index: index,
+                    // face: null,
+                    // object: object,
+                });
+                // console.log(intersects);
 
-                    this.nodePositionOffsetSevice.applyOffset(_position);
+                // for (let i = start, l = end; i < l; i++) {
+                //     _position.fromBufferAttribute(positionAttribute, i);
 
-                    testPoint(
-                        _position,
-                        i,
-                        localThresholdSq,
-                        matrixWorld,
-                        raycaster,
-                        intersects,
-                        this,
-                    );
-                }
+                //     this.nodePositionOffsetSevice.applyOffset(_position);
+
+                //     testPoint(
+                //         _position,
+                //         i,
+                //         localThresholdSq,
+                //         matrixWorld,
+                //         raycaster,
+                //         intersects,
+                //         this,
+                //     );
+                // }
             }
         } else {
             console.error(
@@ -114,6 +135,7 @@ function testPoint(
         intersectPoint.applyMatrix4(matrixWorld);
 
         const distance = raycaster.ray.origin.distanceTo(intersectPoint);
+        console.log(Math.sqrt(rayPointDistanceSq));
 
         if (distance < raycaster.near || distance > raycaster.far) return;
 
