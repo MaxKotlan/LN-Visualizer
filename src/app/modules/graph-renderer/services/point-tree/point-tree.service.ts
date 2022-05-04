@@ -9,20 +9,26 @@ const tempB = new Vector3(0, 0, 0);
 
 const distance = (a: Array<number>, b: Array<number>) => {
     if (a instanceof Ray) {
-        let c = new Vector3();
+        // let c = new Vector3();
         tempB.set(b[0], b[1], b[2]);
-        c = a.closestPointToPoint(tempB, c);
-        tempA.set(c.x, c.y, c.z);
+        // c = a.closestPointToPoint(tempB, c);
+        // tempA.set(c.x, c.y, c.z);
+        return a.distanceToPoint(tempB);
     } else if (b instanceof Ray) {
-        let c = new Vector3();
-        tempB.set(a[0], a[1], a[2]);
-        c = b.closestPointToPoint(tempB, c);
-        tempA.set(c.x, c.y, c.z);
+        // let c = new Vector3();
+        // tempB.set(a[0], a[1], a[2]);
+        // c = b.closestPointToPoint(tempB, c);
+        // tempA.set(c.x, c.y, c.z);
+        // let c = new Vector3();
+        tempA.set(a[0], a[1], a[2]);
+        // c = a.closestPointToPoint(tempB, c);
+        // tempA.set(c.x, c.y, c.z);
+        return b.distanceToPoint(tempA);
     } else {
         tempA.set(a[0], a[1], a[2]);
         tempB.set(b[0], b[1], b[2]);
+        return tempA.distanceTo(tempB);
     }
-    return tempA.distanceTo(tempB);
 };
 
 @Injectable({
@@ -44,7 +50,7 @@ export class PointTreeService {
     }
 
     public getNearestNeighbor(position: Vector3) {
-        console.log(position);
+        //console.log(position);
         if (!position || !position.x || !position.y || !position.z) return;
         position.divideScalar(meshScale);
         const a = this.tree.nearest([position.x, position.y, position.z], 1)[0][0];
@@ -52,10 +58,10 @@ export class PointTreeService {
     }
 
     public getNearestNeighborToRay(ray: Ray) {
-        console.log(ray);
+        //console.log(ray);
         ray.origin.divideScalar(meshScale);
         const a = this.tree.nearest(ray, 1)[0][0];
-        console.log(this.nodeRegistry.get(a[3]));
+        //console.log(this.nodeRegistry.get(a[3]));
         return this.nodeRegistry.get(a[3]);
     }
 }

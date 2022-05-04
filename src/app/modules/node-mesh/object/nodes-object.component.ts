@@ -93,20 +93,22 @@ export class NodesObjectComponent
 
     private onMouseEnter(event: any) {
         document.body.style.cursor = 'pointer';
-        const intersection = event as THREE.Intersection;
-        const node = this.pointTreeService.getNearestNeighbor(intersection.point);
-        if (!node) return;
-        this.nodeMaterial.handleHoverUpdate(node.position);
-        this.toolTipService.open(event.mouseEvent.clientX, event.mouseEvent.clientY, node.alias);
+        const intersection = event as THREE.Intersection as any;
+        // const node = this.pointTreeService.getNearestNeighbor(intersection.point);
+        if (!intersection.node) return;
+        this.nodeMaterial.handleHoverUpdate(intersection.node.position);
+        this.toolTipService.open(
+            event.mouseEvent.clientX,
+            event.mouseEvent.clientY,
+            intersection.node.alias,
+        );
     }
 
     private onClick(event: any) {
-        const intersection = event as THREE.Intersection;
-        const node = this.pointTreeService.getNearestNeighbor(intersection.point);
-        if (!node) return;
+        const intersection = event as THREE.Intersection as any;
+        if (!intersection.node) return;
         this.toolTipService.close();
-        console.log(node);
-        this.store$.dispatch(searchGraph({ searchText: node.public_key }));
+        this.store$.dispatch(searchGraph({ searchText: intersection.node.public_key }));
     }
 
     protected newObject3DInstance(): NodePoint {

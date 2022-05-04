@@ -30,16 +30,16 @@ export class NodePoint extends THREE.Points {
 
         if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
-        _sphere.copy(geometry.boundingSphere);
-        _sphere.applyMatrix4(matrixWorld);
-        _sphere.radius += 1.0;
+        // _sphere.copy(geometry.boundingSphere);
+        // _sphere.applyMatrix4(matrixWorld);
+        // _sphere.radius += 1.0;
 
-        if (raycaster.ray.intersectsSphere(_sphere) === false) return;
+        // if (raycaster.ray.intersectsSphere(_sphere) === false) return;
 
         //
 
-        _inverseMatrix.copy(matrixWorld).invert();
-        _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
+        // _inverseMatrix.copy(matrixWorld).invert();
+        // _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
 
         const objectScaleFactor = (this.scale.x + this.scale.y + this.scale.z) / 3;
         const localThreshold = this.nodeSizeOffsetService.getPointSize() / objectScaleFactor;
@@ -82,15 +82,29 @@ export class NodePoint extends THREE.Points {
                 //     _ray.clone().divideScalar(meshScale),
                 // );
                 const nearestNeighbor = this.pointTreeService.getNearestNeighborToRay(_ray);
-                intersects.push({
-                    node: nearestNeighbor,
-                    // distance: distance,
-                    // distanceToRay: Math.sqrt(rayPointDistanceSq),
-                    // point: intersectPoint,
-                    // index: index,
-                    // face: null,
-                    // object: object,
-                });
+
+                console.log(
+                    _ray.distanceToPoint(
+                        nearestNeighbor.position.clone().multiplyScalar(meshScale),
+                    ),
+                );
+
+                if (
+                    _ray.distanceToPoint(
+                        nearestNeighbor.position.clone().multiplyScalar(meshScale),
+                    ) < 98.0
+                ) {
+                    intersects.push({
+                        node: nearestNeighbor,
+                        distance: 10,
+                        distanceToRay: Math.sqrt(10),
+                        point: nearestNeighbor.position,
+                        index: 4,
+                        face: null,
+                        object: this,
+                    });
+                    console.log(intersects);
+                }
                 // console.log(intersects);
 
                 // for (let i = start, l = end; i < l; i++) {
