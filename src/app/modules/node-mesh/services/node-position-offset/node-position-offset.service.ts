@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Vector3 } from 'three';
-import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
-import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
-import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
+import { selectNodeMotionIntensity } from '../../../controls-renderer/selectors';
+import { NodeSearchEffects } from '../../../graph-renderer/effects/node-search.effects';
+import { AnimationTimeService } from '../../../graph-renderer/services/animation-timer/animation-time.service';
 
 @Injectable({
     providedIn: 'root',

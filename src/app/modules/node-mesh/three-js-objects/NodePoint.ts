@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { BufferGeometry, Material, Matrix4, Ray, Sphere, Vector3 } from 'three';
-import { NodePositionOffsetService } from '../services/node-position-offset.service';
+import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';
 
 const _inverseMatrix = /*@__PURE__*/ new Matrix4();
 const _ray = /*@__PURE__*/ new Ray();
@@ -10,6 +10,7 @@ const _position = /*@__PURE__*/ new Vector3();
 export class NodePoint extends THREE.Points {
     constructor(
         private nodePositionOffsetSevice: NodePositionOffsetService,
+        private nodeSizeOffsetService: NodeSizeOffsetService,
         geometry?: BufferGeometry,
         material?: Material,
     ) {
@@ -37,7 +38,8 @@ export class NodePoint extends THREE.Points {
         _inverseMatrix.copy(matrixWorld).invert();
         _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
 
-        const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
+        const objectScaleFactor = (this.scale.x + this.scale.y + this.scale.z) / 3;
+        const localThreshold = this.nodeSizeOffsetService.getPointSize() / objectScaleFactor;
         const localThresholdSq = localThreshold * localThreshold;
 
         if (geometry.isBufferGeometry) {
@@ -54,7 +56,6 @@ export class NodePoint extends THREE.Points {
 
                     _position.fromBufferAttribute(positionAttribute, a);
 
-                    console.log(this.nodePositionOffsetSevice);
                     this.nodePositionOffsetSevice.applyOffset(_position);
 
                     testPoint(
@@ -93,39 +94,7 @@ export class NodePoint extends THREE.Points {
             );
         }
     }
-
-    private timeVec: Vector3 = new Vector3(0, 0, 0);
-    // private motionOrigin: Vector3 = new Vector3(0, 0, 0);
-    // private motionIntensity: number = 0.01;
-
-    // public offsetPos(vec3: Vector3) {
-    //     const test = vec3.clone();
-    //     const origDist = Math.sqrt(this.motionOrigin.distanceTo(test));
-    //     test.multiplyScalar(origDist).multiplyScalar(this.motionIntensity).multiply(this.timeVec);
-
-    //     vec3.add(test);
-    //     // .add(new Vector3(30, 0, 0));
-    // }
-
-    // public setMotionIntenstiy(intensity: number) {
-    //     this.motionIntensity = intensity;
-    // }
-
-    // public setMotionOrigin(motionOrigin: Vector3) {
-    //     this.motionOrigin = motionOrigin;
-    // }
-
-    // public setSinTime(sin: number) {
-    //     this.timeVec.setX(sin);
-    // }
-
-    // public setCosTime(cos: number) {
-    //     this.timeVec.setY(cos);
-    //     this.timeVec.setZ(cos);
-    // }
 }
-
-//NodePoint.prototype.isPoints = true;
 
 function testPoint(
     point: Vector3,
