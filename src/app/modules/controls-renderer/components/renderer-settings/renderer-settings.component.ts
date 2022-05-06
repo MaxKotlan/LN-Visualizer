@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import {
     setNodeMotionIntensity,
     setNodeTimeIntensity,
+    setRenderResolution,
     setShowAxis,
     setShowGraphAnimation,
     setShowGrid,
@@ -13,6 +14,7 @@ import { RendererControlState } from '../../reducer';
 import {
     selectNodeMotionIntensity,
     selectNodeTimeIntensity,
+    selectRenderResolution,
     selectShowAxis,
     selectShowGraphAnimation,
     selectShowGrid,
@@ -31,6 +33,7 @@ export class RendererSettingsComponent {
     public showGraphAnimation$ = this.store$.select(selectShowGraphAnimation);
     public nodeMotionIntensity$ = this.store$.select(selectNodeMotionIntensity);
     public nodeTimeIntensity$ = this.store$.select(selectNodeTimeIntensity);
+    public renderResolution$ = this.store$.select(selectRenderResolution);
 
     setShowGrid(event: MatCheckboxChange) {
         this.store$.dispatch(setShowGrid({ value: event.checked }));
@@ -49,5 +52,9 @@ export class RendererSettingsComponent {
     }
     setNodeTimeIntensity(event: MatSliderChange) {
         this.store$.dispatch(setNodeTimeIntensity({ value: event.value || 0.005 }));
+    }
+
+    setRenderResolution(event: MatSliderChange) {
+        this.store$.dispatch(setRenderResolution({ value: event.value || 1.0 }));
     }
 }

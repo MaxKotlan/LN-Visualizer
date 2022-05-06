@@ -38,7 +38,6 @@ export class NodeEffects {
                     action.nodeSubSet.forEach((node) => {
                         this.nodeRegistry.set(node.public_key, node);
                     });
-                    this.pointTreeService.buildKDTree();
                     return graphActions.cacheProcessedGraphNodeChunk();
                 }),
             ),
@@ -74,6 +73,7 @@ export class NodeEffects {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
                             this.filteredNodeRegistryService.set(node.public_key, node);
                     });
+                    this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
             ),

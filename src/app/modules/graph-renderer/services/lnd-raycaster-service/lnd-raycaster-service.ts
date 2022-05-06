@@ -212,15 +212,15 @@ export class LndRaycasterService implements OnDestroy {
         this.raycaster.setFromCamera(mouseVector, this.camera?.camera);
         //console.log(this.camera.camera.position);
 
-        this.store$.dispatch(
-            setMouseRay({
-                value: this.raycaster.ray.clone(),
-                //  new Ray(
-                //     (this.camera.camera as Camera).position,
-                //     (this.camera.camera as Camera).rotation.toVector3().normalize(),
-                // ),
-            }),
-        );
+        // this.store$.dispatch(
+        //     setMouseRay({
+        //         value: this.raycaster.ray.clone(),
+        //         //  new Ray(
+        //         //     (this.camera.camera as Camera).position,
+        //         //     (this.camera.camera as Camera).rotation.toVector3().normalize(),
+        //         // ),
+        //     }),
+        // );
 
         let nearestIntersection: THREE.Intersection | undefined | null;
         for (let k = 0; k < this.groups.length; k++) {

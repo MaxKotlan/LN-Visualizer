@@ -20,4 +20,9 @@ export const selectNodeTimeIntensity = createSelector(
     (state) => state.nodeTimeIntensity || 0,
 );
 
+export const selectRenderResolution = createSelector(
+    renderControlsSelector,
+    (state) => state.renderResolution || 1.0,
+);
+
 export const selectMouseRay = createSelector(renderControlsSelector, (state) => state.mouseRay);
