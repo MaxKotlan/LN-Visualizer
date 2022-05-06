@@ -35,7 +35,6 @@ export class CameraControllerService {
 
     setCamera(camera: Camera) {
         this.camera = camera as PerspectiveCamera;
-        console.log(this.camera);
     }
 
     handleUpdates() {

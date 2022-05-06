@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     OrbitControlsComponent,
     PerspectiveCameraComponent,
     RendererCanvasComponent,
+    RendererService,
     SceneComponent,
 } from 'atft';
 import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
@@ -15,6 +17,7 @@ import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { CameraControllerService, OrbitControllerService } from '../../services';
 
+@UntilDestroy()
 @Component({
     selector: 'app-graph-scene',
     templateUrl: './graph-scene.component.html',
@@ -32,6 +35,7 @@ export class GraphSceneComponent implements AfterViewInit {
         public screenSizeService: ScreenSizeService,
         public cameraControllerService: CameraControllerService,
         public orbitControllerService: OrbitControllerService,
+        private renderer: RendererService,
     ) {}
 
     public showGrid$ = this.store$.select(selectShowGrid);
@@ -43,9 +47,17 @@ export class GraphSceneComponent implements AfterViewInit {
         this.cameraControllerService.setCamera(this.cameraComponent?.camera);
         this.orbitControllerService.setOrbitControlsComponent(this.orbitControlsComponent);
 
-        this.actions$.pipe(ofType(graphActions.recomputeCanvasSize)).subscribe(() => {
-            this.renderCanvas.onResize(undefined);
-            this.cameraComponent.camera.updateProjectionMatrix();
-        });
+        this.actions$
+            .pipe(ofType(graphActions.recomputeCanvasSize))
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.renderCanvas.onResize(undefined);
+                this.cameraComponent.camera.updateProjectionMatrix();
+            });
+    }
+
+    @HostListener('window:resize', ['$event'])
+    public onResize() {
+        this.renderer.getWebGlRenderer().setPixelRatio(devicePixelRatio);
     }
 }
