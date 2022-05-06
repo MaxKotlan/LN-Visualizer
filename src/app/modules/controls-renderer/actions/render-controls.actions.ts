@@ -26,4 +26,9 @@ export const setNodeTimeIntensity = createAction(
     props<{ value: number }>(),
 );
 
+export const setRenderResolution = createAction(
+    '[controls] setRenderResolution',
+    props<{ value: number }>(),
+);
+
 export const setMouseRay = createAction('[controls] setMouseRay', props<{ value: Ray }>());

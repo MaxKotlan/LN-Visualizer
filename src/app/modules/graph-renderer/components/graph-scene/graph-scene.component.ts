@@ -9,7 +9,11 @@ import {
     RendererService,
     SceneComponent,
 } from 'atft';
-import { selectShowAxis, selectShowGrid } from 'src/app/modules/controls-renderer/selectors';
+import {
+    selectRenderResolution,
+    selectShowAxis,
+    selectShowGrid,
+} from 'src/app/modules/controls-renderer/selectors';
 import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 import * as THREE from 'three';
@@ -54,10 +58,19 @@ export class GraphSceneComponent implements AfterViewInit {
                 this.renderCanvas.onResize(undefined);
                 this.cameraComponent.camera.updateProjectionMatrix();
             });
+
+        this.store$.select(selectRenderResolution).subscribe((renderResolution) => {
+            this.renderResolution = renderResolution;
+            this.renderer
+                .getWebGlRenderer()
+                .setPixelRatio(devicePixelRatio * this.renderResolution);
+        });
     }
+
+    public renderResolution: number;
 
     @HostListener('window:resize', ['$event'])
     public onResize() {
-        this.renderer.getWebGlRenderer().setPixelRatio(devicePixelRatio);
+        this.renderer.getWebGlRenderer().setPixelRatio(devicePixelRatio * this.renderResolution);
     }
 }

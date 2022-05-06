@@ -9,6 +9,7 @@ export interface RendererControlState {
     showGraphAnimation: boolean;
     nodeMotionIntensity: number;
     nodeTimeIntensity: number;
+    renderResolution: number;
     mouseRay: Ray;
 }
 
@@ -18,6 +19,7 @@ const initialState: RendererControlState = {
     showGraphAnimation: true,
     nodeMotionIntensity: 0.4,
     nodeTimeIntensity: 0.001,
+    renderResolution: 1.0,
     mouseRay: undefined,
 };
 
@@ -47,6 +49,10 @@ export const reducer = createReducer(
     on(renderControlActions.setNodeTimeIntensity, (state, { value }) => ({
         ...state,
         nodeTimeIntensity: value,
+    })),
+    on(renderControlActions.setRenderResolution, (state, { value }) => ({
+        ...state,
+        renderResolution: value,
     })),
     on(renderControlActions.setMouseRay, (state, { value }) => ({
         ...state,
