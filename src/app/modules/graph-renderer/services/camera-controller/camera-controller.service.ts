@@ -26,9 +26,7 @@ export class CameraControllerService {
     ) {
         this.handleUpdates();
         this.animate = this.animate.bind(this);
-        this.animation = this.animationService.animate
-            .pipe(throttleTime(10))
-            .subscribe(this.animate);
+        this.animation = this.animationService.animate.subscribe(this.animate);
         this.animationService.start();
     }
 
