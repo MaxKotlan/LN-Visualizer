@@ -15,7 +15,9 @@
 .example-tree .mat-nested-tree-node div[role='group'] {
     padding-left: 40px;
 }
-
+.mat-tree-node {
+    min-height: unset;
+}
 /*
    * Padding for leaf nodes.
    * Leaf nodes need to have padding so as to align with other non-leaf nodes
