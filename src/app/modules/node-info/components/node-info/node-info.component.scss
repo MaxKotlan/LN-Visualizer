@@ -13,10 +13,23 @@
    * This padding sets alignment of the nested nodes.
    */
 .example-tree .mat-nested-tree-node div[role='group'] {
-    padding-left: 40px;
+    padding-left: 1rem;
 }
 .mat-tree-node {
     min-height: unset;
+}
+.mat-icon-button {
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+}
+.mat-icon {
+    height: 20px;
+    width: 20px;
+}
+
+:host {
+    width: 100%;
 }
 /*
    * Padding for leaf nodes.

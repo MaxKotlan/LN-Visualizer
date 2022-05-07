@@ -1,10 +1,13 @@
 <div
     *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async as node"
-    style="margin-left: 0.2rem; margin-top: 0.2rem"
+    style="margin-left: 0.2rem; margin-top: 0.2rem; width: 100%"
 >
     <mat-tree [dataSource]="treeData$ | async" [treeControl]="treeControl" class="example-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <span style="color: teal; margin-right: 0.2rem">{{ node.key }}:</span>{{ node.value }}
+            <div style="display: flex">
+                <div style="color: teal; margin-right: 0.2rem">{{ node.key }}:</div>
+                <div style="word-break: break-all">{{ node.value }}</div>
+            </div>
         </mat-tree-node>
 
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
@@ -14,8 +17,10 @@
                         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
                     </mat-icon>
                 </button>
-                <span style="color: teal; margin-right: 0.2rem">{{ node.key }}:</span>
-                {{ node.value }}
+                <div style="display: flex">
+                    <div style="color: teal; margin-right: 0.2rem">{{ node.key }}:</div>
+                    <div style="word-break: break-all">{{ node.value }}</div>
+                </div>
             </div>
 
             <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
