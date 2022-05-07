@@ -21,11 +21,10 @@
         <app-graph-view></app-graph-view>
     </mtx-split-pane>
     <mtx-split-pane
-        *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async"
         [order]="2"
         [minSize]="280"
         [maxSize]="750"
-        [size]="280"
+        [size]="(nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async) ? 280 : 0"
     >
         <app-node-info></app-node-info>
         <!-- <app-filter-modal></app-filter-modal> -->

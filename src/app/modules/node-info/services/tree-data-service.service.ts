@@ -20,9 +20,12 @@ export class TreeDataServiceService {
         const o = Object.entries(object);
         return o
             .map((kv) => this.mapKeys(kv))
-            .sort((a, b) =>
-                (a.key as string).toLocaleLowerCase().localeCompare(b.key.toLocaleLowerCase()),
-            );
+            .sort((a, b) => {
+                if (!Number.isNaN(a) && !Number.isNaN(b)) return a - b;
+                return (a.key as string)
+                    .toLocaleLowerCase()
+                    .localeCompare(b.key.toLocaleLowerCase());
+            });
     }
 
     private mapKeys([key, value]) {
