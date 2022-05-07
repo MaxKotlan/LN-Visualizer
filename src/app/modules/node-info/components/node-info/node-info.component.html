@@ -3,7 +3,7 @@
     <span style="margin-left: 0.4rem; flex-grow: 1">Node Properties</span>
 </mat-toolbar>
 <div
-    *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async as node"
+    *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async"
     style="margin-left: 0.2rem; margin-top: 0.2rem; width: 100%"
 >
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
