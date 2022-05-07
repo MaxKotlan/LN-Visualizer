@@ -7,7 +7,7 @@
 >
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <div style="display: flex">
+            <div style="display: flex; margin-left: 20px">
                 <div style="color: #fbc02d; margin-right: 0.2rem">{{ node.key }}:</div>
                 <div style="word-break: break-all">{{ node.value }}</div>
             </div>
