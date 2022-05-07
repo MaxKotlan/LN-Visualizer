@@ -28,7 +28,8 @@ export class TreeDataServiceService {
     private mapKeys([key, value]) {
         if (value instanceof Object) {
             const children = this.mapObject(value);
-            return { key, children: children };
+            if (children.length > 0) return { key, children: children };
+            return undefined;
         }
         return { key, value } as KeyValueNode;
     }
