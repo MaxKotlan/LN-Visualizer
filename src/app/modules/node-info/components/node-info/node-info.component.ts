@@ -55,7 +55,7 @@ export class NodeInfoComponent {
     public mapKeys([key, value]) {
         if (value instanceof Object) {
             const children = this.mapObject(value);
-            return { key, value, children: children };
+            return { key, children: children };
         }
         return { key, value } as KeyValueNode;
     }
