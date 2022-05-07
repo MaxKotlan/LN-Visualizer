@@ -10,6 +10,7 @@ import { GraphViewModule } from '../graph-view/graph-view.module';
 import { EffectsModule } from '@ngrx/effects';
 import { WindowManagerEffects } from './effects';
 import { ControlsGraphFilterModule } from '../controls-graph-filter/controls-graph-filter.module';
+import { NodeInfoModule } from '../node-info/node-info.module';
 
 @NgModule({
     declarations: [WindowManagerComponent],
@@ -20,6 +21,7 @@ import { ControlsGraphFilterModule } from '../controls-graph-filter/controls-gra
         QuickControlsViewModule,
         ControlsGraphFilterModule,
         GraphViewModule,
+        NodeInfoModule,
         EffectsModule.forFeature([WindowManagerEffects]),
         StoreModule.forFeature('windowManagement', windowManagementReducer.reducer),
     ],

@@ -1,13 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
+import * as graphActions from '../../../graph-renderer/actions';
 import * as windowManagementActions from '../../actions';
 import { filterScriptsId, quickControlsId } from '../../constants/windowIds';
 import { WindowManagerState } from '../../reducers';
 import * as windowManagementSelectors from '../../selectors';
-import * as graphActions from '../../../graph-renderer/actions';
-import { MtxSplitComponent } from '@ng-matero/extensions/split';
 
 @Component({
     selector: 'app-window-manager',
@@ -20,6 +20,7 @@ export class WindowManagerComponent {
     constructor(
         public screenSizeService: ScreenSizeService,
         private store$: Store<WindowManagerState>,
+        public nodeSearchEffects: NodeSearchEffects,
     ) {}
 
     shouldShowQuickControls$: Observable<boolean> = this.store$.select(

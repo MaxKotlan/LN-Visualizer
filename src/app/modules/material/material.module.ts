@@ -21,6 +21,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MtxSplitModule } from '@ng-matero/extensions/split';
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { MtxAlertModule } from '@ng-matero/extensions/alert';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
     imports: [
@@ -46,6 +47,7 @@ import { MtxAlertModule } from '@ng-matero/extensions/alert';
         MtxSplitModule,
         MtxPopoverModule,
         MtxAlertModule,
+        MatTreeModule,
     ],
     exports: [
         MatInputModule,
@@ -69,6 +71,7 @@ import { MtxAlertModule } from '@ng-matero/extensions/alert';
         MtxSplitModule,
         MtxPopoverModule,
         MtxAlertModule,
+        MatTreeModule,
     ],
 })
 export class MaterialModule {}
