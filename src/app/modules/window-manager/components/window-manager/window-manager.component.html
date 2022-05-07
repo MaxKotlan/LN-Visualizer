@@ -23,9 +23,9 @@
     <mtx-split-pane
         *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async"
         [order]="2"
-        [minSize]="(shouldShowQuickControls$ | async) ? 280 : 0"
-        [maxSize]="(shouldShowQuickControls$ | async) ? 750 : 0"
-        [size]="(shouldShowQuickControls$ | async) ? 280 : 0"
+        [minSize]="280"
+        [maxSize]="750"
+        [size]="280"
     >
         <app-node-info></app-node-info>
         <!-- <app-filter-modal></app-filter-modal> -->

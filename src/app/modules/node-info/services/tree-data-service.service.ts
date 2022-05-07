@@ -18,7 +18,11 @@ export class TreeDataServiceService {
 
     private mapObject(object: Object) {
         const o = Object.entries(object);
-        return o.map((kv) => this.mapKeys(kv));
+        return o
+            .map((kv) => this.mapKeys(kv))
+            .sort((a, b) =>
+                (a.key as string).toLocaleLowerCase().localeCompare(b.key.toLocaleLowerCase()),
+            );
     }
 
     private mapKeys([key, value]) {
