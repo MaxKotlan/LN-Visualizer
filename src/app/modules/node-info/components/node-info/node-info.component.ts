@@ -1,6 +1,7 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, tap } from 'rxjs';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 
@@ -10,6 +11,7 @@ interface KeyValueNode {
     children?: KeyValueNode[];
 }
 
+@UntilDestroy()
 @Component({
     selector: 'app-node-info',
     templateUrl: './node-info.component.html',
@@ -18,8 +20,17 @@ interface KeyValueNode {
 export class NodeInfoComponent {
     treeControl = new NestedTreeControl<KeyValueNode>((node) => node.children);
     dataSource = new MatTreeNestedDataSource<KeyValueNode>();
+    public treeData$;
 
-    constructor(public nodeSearchEffects: NodeSearchEffects) {}
+    constructor(public nodeSearchEffects: NodeSearchEffects) {
+        this.treeData$ = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(
+            untilDestroyed(this),
+            map((object) => this.mapObject(object)),
+        );
+        this.treeData$.subscribe((data) => {
+            this.dataSource.data = data;
+        });
+    }
 
     public mapObject(object: Object) {
         const r = Object.entries(object);
@@ -33,15 +44,6 @@ export class NodeInfoComponent {
         }
         return { key, value } as KeyValueNode;
     }
-
-    public treeData$ = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(
-        map((object) => this.mapObject(object)), // {
-        map((r) => {
-            const a = new MatTreeNestedDataSource<KeyValueNode>();
-            a.data = r;
-            return a;
-        }),
-    );
 
     hasChild = (_: number, node: KeyValueNode) => !!node.children && node.children.length > 0;
 }

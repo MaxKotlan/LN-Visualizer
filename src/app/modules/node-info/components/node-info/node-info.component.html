@@ -2,10 +2,10 @@
     *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async as node"
     style="margin-left: 0.2rem; margin-top: 0.2rem; width: 100%"
 >
-    <mat-tree [dataSource]="treeData$ | async" [treeControl]="treeControl" class="example-tree">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
             <div style="display: flex">
-                <div style="color: teal; margin-right: 0.2rem">{{ node.key }}:</div>
+                <div style="color: #fbc02d; margin-right: 0.2rem">{{ node.key }}:</div>
                 <div style="word-break: break-all">{{ node.value }}</div>
             </div>
         </mat-tree-node>
@@ -18,7 +18,7 @@
                     </mat-icon>
                 </button>
                 <div style="display: flex">
-                    <div style="color: teal; margin-right: 0.2rem">{{ node.key }}:</div>
+                    <div style="color: #ff9800; margin-right: 0.2rem">{{ node.key }}:</div>
                     <div style="word-break: break-all">{{ node.value }}</div>
                 </div>
             </div>
