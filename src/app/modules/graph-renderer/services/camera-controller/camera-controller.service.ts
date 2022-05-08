@@ -6,7 +6,10 @@ import { filter, map, Observable, Subscription, throttleTime, withLatestFrom } f
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
-import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
+import {
+    selectCameraFocusMode,
+    selectCameraFov,
+} from 'src/app/modules/controls/selectors/controls.selectors';
 import * as THREE from 'three';
 import { Camera, PerspectiveCamera, Vector3 } from 'three';
 import { NodeSearchEffects } from '../../effects/node-search.effects';
@@ -44,9 +47,13 @@ export class CameraControllerService {
                 this.camera.updateProjectionMatrix();
             }
         });
-        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.subscribe((finalNode) => {
-            this.gotoLocation(finalNode?.position.clone().multiplyScalar(meshScale));
-        });
+        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$
+            .pipe(withLatestFrom(this.store$.select(selectCameraFocusMode)))
+            .subscribe(([finalNode, focusmode]) => {
+                const meshVec = finalNode?.position.clone().multiplyScalar(meshScale);
+                if (focusmode === 'goto') this.gotoLocation(meshVec);
+                if (focusmode === 'lookat') this.lookAtLocation(meshVec);
+            });
         this.gotoCoordinates$.subscribe((newTarget) => this.gotoLocation(newTarget));
     }
 
