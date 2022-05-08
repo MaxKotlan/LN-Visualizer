@@ -26,7 +26,11 @@
                 </div>
             </div>
 
-            <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+            <div
+                *ngIf="treeControl.isExpanded(node)"
+                [class.example-tree-invisible]="!treeControl.isExpanded(node)"
+                role="group"
+            >
                 <ng-container matTreeNodeOutlet></ng-container>
             </div>
         </mat-nested-tree-node>
