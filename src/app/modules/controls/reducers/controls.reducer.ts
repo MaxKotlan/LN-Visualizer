@@ -1,11 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlsActions from '../actions/controls.actions';
 
-export const enum CameraFocusMode {
-    None,
-    FocusOnly,
-    Goto,
-}
+export type CameraFocusMode = 'goto' | 'lookat' | 'none';
 
 export interface GenericControlsState {
     controlVersion: string;
@@ -20,7 +16,7 @@ export const initialState: GenericControlsState = {
     searchText: '',
     renderLabels: false,
     cameraFov: 60,
-    cameraFocusMode: CameraFocusMode.FocusOnly,
+    cameraFocusMode: 'goto',
 };
 
 export const reducer = createReducer(
