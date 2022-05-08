@@ -2,7 +2,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest } from 'rxjs';
+import { combineLatest, filter, takeUntil } from 'rxjs';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { TreeDataServiceService } from '../../services/tree-data-service.service';
 
