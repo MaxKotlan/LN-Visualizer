@@ -45,7 +45,7 @@ export class CameraControllerService {
             }
         });
         this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.subscribe((finalNode) => {
-            this.lookAtLocation(finalNode?.position);
+            this.gotoLocation(finalNode?.position.clone().multiplyScalar(meshScale));
         });
         this.gotoCoordinates$.subscribe((newTarget) => this.gotoLocation(newTarget));
     }
@@ -56,11 +56,7 @@ export class CameraControllerService {
 
         const camMat = this.camera.matrix.clone();
         const currentRot = this.camera.quaternion.clone();
-        camMat.lookAt(
-            this.camera.position,
-            newTarget.clone().multiplyScalar(meshScale),
-            new Vector3(0, 1, 0),
-        );
+        camMat.lookAt(this.camera.position, newTarget.clone(), new Vector3(0, 1, 0));
         const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
         const rotationKF = new THREE.QuaternionKeyframeTrack(
             '.quaternion',
@@ -153,7 +149,7 @@ export class CameraControllerService {
         withLatestFrom(this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$),
         map(([, node]) => node?.position),
         filter((pos) => !!pos),
-        map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(meshScale)),
+        map((pos) => pos.clone().multiplyScalar(meshScale)),
     );
 
     public animate() {
