@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { filter, map } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { combineLatest, filter, map } from 'rxjs';
+import { graphNodePositionRecalculate } from '../../graph-renderer/actions';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { KeyValueNode } from '../components';
 
@@ -9,8 +11,12 @@ import { KeyValueNode } from '../components';
 export class TreeDataServiceService {
     public treeData$;
 
-    constructor(public nodeSearchEffects: NodeSearchEffects) {
-        this.treeData$ = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(
+    constructor(public nodeSearchEffects: NodeSearchEffects, public actions: Actions) {
+        const s = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$;
+        const t = this.actions.pipe(ofType(graphNodePositionRecalculate));
+
+        this.treeData$ = combineLatest([s, t]).pipe(
+            map(([s]) => s),
             filter((o) => o !== undefined && o !== null),
             map((object) => this.mapObject(object)),
         );

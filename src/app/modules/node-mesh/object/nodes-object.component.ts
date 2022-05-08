@@ -101,7 +101,6 @@ export class NodesObjectComponent
         const node = this.pointTreeService.getNearestNeighbor(intersection.point);
         if (!node) return;
         this.toolTipService.close();
-        console.log(node);
         this.store$.dispatch(searchGraph({ searchText: node.public_key }));
     }
 
