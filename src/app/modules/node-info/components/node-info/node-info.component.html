@@ -21,6 +21,7 @@
                     </mat-icon>
                 </button>
                 <div style="display: flex">
+                    <div style="margin-left: 0.4rem" *ngIf="node.value"></div>
                     <div style="color: #ff9800; margin-right: 0.2rem">{{ node.key }}:</div>
                     <div style="word-break: break-all">{{ node.value }}</div>
                 </div>
