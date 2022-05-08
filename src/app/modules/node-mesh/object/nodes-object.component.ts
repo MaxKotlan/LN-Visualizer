@@ -17,21 +17,17 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { take } from 'rxjs';
-import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
 import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { GraphState } from '../../graph-renderer/reducer';
 import { LndRaycasterService } from '../../graph-renderer/services';
-import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { NodePoint } from '../three-js-objects/NodePoint';
+import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
-import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
-import { PointTreeService } from '../../graph-renderer/services/point-tree/point-tree.service';
 import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';
+import { NodePoint } from '../three-js-objects/NodePoint';
 
 @Component({
     selector: 'app-nodes-object',
@@ -105,7 +101,6 @@ export class NodesObjectComponent
         const node = this.pointTreeService.getNearestNeighbor(intersection.point);
         if (!node) return;
         this.toolTipService.close();
-        console.log(node);
         this.store$.dispatch(searchGraph({ searchText: node.public_key }));
     }
 

@@ -6,7 +6,10 @@ import { filter, map, Observable, Subscription, throttleTime, withLatestFrom } f
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
-import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
+import {
+    selectCameraFocusMode,
+    selectCameraFov,
+} from 'src/app/modules/controls/selectors/controls.selectors';
 import * as THREE from 'three';
 import { Camera, PerspectiveCamera, Vector3 } from 'three';
 import { NodeSearchEffects } from '../../effects/node-search.effects';
@@ -44,9 +47,13 @@ export class CameraControllerService {
                 this.camera.updateProjectionMatrix();
             }
         });
-        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.subscribe((finalNode) => {
-            this.lookAtLocation(finalNode?.position);
-        });
+        this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$
+            .pipe(withLatestFrom(this.store$.select(selectCameraFocusMode)))
+            .subscribe(([finalNode, focusmode]) => {
+                const meshVec = finalNode?.position.clone().multiplyScalar(meshScale);
+                if (focusmode === 'goto') this.gotoLocation(meshVec);
+                if (focusmode === 'lookat') this.lookAtLocation(meshVec);
+            });
         this.gotoCoordinates$.subscribe((newTarget) => this.gotoLocation(newTarget));
     }
 
@@ -56,11 +63,7 @@ export class CameraControllerService {
 
         const camMat = this.camera.matrix.clone();
         const currentRot = this.camera.quaternion.clone();
-        camMat.lookAt(
-            this.camera.position,
-            newTarget.clone().multiplyScalar(meshScale),
-            new Vector3(0, 1, 0),
-        );
+        camMat.lookAt(this.camera.position, newTarget.clone(), new Vector3(0, 1, 0));
         const newQuat = new THREE.Quaternion().setFromRotationMatrix(camMat);
         const rotationKF = new THREE.QuaternionKeyframeTrack(
             '.quaternion',
@@ -153,7 +156,7 @@ export class CameraControllerService {
         withLatestFrom(this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$),
         map(([, node]) => node?.position),
         filter((pos) => !!pos),
-        map((pos) => new THREE.Vector3(pos?.x, pos?.y, pos?.z).multiplyScalar(meshScale)),
+        map((pos) => pos.clone().multiplyScalar(meshScale)),
     );
 
     public animate() {

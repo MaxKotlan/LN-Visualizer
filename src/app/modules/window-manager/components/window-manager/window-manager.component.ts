@@ -15,12 +15,9 @@ import * as windowManagementSelectors from '../../selectors';
     styleUrls: ['./window-manager.component.scss'],
 })
 export class WindowManagerComponent {
-    //@ViewChild(MtxSplitComponent)
-
     constructor(
         public screenSizeService: ScreenSizeService,
         private store$: Store<WindowManagerState>,
-        public nodeSearchEffects: NodeSearchEffects,
     ) {}
 
     shouldShowQuickControls$: Observable<boolean> = this.store$.select(

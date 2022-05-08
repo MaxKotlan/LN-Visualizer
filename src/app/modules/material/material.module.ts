@@ -22,6 +22,7 @@ import { MtxSplitModule } from '@ng-matero/extensions/split';
 import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { MtxAlertModule } from '@ng-matero/extensions/alert';
 import { MatTreeModule } from '@angular/material/tree';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     imports: [
@@ -48,6 +49,7 @@ import { MatTreeModule } from '@angular/material/tree';
         MtxPopoverModule,
         MtxAlertModule,
         MatTreeModule,
+        ScrollingModule,
     ],
     exports: [
         MatInputModule,
@@ -72,6 +74,7 @@ import { MatTreeModule } from '@angular/material/tree';
         MtxPopoverModule,
         MtxAlertModule,
         MatTreeModule,
+        ScrollingModule,
     ],
 })
 export class MaterialModule {}

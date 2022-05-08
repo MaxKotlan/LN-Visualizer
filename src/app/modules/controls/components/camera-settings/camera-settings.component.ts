@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { cameraFocusMode } from 'src/app/constants/camera-focusmode.constant';
@@ -22,15 +21,12 @@ export class CameraSettingsComponent {
 
     public selectCameraFov$ = this.store.select(selectCameraFov);
     public selectCameraFocusMode$ = this.store.select(selectCameraFocusMode);
-    //.pipe(map((focusmode) => cameraFocusMode[focusmode]));
 
     setCameraFov(event: MatSliderChange) {
         this.store.dispatch(setCameraFov({ value: event.value || 60 }));
     }
 
-    setCameraFocusMode(event: MatSelectChange) {
-        if (event?.value === undefined) return;
-        console.log(event);
-        this.store.dispatch(setCameraFocusMode({ value: event.value }));
+    setCameraFocusMode(event) {
+        this.store.dispatch(setCameraFocusMode({ value: event }));
     }
 }

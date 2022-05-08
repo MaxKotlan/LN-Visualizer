@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { filter, map } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { combineLatest, filter, map } from 'rxjs';
+import { graphNodePositionRecalculate } from '../../graph-renderer/actions';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { KeyValueNode } from '../components';
 
@@ -9,8 +11,12 @@ import { KeyValueNode } from '../components';
 export class TreeDataServiceService {
     public treeData$;
 
-    constructor(public nodeSearchEffects: NodeSearchEffects) {
-        this.treeData$ = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(
+    constructor(public nodeSearchEffects: NodeSearchEffects, public actions: Actions) {
+        const s = this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$;
+        const t = this.actions.pipe(ofType(graphNodePositionRecalculate));
+
+        this.treeData$ = combineLatest([s, t]).pipe(
+            map(([s]) => s),
             filter((o) => o !== undefined && o !== null),
             map((object) => this.mapObject(object)),
         );
@@ -19,6 +25,7 @@ export class TreeDataServiceService {
     private mapObject(object: Object) {
         const o = Object.entries(object);
         return o
+            .filter(([, v]) => v !== null && v !== undefined && v.length !== 0 && v.size !== 0)
             .map((kv) => this.mapKeys(kv))
             .sort((a, b) => {
                 if (!Number.isNaN(a) && !Number.isNaN(b)) return a - b;
@@ -30,6 +37,10 @@ export class TreeDataServiceService {
 
     private mapKeys([key, value]) {
         if (value instanceof Object) {
+            if (value instanceof Map) {
+                const r = this.mapObject(Object.fromEntries(value.entries()));
+                return { key, children: r };
+            }
             const children = this.mapObject(value);
             return { key, children: children };
         }

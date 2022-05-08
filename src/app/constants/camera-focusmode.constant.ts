@@ -1,1 +1,1 @@
-export const cameraFocusMode: string[] = ['None', 'Focus Only', 'Goto'];
+export const cameraFocusMode: string[] = ['none', 'lookat', 'goto'];

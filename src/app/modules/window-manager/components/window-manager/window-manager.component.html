@@ -20,12 +20,7 @@
     <mtx-split-pane [order]="1">
         <app-graph-view></app-graph-view>
     </mtx-split-pane>
-    <mtx-split-pane
-        [order]="2"
-        [minSize]="280"
-        [maxSize]="750"
-        [size]="(nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async) ? 280 : 0"
-    >
+    <mtx-split-pane [order]="2" [minSize]="280" [maxSize]="750" [size]="280">
         <app-node-info></app-node-info>
         <!-- <app-filter-modal></app-filter-modal> -->
     </mtx-split-pane>
