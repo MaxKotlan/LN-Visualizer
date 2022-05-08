@@ -32,8 +32,8 @@ export class TreeDataServiceService {
     private mapKeys([key, value]) {
         if (value instanceof Object) {
             if (value instanceof Map) {
-                const e = Array.from(value.values()) as any[];
-                return this.mapKeys([key, e]);
+                const r = this.mapObject(Object.fromEntries(value.entries()));
+                return { key, children: r };
             }
             const children = this.mapObject(value);
             return { key, children: children };
