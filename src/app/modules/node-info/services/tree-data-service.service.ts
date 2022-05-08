@@ -19,6 +19,7 @@ export class TreeDataServiceService {
     private mapObject(object: Object) {
         const o = Object.entries(object);
         return o
+            .filter(([k, v]) => v !== null && v !== undefined && v.length !== 0)
             .map((kv) => this.mapKeys(kv))
             .sort((a, b) => {
                 if (!Number.isNaN(a) && !Number.isNaN(b)) return a - b;
@@ -31,13 +32,7 @@ export class TreeDataServiceService {
     private mapKeys([key, value]) {
         if (value instanceof Object) {
             if (value instanceof Map) {
-                // console.log(value);
-                // const children = Array.from(value, ([name, value]) => ({ name, value }));
-                // const ch = children.map((c) => this.mapObject(c));
-                // console.log(ch);
-                // return { key, children: ch };
-                // console.log(value instanceof Map);
-                const e = Array.from(value.values()) as any;
+                const e = Array.from(value.values()) as any[];
                 return this.mapKeys([key, e]);
             }
             const children = this.mapObject(value);
