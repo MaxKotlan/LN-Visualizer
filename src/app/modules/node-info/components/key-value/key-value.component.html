@@ -7,12 +7,24 @@
     </div>
     <ng-container [ngSwitch]="node.key">
         <ng-container
+            *ngSwitchCase="'transaction_id'"
+            [ngTemplateOutlet]="transactionIdLink"
+        ></ng-container>
+        <ng-container
             *ngSwitchCase="'public_key'"
             [ngTemplateOutlet]="publicKeyLink"
         ></ng-container>
         <ng-container *ngSwitchDefault [ngTemplateOutlet]="default"></ng-container>
     </ng-container>
 </div>
+<ng-template #transactionIdLink>
+    <a
+        style="color: #ffffff; word-break: break-all"
+        [href]="'https://mempool.space/tx/' + node.value"
+    >
+        {{ node.value }}
+    </a>
+</ng-template>
 <ng-template #publicKeyLink>
     <a style="color: #ffffff; word-break: break-all" [routerLink]="['/' + node.value]">
         {{ node.value }}
