@@ -14,11 +14,7 @@
     </ng-container>
 </div>
 <ng-template #publicKeyLink>
-    <a
-        style="word-break: break-all"
-        [routerLink]="['/' + node.value]"
-        [state]="{ transactionId: 123 }"
-    >
+    <a style="color: #ffffff; word-break: break-all" [routerLink]="['/' + node.value]">
         {{ node.value }}
     </a>
 </ng-template>
