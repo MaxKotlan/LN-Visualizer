@@ -1,0 +1,27 @@
+<div style="display: flex">
+    <div
+        [style.color]="color === 'primary' ? '#fbc02d' : '#ff9800'"
+        style="color: #fbc02d; margin-right: 0.2rem"
+    >
+        {{ node.key }}:
+    </div>
+    <ng-container [ngSwitch]="node.key">
+        <ng-container
+            *ngSwitchCase="'public_key'"
+            [ngTemplateOutlet]="publicKeyLink"
+        ></ng-container>
+        <ng-container *ngSwitchDefault [ngTemplateOutlet]="default"></ng-container>
+    </ng-container>
+</div>
+<ng-template #publicKeyLink>
+    <a
+        style="word-break: break-all"
+        [routerLink]="['/' + node.value]"
+        [state]="{ transactionId: 123 }"
+    >
+        {{ node.value }}
+    </a>
+</ng-template>
+<ng-template #default>
+    <div style="word-break: break-all">{{ node.value }}</div>
+</ng-template>
