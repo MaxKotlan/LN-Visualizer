@@ -18,18 +18,15 @@
     </ng-container>
 </div>
 <ng-template #transactionIdLink>
-    <a
-        style="color: #ffffff; word-break: break-all"
-        [href]="'https://mempool.space/tx/' + node.value"
-    >
+    <a class="valueLink" [href]="'https://mempool.space/tx/' + node.value">
         {{ node.value }}
     </a>
 </ng-template>
 <ng-template #publicKeyLink>
-    <a style="color: #ffffff; word-break: break-all" [routerLink]="['/' + node.value]">
+    <a class="valueLink" [routerLink]="['/' + node.value]">
         {{ node.value }}
     </a>
 </ng-template>
 <ng-template #default>
-    <div style="word-break: break-all">{{ node.value }}</div>
+    <div class="valueDefault">{{ node.value }}</div>
 </ng-template>
