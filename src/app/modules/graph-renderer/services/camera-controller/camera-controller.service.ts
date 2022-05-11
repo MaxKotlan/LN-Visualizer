@@ -48,7 +48,10 @@ export class CameraControllerService {
             }
         });
         this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$
-            .pipe(withLatestFrom(this.store$.select(selectCameraFocusMode)))
+            .pipe(
+                withLatestFrom(this.store$.select(selectCameraFocusMode)),
+                filter(([finalNode]) => !!finalNode?.position),
+            )
             .subscribe(([finalNode, focusmode]) => {
                 const meshVec = finalNode?.position.clone().multiplyScalar(meshScale);
                 if (focusmode === 'goto') this.gotoLocation(meshVec);
