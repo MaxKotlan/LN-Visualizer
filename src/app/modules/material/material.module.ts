@@ -23,6 +23,7 @@ import { MtxPopoverModule } from '@ng-matero/extensions/popover';
 import { MtxAlertModule } from '@ng-matero/extensions/alert';
 import { MatTreeModule } from '@angular/material/tree';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
@@ -50,6 +51,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         MtxAlertModule,
         MatTreeModule,
         ScrollingModule,
+        RouterModule,
     ],
     exports: [
         MatInputModule,
@@ -75,6 +77,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         MtxAlertModule,
         MatTreeModule,
         ScrollingModule,
+        RouterModule,
     ],
 })
 export class MaterialModule {}

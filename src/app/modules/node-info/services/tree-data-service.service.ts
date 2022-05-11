@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
+import moment from 'moment';
 import { combineLatest, filter, map } from 'rxjs';
 import { graphNodePositionRecalculate } from '../../graph-renderer/actions';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
@@ -43,6 +44,10 @@ export class TreeDataServiceService {
             }
             const children = this.mapObject(value);
             return { key, children: children };
+        }
+        if (key === 'updated_at') {
+            const a = moment(value);
+            return { key, value: a.toLocaleString() } as KeyValueNode;
         }
         return { key, value } as KeyValueNode;
     }

@@ -10,7 +10,7 @@ import {
 })
 export class NodeSizeOffsetService {
     constructor(private store$: Store) {
-        this.handleUpdates();
+        //this.handleUpdates();
     }
 
     handleUpdates() {
@@ -26,6 +26,7 @@ export class NodeSizeOffsetService {
     public maximumSize: number;
 
     getPointSize() {
-        return this.maximumSize + this.minimumSize;
+        //return this.maximumSize + this.minimumSize;
+        return 1.0;
     }
 }

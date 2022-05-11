@@ -7,10 +7,11 @@
 >
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <div style="display: flex; margin-left: 20px">
+            <app-key-value style="margin-left: 20px" [node]="node"></app-key-value>
+            <!-- <div style="display: flex; margin-left: 20px">
                 <div style="color: #fbc02d; margin-right: 0.2rem">{{ node.key }}:</div>
                 <div style="word-break: break-all">{{ node.value }}</div>
-            </div>
+            </div> -->
         </mat-tree-node>
 
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
@@ -20,11 +21,12 @@
                         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
                     </mat-icon>
                 </button>
-                <div style="display: flex">
+                <app-key-value [color]="'secondary'" [node]="node"></app-key-value>
+                <!-- <div style="display: flex">
                     <div style="margin-left: 0.4rem" *ngIf="node.value"></div>
                     <div style="color: #ff9800; margin-right: 0.2rem">{{ node.key }}:</div>
                     <div style="word-break: break-all">{{ node.value }}</div>
-                </div>
+                </div> -->
             </div>
 
             <div
