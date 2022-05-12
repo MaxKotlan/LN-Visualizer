@@ -2,7 +2,6 @@ import { injectable } from 'inversify';
 import fs from 'fs';
 import { AuthenticatedLnd, LndAuthenticationWithMacaroon } from 'lightning';
 import * as lightning from 'lightning';
-import config from 'config';
 import { ConfigService } from './config.service';
 
 @injectable()
