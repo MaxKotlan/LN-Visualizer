@@ -6,7 +6,5 @@
     <button (click)="deleteDatabase()" mat-raised-button color="primary">
         Delete Local Graph Database
     </button>
-    <mat-checkbox [ngModel]="donateLinkVisible$ | async" (change)="setDonateLinkVisible($event)">
-        Show Donate Link
-    </mat-checkbox>
+    <app-show-donate-link-checkbox></app-show-donate-link-checkbox>
 </section>

@@ -39,10 +39,10 @@ export class ChannelEffects {
                     this.channelRegistry.forEach((channel) => {
                         channel.policies.forEach((policy) => {
                             const node = this.nodeRegistry.get(policy.public_key);
-                            if (node && !node.connectedChannels.has(channel.id)) {
+                            if (node && !node.connected_channels.has(channel.id)) {
                                 node.channel_count += 1;
                                 node.node_capacity += channel.capacity;
-                                node.connectedChannels.set(channel.id, channel);
+                                node.connected_channels.set(channel.id, channel);
                             }
                         });
                     });

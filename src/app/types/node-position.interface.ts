@@ -5,7 +5,7 @@ import { LndChannel } from '../../../api/src/models';
 
 export interface LndNodeWithPosition extends LndNode {
     position: THREE.Vector3;
-    connectedChannels: Map<string, LndChannel>;
+    connected_channels: Map<string, LndChannel>;
     // parent: LndNodeWithPosition | null;
     // children: Map<string, LndNodeWithPosition>;
     node_capacity: number;
