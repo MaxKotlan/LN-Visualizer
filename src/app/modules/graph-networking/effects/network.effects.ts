@@ -30,7 +30,9 @@ export class NetworkEffects {
                                             alert: {
                                                 id: 'serverStatus',
                                                 type: 'info',
-                                                message: (data as any).status,
+                                                message: `Please wait while the server is ${
+                                                    (data as any).status
+                                                }.`,
                                             },
                                         });
                                 case 'requestComplete':
