@@ -16,15 +16,26 @@ import { EnterInvoiceAmountComponent } from './components/enter-invoice-amount/e
 import { InvoicePendingComponent } from './components/invoice-pending/invoice-pending.component';
 import { InvoiceErrorComponent } from './components/invoice-error/invoice-error.component';
 import { PaymentCompleteComponent } from './components/payment-complete/payment-complete.component';
+import { ControlsMiscModule } from '../controls-misc/controls-misc.module';
 
 @NgModule({
-    declarations: [DonateButtonComponent, DonateModalComponent, SafePipe, DonateLoadingComponent, EnterInvoiceAmountComponent, InvoicePendingComponent, InvoiceErrorComponent, PaymentCompleteComponent],
+    declarations: [
+        DonateButtonComponent,
+        DonateModalComponent,
+        SafePipe,
+        DonateLoadingComponent,
+        EnterInvoiceAmountComponent,
+        InvoicePendingComponent,
+        InvoiceErrorComponent,
+        PaymentCompleteComponent,
+    ],
     imports: [
         CommonModule,
         MaterialModule,
         FormsModule,
         QRCodeModule,
         EffectsModule.forFeature([DonateEffects]),
+        ControlsMiscModule,
         StoreModule.forFeature('donate', reducer),
     ],
     providers: [DonateApiService],
