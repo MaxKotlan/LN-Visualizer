@@ -3,8 +3,14 @@ import config from 'config';
 import { GradientDescentSettings } from '../position-algorithms/gradient-descent/gd-settings.interface';
 import { LndAuthenticationWithMacaroon } from 'lightning';
 
-export interface Config {
+export interface LndConfig {
     macaroon: LndAuthenticationWithMacaroon;
+    cert_file: string | undefined;
+    view_macaroon_file: string | undefined;
+}
+
+export interface Config {
+    lndConfig: LndConfig;
     positionAlgorithm: string;
     gradientDescentSettings: GradientDescentSettings;
     resyncTimer: string;
@@ -14,10 +20,14 @@ export interface Config {
 
 /*default values used if config file does is missing a value*/
 const initConfig: Config = {
-    macaroon: {
-        cert: 'base64 encoded tls.cert',
-        macaroon: 'base64 encoded admin.macaroon',
-        socket: '127.0.0.1:10009',
+    lndConfig: {
+        macaroon: {
+            cert: undefined,
+            macaroon: undefined,
+            socket: '127.0.0.1:10009',
+        },
+        cert_file: undefined,
+        view_macaroon_file: undefined,
     },
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
@@ -47,7 +57,7 @@ export class ConfigService {
     private overrideEnvironmentVariables(config: Config, prefix = 'LNVIS_') {
         Object.entries(config).forEach(([key, value]) => {
             if (value instanceof Object) {
-                const prfx = key === 'macaroon' ? 'LND_' : prefix;
+                const prfx = key === 'lndConfig' ? 'LND_' : prefix;
                 this.overrideEnvironmentVariables(config[key], prfx);
             } else {
                 const envPredecessor = `${prefix}${key.toUpperCase()}`;
