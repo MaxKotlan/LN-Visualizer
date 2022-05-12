@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import fs from 'fs';
 import { AuthenticatedLnd, LndAuthenticationWithMacaroon } from 'lightning';
 import * as lightning from 'lightning';
-import config from 'config';
+import { ConfigService } from './config.service';
 
 @injectable()
 export class LndAuthService {
@@ -12,25 +12,29 @@ export class LndAuthService {
 
     private lnd: AuthenticatedLnd;
 
-    constructor() {
+    constructor(private configService: ConfigService) {
         const conf = this.getConfig();
         const { lnd } = lightning.authenticatedLndGrpc(conf);
         this.lnd = lnd;
     }
 
     public getConfig(): LndAuthenticationWithMacaroon {
-        const macaroon: LndAuthenticationWithMacaroon = { ...config.get('macaroon') };
+        const macaroon: LndAuthenticationWithMacaroon =
+            this.configService.getConfig().lndConfig.macaroon;
         this.replaceWithLndDataDir(macaroon);
         return macaroon;
     }
 
     private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
-        const envCert = this.readFileBase64(process.env.LND_CERT_FILE);
-        const envMac = this.readFileBase64(process.env.LND_VIEW_MACAROON_FILE);
+        const envCert = this.readFileBase64(this.configService.getConfig().lndConfig.cert_file);
+        const envMac = this.readFileBase64(
+            this.configService.getConfig().lndConfig.view_macaroon_file,
+        );
 
         macaroon.cert = envCert || macaroon.cert;
         macaroon.macaroon = envMac || macaroon.macaroon;
-        if (process.env.LND_ADDRESS) macaroon.socket = process.env.LND_ADDRESS;
+        if (this.configService.getConfig().lndConfig.macaroon.socket)
+            macaroon.socket = this.configService.getConfig().lndConfig.macaroon.socket;
     }
 
     private readFileBase64(path: string | undefined): string | undefined {
