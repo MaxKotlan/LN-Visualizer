@@ -4,6 +4,8 @@
         "macaroon": "base64 encoded admin.macaroon",
         "socket": "127.0.0.1:10009"
     },
+    "cert_file": "path to lnd tls.cert",
+    "view_macaroon_file": "path to readonly.macaroon",
     "positionAlgorithm": "gradient-descent",
     "gradientDescentSettings": {
         "iterations": 50,
