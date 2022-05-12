@@ -44,12 +44,12 @@ export class ConfigService {
         return config.util.toObject();
     }
 
-    private overrideEnvironmentVariables(config: Config) {
+    private overrideEnvironmentVariables(config: Config, prefix = 'LNVIS_') {
         Object.entries(config).forEach(([key, value]) => {
             if (value instanceof Object) {
-                this.overrideEnvironmentVariables(config[key]);
+                this.overrideEnvironmentVariables(config[key], 'LND_');
             } else {
-                const envPredecessor = `LNVIS_${key.toUpperCase()}`;
+                const envPredecessor = `${prefix}${key.toUpperCase()}`;
                 const envVar = process.env[envPredecessor];
                 if (envVar) config[key] = envVar;
             }
