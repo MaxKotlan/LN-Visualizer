@@ -9,7 +9,3 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
     -moz-appearance: textfield;
 }
-
-:host ::ng-deep .mat-form-field-infix {
-    width: unset;
-}
