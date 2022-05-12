@@ -24,6 +24,8 @@ import { MtxAlertModule } from '@ng-matero/extensions/alert';
 import { MatTreeModule } from '@angular/material/tree';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 
 @NgModule({
     imports: [
@@ -80,4 +82,11 @@ import { RouterModule } from '@angular/router';
         RouterModule,
     ],
 })
-export class MaterialModule {}
+export class MaterialModule {
+    constructor(private domSanitizer: DomSanitizer, private matIconRegistry: MatIconRegistry) {
+        this.matIconRegistry.addSvgIcon(
+            'lnvisualizer',
+            this.domSanitizer.bypassSecurityTrustResourceUrl('assets/lnvisualizer_fin.svg'),
+        );
+    }
+}
