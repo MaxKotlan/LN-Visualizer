@@ -3,7 +3,6 @@
         *ngIf="paymentIsSettled$ | async; else paymentPending"
     ></app-payment-complete>
     <ng-template #paymentPending>
-        <!-- <p>If you want to support my efforts in creating the best lightning explorer</p> -->
         <app-invoice-error></app-invoice-error>
         <app-enter-invoice-amount></app-enter-invoice-amount>
         <app-donate-loading></app-donate-loading>
