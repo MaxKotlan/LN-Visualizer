@@ -3,6 +3,7 @@ import fs from 'fs';
 import { AuthenticatedLnd, LndAuthenticationWithMacaroon } from 'lightning';
 import * as lightning from 'lightning';
 import config from 'config';
+import { ConfigService } from './config.service';
 
 @injectable()
 export class LndAuthService {
@@ -12,14 +13,14 @@ export class LndAuthService {
 
     private lnd: AuthenticatedLnd;
 
-    constructor() {
+    constructor(private configService: ConfigService) {
         const conf = this.getConfig();
         const { lnd } = lightning.authenticatedLndGrpc(conf);
         this.lnd = lnd;
     }
 
     public getConfig(): LndAuthenticationWithMacaroon {
-        const macaroon: LndAuthenticationWithMacaroon = { ...config.get('macaroon') };
+        const macaroon: LndAuthenticationWithMacaroon = this.configService.getConfig().macaroon;
         this.replaceWithLndDataDir(macaroon);
         return macaroon;
     }
