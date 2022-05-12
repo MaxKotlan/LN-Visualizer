@@ -45,7 +45,7 @@ export class GraphDatabaseService {
     async save() {
         const nReg = Array.from(this.nodeRegistry.values()).map((n: LndNodeWithPosition) => ({
             ...n,
-            connectedChannels: undefined,
+            connected_channels: undefined,
             node_capacity: undefined,
             channel_count: undefined,
         }));

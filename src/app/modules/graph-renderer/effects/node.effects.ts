@@ -87,7 +87,7 @@ export class NodeEffects {
                 map(() => {
                     this.filteredChannelRegistryService.clear();
                     this.filteredNodeRegistryService.forEach((node) => {
-                        node.connectedChannels.forEach((channel) => {
+                        node.connected_channels.forEach((channel) => {
                             this.filteredChannelRegistryService.set(
                                 (channel as unknown as LndChannelWithParent)
                                     .id as unknown as string,
@@ -114,7 +114,7 @@ export class NodeEffects {
                                 lnNode['position'].y,
                                 lnNode['position'].z,
                             ),
-                            connectedChannels: new Map(),
+                            connected_channels: new Map(),
                             node_capacity: 0,
                             channel_count: 0,
                         } as LndNodeWithPosition;
