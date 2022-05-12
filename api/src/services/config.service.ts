@@ -47,7 +47,8 @@ export class ConfigService {
     private overrideEnvironmentVariables(config: Config, prefix = 'LNVIS_') {
         Object.entries(config).forEach(([key, value]) => {
             if (value instanceof Object) {
-                this.overrideEnvironmentVariables(config[key], 'LND_');
+                const prfx = key === 'macaroon' ? 'LND_' : prefix;
+                this.overrideEnvironmentVariables(config[key], prfx);
             } else {
                 const envPredecessor = `${prefix}${key.toUpperCase()}`;
                 const envVar = process.env[envPredecessor];
