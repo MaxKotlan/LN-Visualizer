@@ -1,8 +1,10 @@
 import { injectable } from 'inversify';
 import config from 'config';
 import { GradientDescentSettings } from '../position-algorithms/gradient-descent/gd-settings.interface';
+import { LndAuthenticationWithMacaroon } from 'lightning';
 
 export interface Config {
+    macaroon: LndAuthenticationWithMacaroon;
     positionAlgorithm: string;
     gradientDescentSettings: GradientDescentSettings;
     resyncTimer: string;
@@ -12,6 +14,11 @@ export interface Config {
 
 /*default values used if config file does is missing a value*/
 const initConfig: Config = {
+    macaroon: {
+        cert: 'base64 encoded tls.cert',
+        macaroon: 'base64 encoded admin.macaroon',
+        socket: '127.0.0.1:10009',
+    },
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
         iterations: 50,
