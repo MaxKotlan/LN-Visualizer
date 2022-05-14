@@ -1,29 +1,19 @@
 version: '3.7'
 
 services:
-    web:
+    lnvisweb:
         image: maxkotlan/ln-visualizer-web:latest
         restart: on-failure
         stop_grace_period: 1m
         ports:
-            - '${APP_LNVISUALIZER_WEB_PORT}:80'
+            - '80:80'
         environment:
-            LN_VISUALIZER_API_URL: 'http://${APP_LNVISUALIZER_API_IP}:${APP_LNVISUALIZER_API_PORT}'
-        networks:
-            default:
-                ipv4_address: '${APP_LNVISUALIZER_WEB_IP}'
-    api:
+            LN_VISUALIZER_API_URL: 'http://lnvisapi:5647'
+    lnvisapi:
         image: maxkotlan/ln-visualizer-api:latest
         restart: on-failure
         stop_grace_period: 1m
-        ports:
-            - '${APP_LNVISUALIZER_API_PORT}:${APP_LNVISUALIZER_API_PORT}'
-        volumes:
-            - '${LND_DATA_DIR}:/lnd:ro'
         environment:
-            LND_CERT_FILE: '/lnd/tls.cert'
-            LND_VIEW_MACAROON_FILE: '/lnd/data/chain/bitcoin/${BITCOIN_NETWORK}/readonly.macaroon'
-            LND_ADDRESS: '${LND_IP}:${LND_GRPC_PORT}'
-        networks:
-            default:
-                ipv4_address: '${APP_LNVISUALIZER_API_IP}'
+            LND_CERT: 'your base64 lnd tls certificate'
+            LND_MACAROON: 'your base64 readonly macaroon'
+            LND_SOCKET: umbrel.local:10009
