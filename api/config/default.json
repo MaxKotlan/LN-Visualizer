@@ -6,7 +6,7 @@
             "socket": "127.0.0.1:10009"
         },
         "cert_file": "",
-        "view_macaroon_file": ""
+        "macaroon_file": ""
     },
     "positionAlgorithm": "gradient-descent",
     "gradientDescentSettings": {

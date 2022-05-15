@@ -25,12 +25,19 @@ export class LndAuthService {
         return macaroon;
     }
 
-    private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
-        const envCert = this.readFileBase64(this.configService.getConfig().lndConfig.cert_file);
-        const envMac = this.readFileBase64(
-            this.configService.getConfig().lndConfig.view_macaroon_file,
-        );
+    private readEnvCertFromFile() {
+        const certFilePath = this.configService.getConfig().lndConfig.cert_file;
+        if (certFilePath) return this.readFileBase64(certFilePath);
+    }
 
+    private readEnvMacaroonFromFile() {
+        const macaroonFilePath = this.configService.getConfig().lndConfig.macaroon_file;
+        if (macaroonFilePath) return this.readFileBase64(macaroonFilePath);
+    }
+
+    private replaceWithLndDataDir(macaroon: LndAuthenticationWithMacaroon): void {
+        const envCert = this.readEnvCertFromFile();
+        const envMac = this.readEnvMacaroonFromFile();
         macaroon.cert = envCert || macaroon.cert;
         macaroon.macaroon = envMac || macaroon.macaroon;
         if (this.configService.getConfig().lndConfig.macaroon.socket)

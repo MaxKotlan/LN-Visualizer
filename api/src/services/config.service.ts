@@ -6,7 +6,7 @@ import { LndAuthenticationWithMacaroon } from 'lightning';
 export interface LndConfig {
     macaroon: LndAuthenticationWithMacaroon;
     cert_file: string | undefined;
-    view_macaroon_file: string | undefined;
+    macaroon_file: string | undefined;
 }
 
 export interface Config {
@@ -27,7 +27,7 @@ const initConfig: Config = {
             socket: '127.0.0.1:10009',
         },
         cert_file: undefined,
-        view_macaroon_file: undefined,
+        macaroon_file: undefined,
     },
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
