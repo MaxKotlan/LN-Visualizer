@@ -6,7 +6,7 @@ services:
         restart: on-failure
         stop_grace_period: 1m
         ports:
-            - '80:80'
+            - '5646:80'
         environment:
             LN_VISUALIZER_API_URL: 'http://lnvisapi:5647'
     lnvisapi:
