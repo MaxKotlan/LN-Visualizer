@@ -16,4 +16,8 @@ services:
         environment:
             LND_CERT: 'your base64 lnd tls certificate'
             LND_MACAROON: 'your base64 readonly macaroon'
-            LND_SOCKET: umbrel.local:10009
+            LND_SOCKET: 10.21.21.9:10009
+networks:
+   default:
+      external:
+         name: 'umbrel_main_network'
