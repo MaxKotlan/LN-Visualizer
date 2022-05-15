@@ -13,9 +13,11 @@ services:
         image: maxkotlan/ln-visualizer-api:latest
         restart: on-failure
         stop_grace_period: 1m
+        volumes:
+            - '/home/umbrel/umbrel/lnd:/lnd:ro'
         environment:
-            LND_CERT: 'your base64 lnd tls certificate'
-            LND_MACAROON: 'your base64 readonly macaroon'
+            LND_CERT_FILE: '/lnd/tls.cert'
+            LND_MACAROON_FILE: '/lnd/data/chain/bitcoin/mainnet/readonly.macaroon'
             LND_SOCKET: 10.21.21.9:10009
 networks:
    default:
