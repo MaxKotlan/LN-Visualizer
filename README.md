@@ -59,8 +59,7 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
               restart: on-failure
             ...
         ```
-
-        You can find the latest version by looking at this side pannel
+    You can find the latest version by looking at this side pannel
 
     ![image](https://user-images.githubusercontent.com/7473983/168476937-2274378e-6d0f-4968-b1df-14706f801dbf.png)
 
@@ -85,7 +84,9 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
     	LND_SOCKET: umbrel.local:10009
     ```
 5.  start the application running the following command
-    `docker-compose up -d`
+    ```
+    docker-compose up -d
+    ```
 
 6.  connect to the application by going to
     if running on the same machine, connect by going to:
@@ -94,11 +95,13 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
     [http://umbrel.local:5646](http://umbrel.local:5646)
 
 7.  stop the application by running the following command in the same folder with the `docker-compose.yml` file
-    `docker-compose down`
+    ```
+    docker-compose down
+    ```
 
-## Umbrel App
+## Umbrel App Store
 
-Hopefully coming soon
+Coming soon
 
 ## Contributing
 
