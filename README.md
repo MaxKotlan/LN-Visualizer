@@ -68,15 +68,23 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
     	LND_MACAROON: 'your base64 readonly macaroon'
     	LND_SOCKET: 'ip address and port eg. umbrel.local:10009 or 127.0.0.1:10009'
     ```
-    alternatively, you can pass in the file location to your macaroon and cert directly
+    alternatively, you can pass in the file location to your macaroon and cert directly.
     ```
      ...
      stop_grace_period: 1m
      environment:
-    	LND_CERT_FILE: 'path to lnd.cert eg. ~/umbrel/lnd/tls.cert'
-    	LND_MACAROON_FILE: 'path to lnd.cert eg. ~/umbrel/lnd/data/chain/bitcoin/mainnet/readonly.macaroon'
+    	LND_CERT_FILE: 'path to lnd.cert eg. /lnd/tls.cert'
+    	LND_MACAROON_FILE: 'path to lnd.cert eg. /lnd/data/chain/bitcoin/mainnet/readonly.macaroon'
     	LND_SOCKET: umbrel.local:10009
     ```
+    If you want to reference the file directly, you need to also mount a volume to the lnd folder to pass the files into the docker container.
+    You can do this by adding this section to the `docker-compose.yml` file. The left side of the colon is the path on the host machine, the right side is the path in     the docker container. Make sure the environment var paths from the line above are from the perspective of the docker container.
+    ```
+    volumes:
+      '/home/umbrel/umbrel/lnd:/lnd:ro'
+    ```
+    
+    
 5.  start the application running the following command
     ```
     docker-compose up -d
