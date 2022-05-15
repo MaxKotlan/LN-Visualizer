@@ -17,49 +17,43 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
     ```
 3.  Update the version tag for both the api and the web
 
-        If you are running this on an arm platform, such as a raspberry pi, using the `:latest` tag is not supported.
-        You must specify a version directly eg..
+     ```
+     ...
+     lnvisweb:
+       image: maxkotlan/ln-visualizer-web:latest
+       restart: on-failure
+     ...
+     ```
 
-        change the web version from:
+    to
 
-           ```
-            ...
-            lnvisweb:
-              image: maxkotlan/ln-visualizer-web:latest
-              restart: on-failure
-            ...
-        ```
+     ```
+     ...
+     lnvisapi:
+       image: maxkotlan/ln-visualizer-web:v0.0.17
+       restart: on-failure
+     ...
+     ```
 
-        to
+     and change the api image tag from
 
-        ```
-            ...
-            lnvisapi:
-              image: maxkotlan/ln-visualizer-web:v0.0.17
-              restart: on-failure
-            ...
-        ```
+       ```
+      ...
+      lnvisapi:
+        image: maxkotlan/ln-visualizer-api:latest
+        restart: on-failure
+      ...
+       ```
 
-        and change the api image tag from
-
-        ```
-            ...
-            lnvisapi:
-              image: maxkotlan/ln-visualizer-api:latest
-              restart: on-failure
-            ...
-        ```
-
-        to
-
-        ```
-            ...
-            lnvisapi:
-              image: maxkotlan/ln-visualizer-api:v0.0.17
-              restart: on-failure
-            ...
-        ```
-    You can find the latest version by looking at this side pannel
+       to
+    ```
+    ...
+    lnvisapi:
+      image: maxkotlan/ln-visualizer-api:v0.0.17
+      restart: on-failure
+      ...
+    ```
+    You can find the latest version by looking at this side panel
 
     ![image](https://user-images.githubusercontent.com/7473983/168476937-2274378e-6d0f-4968-b1df-14706f801dbf.png)
 
