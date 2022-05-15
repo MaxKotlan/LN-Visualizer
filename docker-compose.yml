@@ -19,5 +19,4 @@ services:
             LND_SOCKET: 10.21.21.9:10009
 networks:
    default:
-      external:
-         name: 'umbrel_main_network'
+      name: 'umbrel_main_network'
