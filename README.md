@@ -29,7 +29,7 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
 
      ```
      ...
-     lnvisapi:
+     lnvisweb:
        image: maxkotlan/ln-visualizer-web:v0.0.17
        restart: on-failure
      ...
