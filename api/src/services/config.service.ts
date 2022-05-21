@@ -9,8 +9,14 @@ export interface LndConfig {
     macaroon_file: string | undefined;
 }
 
+export interface PodStatusServer {
+    enabled: boolean;
+    port: number;
+}
+
 export interface Config {
     lndConfig: LndConfig;
+    podStatusServer: PodStatusServer;
     positionAlgorithm: string;
     gradientDescentSettings: GradientDescentSettings;
     resyncTimer: string;
@@ -29,6 +35,10 @@ const initConfig: Config = {
         cert_file: undefined,
         macaroon_file: undefined,
     },
+    podStatusServer: {
+        enabled: true,
+        port: 3000,
+    } as PodStatusServer,
     positionAlgorithm: 'gradient-descent',
     gradientDescentSettings: {
         iterations: 50,
@@ -72,6 +82,7 @@ export class ConfigService {
             if (value instanceof Object) {
                 this.overrideConfigVariables(inMemory[key], file[key]);
             } else {
+                if (!file) return;
                 const configValue = file[key];
                 if (configValue) inMemory[key] = file[key];
             }

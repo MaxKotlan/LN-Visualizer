@@ -5,6 +5,7 @@ import { fromEvent } from 'rxjs';
 import { Worker } from 'worker_threads';
 import { ConfigService } from './config.service';
 import { GraphRegistryService } from './graph-registry.service';
+import { HealthCheckServerService } from './health-check-server';
 import { LndAuthService } from './lnd-auth-service';
 import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 import { ServerStatusService } from './server-status.service';
@@ -17,6 +18,7 @@ export class LndGraphManagerService {
         private graphRegistryService: GraphRegistryService,
         private serverStatusService: ServerStatusService,
         private configService: ConfigService,
+        private healthCheckServerService: HealthCheckServerService,
     ) {}
 
     public async init() {
