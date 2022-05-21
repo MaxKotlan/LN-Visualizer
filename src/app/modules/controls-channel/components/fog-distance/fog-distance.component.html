@@ -1,0 +1,10 @@
+<mat-slider
+    [ngModel]="selectFogDistance$ | async"
+    (change)="setFogDistance($event)"
+    #fogDistance
+    min="0"
+    max="11"
+    step="0.1"
+    value="1"
+></mat-slider>
+{{ fogDistance.value }}

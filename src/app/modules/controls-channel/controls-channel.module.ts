@@ -7,9 +7,11 @@ import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducers';
 import { ChannelColorDropdownComponent } from './components/channel-color-dropdown/channel-color-dropdown.component';
 import { ChannelColorMapDropdownComponent } from './components/channel-color-map-dropdown/channel-color-map-dropdown.component';
+import { EnableChannelFogComponent } from './components/enable-channel-fog/enable-channel-fog.component';
+import { FogDistanceComponent } from './components/fog-distance/fog-distance.component';
 
 @NgModule({
-    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent],
+    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent, EnableChannelFogComponent, FogDistanceComponent],
     imports: [
         CommonModule,
         MaterialModule,
