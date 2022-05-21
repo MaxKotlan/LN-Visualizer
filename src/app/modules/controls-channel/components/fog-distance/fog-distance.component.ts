@@ -3,7 +3,7 @@ import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { GenericControlsState } from 'src/app/modules/controls/reducers';
 import { setFogDistance } from '../../actions';
-import { selectFogDistance } from '../../selectors';
+import { selectEnableChannelFog, selectFogDistance } from '../../selectors';
 
 @Component({
     selector: 'app-fog-distance',
@@ -13,6 +13,7 @@ import { selectFogDistance } from '../../selectors';
 export class FogDistanceComponent {
     constructor(private store: Store<GenericControlsState>) {}
 
+    public selectEnabledFog$ = this.store.select(selectEnableChannelFog);
     public selectFogDistance$ = this.store.select(selectFogDistance);
 
     setFogDistance(event: MatSliderChange) {

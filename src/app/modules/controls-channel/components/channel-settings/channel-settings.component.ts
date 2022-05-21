@@ -13,6 +13,7 @@ import {
     selectEdgeDepthTest,
     selectEdgeDottedLine,
     selectUseLogColorScale,
+    selectEnableChannelFog,
 } from '../../selectors';
 
 @Component({
@@ -27,6 +28,7 @@ export class ChannelSettingsComponent {
     public selectEdgeDepthTest$ = this.store.select(selectEdgeDepthTest);
     public selectEdgeDottedLine$ = this.store.select(selectEdgeDottedLine);
     public selectUseLogColorScale$ = this.store.select(selectUseLogColorScale);
+    public selectEnabledFog$ = this.store.select(selectEnableChannelFog);
 
     setShouldRenderEdges(event: MatCheckboxChange) {
         this.store.dispatch(renderEdges({ value: event.checked }));
