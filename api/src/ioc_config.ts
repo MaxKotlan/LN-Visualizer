@@ -12,6 +12,7 @@ import { ChannelUpdatedService } from './services/channel-updated.service';
 import { GraphRegistryService } from './services/graph-registry.service';
 import { ConfigService } from './services/config.service';
 import { ServerStatusService } from './services/server-status.service';
+import { HealthCheckServerService } from './services/health-check-server';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -25,4 +26,5 @@ container.bind<ChannelUpdatedService>(ChannelUpdatedService).toSelf().inSingleto
 container.bind<GraphRegistryService>(GraphRegistryService).toSelf().inSingletonScope();
 container.bind<ConfigService>(ConfigService).toSelf().inSingletonScope();
 container.bind<ServerStatusService>(ServerStatusService).toSelf().inSingletonScope();
+container.bind<HealthCheckServerService>(HealthCheckServerService).toSelf().inSingletonScope();
 export default container;
