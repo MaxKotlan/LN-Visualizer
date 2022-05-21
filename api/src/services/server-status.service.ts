@@ -22,7 +22,7 @@ export class ServerStatusService {
 
     public readyToDownload() {
         this.statusSubject.next('ready to download');
-        // this.healthCheckServerService.isReady();
+        this.healthCheckServerService.isReady();
     }
 
     public sendStatus(ws: WebSocket, status: ServerStatus) {
