@@ -46,3 +46,13 @@ export const selectUseLogColorScale = createSelector(
     channelControlsSelector,
     (state) => state.useLogColorScale,
 );
+
+export const selectFogDistance = createSelector(
+    channelControlsSelector,
+    (state) => state.fogDistance,
+);
+
+export const selectEnableChannelFog = createSelector(
+    channelControlsSelector,
+    (state) => state.enableChannelFog,
+);

@@ -5,7 +5,7 @@ export const ChannelShader = {
         sinTime: { value: 0.0 },
         cosTime: { value: 0.0 },
         motionIntensity: { value: 0.0 },
-        fogDistance: { value: 10.0 },
+        fogDistance: { value: 1.0 },
         fogEnabled: { value: true },
     },
     vertexShader: /*glsl*/ `
@@ -20,11 +20,6 @@ export const ChannelShader = {
     varying vec3 vColor;
     varying float cameraDistance;
 
-    // float rand(vec2 st) {
-    //     return fract(sin(dot(st.xy,
-    //                          vec2(12.9898,78.233)))*
-    //         43758.5453123);
-    // }
 
     float dline( vec2 p, vec2 a, vec2 b ) {
         
