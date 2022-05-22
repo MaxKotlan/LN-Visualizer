@@ -39,12 +39,12 @@ export class ChannelMeshEffects {
                 this.actions$.pipe(ofType(setFilteredNodeChannels)),
                 this.actions$.pipe(ofType(setFilteredNodes)),
             ]).pipe(
-                // sampleTime(this.throttleTimeMs),
+                sampleTime(this.throttleTimeMs),
                 map(([filters, ,]) => {
                     if (!this.channelBufferService.vertex || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
-                    this.filteredStatisticsCaluclator.resetFilterStatistics();
+                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.filteredChannelRegistryService.forEach((channel) => {
                         if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
                             const node1 = this.filteredNodeRegistry.get(
@@ -68,11 +68,11 @@ export class ChannelMeshEffects {
                                     node2.position.z * meshScale;
                                 i++;
 
-                                this.filteredStatisticsCaluclator.checkChannel(channel);
+                                // this.filteredStatisticsCaluclator.checkChannel(channel);
                             }
                         }
                     });
-                    this.filteredStatisticsCaluclator.updateStore();
+                    // this.filteredStatisticsCaluclator.updateStore();
                     this.channelBufferService.vertex.onUpdate.next(i * 2);
                 }),
             ),
@@ -89,7 +89,7 @@ export class ChannelMeshEffects {
                 this.store$.select(channelColorMap),
                 this.store$.select(selectUseLogColorScale),
             ]).pipe(
-                // sampleTime(this.throttleTimeMs),
+                sampleTime(this.throttleTimeMs),
                 map(([filters, ,]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
