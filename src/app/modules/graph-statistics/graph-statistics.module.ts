@@ -6,8 +6,8 @@ import { MinMaxCalculatorService } from './services';
 @NgModule({
     providers: [MinMaxCalculatorService],
     imports: [
-        StoreModule.forFeature('globalStatisticsState', globalStatisticsReducer.reducer),
-        StoreModule.forFeature('filteredStatisticsState', filteredStatisticsReducer.reducer),
+        StoreModule.forFeature('globalStatistics', globalStatisticsReducer.reducer),
+        StoreModule.forFeature('filteredStatistics', filteredStatisticsReducer.reducer),
     ],
 })
 export class GraphStatisticsModule {}

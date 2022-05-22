@@ -3,7 +3,7 @@ import { selectChannelCount } from '../../graph-renderer/selectors/graph.selecto
 import { GraphStatisticsState } from '../models';
 
 export const graphStatisticsSelector =
-    createFeatureSelector<GraphStatisticsState>('globalStatisticsState');
+    createFeatureSelector<GraphStatisticsState>('globalStatistics');
 
 export const selectChannelMinMaxTotal = createSelector(
     graphStatisticsSelector,

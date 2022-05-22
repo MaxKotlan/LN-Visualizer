@@ -1,1 +1,1 @@
-export * from './graph-statistics.actions';
+export * from './global-statistics.actions';
