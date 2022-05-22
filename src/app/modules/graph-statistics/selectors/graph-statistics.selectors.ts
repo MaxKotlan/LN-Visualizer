@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { GraphStatisticsState } from '../reducer/graph-statistics.reducer';
 import { selectChannelCount } from '../../graph-renderer/selectors/graph.selectors';
+import { GraphStatisticsState } from '../models';
 
 export const graphStatisticsSelector =
     createFeatureSelector<GraphStatisticsState>('graphStatisticsState');

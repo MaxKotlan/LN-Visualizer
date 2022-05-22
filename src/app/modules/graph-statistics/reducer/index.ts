@@ -1,1 +1,1 @@
-export * as graphStatisticsReducer from './graph-statistics.reducer';
+export * as graphStatisticsReducer from './global-statistics.reducer';

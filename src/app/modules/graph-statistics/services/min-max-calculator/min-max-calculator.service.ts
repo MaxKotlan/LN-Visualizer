@@ -4,7 +4,7 @@ import { LndChannel } from 'api/src/models';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as graphStatisticActions from '../../actions/graph-statistics.actions';
-import { GraphStatisticsState } from '../../reducer/graph-statistics.reducer';
+import { GraphStatisticsState } from '../../models';
 import { graphStatisticsSelector } from '../../selectors';
 import { updateCurrentMinMaxTotalStats } from '../../utils';
 
@@ -55,7 +55,7 @@ export class MinMaxCalculatorService {
     public updateStore() {
         this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
             this.store$.dispatch(
-                graphStatisticActions.updateMinMaxStatistic({
+                graphStatisticActions.updateGlobalMinMaxStatistic({
                     property,
                     newStatState: this.currentStatisticsState[property],
                 }),
