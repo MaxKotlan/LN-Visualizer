@@ -26,7 +26,7 @@ export class NodeEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private globalStatisticsCaluclator: GlobalStatisticsCalculatorService,
-        private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
+        // private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
@@ -73,14 +73,14 @@ export class NodeEffects {
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
-                    this.filteredStatisticsCaluclator.resetFilterStatistics();
+                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
-                            this.filteredStatisticsCaluclator.checkNode(node);
+                            // this.filteredStatisticsCaluclator.checkNode(node);
                         }
                     });
-                    this.filteredStatisticsCaluclator.updateStore();
+                    // this.filteredStatisticsCaluclator.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
@@ -94,6 +94,7 @@ export class NodeEffects {
                 ofType(graphActions.setFilteredNodes),
                 map(() => {
                     this.filteredChannelRegistryService.clear();
+                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.filteredNodeRegistryService.forEach((node) => {
                         node.connected_channels.forEach((channel) => {
                             this.filteredChannelRegistryService.set(
@@ -101,8 +102,10 @@ export class NodeEffects {
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
                             );
+                            // this.filteredStatisticsCaluclator.checkChannel(channel);
                         });
                     });
+                    // this.filteredStatisticsCaluclator.updateStore();
                     return graphActions.setFilteredNodeChannels();
                 }),
             ),
