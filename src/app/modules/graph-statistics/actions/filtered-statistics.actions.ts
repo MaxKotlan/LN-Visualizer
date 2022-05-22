@@ -6,3 +6,7 @@ export const updateFilteredMinMaxStatistic = createAction(
     '[statistics] updateFilteredMinMaxStatistic',
     props<{ property: keyof GraphStatisticsState; newStatState: MinMaxTotal | MinMax }>(),
 );
+
+export const clearFilteredMinMaxStatistic = createAction(
+    '[statistics] clearFilteredMinMaxStatistic',
+);

@@ -73,10 +73,14 @@ export class NodeEffects {
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
+                    this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.nodeRegistry.forEach((node) => {
-                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
+                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
+                            this.filteredStatisticsCaluclator.checkNode(node);
+                        }
                     });
+                    this.filteredStatisticsCaluclator.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
@@ -105,19 +109,19 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    computeFilteredStatistics$ = createEffect(
-        () =>
-            this.actions$.pipe(
-                ofType(graphActions.setFilteredNodeChannels),
-                map(() => {
-                    this.filteredNodeRegistryService.forEach((node) => {
-                        this.filteredStatisticsCaluclator.checkNode(node);
-                    });
-                    this.filteredStatisticsCaluclator.updateStore();
-                }),
-            ),
-        { dispatch: false },
-    );
+    // computeFilteredStatistics$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.setFilteredNodeChannels),
+    //             map(() => {
+    //                 this.filteredNodeRegistryService.forEach((node) => {
+    //                     this.filteredStatisticsCaluclator.checkNode(node);
+    //                 });
+    //                 this.filteredStatisticsCaluclator.updateStore();
+    //             }),
+    //         ),
+    //     { dispatch: false },
+    // );
 
     positionNodes$ = createEffect(
         () =>

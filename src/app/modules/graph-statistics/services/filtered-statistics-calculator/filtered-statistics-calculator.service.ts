@@ -62,4 +62,8 @@ export class FilteredStatisticsCalculatorService {
             );
         });
     }
+
+    public resetFilterStatistics() {
+        this.store$.dispatch(filteredStatisticActions.clearFilteredMinMaxStatistic());
+    }
 }
