@@ -15,7 +15,7 @@ import { ChannelColorService, FilteredChannelRegistryService } from '../services
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-import { FilteredStatisticsCalculatorService } from '../../graph-statistics/services';
+// import { FilteredStatisticsCalculatorService } from '../../graph-statistics/services';
 
 @Injectable()
 export class ChannelMeshEffects {
@@ -26,8 +26,7 @@ export class ChannelMeshEffects {
         private filterEvaluationService: FilterEvaluatorService,
         private channelBufferService: ChannelBuffersService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
-        private filteredNodeRegistry: FilteredNodeRegistryService,
-        private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
+        private filteredNodeRegistry: FilteredNodeRegistryService, // private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
     ) {}
 
     readonly throttleTimeMs: number = 500;
