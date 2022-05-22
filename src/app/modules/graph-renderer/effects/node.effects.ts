@@ -12,10 +12,10 @@ import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import _ from 'lodash';
 import { PointTreeService } from '../services/point-tree/point-tree.service';
+import { MinMaxCalculatorService } from '../../graph-statistics/services';
 
 @Injectable()
 export class NodeEffects {

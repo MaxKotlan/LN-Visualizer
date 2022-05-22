@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
+import { MinMaxCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
-import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 
 @Injectable()

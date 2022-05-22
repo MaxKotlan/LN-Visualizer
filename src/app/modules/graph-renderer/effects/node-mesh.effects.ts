@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { sampleTime, map, combineLatest } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
+import { selectMinMax } from '../../graph-statistics/selectors';
 import { setFilteredNodes } from '../actions';
 import { GraphState } from '../reducer';
-import { selectMinMax } from '../selectors';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { NodeBuffersService } from '../services/node-buffers/node-buffers.service';
 

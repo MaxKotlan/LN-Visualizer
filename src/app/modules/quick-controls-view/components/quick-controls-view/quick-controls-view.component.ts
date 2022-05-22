@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { setModalClose } from 'src/app/modules/window-manager/actions';
 import { quickControlsId } from 'src/app/modules/window-manager/constants/windowIds';
 import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
-import * as graphStatisticsSelector from '../../../graph-renderer/selectors';
+import * as graphStatisticsSelector from '../../../graph-statistics/selectors';
 
 @UntilDestroy()
 @Component({

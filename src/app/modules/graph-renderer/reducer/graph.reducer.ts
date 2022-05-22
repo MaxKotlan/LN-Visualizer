@@ -12,7 +12,6 @@ export interface GraphState {
     nodeVertexBufferSize: number;
     nodeColorBufferSize: number;
     nodeCapacityBufferSize: number;
-
     channelVertexBufferSize: number;
     channelColorBufferSize: number;
 
