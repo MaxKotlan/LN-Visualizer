@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
-import { MinMaxCalculatorService } from '../../graph-statistics/services';
+import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
@@ -10,7 +10,7 @@ import { NodeRegistryService } from '../services/node-registry/node-registry.ser
 export class ChannelEffects {
     constructor(
         private actions$: Actions,
-        private minMaxCaluclator: MinMaxCalculatorService,
+        private globalStatisticsCalculator: GlobalStatisticsCalculatorService,
         private nodeRegistry: NodeRegistryService,
         private channelRegistry: ChannelRegistryService,
     ) {}
@@ -21,10 +21,10 @@ export class ChannelEffects {
                 ofType(graphActions.processGraphChannelChunk),
                 map((action) => {
                     action.chunk.data.forEach((channel) => {
-                        this.minMaxCaluclator.checkChannel(channel);
+                        this.globalStatisticsCalculator.checkChannel(channel);
                         this.channelRegistry.set(channel.id, channel);
                     });
-                    this.minMaxCaluclator.updateStore();
+                    this.globalStatisticsCalculator.updateStore();
                     return graphActions.cacheProcessedChannelChunk();
                 }),
             ),

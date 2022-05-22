@@ -11,7 +11,7 @@ import { updateCurrentMinMaxTotalStats } from '../../utils';
 @Injectable({
     providedIn: 'root',
 })
-export class MinMaxCalculatorService {
+export class GlobalStatisticsCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
         this.store$.select(graphStatisticsSelector).subscribe((currentState) => {
             this.currentStatisticsState = currentState;

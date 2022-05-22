@@ -15,14 +15,14 @@ import { FilteredNodeRegistryService } from '../services/filtered-node-registry/
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import _ from 'lodash';
 import { PointTreeService } from '../services/point-tree/point-tree.service';
-import { MinMaxCalculatorService } from '../../graph-statistics/services';
+import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 
 @Injectable()
 export class NodeEffects {
     constructor(
         private actions$: Actions,
         private store$: Store<GraphState>,
-        private minMaxCaluclator: MinMaxCalculatorService,
+        private globalStatisticsCaluclator: GlobalStatisticsCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
@@ -50,9 +50,9 @@ export class NodeEffects {
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
                 map(() => {
                     this.nodeRegistry.forEach((node) => {
-                        this.minMaxCaluclator.checkNode(node);
+                        this.globalStatisticsCaluclator.checkNode(node);
                     });
-                    this.minMaxCaluclator.updateStore();
+                    this.globalStatisticsCaluclator.updateStore();
                     return graphActions.computeNodeStatistics();
                 }),
             ),

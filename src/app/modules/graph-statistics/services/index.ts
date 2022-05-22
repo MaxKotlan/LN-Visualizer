@@ -1,1 +1,1 @@
-export * from './min-max-calculator';
+export * from './global-statistics-calculator';
