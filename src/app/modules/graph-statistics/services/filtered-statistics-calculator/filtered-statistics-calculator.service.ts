@@ -3,9 +3,9 @@ import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import * as globalStatisticActions from '../../actions/global-statistics.actions';
+import * as filteredStatisticActions from '../../actions/filtered-statistics.actions';
 import { GraphStatisticsState } from '../../models';
-import { graphStatisticsSelector } from '../../selectors';
+import { filteredStatisticsSelector } from '../../selectors';
 import { updateCurrentMinMaxTotalStats } from '../../utils';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { updateCurrentMinMaxTotalStats } from '../../utils';
 })
 export class FilteredStatisticsCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
-        this.store$.select(graphStatisticsSelector).subscribe((currentState) => {
+        this.store$.select(filteredStatisticsSelector).subscribe((currentState) => {
             this.currentStatisticsState = currentState;
             this.keysToCheck = Object.keys(this.currentStatisticsState);
         });
@@ -55,7 +55,7 @@ export class FilteredStatisticsCalculatorService {
     public updateStore() {
         this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
             this.store$.dispatch(
-                globalStatisticActions.updateGlobalMinMaxStatistic({
+                filteredStatisticActions.updateFilteredMinMaxStatistic({
                     property,
                     newStatState: this.currentStatisticsState[property],
                 }),

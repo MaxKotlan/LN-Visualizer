@@ -15,7 +15,7 @@ import * as graphStatisticsSelector from '../../../graph-statistics/selectors';
 export class QuickControlsViewComponent {
     constructor(private store$: Store<WindowManagerState>) {
         this.store$
-            .select(graphStatisticsSelector.graphStatisticsSelector)
+            .select(graphStatisticsSelector.globalStatisticsSelector)
             .pipe(untilDestroyed(this))
             .subscribe((newStatsState) => {
                 this.statsKeys = Object.keys(newStatsState).filter(

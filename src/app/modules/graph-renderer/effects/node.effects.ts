@@ -15,7 +15,10 @@ import { FilteredNodeRegistryService } from '../services/filtered-node-registry/
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import _ from 'lodash';
 import { PointTreeService } from '../services/point-tree/point-tree.service';
-import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
+import {
+    FilteredStatisticsCalculatorService,
+    GlobalStatisticsCalculatorService,
+} from '../../graph-statistics/services';
 
 @Injectable()
 export class NodeEffects {
@@ -23,6 +26,7 @@ export class NodeEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private globalStatisticsCaluclator: GlobalStatisticsCalculatorService,
+        private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
@@ -44,7 +48,7 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    computeStatistics$ = createEffect(
+    computeGlobalStatistics$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
@@ -99,6 +103,20 @@ export class NodeEffects {
                 }),
             ),
         { dispatch: true },
+    );
+
+    computeFilteredStatistics$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.setFilteredNodeChannels),
+                map(() => {
+                    this.filteredNodeRegistryService.forEach((node) => {
+                        this.filteredStatisticsCaluclator.checkNode(node);
+                    });
+                    this.filteredStatisticsCaluclator.updateStore();
+                }),
+            ),
+        { dispatch: false },
     );
 
     positionNodes$ = createEffect(

@@ -5,7 +5,7 @@ import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as globalStatisticActions from '../../actions/global-statistics.actions';
 import { GraphStatisticsState } from '../../models';
-import { graphStatisticsSelector } from '../../selectors';
+import { globalStatisticsSelector } from '../../selectors';
 import { updateCurrentMinMaxTotalStats } from '../../utils';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { updateCurrentMinMaxTotalStats } from '../../utils';
 })
 export class GlobalStatisticsCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
-        this.store$.select(graphStatisticsSelector).subscribe((currentState) => {
+        this.store$.select(globalStatisticsSelector).subscribe((currentState) => {
             this.currentStatisticsState = currentState;
             this.keysToCheck = Object.keys(this.currentStatisticsState);
         });
