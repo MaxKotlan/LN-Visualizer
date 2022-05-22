@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { filteredStatisticsReducer, globalStatisticsReducer } from './reducer';
-import { GlobalStatisticsCalculatorService } from './services';
+import { FilteredStatisticsCalculatorService, GlobalStatisticsCalculatorService } from './services';
 
 @NgModule({
-    providers: [GlobalStatisticsCalculatorService],
+    providers: [GlobalStatisticsCalculatorService, FilteredStatisticsCalculatorService],
     imports: [
         StoreModule.forFeature('globalStatistics', globalStatisticsReducer.reducer),
         StoreModule.forFeature('filteredStatistics', filteredStatisticsReducer.reducer),
