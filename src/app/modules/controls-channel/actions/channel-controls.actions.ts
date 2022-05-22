@@ -28,3 +28,10 @@ export const useLogColorScale = createAction(
     '[controls] useLogColorScale',
     props<{ value: boolean }>(),
 );
+
+export const enableChannelFog = createAction(
+    '[controls] enableChannelFog',
+    props<{ value: boolean }>(),
+);
+
+export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());

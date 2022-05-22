@@ -12,17 +12,21 @@ import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-import { MinMaxCalculatorService } from '../services/min-max-calculator/min-max-calculator.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
 import _ from 'lodash';
 import { PointTreeService } from '../services/point-tree/point-tree.service';
+import {
+    FilteredStatisticsCalculatorService,
+    GlobalStatisticsCalculatorService,
+} from '../../graph-statistics/services';
 
 @Injectable()
 export class NodeEffects {
     constructor(
         private actions$: Actions,
         private store$: Store<GraphState>,
-        private minMaxCaluclator: MinMaxCalculatorService,
+        private globalStatisticsCaluclator: GlobalStatisticsCalculatorService,
+        // private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
@@ -44,15 +48,15 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    computeStatistics$ = createEffect(
+    computeGlobalStatistics$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
                 map(() => {
                     this.nodeRegistry.forEach((node) => {
-                        this.minMaxCaluclator.checkNode(node);
+                        this.globalStatisticsCaluclator.checkNode(node);
                     });
-                    this.minMaxCaluclator.updateStore();
+                    this.globalStatisticsCaluclator.updateStore();
                     return graphActions.computeNodeStatistics();
                 }),
             ),
@@ -69,10 +73,14 @@ export class NodeEffects {
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
+                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.nodeRegistry.forEach((node) => {
-                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters))
+                        if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
+                            // this.filteredStatisticsCaluclator.checkNode(node);
+                        }
                     });
+                    // this.filteredStatisticsCaluclator.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
@@ -86,6 +94,7 @@ export class NodeEffects {
                 ofType(graphActions.setFilteredNodes),
                 map(() => {
                     this.filteredChannelRegistryService.clear();
+                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.filteredNodeRegistryService.forEach((node) => {
                         node.connected_channels.forEach((channel) => {
                             this.filteredChannelRegistryService.set(
@@ -93,13 +102,29 @@ export class NodeEffects {
                                     .id as unknown as string,
                                 channel as unknown as LndChannel,
                             );
+                            // this.filteredStatisticsCaluclator.checkChannel(channel);
                         });
                     });
+                    // this.filteredStatisticsCaluclator.updateStore();
                     return graphActions.setFilteredNodeChannels();
                 }),
             ),
         { dispatch: true },
     );
+
+    // computeFilteredStatistics$ = createEffect(
+    //     () =>
+    //         this.actions$.pipe(
+    //             ofType(graphActions.setFilteredNodeChannels),
+    //             map(() => {
+    //                 this.filteredNodeRegistryService.forEach((node) => {
+    //                     this.filteredStatisticsCaluclator.checkNode(node);
+    //                 });
+    //                 this.filteredStatisticsCaluclator.updateStore();
+    //             }),
+    //         ),
+    //     { dispatch: false },
+    // );
 
     positionNodes$ = createEffect(
         () =>

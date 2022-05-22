@@ -3,7 +3,11 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
 import { Uniform } from 'three';
-import { selectEdgeDepthTest } from '../../controls-channel/selectors';
+import {
+    selectEdgeDepthTest,
+    selectEnableChannelFog,
+    selectFogDistance,
+} from '../../controls-channel/selectors';
 import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
@@ -55,6 +59,14 @@ export class ChannelMaterial extends THREE.ShaderMaterial {
 
         this.store$.select(selectEdgeDepthTest).subscribe((depthTest) => {
             this.depthTest = depthTest;
+        });
+
+        this.store$.select(selectEnableChannelFog).subscribe((enableChannelFog) => {
+            this.uniforms['fogEnabled'] = { value: enableChannelFog };
+        });
+
+        this.store$.select(selectFogDistance).subscribe((fogDistance) => {
+            this.uniforms['fogDistance'] = { value: fogDistance };
         });
     }
 }

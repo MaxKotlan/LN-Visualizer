@@ -19,7 +19,7 @@ import { ChannelMeshEffects } from './effects/channel-mesh.effects';
 import { GraphDatabaseEffects } from './effects/graph-database.effects';
 import { NodeMeshEffects } from './effects/node-mesh.effects';
 import { NodeSearchEffects } from './effects/node-search.effects';
-import { graphStatisticsReducer, nodeStatisticsReducer, reducer } from './reducer';
+import { reducer } from './reducer';
 import {
     CameraControllerService,
     ChannelColorService,
@@ -28,6 +28,7 @@ import {
 } from './services';
 import { ChannelBuffersService } from './services/channel-buffers/channel-buffers.service';
 import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
+import { GraphStatisticsModule } from '../graph-statistics';
 
 @NgModule({
     declarations: [
@@ -52,6 +53,7 @@ import { NodeBuffersService } from './services/node-buffers/node-buffers.service
         GraphNetworkingModule,
         NodeMeshModule,
         ChannelMeshModule,
+        GraphStatisticsModule,
         EffectsModule.forFeature([
             NodeEffects,
             ChannelEffects,
@@ -61,8 +63,6 @@ import { NodeBuffersService } from './services/node-buffers/node-buffers.service
             GraphDatabaseEffects,
         ]),
         StoreModule.forFeature('graphState', reducer),
-        StoreModule.forFeature('graphStatisticsState', graphStatisticsReducer.reducer),
-        StoreModule.forFeature('nodeStatisticsState', nodeStatisticsReducer.reducer),
     ],
     exports: [GraphSceneComponent],
 })

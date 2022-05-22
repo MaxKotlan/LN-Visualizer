@@ -1,17 +1,20 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { GraphStatisticsState } from '../reducer/graph-statistics.reducer';
-import { selectChannelCount } from './graph.selectors';
+import { selectChannelCount } from '../../graph-renderer/selectors/graph.selectors';
+import { GraphStatisticsState } from '../models';
 
-export const graphStatisticsSelector =
-    createFeatureSelector<GraphStatisticsState>('graphStatisticsState');
+export const globalStatisticsSelector =
+    createFeatureSelector<GraphStatisticsState>('globalStatistics');
+
+export const filteredStatisticsSelector =
+    createFeatureSelector<GraphStatisticsState>('filteredStatistics');
 
 export const selectChannelMinMaxTotal = createSelector(
-    graphStatisticsSelector,
+    globalStatisticsSelector,
     (state) => state.capacity,
 );
 
 export const selectChannelFeesMinMaxTotal = createSelector(
-    graphStatisticsSelector,
+    globalStatisticsSelector,
     (state) => state.fee_rate,
 );
 
@@ -37,9 +40,9 @@ export const selectAverageCapacity = createSelector(
 );
 
 export const selectMinMax = (property: keyof GraphStatisticsState) =>
-    createSelector(graphStatisticsSelector, (graphState) => graphState[property]);
+    createSelector(globalStatisticsSelector, (graphState) => graphState[property]);
 
-export const statsLabels = createSelector(graphStatisticsSelector, (state) =>
+export const statsLabels = createSelector(globalStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>
         Object.keys(state[key]).map(
             (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,

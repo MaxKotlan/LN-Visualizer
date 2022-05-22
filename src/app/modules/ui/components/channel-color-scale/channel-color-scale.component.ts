@@ -9,7 +9,7 @@ import {
 import {
     selectMaximumChannelCapacity,
     selectMinimumChannelCapacity,
-} from 'src/app/modules/graph-renderer/selectors';
+} from 'src/app/modules/graph-statistics/selectors';
 
 @Component({
     selector: 'app-channel-color-scale',

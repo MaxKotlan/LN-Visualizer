@@ -3,17 +3,17 @@ import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import * as graphStatisticActions from '../../actions/graph-statistics.actions';
-import { GraphStatisticsState } from '../../reducer/graph-statistics.reducer';
-import { graphStatisticsSelector } from '../../selectors';
+import * as filteredStatisticActions from '../../actions/filtered-statistics.actions';
+import { GraphStatisticsState } from '../../models';
+import { filteredStatisticsSelector } from '../../selectors';
 import { updateCurrentMinMaxTotalStats } from '../../utils';
 
 @Injectable({
     providedIn: 'root',
 })
-export class MinMaxCalculatorService {
+export class FilteredStatisticsCalculatorService {
     constructor(private store$: Store<GraphStatisticsState>) {
-        this.store$.select(graphStatisticsSelector).subscribe((currentState) => {
+        this.store$.select(filteredStatisticsSelector).subscribe((currentState) => {
             this.currentStatisticsState = currentState;
             this.keysToCheck = Object.keys(this.currentStatisticsState);
         });
@@ -55,11 +55,15 @@ export class MinMaxCalculatorService {
     public updateStore() {
         this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
             this.store$.dispatch(
-                graphStatisticActions.updateMinMaxStatistic({
+                filteredStatisticActions.updateFilteredMinMaxStatistic({
                     property,
                     newStatState: this.currentStatisticsState[property],
                 }),
             );
         });
+    }
+
+    public resetFilterStatistics() {
+        this.store$.dispatch(filteredStatisticActions.clearFilteredMinMaxStatistic());
     }
 }

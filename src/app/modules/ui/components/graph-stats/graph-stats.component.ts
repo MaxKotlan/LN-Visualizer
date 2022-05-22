@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
-import * as graphSelectors from '../../../graph-renderer/selectors';
+import { Observable } from 'rxjs';
+import { selectChannelCount, selectNodeCount } from 'src/app/modules/graph-renderer/selectors';
+import * as graphSelectors from '../../../graph-statistics/selectors';
 
 @Component({
     selector: 'app-graph-stats',
@@ -25,6 +26,6 @@ export class GraphStatsComponent {
     );
 
     public statLabels$: Observable<string[]> = this.store.select(graphSelectors.statsLabels);
-    public nodeCount$: Observable<number> = this.store.select(graphSelectors.selectNodeCount);
-    public channelCount$: Observable<number> = this.store.select(graphSelectors.selectChannelCount);
+    public nodeCount$: Observable<number> = this.store.select(selectNodeCount);
+    public channelCount$: Observable<number> = this.store.select(selectChannelCount);
 }

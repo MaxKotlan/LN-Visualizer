@@ -122,11 +122,10 @@ export const NodeShader = {
 
         vColor = nodeColor;
 
-        float lnDist = 1.0;//sqrt(sin(dline( position, mouseRayOrigin, mouseRayDirection )));// );
+        float lnDist = 1.0;
         float invertedCap = (1.-averageCapacityRatio);
-        vec3 moveFactor = position;// motionOrigin;//vec3(position.x, position.y, position.z);
+        vec3 moveFactor = position;
         float dist = sqrt(distance(position, motionOrigin));
-        // float rnd = rand( vec2( position.x, position.z ) )-.5;
 
         float hoversize = 0.0;
 
@@ -136,8 +135,6 @@ export const NodeShader = {
         vec3 timeVec = vec3(sinTime, cosTime, cosTime );
 
         vec3 newPos = lnDist*dist*motionIntensity*timeVec/**invertedCap*/*moveFactor;
-        // float crazy = minDistanceToLine( newPos, mouseRayOrigin, mouseRayDirection );
-
         vec4 mvPosition = modelViewMatrix * vec4( position + newPos, 1.0 );
 
 

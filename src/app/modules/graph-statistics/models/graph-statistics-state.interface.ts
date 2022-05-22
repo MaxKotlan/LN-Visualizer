@@ -1,12 +1,9 @@
-import { createReducer, on } from '@ngrx/store';
 import {
     initMinMax,
     initMinMaxTotal,
     MinMax,
     MinMaxTotal,
 } from 'src/app/types/min-max-total.interface';
-
-import * as graphStatisticActions from '../actions/graph-statistics.actions';
 
 export interface GraphStatisticsState {
     channel_count: MinMax;
@@ -19,7 +16,7 @@ export interface GraphStatisticsState {
     min_htlc_mtokens: MinMax;
 }
 
-const initialState: GraphStatisticsState = {
+export const initialStatisticsState: GraphStatisticsState = {
     channel_count: initMinMax,
     node_capacity: initMinMax,
     capacity: initMinMaxTotal,
@@ -29,11 +26,3 @@ const initialState: GraphStatisticsState = {
     max_htlc_mtokens: initMinMax,
     min_htlc_mtokens: initMinMax,
 };
-
-export const reducer = createReducer(
-    initialState,
-    on(graphStatisticActions.updateMinMaxStatistic, (state, { property, newStatState }) => ({
-        ...state,
-        [property]: newStatState,
-    })),
-);
