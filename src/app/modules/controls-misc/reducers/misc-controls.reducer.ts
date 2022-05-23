@@ -4,10 +4,12 @@ import * as miscActions from '../actions';
 
 export interface MiscControlState {
     donateLinkVisible: boolean;
+    displayUnit: 'btc' | 'mbtc' | 'sat';
 }
 
 const initialState: MiscControlState = {
     donateLinkVisible: true,
+    displayUnit: 'sat',
 };
 
 export const reducer = createReducer(
