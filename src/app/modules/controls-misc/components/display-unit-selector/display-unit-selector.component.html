@@ -1,1 +1,6 @@
-<p>display-unit-selector works!</p>
+<mat-form-field appearance="fill">
+    <mat-label>Unit</mat-label>
+    <mat-select [value]="selectDisplayUnit$ | async" (valueChange)="setDisplayUnit($event)">
+        <mat-option *ngFor="let mode of displayUnits" [value]="mode">{{ mode }}</mat-option>
+    </mat-select>
+</mat-form-field>

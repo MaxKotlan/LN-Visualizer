@@ -17,13 +17,14 @@ export class UnitPipe implements PipeTransform {
 
     public unit: 'btc' | 'mbtc' | 'sat';
 
-    public readonly conversionFactor: {
-        btc: 0.00000001;
-        mbtc: 0.001;
-        sat: 1;
+    public readonly conversionFactor = {
+        btc: 0.00000001,
+        mbtc: 0.001,
+        sat: 1,
     };
 
     transform(value: number): number {
+        if (!this.unit) return value;
         return value * this.conversionFactor[this.unit];
     }
 }
