@@ -22,4 +22,8 @@ export const reducer = createReducer(
         ...state,
         donateLinkVisible: value,
     })),
+    on(miscActions.setDisplayUnit, (state, { value }) => ({
+        ...state,
+        displayUnit: value,
+    })),
 );
