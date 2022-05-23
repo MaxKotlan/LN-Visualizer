@@ -10,7 +10,6 @@ import { MaterialModule } from '../material';
 import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 import { ErrorComponent } from './components/error';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-import { UnitPipe } from './pipes/unit.pipe';
 
 @NgModule({
     declarations: [
@@ -21,7 +20,6 @@ import { UnitPipe } from './pipes/unit.pipe';
         TooltipComponent,
         GraphStatsComponent,
         LoadingSpinnerComponent,
-        UnitPipe,
     ],
     imports: [CommonModule, MaterialModule],
     exports: [

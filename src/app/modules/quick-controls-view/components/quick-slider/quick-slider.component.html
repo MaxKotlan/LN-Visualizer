@@ -3,7 +3,7 @@
         {{ label }}
     </p>
     <p style="margin-top: 10px; margin-bottom: 0px; font-size: 12px">
-        {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}
+        {{ logValue[0] | logToLinear | unit }}-{{ logValue[1] | logToLinear | unit }}
     </p>
 </div>
 <div style="display: flex; align-items: center; gap: 0.2rem">
