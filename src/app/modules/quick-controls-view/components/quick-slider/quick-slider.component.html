@@ -13,13 +13,13 @@
         "
     >
         <app-mini-input
-            [value]="inputConverterService.forwardConvert(logValue[0])"
-            (valueChanged$)="inputConverterService.backwardsConvert($event)"
+            [value]="currencyLogInputConverterService.forwardConvert(logValue[0])"
+            (valueChanged$)="currencyLogInputConverterService.backwardsConvert($event)"
         ></app-mini-input>
         -
         <app-mini-input
-            [value]="inputConverterService.forwardConvert(logValue[1])"
-            (valueChanged$)="inputConverterService.backwardsConvert($event)"
+            [value]="currencyLogInputConverterService.forwardConvert(logValue[1])"
+            (valueChanged$)="currencyLogInputConverterService.backwardsConvert($event)"
         ></app-mini-input>
 
         {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}

@@ -40,7 +40,7 @@ export class UnitConverterService {
 @Injectable({
     providedIn: 'root',
 })
-export class InputConverterService {
+export class CurrencyLogInputConverterService {
     constructor(private unitConverterService: UnitConverterService, private store$: Store<any>) {
         this.store$
             .select(displayUnit)
