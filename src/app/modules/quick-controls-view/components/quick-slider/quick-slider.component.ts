@@ -57,8 +57,8 @@ export class QuickSliderComponent implements AfterViewInit {
     public logStep: number;
     public logValue: number[];
 
-    public forwardConverterFunc: any = () => {};
-    public backwardsConverterFunc: any = () => {};
+    public forwardConverterFunc: any = this.numberLogInputConverterService.forwardConvert;
+    public backwardsConverterFunc: any = this.numberLogInputConverterService.backwardsConvert;
 
     @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
@@ -85,10 +85,6 @@ export class QuickSliderComponent implements AfterViewInit {
     public scriptName: string;
     public isEnabled: boolean;
     public isEnabled$: Observable<boolean>;
-
-    public onInputChange(newValue: number, index) {
-        this.logValue[index] = newValue;
-    }
 
     public onEnableChange() {
         if (!this.isEnabled) {

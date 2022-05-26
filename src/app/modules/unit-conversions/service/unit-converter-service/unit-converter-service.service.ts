@@ -3,6 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { displayUnit } from 'src/app/modules/controls-misc/selectors/misc-controls.selectors';
 
+/*This file is terrible. I'm sorry I just wanted it to work*/
+
 export type UnitLabel = 'log' | 'linear' | 'sat' | 'btc' | 'msat';
 
 export interface Unit {
@@ -43,12 +45,18 @@ export class UnitConverterService {
     };
 }
 
+export abstract class Converter {
+    public abstract forwardConvert(value: number): number;
+    public abstract backwardsConvert(value: number): number;
+}
+
 @UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
-export class SatLogInputConverterService {
+export class SatLogInputConverterService extends Converter {
     constructor(private unitConverterService: UnitConverterService, private store$: Store<any>) {
+        super();
         this.store$
             .select(displayUnit)
             .pipe(untilDestroyed(this))
@@ -80,8 +88,9 @@ export class SatLogInputConverterService {
 @Injectable({
     providedIn: 'root',
 })
-export class MilliSatLogInputConverterService {
+export class MilliSatLogInputConverterService extends Converter {
     constructor(private unitConverterService: UnitConverterService, private store$: Store<any>) {
+        super();
         this.store$
             .select(displayUnit)
             .pipe(untilDestroyed(this))
@@ -113,8 +122,10 @@ export class MilliSatLogInputConverterService {
 @Injectable({
     providedIn: 'root',
 })
-export class NumberLogInputConverterService {
-    constructor(private unitConverterService: UnitConverterService) {}
+export class NumberLogInputConverterService extends Converter {
+    constructor(private unitConverterService: UnitConverterService) {
+        super();
+    }
 
     public forwardConvert(value: number): number {
         const a = this.unitConverterService.converter(
@@ -130,5 +141,31 @@ export class NumberLogInputConverterService {
             'log',
         ) as unknown as number;
         return b as unknown as number;
+    }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class BaseConverterService {
+    constructor(
+        public satLogInputConverterService: SatLogInputConverterService,
+        public milliSatLogInputConverterService: MilliSatLogInputConverterService,
+        public numberLogInputConverterService: NumberLogInputConverterService,
+    ) {}
+
+    public forwardConverterFunc: any = this.numberLogInputConverterService.forwardConvert;
+    public backwardsConverterFunc: any = this.numberLogInputConverterService.backwardsConvert;
+
+    gerConverter(baseUnit): Converter {
+        if (baseUnit === 'number') {
+            return this.numberLogInputConverterService;
+        }
+        if (baseUnit === 'sat') {
+            return this.satLogInputConverterService;
+        }
+        if (baseUnit === 'msat') {
+            return this.milliSatLogInputConverterService;
+        }
     }
 }
