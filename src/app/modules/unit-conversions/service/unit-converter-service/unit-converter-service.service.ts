@@ -10,8 +10,6 @@ export interface Unit {
     type: UnitLabel;
 }
 
-export interface UnitMap {}
-
 @Injectable({
     providedIn: 'root',
 })
@@ -25,15 +23,15 @@ export class UnitConverterService {
             'linear': (x) => Math.round(Math.pow(10, x) - 1),
         },
         'linear': {
-            'log': (x) => Math.log10(x + 1),
+            'log': (x) => Math.round(Math.log10(x + 1)),
         },
         'sat': {
-            'btc': (x) => 10000000 / x,
-            'sat': (x) => 1,
+            'btc': (x) => 100000000 / x,
+            'sat': (x) => x,
         },
         'btc': {
-            'sat': (x) => x / 10000000,
-            'btc': (x) => 1,
+            'sat': (x) => x * 100000000,
+            'btc': (x) => x,
         },
     };
 }
@@ -52,13 +50,21 @@ export class InputConverterService {
 
     private displayUnit: UnitLabel;
 
-    public forwardConvert(value: number) {
-        const a = this.unitConverterService.converter({ value, type: 'log' }, 'linear');
-        const b = this.unitConverterService.converter({ value, type: 'sat' }, this.displayUnit);
+    public forwardConvert(value: number): number {
+        const a = this.unitConverterService.converter(
+            { value, type: 'log' },
+            'linear',
+        ) as unknown as number;
+        const b = this.unitConverterService.converter({ value: a, type: 'sat' }, this.displayUnit);
+        return b as unknown as number;
     }
 
-    public backwardsConvert(value: number) {
-        const a = this.unitConverterService.converter({ value, type: 'log' }, 'linear');
-        const b = this.unitConverterService.converter({ value, type: this.displayUnit }, 'sat');
+    public backwardsConvert(value: number): number {
+        const a = this.unitConverterService.converter({ value, type: this.displayUnit }, 'sat');
+        const b = this.unitConverterService.converter(
+            { value: a as unknown as number, type: 'linear' },
+            'log',
+        ) as unknown as number;
+        return b as unknown as number;
     }
 }

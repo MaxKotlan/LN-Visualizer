@@ -1,5 +1,5 @@
 <div style="display: flex">
-    <p style="margin-top: 10px; margin-bottom: 0px; text-transform: capitalize; flex-grow: 1">
+    <p style="margin-top: 10px; margin-bottom: 0px; text-transform: capitalize; width: 120px">
         {{ label }}
     </p>
     <p
@@ -13,16 +13,16 @@
         "
     >
         <app-mini-input
-            [value]="logValue[0] | logToLinear"
-            (valueChanged$)="onInputChange($event, 0)"
+            [value]="inputConverterService.forwardConvert(logValue[0])"
+            (valueChanged$)="inputConverterService.backwardsConvert($event)"
         ></app-mini-input>
         -
         <app-mini-input
-            [value]="logValue[1] | logToLinear"
-            (valueChanged$)="onInputChange($event, 1)"
+            [value]="inputConverterService.forwardConvert(logValue[1])"
+            (valueChanged$)="inputConverterService.backwardsConvert($event)"
         ></app-mini-input>
-        <!--     
-        {{ logValue[0] | logToLinear | unit }}-{{ logValue[1] | logToLinear | unit }} -->
+
+        {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}
     </p>
 </div>
 <div style="display: flex; align-items: center; gap: 0.2rem">

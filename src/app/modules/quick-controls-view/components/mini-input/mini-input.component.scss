@@ -1,9 +1,16 @@
+:host {
+    width: 100%;
+    flex-grow: 1;
+}
+
 :host ::ng-deep {
     .mat-form-field-appearance-fill .mat-form-field-flex {
         padding-top: unset;
     }
     .mat-form-field-infix {
-        width: 2rem;
+        display: inline;
+        width: 100%;
+        flex-grow: 1;
         border-top: 0.24375em solid transparent;
     }
     .mat-form-field-wrapper {
