@@ -12,9 +12,9 @@
             align-items: center;
         "
     >
-        <app-mini-input></app-mini-input>
+        <app-mini-input [value]="logValue[0] | logToLinear"></app-mini-input>
         -
-        <app-mini-input></app-mini-input>
+        <app-mini-input [value]="logValue[1] | logToLinear"></app-mini-input>
         <!--     
         {{ logValue[0] | logToLinear | unit }}-{{ logValue[1] | logToLinear | unit }} -->
     </p>
