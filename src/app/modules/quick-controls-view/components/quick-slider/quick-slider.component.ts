@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
+import { UnitLabelOrNumber } from 'src/app/constants/display-units.constant';
 import {
     ChannelEvaluationFunction,
     Filter,
@@ -10,6 +11,7 @@ import {
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import {
     MilliSatLogInputConverterService,
+    NumberLogInputConverterService,
     SatLogInputConverterService,
 } from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
@@ -22,11 +24,12 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
     templateUrl: './quick-slider.component.html',
     styleUrls: ['./quick-slider.component.scss'],
 })
-export class QuickSliderComponent {
+export class QuickSliderComponent implements AfterViewInit {
     constructor(
         private store$: Store<GraphState>,
         public satLogInputConverterService: SatLogInputConverterService,
         public milliSatLogInputConverterService: MilliSatLogInputConverterService,
+        public numberLogInputConverterService: NumberLogInputConverterService,
     ) {}
 
     @Input() set key(key: string) {
@@ -60,12 +63,18 @@ export class QuickSliderComponent {
     @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
     @Input() public isCurrency: boolean = false;
-    @Input() public set baseUnit(baseUnit: 'sat' | 'msat') {
-        if (baseUnit === 'sat') {
+    @Input() public baseUnit: UnitLabelOrNumber;
+
+    ngAfterViewInit(): void {
+        if (this.baseUnit === 'number') {
+            this.forwardConverterFunc = this.numberLogInputConverterService.forwardConvert;
+            this.backwardsConverterFunc = this.numberLogInputConverterService.backwardsConvert;
+        }
+        if (this.baseUnit === 'sat') {
             this.forwardConverterFunc = this.satLogInputConverterService.forwardConvert;
             this.backwardsConverterFunc = this.satLogInputConverterService.backwardsConvert;
         }
-        if (baseUnit === 'msat') {
+        if (this.baseUnit === 'msat') {
             this.forwardConverterFunc = this.milliSatLogInputConverterService.forwardConvert;
             this.backwardsConverterFunc = this.satLogInputConverterService.backwardsConvert;
         }

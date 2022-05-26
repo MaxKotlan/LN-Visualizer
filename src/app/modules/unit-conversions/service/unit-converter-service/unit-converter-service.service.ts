@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { displayUnit } from 'src/app/modules/controls-misc/selectors/misc-controls.selectors';
 
-type UnitLabel = 'log' | 'linear' | 'sat' | 'btc' | 'msat';
+export type UnitLabel = 'log' | 'linear' | 'sat' | 'btc' | 'msat';
 
 export interface Unit {
     value: number;
@@ -103,6 +103,30 @@ export class MilliSatLogInputConverterService {
         const a = this.unitConverterService.converter({ value, type: this.displayUnit }, 'msat');
         const b = this.unitConverterService.converter(
             { value: a as unknown as number, type: 'linear' },
+            'log',
+        ) as unknown as number;
+        return b as unknown as number;
+    }
+}
+
+@UntilDestroy()
+@Injectable({
+    providedIn: 'root',
+})
+export class NumberLogInputConverterService {
+    constructor(private unitConverterService: UnitConverterService) {}
+
+    public forwardConvert(value: number): number {
+        const a = this.unitConverterService.converter(
+            { value, type: 'log' },
+            'linear',
+        ) as unknown as number;
+        return a as unknown as number;
+    }
+
+    public backwardsConvert(value: number): number {
+        const b = this.unitConverterService.converter(
+            { value, type: 'linear' },
             'log',
         ) as unknown as number;
         return b as unknown as number;
