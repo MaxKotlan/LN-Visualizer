@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
@@ -7,7 +8,9 @@ import {
     Filter,
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
+import { displayUnit } from 'src/app/modules/controls-misc/selectors/misc-controls.selectors';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { Unit, UnitConverterService } from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -19,7 +22,10 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
     styleUrls: ['./quick-slider.component.scss'],
 })
 export class QuickSliderComponent {
-    constructor(private store$: Store<GraphState>) {}
+    constructor(
+        private store$: Store<GraphState>,
+        private unitConverterService: UnitConverterService,
+    ) {}
 
     @Input() set key(key: string) {
         this.label = key.replace(/_/g, ' ');
@@ -37,6 +43,11 @@ export class QuickSliderComponent {
             (this.maxLog - this.minLog) / 4 + this.minLog,
             (3 * (this.maxLog - this.minLog)) / 4 + this.minLog,
         ];
+    }
+
+    public forwardConvert(value: number) {
+        const a = this.unitConverterService.converter({ value, type: 'log' }, 'linear');
+        const b = this.unitConverterService.converter({ value, type: 'log' }, 'linear');
     }
 
     public minLog = 0;
