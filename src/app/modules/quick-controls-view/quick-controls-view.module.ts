@@ -7,9 +7,10 @@ import { UnitConversionsModule } from '../unit-conversions/unit-conversions.modu
 import { QuickControlsViewComponent } from './components';
 import { QuickSliderComponent } from './components/quick-slider/quick-slider.component';
 import { LogToLinearPipe } from './pipes/log-to-linear.pipe';
+import { MiniInputComponent } from './components/mini-input/mini-input.component';
 
 @NgModule({
-    declarations: [QuickControlsViewComponent, QuickSliderComponent, LogToLinearPipe],
+    declarations: [QuickControlsViewComponent, QuickSliderComponent, LogToLinearPipe, MiniInputComponent],
     imports: [CommonModule, MaterialModule, FormsModule, ControlsModule, UnitConversionsModule],
     exports: [QuickControlsViewComponent],
 })

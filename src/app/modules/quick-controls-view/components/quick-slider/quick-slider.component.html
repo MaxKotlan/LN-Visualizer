@@ -2,8 +2,21 @@
     <p style="margin-top: 10px; margin-bottom: 0px; text-transform: capitalize; flex-grow: 1">
         {{ label }}
     </p>
-    <p style="margin-top: 10px; margin-bottom: 0px; font-size: 12px">
-        {{ logValue[0] | logToLinear | unit }}-{{ logValue[1] | logToLinear | unit }}
+    <p
+        style="
+            margin-top: 10px;
+            margin-bottom: 0px;
+            font-size: 12px;
+            display: flex;
+            gap: 0.1rem;
+            align-items: center;
+        "
+    >
+        <app-mini-input></app-mini-input>
+        to
+        <app-mini-input></app-mini-input>
+        <!--     
+        {{ logValue[0] | logToLinear | unit }}-{{ logValue[1] | logToLinear | unit }} -->
     </p>
 </div>
 <div style="display: flex; align-items: center; gap: 0.2rem">
