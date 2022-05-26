@@ -54,6 +54,10 @@ export class QuickSliderComponent {
     public isEnabled: boolean;
     public isEnabled$: Observable<boolean>;
 
+    public onInputChange(newValue: number, index) {
+        this.logValue[index] = newValue;
+    }
+
     public onEnableChange() {
         if (!this.isEnabled) {
             this.store$.dispatch(
