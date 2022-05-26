@@ -8,7 +8,10 @@ import {
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
-import { SatLogInputConverterService } from 'src/app/modules/unit-conversions/service';
+import {
+    MilliSatLogInputConverterService,
+    SatLogInputConverterService,
+} from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -22,7 +25,8 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
 export class QuickSliderComponent {
     constructor(
         private store$: Store<GraphState>,
-        public currencyLogInputConverterService: SatLogInputConverterService,
+        public satLogInputConverterService: SatLogInputConverterService,
+        public milliSatLogInputConverterService: MilliSatLogInputConverterService,
     ) {}
 
     @Input() set key(key: string) {
@@ -50,10 +54,22 @@ export class QuickSliderComponent {
     public logStep: number;
     public logValue: number[];
 
+    public forwardConverterFunc: any = () => {};
+    public backwardsConverterFunc: any = () => {};
+
     @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
     @Input() public isCurrency: boolean = false;
-    @Input() public baseUnit: 'sat' | 'msat';
+    @Input() public set baseUnit(baseUnit: 'sat' | 'msat') {
+        if (baseUnit === 'sat') {
+            this.forwardConverterFunc = this.satLogInputConverterService.forwardConvert;
+            this.backwardsConverterFunc = this.satLogInputConverterService.backwardsConvert;
+        }
+        if (baseUnit === 'msat') {
+            this.forwardConverterFunc = this.milliSatLogInputConverterService.forwardConvert;
+            this.backwardsConverterFunc = this.satLogInputConverterService.backwardsConvert;
+        }
+    }
 
     public objectKey: string;
     public label: string;
