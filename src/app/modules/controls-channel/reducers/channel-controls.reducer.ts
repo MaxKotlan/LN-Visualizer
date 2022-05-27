@@ -38,10 +38,6 @@ export const reducer = createReducer(
         ...state,
         renderEdges: value,
     })),
-    on(channelControlsActions.minEdgesRecompute, (state, { minEdges }) => ({
-        ...state,
-        minimumEdges: minEdges,
-    })),
     on(channelControlsActions.setEdgeUseDottedLine, (state, { value }) => ({
         ...state,
         edgeDottedLine: value,

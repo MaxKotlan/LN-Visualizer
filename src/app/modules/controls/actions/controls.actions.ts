@@ -13,17 +13,14 @@ export const resetToDefault = createAction('[controls] resetToDefault');
 
 export const resetControlsToDefault = createAction('[controls] resetControlsToDefault');
 
-export const searchGraph = createAction(
-    '[controls] setSearchString',
+export const searchGraph = createAction('[controls] searchGraph', props<{ searchText: string }>());
+
+export const searchGraphByPublicKey = createAction(
+    '[controls] searchGraphByPublicKey',
     props<{ searchText: string }>(),
 );
 
 export const renderLabels = createAction('[controls] renderLabels', props<{ value: boolean }>());
-
-export const sortOrderChange = createAction(
-    '[controls] setSortOrder',
-    props<{ ascending: boolean }>(),
-);
 
 export const setCameraFov = createAction('[controls] setCameraFov', props<{ value: number }>());
 
