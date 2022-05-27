@@ -9,6 +9,7 @@ import {
     map,
     switchMap,
     takeUntil,
+    takeWhile,
     throttleTime,
     timer,
 } from 'rxjs';
@@ -18,7 +19,7 @@ import { ScreenSizeService } from '../../screen-size/services';
 import * as windowManagementActions from '../actions';
 import { quickControlsId } from '../constants/windowIds';
 import { WindowManagerState } from '../reducers';
-import { selectAllModalState } from '../selectors';
+import { isBeingDragged, selectAllModalState } from '../selectors';
 
 @Injectable()
 export class WindowManagerEffects {
@@ -43,6 +44,19 @@ export class WindowManagerEffects {
                 ),
         { dispatch: true },
     );
+
+    windowIsBeingDragged$ = createEffect(() =>
+        this.store$.select(isBeingDragged).pipe(
+            switchMap((isBeingDragged) =>
+                animationFrames().pipe(
+                    takeWhile(() => isBeingDragged),
+                    throttleTime(10),
+                    map(graphActions.recomputeCanvasSize),
+                ),
+            ),
+        ),
+    );
+
     // mobileModal$ = createEffect(
     //     () =>
     //         this.screenSizeService.isMobile$.pipe(
