@@ -7,3 +7,5 @@ export const donateLinkVisible = createSelector(
     miscControlsSelector,
     (state) => state.donateLinkVisible,
 );
+
+export const displayUnit = createSelector(miscControlsSelector, (state) => state.displayUnit);

@@ -1,0 +1,33 @@
+:host {
+    width: 100%;
+    flex-grow: 1;
+}
+
+:host ::ng-deep {
+    .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding-top: unset;
+    }
+    .mat-form-field-infix {
+        display: inline;
+        width: 100%;
+        flex-grow: 1;
+        border-top: 0.24375em solid transparent;
+    }
+    .mat-form-field-wrapper {
+        padding-bottom: unset;
+    }
+    .mat-form-field-underline {
+        position: unset;
+    }
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}

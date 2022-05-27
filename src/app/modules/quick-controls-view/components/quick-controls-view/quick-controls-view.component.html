@@ -12,6 +12,7 @@
         [isPolicyScript]="false"
         [key]="'node_capacity'"
         [minMax]="statsState['node_capacity']"
+        baseUnit="sat"
     >
     </app-quick-slider>
     <app-quick-slider
@@ -19,6 +20,7 @@
         [isPolicyScript]="false"
         [key]="'channel_count'"
         [minMax]="statsState['channel_count']"
+        baseUnit="number"
     >
     </app-quick-slider>
     <app-quick-slider [isPolicyScript]="false" [key]="'capacity'" [minMax]="statsState['capacity']">
@@ -27,5 +29,6 @@
         *ngFor="let key of statsKeys"
         [key]="key"
         [minMax]="statsState[key]"
+        [baseUnit]="backendUnitFormat[key]"
     ></app-quick-slider>
 </div>

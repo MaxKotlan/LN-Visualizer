@@ -2,12 +2,15 @@ import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
+import { UnitLabelOrNumber } from 'src/app/constants/display-units.constant';
 import {
     ChannelEvaluationFunction,
     Filter,
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
+import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -17,9 +20,15 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
     selector: 'app-quick-slider',
     templateUrl: './quick-slider.component.html',
     styleUrls: ['./quick-slider.component.scss'],
+    providers: [FinalConverterWrapper],
 })
 export class QuickSliderComponent {
-    constructor(private store$: Store<GraphState>) {}
+    constructor(
+        public store$: Store<GraphState>,
+        public finalConverterWrapper: FinalConverterWrapper,
+    ) {}
+
+    public isPilotFlagEnabled$ = this.store$.select(pilotIsUnitConversionsEnabled$);
 
     @Input() set key(key: string) {
         this.label = key.replace(/_/g, ' ');
@@ -48,6 +57,11 @@ export class QuickSliderComponent {
 
     @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
+    @Input() public isCurrency: boolean = false;
+    @Input() public set baseUnit(baseUnit: UnitLabelOrNumber) {
+        this.finalConverterWrapper.setBaseUnit(baseUnit);
+    }
+
     public objectKey: string;
     public label: string;
     public scriptName: string;

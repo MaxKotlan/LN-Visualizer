@@ -1,0 +1,9 @@
+<mat-form-field class="mini-input" appearance="fill">
+    <input
+        type="number"
+        pattern="\d*"
+        matInput
+        [(ngModel)]="_val"
+        (ngModelChange)="updateValue()"
+    />
+</mat-form-field>

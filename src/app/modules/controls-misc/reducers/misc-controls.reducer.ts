@@ -4,10 +4,12 @@ import * as miscActions from '../actions';
 
 export interface MiscControlState {
     donateLinkVisible: boolean;
+    displayUnit: 'btc' | 'mbtc' | 'sat';
 }
 
 const initialState: MiscControlState = {
     donateLinkVisible: true,
+    displayUnit: 'sat',
 };
 
 export const reducer = createReducer(
@@ -19,5 +21,9 @@ export const reducer = createReducer(
     on(miscActions.setDonateLinkVisible, (state, { value }) => ({
         ...state,
         donateLinkVisible: value,
+    })),
+    on(miscActions.setDisplayUnit, (state, { value }) => ({
+        ...state,
+        displayUnit: value,
     })),
 );
