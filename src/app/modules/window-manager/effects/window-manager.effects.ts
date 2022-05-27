@@ -49,7 +49,7 @@ export class WindowManagerEffects {
         this.store$.select(isBeingDragged).pipe(
             switchMap((isBeingDragged) =>
                 animationFrames().pipe(
-                    takeWhile(() => isBeingDragged),
+                    filter(() => isBeingDragged),
                     throttleTime(10),
                     map(graphActions.recomputeCanvasSize),
                 ),

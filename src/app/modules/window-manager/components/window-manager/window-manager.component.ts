@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
-import * as graphActions from '../../../graph-renderer/actions';
 import * as windowManagementActions from '../../actions';
 import { filterScriptsId, quickControlsId } from '../../constants/windowIds';
 import { WindowManagerState } from '../../reducers';
