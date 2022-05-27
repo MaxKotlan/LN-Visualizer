@@ -9,6 +9,7 @@ import {
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
@@ -23,9 +24,11 @@ import * as filterSelectors from '../../../controls-graph-filter/selectors/filte
 })
 export class QuickSliderComponent {
     constructor(
-        private store$: Store<GraphState>,
+        public store$: Store<GraphState>,
         public finalConverterWrapper: FinalConverterWrapper,
     ) {}
+
+    public isPilotFlagEnabled$ = this.store$.select(pilotIsUnitConversionsEnabled$);
 
     @Input() set key(key: string) {
         this.label = key.replace(/_/g, ' ');

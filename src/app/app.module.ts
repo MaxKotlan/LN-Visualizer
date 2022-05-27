@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { RouteEffects } from './effects/route.effects';
 import { ControlsGraphFilterModule } from './modules/controls-graph-filter/controls-graph-filter.module';
 import { ControlsEffects } from './modules/controls/effects/controls.effects';
+import { PilotFlagsModule } from './modules/pilot-flags/pilot-flags.module';
 import { WindowManagerModule } from './modules/window-manager/window-manager.module';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { WindowManagerModule } from './modules/window-manager/window-manager.mod
         AppRoutingModule,
         HttpClientModule,
         ControlsGraphFilterModule,
+        PilotFlagsModule,
         WindowManagerModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         StoreModule.forRoot(

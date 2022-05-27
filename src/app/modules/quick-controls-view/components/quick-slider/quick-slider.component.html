@@ -10,18 +10,20 @@
             display: flex;
             gap: 0.3rem;
             align-items: center;
+            margin-left: auto;
         "
     >
-        <app-mini-input
-            [value]="finalConverterWrapper.forwardConvert$ | async"
-            (valueChanged$)="finalConverterWrapper.setUnit($event)"
-        ></app-mini-input>
-        -
-        <app-mini-input
-            [value]="finalConverterWrapper.backwardsConvert$ | async"
-            (valueChanged$)="finalConverterWrapper.setUnit($event)"
-        ></app-mini-input>
-
+        <ng-container *ngIf="isPilotFlagEnabled$ | async">
+            <app-mini-input
+                [value]="finalConverterWrapper.forwardConvert$ | async"
+                (valueChanged$)="finalConverterWrapper.setUnit($event)"
+            ></app-mini-input>
+            -
+            <app-mini-input
+                [value]="finalConverterWrapper.backwardsConvert$ | async"
+                (valueChanged$)="finalConverterWrapper.setUnit($event)"
+            ></app-mini-input>
+        </ng-container>
         {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}
     </p>
 </div>

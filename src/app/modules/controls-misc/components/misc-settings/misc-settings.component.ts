@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { deleteGraphDatabase } from 'src/app/modules/graph-renderer/actions/graph-database.actions';
+import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { resetControlsToDefault } from '../../../controls/actions';
 import { GenericControlsState } from '../../../controls/reducers';
-import { donateLinkVisible } from '../../selectors/misc-controls.selectors';
 
 @Component({
     selector: 'app-misc-settings',
@@ -12,6 +12,8 @@ import { donateLinkVisible } from '../../selectors/misc-controls.selectors';
 })
 export class MiscSettingsComponent {
     constructor(private store: Store<GenericControlsState>) {}
+
+    public isPilotFlagEnabled$ = this.store.select(pilotIsUnitConversionsEnabled$);
 
     resetSettingsToDefault() {
         this.store.dispatch(resetControlsToDefault());
