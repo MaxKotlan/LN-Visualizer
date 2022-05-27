@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Pipe } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { BehaviorSubject, combineLatest, filter, map, Subject } from 'rxjs';
 import { displayUnit } from 'src/app/modules/controls-misc/selectors/misc-controls.selectors';
 
 /*This file is terrible. I'm sorry I just wanted it to work*/
@@ -154,10 +155,7 @@ export class BaseConverterService {
         public numberLogInputConverterService: NumberLogInputConverterService,
     ) {}
 
-    public forwardConverterFunc: any = this.numberLogInputConverterService.forwardConvert;
-    public backwardsConverterFunc: any = this.numberLogInputConverterService.backwardsConvert;
-
-    gerConverter(baseUnit): Converter {
+    getConverter(baseUnit): Converter {
         if (baseUnit === 'number') {
             return this.numberLogInputConverterService;
         }
@@ -168,4 +166,37 @@ export class BaseConverterService {
             return this.milliSatLogInputConverterService;
         }
     }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class FinalConverterWrapper {
+    constructor(private baseConverterService: BaseConverterService) {
+        console.log('bro');
+        this.forwardConvert$.subscribe((x) => console.log('mrroroo', x));
+    }
+
+    private unitSubject$: BehaviorSubject<number> = new BehaviorSubject(NaN);
+    private converterSubject$: BehaviorSubject<Converter> = new BehaviorSubject(undefined);
+
+    public setBaseUnit(baseUnit) {
+        const converter = this.baseConverterService.getConverter(baseUnit);
+        this.converterSubject$.next(converter);
+    }
+
+    public setUnit(value: number) {
+        console.log('bruh soundeffect 7', value);
+        this.unitSubject$.next(value[0]);
+    }
+
+    public forwardConvert$ = combineLatest([this.unitSubject$, this.converterSubject$]).pipe(
+        filter(([unit, converter]) => !!unit && !!converter),
+        map(([unit, converter]) => converter.forwardConvert(unit)),
+    );
+
+    public backwardsConvert$ = combineLatest([this.unitSubject$, this.converterSubject$]).pipe(
+        filter(([unit, converter]) => !!unit && !!converter),
+        map(([unit, converter]) => converter.backwardsConvert(unit)),
+    );
 }

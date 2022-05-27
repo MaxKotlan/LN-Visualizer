@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UnitPipe } from './pipes/unit.pipe';
 import {
+    FinalConverterWrapper,
     MilliSatLogInputConverterService,
     NumberLogInputConverterService,
     SatLogInputConverterService,
@@ -16,6 +17,7 @@ import {
         MilliSatLogInputConverterService,
         NumberLogInputConverterService,
         SatLogInputConverterService,
+        FinalConverterWrapper,
     ],
     imports: [CommonModule],
     exports: [UnitPipe],

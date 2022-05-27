@@ -13,13 +13,13 @@
         "
     >
         <app-mini-input
-            [value]="forwardConverterFunc(logValue[0])"
-            (valueChanged$)="backwardsConverterFunc($event)"
+            [value]="finalConverterWrapper.forwardConvert$ | async"
+            (valueChanged$)="finalConverterWrapper.setUnit($event)"
         ></app-mini-input>
         -
         <app-mini-input
-            [value]="forwardConverterFunc(logValue[1])"
-            (valueChanged$)="backwardsConverterFunc($event)"
+            [value]="finalConverterWrapper.backwardsConvert$ | async"
+            (valueChanged$)="finalConverterWrapper.setUnit($event)"
         ></app-mini-input>
 
         {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}
@@ -38,6 +38,7 @@
         [step]="logStep"
         style="width: 100%"
         [(ngModel)]="logValue"
+        (ngModelChange)="finalConverterWrapper.setUnit($event)"
         (ngModelChange)="updateScript()"
         [disabled]="(isEnabled$ | async) === false"
     ></mtx-slider>
