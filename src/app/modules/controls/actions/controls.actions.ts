@@ -15,11 +15,6 @@ export const resetControlsToDefault = createAction('[controls] resetControlsToDe
 
 export const searchGraph = createAction('[controls] searchGraph', props<{ searchText: string }>());
 
-export const searchGraphByPublicKey = createAction(
-    '[controls] searchGraphByPublicKey',
-    props<{ searchText: string }>(),
-);
-
 export const renderLabels = createAction('[controls] renderLabels', props<{ value: boolean }>());
 
 export const setCameraFov = createAction('[controls] setCameraFov', props<{ value: number }>());

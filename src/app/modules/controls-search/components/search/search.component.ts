@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { filter, map, Subject, withLatestFrom } from 'rxjs';
+import { filter, Subject } from 'rxjs';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { searchGraph } from '../../../controls/actions';
@@ -15,24 +15,26 @@ export class SearchComponent {
     public optionSelected$ = new Subject<void>();
 
     public nodeSearchResults$ = this.nodeSearchEffects.selectNodesSearchResults$;
-    public selectSearchString$ = this.optionSelected$.pipe(
-        withLatestFrom(
-            this.nodeSearchEffects.selectFinalMatchAliasFromSearch$.pipe(filter((x) => !x)),
-        ),
-        map(([, x]) => x),
+    public selectSearchString$ = this.nodeSearchEffects.selectFinalMatchAliasFromSearch$.pipe(
+        filter(() => this.shouldUpdateSearchText),
     );
 
     clear() {
         this.store$.dispatch(searchGraph({ searchText: '' }));
     }
 
+    public shouldUpdateSearchText = false;
+
     onTextChange(event: any) {
-        if (!!event?.target?.value || event?.target?.value === '')
+        if (!!event?.target?.value || event?.target?.value === '') {
+            this.shouldUpdateSearchText = false;
             this.store$.dispatch(searchGraph({ searchText: event.target.value }));
+        }
     }
 
     onOptionSelected(event: any) {
         if (event?.option?.value) {
+            this.shouldUpdateSearchText = true;
             this.optionSelected$.next();
             console.log(event.option);
             this.store$.dispatch(searchGraph({ searchText: event.option.value }));
