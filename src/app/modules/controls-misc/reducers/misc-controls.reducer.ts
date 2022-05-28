@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlsActions from '../../controls/actions';
+import { initializeDefaultValue } from '../../controls/utils/default-settings-upgrader';
 import * as miscActions from '../actions';
 
 export interface MiscControlState {
@@ -14,9 +15,8 @@ const initialState: MiscControlState = {
 
 export const reducer = createReducer(
     initialState,
-    on(
-        controlsActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.miscControls || initialState,
+    on(controlsActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
+        initializeDefaultValue(savedState.miscControls, initialState),
     ),
     on(miscActions.setDonateLinkVisible, (state, { value }) => ({
         ...state,

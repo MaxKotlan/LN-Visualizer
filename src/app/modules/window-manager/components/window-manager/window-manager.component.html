@@ -6,8 +6,8 @@
     [useTransition]="true"
     *ngIf="screenSizeService.isDesktop$ | async"
     [disabled]="(shouldShowQuickControls$ | async) === false"
-    (dragEnd)="recomputeCanvas()"
-    (transitionEnd)="recomputeCanvas()"
+    (dragStart)="startModalDrag()"
+    (dragEnd)="endModalDrag()"
 >
     <mtx-split-pane
         [order]="0"

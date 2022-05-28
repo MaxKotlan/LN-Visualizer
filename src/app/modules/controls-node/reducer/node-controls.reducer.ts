@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlActions from '../../controls/actions';
+import { initializeDefaultValue } from '../../controls/utils/default-settings-upgrader';
 import * as nodeControlActions from '../actions/node-controls.actions';
 
 export interface NodeControlState {
@@ -22,9 +23,8 @@ const initialState: NodeControlState = {
 
 export const reducer = createReducer(
     initialState,
-    on(
-        controlActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.nodeControls || initialState,
+    on(controlActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
+        initializeDefaultValue(savedState.nodeControls, initialState),
     ),
     on(controlActions.resetControlsToDefault, () => initialState),
     on(nodeControlActions.renderNodes, (state, { value }) => ({ ...state, renderNodes: value })),

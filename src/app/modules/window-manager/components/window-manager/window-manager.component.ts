@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
-import * as graphActions from '../../../graph-renderer/actions';
 import * as windowManagementActions from '../../actions';
 import { filterScriptsId, quickControlsId } from '../../constants/windowIds';
 import { WindowManagerState } from '../../reducers';
@@ -40,7 +38,11 @@ export class WindowManagerComponent {
         this.store$.dispatch(windowManagementActions.setModalClose({ modalId: filterScriptsId }));
     }
 
-    public recomputeCanvas() {
-        this.store$.dispatch(graphActions.recomputeCanvasSize());
+    public startModalDrag() {
+        this.store$.dispatch(windowManagementActions.modalIsBeingDragged({ isDragged: true }));
+    }
+
+    public endModalDrag() {
+        this.store$.dispatch(windowManagementActions.modalIsBeingDragged({ isDragged: false }));
     }
 }

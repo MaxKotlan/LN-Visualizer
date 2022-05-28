@@ -4,11 +4,16 @@ export const setModalOpen = createAction('[modal] setModalOpen', props<{ modalId
 export const setModalClose = createAction('[modal] setModalClose', props<{ modalId: string }>());
 
 export const toggleModalPreference = createAction(
-    '[modal] toggleModalPreference',
+    '[window] toggleModalPreference',
     props<{ modalId: string }>(),
 );
 
 export const setModalPreference = createAction(
-    '[modal] setModalPreference',
+    '[window] setModalPreference',
     props<{ modalId: string; preference: 'modal' | 'sidebar' }>(),
+);
+
+export const modalIsBeingDragged = createAction(
+    '[window] modalIsBeingDragged',
+    props<{ isDragged: boolean }>(),
 );

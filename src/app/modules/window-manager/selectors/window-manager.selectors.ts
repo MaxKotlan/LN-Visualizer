@@ -25,6 +25,11 @@ export const shouldShowSidebar = (modalId: string) =>
             state.modalPreference[modalId] === 'sidebar' && state.modalState[modalId] === 'open',
     );
 
+export const isBeingDragged = createSelector(
+    windowManagementSelector,
+    (state) => state.isBeingDragged,
+);
+
 // export const shouldShowModal = (modalId: string) =>
 //     createSelector(
 //         windowManagementSelector,

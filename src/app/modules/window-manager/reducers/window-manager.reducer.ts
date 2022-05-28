@@ -5,6 +5,7 @@ import { filterScriptsId, quickControlsId } from '../constants/windowIds';
 export interface WindowManagerState {
     modalState: Record<string, 'open' | 'close'>;
     modalPreference: Record<string, 'modal' | 'sidebar'>;
+    isBeingDragged: boolean;
 }
 
 const initialState: WindowManagerState = {
@@ -16,6 +17,7 @@ const initialState: WindowManagerState = {
         [quickControlsId]: 'modal',
         [filterScriptsId]: 'modal',
     },
+    isBeingDragged: false,
 };
 
 export const reducer = createReducer(
@@ -38,5 +40,9 @@ export const reducer = createReducer(
             ...state.modalPreference,
             [modalId]: state.modalPreference[modalId] === 'modal' ? 'sidebar' : 'modal',
         },
+    })),
+    on(windowMangementActions.modalIsBeingDragged, (state, { isDragged }) => ({
+        ...state,
+        isBeingDragged: isDragged,
     })),
 );

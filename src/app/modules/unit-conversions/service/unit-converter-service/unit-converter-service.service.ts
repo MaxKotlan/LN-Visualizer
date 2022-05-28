@@ -172,10 +172,7 @@ export class BaseConverterService {
     providedIn: 'root',
 })
 export class FinalConverterWrapper {
-    constructor(private baseConverterService: BaseConverterService) {
-        console.log('bro');
-        this.forwardConvert$.subscribe((x) => console.log('mrroroo', x));
-    }
+    constructor(private baseConverterService: BaseConverterService) {}
 
     private unitSubject$: BehaviorSubject<number> = new BehaviorSubject(NaN);
     private converterSubject$: BehaviorSubject<Converter> = new BehaviorSubject(undefined);
@@ -186,7 +183,6 @@ export class FinalConverterWrapper {
     }
 
     public setUnit(value: number) {
-        console.log('bruh soundeffect 7', value);
         this.unitSubject$.next(value[0]);
     }
 

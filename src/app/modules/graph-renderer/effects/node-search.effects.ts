@@ -2,7 +2,16 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { LndChannel } from 'api/src/models';
-import { combineLatest, distinctUntilChanged, from, map, mergeMap, share, shareReplay } from 'rxjs';
+import {
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    from,
+    map,
+    mergeMap,
+    share,
+    shareReplay,
+} from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { Uniform, Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
@@ -32,6 +41,7 @@ export class NodeSearchEffects {
         this.generateSearchSubset$,
         this.store$.select(selectSearchString),
     ]).pipe(
+        filter(([subset]) => !!subset),
         map(([subset, searchString]) => {
             return subset.filter(
                 (a) =>
