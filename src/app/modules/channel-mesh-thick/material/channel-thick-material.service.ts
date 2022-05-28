@@ -27,7 +27,7 @@ export class ChannelThickMaterial extends LineMaterial {
     ) {
         super({
             color: 0xffffff,
-            linewidth: 0.01, // in world units with size attenuation, pixels otherwise
+            linewidth: 0.002, // in world units with size attenuation, pixels otherwise
             vertexColors: true,
             //resolution:  // to be set by renderer, eventually
             dashed: false,

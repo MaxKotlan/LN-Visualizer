@@ -16,7 +16,7 @@ export class ChannelThickGeometry extends LineGeometry {
     ) {
         super();
         this.initializeGeometry();
-        //this.handleUpdates();
+        this.handleUpdates();
     }
 
     public initializeGeometry() {
@@ -24,11 +24,15 @@ export class ChannelThickGeometry extends LineGeometry {
         //     'color',
         //     new THREE.BufferAttribute(this.channelBufferService.color.data, 3, true),
         // );
-        this.setPositions([0, 0, 1, 0, 2, 0]);
+        if (this.channelBufferService.vertex.data.length > 0)
+            this.setPositions(this.channelBufferService.vertex.data);
         // this.setAttribute(
         //     'position',
         //     new THREE.BufferAttribute(this.channelBufferService.vertex.data, 3),
         // );
+        if (this.channelBufferService.color.data.length > 0)
+            this.setColors(this.channelBufferService.color.data as unknown as Float32Array);
+
         this.updateGeometry();
     }
 
@@ -43,7 +47,7 @@ export class ChannelThickGeometry extends LineGeometry {
         let currentDrawRange;
         let currentShouldRender;
 
-        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
+        this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
             this.initializeGeometry();
             this.setDrawRange(0, currentShouldRender ? drawRange : 0);
