@@ -7,7 +7,7 @@ import { ChannelThickMaterial } from '../material';
 
 @UntilDestroy()
 @Component({
-    selector: 'app-channel-object',
+    selector: 'app-channel-thick-object',
     providers: [provideParent(SphereMeshComponent)],
     template: '<ng-content></ng-content>',
 })
