@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { createEffect } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
 import * as controlsActions from '../modules/controls/actions';
@@ -11,6 +11,7 @@ import { GraphState } from '../modules/graph-renderer/reducer';
 export class RouteEffects {
     constructor(
         private store$: Store<GraphState>,
+        private actions: Actions,
         private router: Router,
         private nodeSearchEffects: NodeSearchEffects,
     ) {}
@@ -44,10 +45,12 @@ export class RouteEffects {
                         this.router.routerState.snapshot.root?.firstChild?.params['public_key'] ||
                         '',
                 ),
-                map((routePubKey) =>
+                withLatestFrom(this.actions.pipe(ofType(controlsActions.searchGraph))),
+                filter(([, x]) => !!x.shouldUpdateSearchBar),
+                map(([routePubKey]) =>
                     controlsActions.searchGraph({
                         searchText: routePubKey,
-                        shouldUpdateSearchBar: false,
+                        shouldUpdateSearchBar: true,
                     }),
                 ),
             ),
