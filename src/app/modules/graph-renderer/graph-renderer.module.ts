@@ -29,6 +29,7 @@ import {
 import { ChannelBuffersService } from './services/channel-buffers/channel-buffers.service';
 import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
 import { GraphStatisticsModule } from '../graph-statistics';
+import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick.module';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { GraphStatisticsModule } from '../graph-statistics';
         GraphNetworkingModule,
         NodeMeshModule,
         ChannelMeshModule,
+        ChannelThickMeshModule,
         GraphStatisticsModule,
         EffectsModule.forFeature([
             NodeEffects,
