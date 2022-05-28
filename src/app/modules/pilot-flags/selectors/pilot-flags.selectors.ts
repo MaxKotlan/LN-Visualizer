@@ -7,3 +7,8 @@ export const pilotIsUnitConversionsEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.unitConversions,
 );
+
+export const pilotThickLinesEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.thickLines,
+);
