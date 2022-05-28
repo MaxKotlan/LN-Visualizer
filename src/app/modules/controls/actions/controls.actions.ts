@@ -13,7 +13,10 @@ export const resetToDefault = createAction('[controls] resetToDefault');
 
 export const resetControlsToDefault = createAction('[controls] resetControlsToDefault');
 
-export const searchGraph = createAction('[controls] searchGraph', props<{ searchText: string }>());
+export const searchGraph = createAction(
+    '[controls] searchGraph',
+    props<{ searchText: string; shouldUpdateSearchBar: boolean }>(),
+);
 
 export const renderLabels = createAction('[controls] renderLabels', props<{ value: boolean }>());
 

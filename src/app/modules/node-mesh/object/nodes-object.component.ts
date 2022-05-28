@@ -101,7 +101,9 @@ export class NodesObjectComponent
         const node = this.pointTreeService.getNearestNeighbor(intersection.point);
         if (!node) return;
         this.toolTipService.close();
-        this.store$.dispatch(searchGraph({ searchText: node.public_key }));
+        this.store$.dispatch(
+            searchGraph({ searchText: node.public_key, shouldUpdateSearchBar: true }),
+        );
     }
 
     protected newObject3DInstance(): NodePoint {

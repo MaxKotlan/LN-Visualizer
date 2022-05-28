@@ -41,3 +41,8 @@ export const selectCameraFocusMode = createSelector(
     genericControlsSelector,
     (state) => state.cameraFocusMode,
 );
+
+export const shouldUpdateSearchBar = createSelector(
+    genericControlsSelector,
+    (state) => state.shouldUpdateSearchBar,
+);

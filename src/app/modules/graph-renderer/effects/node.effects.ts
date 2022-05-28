@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, distinctUntilChanged, from, map, mergeMap, take } from 'rxjs';
+import _ from 'lodash';
+import { combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { LndChannelWithParent, LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { LndNode } from 'src/app/types/node.interface';
 import { Vector3 } from 'three';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
+import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';
-import _ from 'lodash';
 import { PointTreeService } from '../services/point-tree/point-tree.service';
-import {
-    FilteredStatisticsCalculatorService,
-    GlobalStatisticsCalculatorService,
-} from '../../graph-statistics/services';
 
 @Injectable()
 export class NodeEffects {

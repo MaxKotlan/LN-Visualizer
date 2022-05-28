@@ -7,6 +7,7 @@ export interface GenericControlsState {
     controlVersion: string;
     searchText: string;
     renderLabels: boolean;
+    shouldUpdateSearchBar: boolean;
     cameraFov: number;
     cameraFocusMode: CameraFocusMode;
 }
@@ -15,6 +16,7 @@ export const initialState: GenericControlsState = {
     controlVersion: '1',
     searchText: '',
     renderLabels: false,
+    shouldUpdateSearchBar: false,
     cameraFov: 60,
     cameraFocusMode: 'goto',
 };
@@ -26,7 +28,11 @@ export const reducer = createReducer(
         (_state, { savedState }) => savedState.genericControls || initialState,
     ),
     on(controlsActions.resetControlsToDefault, () => initialState),
-    on(controlsActions.searchGraph, (state, { searchText }) => ({ ...state, searchText })),
+    on(controlsActions.searchGraph, (state, { searchText, shouldUpdateSearchBar }) => ({
+        ...state,
+        searchText,
+        shouldUpdateSearchBar,
+    })),
     on(controlsActions.renderLabels, (state, { value }) => ({ ...state, renderLabels: value })),
     on(controlsActions.setCameraFov, (state, { value }) => ({ ...state, cameraFov: value })),
     on(controlsActions.setCameraFocusMode, (state, { value }) => ({

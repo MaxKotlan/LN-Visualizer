@@ -45,7 +45,13 @@ export class RouteEffects {
                         '',
                 ),
                 withLatestFrom(this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$),
-                map(([routePubKey]) => controlsActions.searchGraph({ searchText: routePubKey })),
+                filter(([, matchedNode]) => !matchedNode),
+                map(([routePubKey]) =>
+                    controlsActions.searchGraph({
+                        searchText: routePubKey,
+                        shouldUpdateSearchBar: true,
+                    }),
+                ),
             ),
         { dispatch: true },
     );

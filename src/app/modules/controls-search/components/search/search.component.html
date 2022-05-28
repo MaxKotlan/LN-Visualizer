@@ -26,7 +26,7 @@
         #auto="matAutocomplete"
         (optionSelected)="onOptionSelected($event)"
     >
-        <mat-option *ngFor="let option of nodeSearchResults$ | async" [value]="option.alias">
+        <mat-option *ngFor="let option of nodeSearchResults$ | async" [value]="option.publicKey">
             <div style="flex-direction: column; display: flex">
                 <div style="height: 10px">
                     {{ option.alias }}
