@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlsActions from '../../controls/actions';
+import { initializeDefaultValue } from '../../controls/utils/default-settings-upgrader';
 import * as channelControlsActions from '../actions';
 
 export interface ChannelControlState {
@@ -29,9 +30,8 @@ const initialState: ChannelControlState = {
 export const reducer = createReducer(
     initialState,
 
-    on(
-        controlsActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.channelControls || initialState,
+    on(controlsActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
+        initializeDefaultValue(savedState.channelControls, initialState),
     ),
     on(controlsActions.resetControlsToDefault, () => initialState),
     on(channelControlsActions.renderEdges, (state, { value }) => ({

@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { Ray } from 'three';
 import * as controlActions from '../../controls/actions';
+import { initializeDefaultValue } from '../../controls/utils/default-settings-upgrader';
 import * as renderControlActions from '../actions';
 
 export interface RendererControlState {
@@ -25,9 +26,8 @@ const initialState: RendererControlState = {
 
 export const reducer = createReducer(
     initialState,
-    on(
-        controlActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.renderControls || initialState,
+    on(controlActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
+        initializeDefaultValue(savedState.renderControls, initialState),
     ),
     on(controlActions.resetControlsToDefault, () => initialState),
     on(renderControlActions.setShowGrid, (state, { value }) => ({

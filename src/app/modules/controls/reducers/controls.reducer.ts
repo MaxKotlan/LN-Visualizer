@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as controlsActions from '../actions/controls.actions';
+import { initializeDefaultValue } from '../utils/default-settings-upgrader';
 
 export type CameraFocusMode = 'goto' | 'lookat' | 'none';
 
@@ -23,9 +24,8 @@ export const initialState: GenericControlsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(
-        controlsActions.setSavedStateFromLocalStorage,
-        (_state, { savedState }) => savedState.genericControls || initialState,
+    on(controlsActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
+        initializeDefaultValue(savedState.genericControls, initialState),
     ),
     on(controlsActions.resetControlsToDefault, () => initialState),
     on(controlsActions.searchGraph, (state, { searchText, shouldUpdateSearchBar }) => ({
