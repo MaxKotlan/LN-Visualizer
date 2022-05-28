@@ -3,6 +3,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
 import { Uniform } from 'three';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import {
     selectEdgeDepthTest,
     selectEnableChannelFog,
@@ -13,19 +14,26 @@ import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
-import { ChannelShader } from '../shaders';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ChannelThickMaterial extends THREE.ShaderMaterial {
+export class ChannelThickMaterial extends LineMaterial {
     constructor(
         private animationTimeService: AnimationTimeService,
         private actions: Actions,
         private store$: Store<GraphState>,
         private nodeSearch: NodeSearchEffects,
     ) {
-        super(ChannelShader);
+        super({
+            color: 0xffffff,
+            linewidth: 0.01, // in world units with size attenuation, pixels otherwise
+            vertexColors: true,
+            //resolution:  // to be set by renderer, eventually
+            dashed: false,
+            alphaToCoverage: true,
+        });
+        console.log(this);
         this.handleUpdates();
     }
 

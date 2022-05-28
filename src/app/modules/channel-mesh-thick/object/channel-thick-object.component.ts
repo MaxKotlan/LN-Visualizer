@@ -2,6 +2,7 @@ import { Component, Optional, SkipSelf } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
 import * as THREE from 'three';
+import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { ChannelThickGeometry } from '../geometry';
 import { ChannelThickMaterial } from '../material';
 
@@ -11,7 +12,7 @@ import { ChannelThickMaterial } from '../material';
     providers: [provideParent(SphereMeshComponent)],
     template: '<ng-content></ng-content>',
 })
-export class ChannelThickObjectComponent extends AbstractObject3D<THREE.LineSegments> {
+export class ChannelThickObjectComponent extends AbstractObject3D<Line2> {
     constructor(
         protected override rendererService: RendererService,
         private geometry: ChannelThickGeometry,
@@ -21,8 +22,9 @@ export class ChannelThickObjectComponent extends AbstractObject3D<THREE.LineSegm
         super(rendererService, parent);
     }
 
-    protected newObject3DInstance(): THREE.LineSegments {
-        const line = new THREE.LineSegments(this.geometry, this.material);
+    protected newObject3DInstance(): Line2 {
+        const line = new Line2(this.geometry, this.material);
+        console.log(line);
         line.renderOrder = -1;
         return line;
     }
