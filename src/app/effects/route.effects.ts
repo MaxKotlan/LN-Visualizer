@@ -44,12 +44,10 @@ export class RouteEffects {
                         this.router.routerState.snapshot.root?.firstChild?.params['public_key'] ||
                         '',
                 ),
-                withLatestFrom(this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$),
-                filter(([, matchedNode]) => !matchedNode),
-                map(([routePubKey]) =>
+                map((routePubKey) =>
                     controlsActions.searchGraph({
                         searchText: routePubKey,
-                        shouldUpdateSearchBar: true,
+                        shouldUpdateSearchBar: false,
                     }),
                 ),
             ),
