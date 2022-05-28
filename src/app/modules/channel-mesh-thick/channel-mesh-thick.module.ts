@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChannelThickGeometry } from '../channel-mesh/geometry';
+import { ChannelThickGeometry } from './geometry';
 import { ChannelThickObjectComponent } from './object';
 import { ChannelThickMaterial } from './material';
 
