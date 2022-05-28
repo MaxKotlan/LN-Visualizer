@@ -10,4 +10,4 @@ import { ChannelThickMaterial } from './material';
     providers: [ChannelThickGeometry, ChannelThickMaterial],
     exports: [ChannelThickObjectComponent],
 })
-export class ChannelMeshModule {}
+export class ChannelThickMeshModule {}
