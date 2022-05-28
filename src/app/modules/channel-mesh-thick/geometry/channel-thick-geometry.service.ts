@@ -26,10 +26,7 @@ export class ChannelThickGeometry extends LineGeometry {
         // );
         if (this.channelBufferService.vertex.data.length > 0)
             this.setPositions(this.channelBufferService.vertex.data);
-        // this.setAttribute(
-        //     'position',
-        //     new THREE.BufferAttribute(this.channelBufferService.vertex.data, 3),
-        // );
+
         if (this.channelBufferService.color.data.length > 0)
             this.setColors(this.channelBufferService.color.data as unknown as Float32Array);
 
