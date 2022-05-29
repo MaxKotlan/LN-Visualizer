@@ -8,7 +8,7 @@ export interface PilotFlags {
 
 const initialState: PilotFlags = {
     unitConversions: false,
-    thickLines: true,
+    thickLines: false,
 };
 
 export const reducer = createReducer(
