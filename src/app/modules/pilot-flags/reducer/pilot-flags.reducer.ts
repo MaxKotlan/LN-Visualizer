@@ -17,4 +17,7 @@ export const reducer = createReducer(
         ...state,
         [pilotName]: value,
     })),
+    on(pilotFlagActions.setAllPilotFlags, (state, { value }) => ({
+        ...value,
+    })),
 );
