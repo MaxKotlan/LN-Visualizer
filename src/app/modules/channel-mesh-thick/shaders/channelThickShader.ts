@@ -29,6 +29,14 @@ export const ChannelThickShader = {
     varying vec3 worldStart;
     varying vec3 worldEnd;
 
+    uniform float sinTime;
+    uniform float motionIntensity;
+    uniform vec3 motionOrigin;
+    uniform vec3 mouseRayOrigin;
+    uniform vec3 mouseRayDirection;
+    uniform float cosTime;
+
+
     #ifdef USE_DASH
 
         uniform float dashScale;
@@ -70,6 +78,16 @@ export const ChannelThickShader = {
         float aspect = resolution.x / resolution.y;
 
         vUv = uv;
+
+        vec3 timeVec = vec3(sinTime, cosTime, cosTime );
+
+        vec3 moveFactorStart = instanceStart;
+        float distStart = sqrt(distance(instanceStart, motionOrigin));
+        vec3 instanceStart = vec3( instanceStart + distStart*motionIntensity*timeVec*moveFactorStart);
+
+        vec3 moveFactorEnd = instanceEnd;
+        float distEnd = sqrt(distance(instanceEnd, motionOrigin));
+        vec3 instanceEnd = vec3( instanceEnd + distEnd*motionIntensity*timeVec*moveFactorEnd);
 
         // camera space
         vec4 start = modelViewMatrix * vec4( instanceStart, 1.0 );
@@ -114,11 +132,14 @@ export const ChannelThickShader = {
         dir.x *= aspect;
         dir = normalize( dir );
 
+
+
         #ifdef WORLD_UNITS
 
             // get the offset direction as perpendicular to the view vector
             vec3 worldDir = normalize( end.xyz - start.xyz );
             vec3 offset;
+
             if ( position.y < 0.5 ) {
 
                 offset = normalize( cross( start.xyz, worldDir ) );
