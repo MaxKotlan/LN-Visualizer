@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
 import { shouldRenderEdges } from '../../controls-channel/selectors';
 import { GraphState } from '../../graph-renderer/reducer';
 import { ChannelBuffersService } from '../../graph-renderer/services/channel-buffers/channel-buffers.service';
@@ -9,7 +10,7 @@ import { ChannelBuffersService } from '../../graph-renderer/services/channel-buf
 @Injectable({
     providedIn: 'root',
 })
-export class ChannelThickGeometry extends LineGeometry {
+export class ChannelThickGeometry extends LineSegmentsGeometry {
     constructor(
         private channelBufferService: ChannelBuffersService,
         private store$: Store<GraphState>,
@@ -27,8 +28,8 @@ export class ChannelThickGeometry extends LineGeometry {
         if (this.channelBufferService.vertex.data.length > 0)
             this.setPositions(this.channelBufferService.vertex.data);
 
-        if (this.channelBufferService.color.data.length > 0)
-            this.setColors(this.channelBufferService.color.data as unknown as Float32Array);
+        // if (this.channelBufferService.color.data.length > 0)
+        //     this.setColors(this.channelBufferService.color.data as unknown as Float32Array);
 
         this.updateGeometry();
     }
