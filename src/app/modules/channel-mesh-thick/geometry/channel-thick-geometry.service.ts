@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
+import { InterleavedBufferAttribute } from 'three';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
 import { shouldRenderEdges } from '../../controls-channel/selectors';
@@ -51,20 +52,17 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
     }
 
     private handleUpdates() {
-        let currentDrawRange;
         let currentShouldRender;
 
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
-            currentDrawRange = drawRange;
-            console.log('updateing..', currentDrawRange);
-            this.instanceCount = drawRange;
-            this.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.setDrawRange(0, currentShouldRender ? Infinity : 0);
+            this.instanceCount = drawRange / 2;
             this.initializeGeometry();
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
             currentShouldRender = shouldRender;
-            this.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            this.setDrawRange(0, currentShouldRender ? Infinity : 0);
         });
     }
 }
