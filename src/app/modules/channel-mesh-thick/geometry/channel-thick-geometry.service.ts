@@ -29,9 +29,9 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
             this.setPositions(this.channelBufferService.vertex.data);
 
         const a = this.channelBufferService.color.data;
-        const b = new Float32Array(a);
+        const b = new Float32Array(a).map((x) => x / 256);
         if (this.channelBufferService.color.data.length > 0) this.setColors(b);
-        console.log(this);
+
         this.updateGeometry();
     }
 
