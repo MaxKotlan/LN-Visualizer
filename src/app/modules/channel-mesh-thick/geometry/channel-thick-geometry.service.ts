@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as THREE from 'three';
-import { InterleavedBufferAttribute } from 'three';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
 import { shouldRenderEdges } from '../../controls-channel/selectors';
 import { GraphState } from '../../graph-renderer/reducer';
