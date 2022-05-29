@@ -50,7 +50,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public thickLinesEnabled$ = this.store$.select(pilotThickLinesEnabled$);
 
     public ngAfterViewInit() {
-        // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
+        this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
         this.cameraControllerService.setCamera(this.cameraComponent?.camera);
         this.orbitControllerService.setOrbitControlsComponent(this.orbitControlsComponent);
 

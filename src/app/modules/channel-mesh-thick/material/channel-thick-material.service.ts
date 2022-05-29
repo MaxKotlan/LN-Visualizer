@@ -32,6 +32,7 @@ export class ChannelThickMaterial extends LineMaterial {
             //resolution:  // to be set by renderer, eventually
             dashed: false,
             alphaToCoverage: true,
+            fog: true,
         });
         console.log(this);
         this.handleUpdates();
