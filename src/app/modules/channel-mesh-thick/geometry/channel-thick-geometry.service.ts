@@ -56,8 +56,10 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
 
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
-            this.initializeGeometry();
+            console.log('updateing..', currentDrawRange);
+            this.instanceCount = drawRange;
             this.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            this.initializeGeometry();
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
