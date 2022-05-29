@@ -28,15 +28,24 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
         if (this.channelBufferService.vertex.data.length > 0)
             this.setPositions(this.channelBufferService.vertex.data);
 
-        // if (this.channelBufferService.color.data.length > 0)
-        //     this.setColors(this.channelBufferService.color.data as unknown as Float32Array);
-
+        const a = this.channelBufferService.color.data;
+        const b = new Float32Array(a);
+        if (this.channelBufferService.color.data.length > 0) this.setColors(b);
+        console.log(this);
         this.updateGeometry();
     }
 
+    public updateAttributes() {
+        if (this.attributes['instanceColorEnd'])
+            this.attributes['instanceColorEnd'].needsUpdate = true;
+        if (this.attributes['instanceColorStart'])
+            this.attributes['instanceColorStart'].needsUpdate = true;
+        if (this.attributes['instanceEnd']) this.attributes['instanceEnd'].needsUpdate = true;
+        if (this.attributes['instanceStart']) this.attributes['instanceStart'].needsUpdate = true;
+    }
+
     public updateGeometry() {
-        // this.attributes['color'].needsUpdate = true;
-        // this.attributes['position'].needsUpdate = true;
+        this.updateAttributes();
         this.computeBoundingBox();
         this.computeBoundingSphere();
     }
@@ -45,7 +54,7 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
         let currentDrawRange;
         let currentShouldRender;
 
-        this.channelBufferService.vertex.onUpdate.subscribe((drawRange) => {
+        this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
             this.initializeGeometry();
             this.setDrawRange(0, currentShouldRender ? drawRange : 0);
