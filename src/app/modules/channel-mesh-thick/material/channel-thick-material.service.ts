@@ -14,6 +14,7 @@ import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
+import { ChannelThickShader } from '../shaders/channelThickShader';
 
 @Injectable({
     providedIn: 'root',
@@ -30,10 +31,11 @@ export class ChannelThickMaterial extends LineMaterial {
             linewidth: 0.002, // in world units with size attenuation, pixels otherwise
             vertexColors: true,
             //resolution:  // to be set by renderer, eventually
-            dashed: false,
+            dashed: true,
             alphaToCoverage: true,
             fog: true,
         });
+        this.vertexShader = ChannelThickShader.vertexShader;
         console.log(this);
         this.handleUpdates();
     }
