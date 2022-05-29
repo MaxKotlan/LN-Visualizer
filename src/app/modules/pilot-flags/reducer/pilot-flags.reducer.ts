@@ -13,8 +13,8 @@ const initialState: PilotFlags = {
 
 export const reducer = createReducer(
     initialState,
-    on(pilotFlagActions.enableThickLines, (state) => ({
+    on(pilotFlagActions.setPilotFlag, (state, { pilotName, value }) => ({
         ...state,
-        thickLines: true,
+        [pilotName]: value,
     })),
 );
