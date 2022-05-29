@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { Uniform } from 'three';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import {
+    selectChannelWidth,
     selectEdgeDepthTest,
     selectEnableChannelFog,
     selectFogDistance,
@@ -37,7 +38,6 @@ export class ChannelThickMaterial extends LineMaterial {
             fog: true,
         });
         this.vertexShader = ChannelThickShader.vertexShader;
-        console.log(this);
         this.handleUpdates();
     }
 
@@ -79,6 +79,10 @@ export class ChannelThickMaterial extends LineMaterial {
 
         this.store$.select(selectFogDistance).subscribe((fogDistance) => {
             this.uniforms['fogDistance'] = { value: fogDistance };
+        });
+
+        this.store$.select(selectChannelWidth).subscribe((width) => {
+            this.linewidth = width;
         });
     }
 }

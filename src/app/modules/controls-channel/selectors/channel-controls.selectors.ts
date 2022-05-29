@@ -56,3 +56,8 @@ export const selectEnableChannelFog = createSelector(
     channelControlsSelector,
     (state) => state.enableChannelFog,
 );
+
+export const selectChannelWidth = createSelector(
+    channelControlsSelector,
+    (state) => state.channelWidth,
+);

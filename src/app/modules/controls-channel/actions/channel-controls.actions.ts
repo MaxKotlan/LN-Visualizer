@@ -34,4 +34,9 @@ export const enableChannelFog = createAction(
     props<{ value: boolean }>(),
 );
 
+export const setChannelWidth = createAction(
+    '[controls] setChannelWidth',
+    props<{ value: number }>(),
+);
+
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());

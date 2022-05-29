@@ -13,6 +13,7 @@ export interface ChannelControlState {
     useLogColorScale: boolean;
     enableChannelFog: boolean;
     fogDistance: number;
+    channelWidth: number;
 }
 
 const initialState: ChannelControlState = {
@@ -25,6 +26,7 @@ const initialState: ChannelControlState = {
     useLogColorScale: true,
     enableChannelFog: false,
     fogDistance: 1.0,
+    channelWidth: 1.0,
 };
 
 export const reducer = createReducer(
@@ -65,5 +67,9 @@ export const reducer = createReducer(
     on(channelControlsActions.setFogDistance, (state, { value }) => ({
         ...state,
         fogDistance: value,
+    })),
+    on(channelControlsActions.setChannelWidth, (state, { value }) => ({
+        ...state,
+        channelWidth: value,
     })),
 );
