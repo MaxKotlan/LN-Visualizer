@@ -27,7 +27,7 @@ export class SearchComponent {
     );
 
     clear() {
-        this.store$.dispatch(searchGraph({ searchText: '', shouldUpdateSearchBar: true }));
+        this.store$.dispatch(searchGraph({ searchText: '', shouldUpdateSearchBar: false }));
     }
 
     onTextChange(event: any) {
