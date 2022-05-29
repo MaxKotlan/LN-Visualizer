@@ -45,6 +45,7 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
     }
 
     public updateGeometry() {
+        console.log(this);
         this.updateAttributes();
         this.computeBoundingBox();
         this.computeBoundingSphere();
@@ -57,12 +58,12 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
         this.channelBufferService.color.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
             this.initializeGeometry();
-            this.setDrawRange(0, currentShouldRender ? drawRange : 0);
+            //this.setDrawRange(0, currentShouldRender ? drawRange : 0);
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
             currentShouldRender = shouldRender;
-            this.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
+            //this.setDrawRange(0, currentShouldRender ? currentDrawRange : 0);
         });
     }
 }
