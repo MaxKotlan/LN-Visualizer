@@ -22,10 +22,6 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
     }
 
     public initializeGeometry() {
-        // this.setAttribute(
-        //     'color',
-        //     new THREE.BufferAttribute(this.channelBufferService.color.data, 3, true),
-        // );
         if (this.channelBufferService.vertex.data.length > 0)
             this.setPositions(this.channelBufferService.vertex.data);
 
