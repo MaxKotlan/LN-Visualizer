@@ -49,4 +49,9 @@ export const setLineAttenuation = createAction(
     props<{ value: boolean }>(),
 );
 
+export const setChannelAttenuation = createAction(
+    '[controls] setChannelAttenuation',
+    props<{ value: boolean }>(),
+);
+
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());

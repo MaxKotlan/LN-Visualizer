@@ -87,4 +87,8 @@ export const reducer = createReducer(
         ...state,
         attenuation: value,
     })),
+    on(channelControlsActions.setChannelAttenuation, (state, { value }) => ({
+        ...state,
+        attenuation: value,
+    })),
 );
