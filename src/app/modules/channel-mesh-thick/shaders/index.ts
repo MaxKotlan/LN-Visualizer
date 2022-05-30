@@ -1,1 +1,1 @@
-export { ChannelShader } from './channelShader';
+export { ChannelThickShader } from './channelThickShader';

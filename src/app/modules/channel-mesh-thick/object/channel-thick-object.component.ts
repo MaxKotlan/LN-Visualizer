@@ -23,7 +23,7 @@ export class ChannelThickObjectComponent extends AbstractObject3D<LineSegments2>
 
     protected newObject3DInstance(): LineSegments2 {
         const line = new LineSegments2(this.geometry, this.material);
-        console.log(line);
+        // line.computeLineDistances();
         line.renderOrder = -1;
         return line;
     }

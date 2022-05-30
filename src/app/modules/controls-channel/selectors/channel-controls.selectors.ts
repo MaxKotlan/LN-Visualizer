@@ -56,3 +56,24 @@ export const selectEnableChannelFog = createSelector(
     channelControlsSelector,
     (state) => state.enableChannelFog,
 );
+
+export const selectLineBackend = createSelector(
+    channelControlsSelector,
+    (state) => state.lineBackend,
+);
+
+export const selectChannelWidth = createSelector(
+    channelControlsSelector,
+    (state) => state.channelWidth,
+);
+
+export const selectLineAttenuation = createSelector(
+    channelControlsSelector,
+    (state) => state.attenuation,
+);
+
+export const selectChannelWidthForShader = createSelector(
+    selectChannelWidth,
+    selectLineAttenuation,
+    (width, attenuation) => (attenuation ? width / 10 : width / 300),
+);

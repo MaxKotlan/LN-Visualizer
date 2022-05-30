@@ -8,13 +8,16 @@ export interface PilotFlags {
 
 const initialState: PilotFlags = {
     unitConversions: false,
-    thickLines: false,
+    thickLines: true,
 };
 
 export const reducer = createReducer(
     initialState,
-    on(pilotFlagActions.enableThickLines, (state) => ({
+    on(pilotFlagActions.setPilotFlag, (state, { pilotName, value }) => ({
         ...state,
-        thickLines: true,
+        [pilotName]: value,
+    })),
+    on(pilotFlagActions.setAllPilotFlags, (state, { value }) => ({
+        ...value,
     })),
 );

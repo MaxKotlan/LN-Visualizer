@@ -1,3 +1,12 @@
-import { createAction } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
+import { PilotFlags } from '../reducer';
 
-export const enableThickLines = createAction('[pilot flags] enableThickLines');
+export const setPilotFlag = createAction(
+    '[pilot flags] setPilotFlag',
+    props<{ pilotName: string; value: boolean }>(),
+);
+
+export const setAllPilotFlags = createAction(
+    '[pilot flags] setPilotFlag',
+    props<{ value: PilotFlags }>(),
+);

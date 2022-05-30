@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
+import { pilotThickLinesEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { GenericControlsState } from '../../../controls/reducers';
 import {
     renderEdges,
@@ -14,6 +15,7 @@ import {
     selectEdgeDottedLine,
     selectUseLogColorScale,
     selectEnableChannelFog,
+    selectLineBackend,
 } from '../../selectors';
 
 @Component({
@@ -29,6 +31,9 @@ export class ChannelSettingsComponent {
     public selectEdgeDottedLine$ = this.store.select(selectEdgeDottedLine);
     public selectUseLogColorScale$ = this.store.select(selectUseLogColorScale);
     public selectEnabledFog$ = this.store.select(selectEnableChannelFog);
+
+    public thickLinesEnabled$ = this.store.select(pilotThickLinesEnabled$);
+    public selectLineBackend$ = this.store.select(selectLineBackend);
 
     setShouldRenderEdges(event: MatCheckboxChange) {
         this.store.dispatch(renderEdges({ value: event.checked }));

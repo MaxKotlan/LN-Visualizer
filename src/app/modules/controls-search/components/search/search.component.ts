@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, filter, map, Subject, tap } from 'rxjs';
+import { combineLatest, filter, map, tap } from 'rxjs';
 import { shouldUpdateSearchBar } from 'src/app/modules/controls/selectors/controls.selectors';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
@@ -27,7 +27,7 @@ export class SearchComponent {
     );
 
     clear() {
-        this.store$.dispatch(searchGraph({ searchText: '', shouldUpdateSearchBar: true }));
+        this.store$.dispatch(searchGraph({ searchText: '', shouldUpdateSearchBar: false }));
     }
 
     onTextChange(event: any) {

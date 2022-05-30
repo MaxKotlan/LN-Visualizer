@@ -13,6 +13,9 @@ export interface ChannelControlState {
     useLogColorScale: boolean;
     enableChannelFog: boolean;
     fogDistance: number;
+    lineBackend: 'gl-line' | 'line-mesh';
+    channelWidth: number;
+    attenuation: boolean;
 }
 
 const initialState: ChannelControlState = {
@@ -25,11 +28,13 @@ const initialState: ChannelControlState = {
     useLogColorScale: true,
     enableChannelFog: false,
     fogDistance: 1.0,
+    channelWidth: 0.3,
+    lineBackend: 'gl-line',
+    attenuation: false,
 };
 
 export const reducer = createReducer(
     initialState,
-
     on(controlsActions.setSavedStateFromLocalStorage, (_state, { savedState }) =>
         initializeDefaultValue(savedState.channelControls, initialState),
     ),
@@ -65,5 +70,25 @@ export const reducer = createReducer(
     on(channelControlsActions.setFogDistance, (state, { value }) => ({
         ...state,
         fogDistance: value,
+    })),
+    on(channelControlsActions.setChannelWidth, (state, { value }) => ({
+        ...state,
+        channelWidth: value,
+    })),
+    on(channelControlsActions.setChannelWidth, (state, { value }) => ({
+        ...state,
+        channelWidth: value,
+    })),
+    on(channelControlsActions.setLineBackend, (state, { value }) => ({
+        ...state,
+        lineBackend: value,
+    })),
+    on(channelControlsActions.setLineAttenuation, (state, { value }) => ({
+        ...state,
+        attenuation: value,
+    })),
+    on(channelControlsActions.setChannelAttenuation, (state, { value }) => ({
+        ...state,
+        attenuation: value,
     })),
 );

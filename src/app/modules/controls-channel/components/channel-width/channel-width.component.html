@@ -1,0 +1,11 @@
+<span style="margin-right: 0.4rem"> Channel Width</span>
+<mat-slider
+    [ngModel]="selectChannelWidth$ | async"
+    (change)="setChannelWidth($event)"
+    #maxNodeSize
+    min="0"
+    max="3"
+    step="0.002"
+    value="1"
+></mat-slider>
+{{ maxNodeSize.value }}

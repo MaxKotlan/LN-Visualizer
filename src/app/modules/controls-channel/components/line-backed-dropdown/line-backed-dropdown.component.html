@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+    <mat-label>Line Primitive</mat-label>
+    <mat-select [value]="lineBackend$ | async" (valueChange)="valueChanged($event)">
+        <mat-option *ngFor="let option of lineOptions" [value]="option">{{ option }}</mat-option>
+    </mat-select>
+</mat-form-field>

@@ -5,15 +5,18 @@ import * as THREE from 'three';
 import { Uniform } from 'three';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import {
+    selectChannelWidthForShader,
     selectEdgeDepthTest,
     selectEnableChannelFog,
     selectFogDistance,
+    selectLineAttenuation,
 } from '../../controls-channel/selectors';
 import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
+import { ChannelThickShader } from '../shaders/channelThickShader';
 
 @Injectable({
     providedIn: 'root',
@@ -27,12 +30,15 @@ export class ChannelThickMaterial extends LineMaterial {
     ) {
         super({
             color: 0xffffff,
-            linewidth: 0.002, // in world units with size attenuation, pixels otherwise
+            linewidth: 0.03, // in world units with size attenuation, pixels otherwise
             vertexColors: true,
+            worldUnits: true,
             //resolution:  // to be set by renderer, eventually
-            dashed: false,
+            dashed: true,
             alphaToCoverage: true,
+            fog: true,
         });
+        this.vertexShader = ChannelThickShader.vertexShader;
         console.log(this);
         this.handleUpdates();
     }
@@ -75,6 +81,15 @@ export class ChannelThickMaterial extends LineMaterial {
 
         this.store$.select(selectFogDistance).subscribe((fogDistance) => {
             this.uniforms['fogDistance'] = { value: fogDistance };
+        });
+
+        this.store$.select(selectChannelWidthForShader).subscribe((width) => {
+            this.linewidth = width;
+        });
+
+        this.store$.select(selectLineAttenuation).subscribe((worldUnits) => {
+            this.worldUnits = worldUnits;
+            this.needsUpdate = true;
         });
     }
 }

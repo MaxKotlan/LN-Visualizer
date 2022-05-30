@@ -34,4 +34,24 @@ export const enableChannelFog = createAction(
     props<{ value: boolean }>(),
 );
 
+export const setChannelWidth = createAction(
+    '[controls] setChannelWidth',
+    props<{ value: number }>(),
+);
+
+export const setLineBackend = createAction(
+    '[controls] setLineBackend',
+    props<{ value: 'gl-line' | 'line-mesh' }>(),
+);
+
+export const setLineAttenuation = createAction(
+    '[controls] setLineAttenuation',
+    props<{ value: boolean }>(),
+);
+
+export const setChannelAttenuation = createAction(
+    '[controls] setChannelAttenuation',
+    props<{ value: boolean }>(),
+);
+
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());
