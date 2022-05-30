@@ -29,7 +29,10 @@
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-nodes-object></app-nodes-object>
             <app-channel-thick-object
-                *ngIf="thickLinesEnabled$ | async; else regularLines"
+                *ngIf="
+                    (thickLinesEnabled$ | async) && (lineBackend$ | async) === 'line-mesh';
+                    else regularLines
+                "
             ></app-channel-thick-object>
             <ng-template #regularLines>
                 <app-channel-object></app-channel-object>

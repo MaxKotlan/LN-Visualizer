@@ -9,6 +9,7 @@ import {
     RendererService,
     SceneComponent,
 } from 'atft';
+import { selectLineBackend } from 'src/app/modules/controls-channel/selectors';
 import {
     selectRenderResolution,
     selectShowAxis,
@@ -48,6 +49,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public selectCameraFov$ = this.store$.select(selectCameraFov);
 
     public thickLinesEnabled$ = this.store$.select(pilotThickLinesEnabled$);
+    public lineBackend$ = this.store$.select(selectLineBackend);
 
     public ngAfterViewInit() {
         // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
