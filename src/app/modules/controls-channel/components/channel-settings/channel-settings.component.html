@@ -18,7 +18,9 @@
     >
     <ng-container *ngIf="thickLinesEnabled$ | async">
         <app-line-backed-dropdown></app-line-backed-dropdown>
-        <app-channel-attenuation></app-channel-attenuation>
-        <app-channel-width></app-channel-width>
+        <ng-container *ngIf="(selectLineBackend$ | async) === 'line-mesh'">
+            <app-channel-attenuation></app-channel-attenuation>
+            <app-channel-width></app-channel-width>
+        </ng-container>
     </ng-container>
 </section>

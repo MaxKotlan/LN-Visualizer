@@ -16,6 +16,6 @@ export class ChannelWidthComponent {
     public selectChannelWidth$ = this.store.select(selectChannelWidth);
 
     setChannelWidth(event: MatSliderChange) {
-        this.store.dispatch(setChannelWidth({ value: event.value || 1 }));
+        this.store.dispatch(setChannelWidth({ value: event.value || 0 }));
     }
 }

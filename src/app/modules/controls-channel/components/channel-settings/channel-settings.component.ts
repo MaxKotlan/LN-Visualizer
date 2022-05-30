@@ -15,6 +15,7 @@ import {
     selectEdgeDottedLine,
     selectUseLogColorScale,
     selectEnableChannelFog,
+    selectLineBackend,
 } from '../../selectors';
 
 @Component({
@@ -32,6 +33,7 @@ export class ChannelSettingsComponent {
     public selectEnabledFog$ = this.store.select(selectEnableChannelFog);
 
     public thickLinesEnabled$ = this.store.select(pilotThickLinesEnabled$);
+    public selectLineBackend$ = this.store.select(selectLineBackend);
 
     setShouldRenderEdges(event: MatCheckboxChange) {
         this.store.dispatch(renderEdges({ value: event.checked }));

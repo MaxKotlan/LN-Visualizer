@@ -87,6 +87,8 @@ export class ChannelThickMaterial extends LineMaterial {
             this.linewidth = width;
         });
 
-        this.store$.select(selectLineAttenuation).subscribe(() => (this.worldUnits = true));
+        this.store$.select(selectLineAttenuation).subscribe((worldUnits) => {
+            this.worldUnits = worldUnits;
+        });
     }
 }
