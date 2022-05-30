@@ -43,6 +43,8 @@ export class ChannelThickMaterial extends LineMaterial {
         this.handleUpdates();
     }
 
+    worldUns: boolean = true;
+
     private handleUpdates() {
         this.animationTimeService.sinTime$.subscribe(
             (elapsed) => (this.uniforms['sinTime'] = { value: elapsed }),
@@ -88,7 +90,9 @@ export class ChannelThickMaterial extends LineMaterial {
         });
 
         this.store$.select(selectLineAttenuation).subscribe((worldUnits) => {
+            console.log(this.uniforms);
             this.worldUnits = worldUnits;
+            this.needsUpdate = true;
         });
     }
 }
