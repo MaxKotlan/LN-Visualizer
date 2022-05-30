@@ -28,9 +28,9 @@ const initialState: ChannelControlState = {
     useLogColorScale: true,
     enableChannelFog: false,
     fogDistance: 1.0,
-    channelWidth: 1.0,
+    channelWidth: 0.3,
     lineBackend: 'gl-line',
-    attenuation: true,
+    attenuation: false,
 };
 
 export const reducer = createReducer(
