@@ -57,6 +57,11 @@ export const selectEnableChannelFog = createSelector(
     (state) => state.enableChannelFog,
 );
 
+export const selectLineBackend = createSelector(
+    channelControlsSelector,
+    (state) => state.lineBackend,
+);
+
 export const selectChannelWidth = createSelector(
     channelControlsSelector,
     (state) => state.channelWidth,

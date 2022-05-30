@@ -17,6 +17,7 @@
         >Use Log Scale</mat-checkbox
     >
     <ng-container *ngIf="thickLinesEnabled$ | async">
+        <app-line-backed-dropdown></app-line-backed-dropdown>
         <app-channel-width></app-channel-width>
     </ng-container>
 </section>

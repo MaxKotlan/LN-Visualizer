@@ -39,4 +39,9 @@ export const setChannelWidth = createAction(
     props<{ value: number }>(),
 );
 
+export const setLineBackend = createAction(
+    '[controls] setLineBackend',
+    props<{ value: 'gl-line' | 'line-mesh' }>(),
+);
+
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());

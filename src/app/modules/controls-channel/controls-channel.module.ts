@@ -10,9 +10,10 @@ import { ChannelColorMapDropdownComponent } from './components/channel-color-map
 import { EnableChannelFogComponent } from './components/enable-channel-fog/enable-channel-fog.component';
 import { FogDistanceComponent } from './components/fog-distance/fog-distance.component';
 import { ChannelWidthComponent } from './components/channel-width/channel-width.component';
+import { LineBackedDropdownComponent } from './components/line-backed-dropdown/line-backed-dropdown.component';
 
 @NgModule({
-    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent, EnableChannelFogComponent, FogDistanceComponent, ChannelWidthComponent],
+    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent, EnableChannelFogComponent, FogDistanceComponent, ChannelWidthComponent, LineBackedDropdownComponent],
     imports: [
         CommonModule,
         MaterialModule,
