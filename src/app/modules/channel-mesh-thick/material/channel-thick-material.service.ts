@@ -9,6 +9,7 @@ import {
     selectEdgeDepthTest,
     selectEnableChannelFog,
     selectFogDistance,
+    selectLineAttenuation,
 } from '../../controls-channel/selectors';
 import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
@@ -38,6 +39,7 @@ export class ChannelThickMaterial extends LineMaterial {
             fog: true,
         });
         this.vertexShader = ChannelThickShader.vertexShader;
+        console.log(this);
         this.handleUpdates();
     }
 
@@ -84,5 +86,7 @@ export class ChannelThickMaterial extends LineMaterial {
         this.store$.select(selectChannelWidth).subscribe((width) => {
             this.linewidth = width;
         });
+
+        this.store$.select(selectLineAttenuation).subscribe(() => (this.worldUnits = true));
     }
 }

@@ -66,3 +66,8 @@ export const selectChannelWidth = createSelector(
     channelControlsSelector,
     (state) => state.channelWidth,
 );
+
+export const selectLineAttenuation = createSelector(
+    channelControlsSelector,
+    (state) => state.attenuation,
+);

@@ -15,6 +15,7 @@ export interface ChannelControlState {
     fogDistance: number;
     lineBackend: 'gl-line' | 'line-mesh';
     channelWidth: number;
+    attenuation: boolean;
 }
 
 const initialState: ChannelControlState = {
@@ -29,6 +30,7 @@ const initialState: ChannelControlState = {
     fogDistance: 1.0,
     channelWidth: 1.0,
     lineBackend: 'gl-line',
+    attenuation: true,
 };
 
 export const reducer = createReducer(
@@ -80,5 +82,9 @@ export const reducer = createReducer(
     on(channelControlsActions.setLineBackend, (state, { value }) => ({
         ...state,
         lineBackend: value,
+    })),
+    on(channelControlsActions.setLineAttenuation, (state, { value }) => ({
+        ...state,
+        attenuation: value,
     })),
 );
