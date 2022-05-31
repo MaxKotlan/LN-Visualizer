@@ -5,6 +5,7 @@ import {
     map,
     Observable,
     of,
+    shareReplay,
     switchMap,
     tap,
     TimestampProvider,
@@ -37,6 +38,7 @@ export class AnimationTimeService {
                       )
                     : of(0),
             ),
+            shareReplay(1),
         );
         this.cosTime$ = this.store$.select(selectShowGraphAnimation).pipe(
             switchMap((shouldShow) =>
@@ -47,6 +49,7 @@ export class AnimationTimeService {
                       )
                     : of(0),
             ),
+            shareReplay(1),
         );
     }
 
