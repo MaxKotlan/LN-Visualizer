@@ -72,7 +72,7 @@ export class NodeSearchEffects {
                     nodeMatch?.position.clone().multiplyScalar(meshScale) || new Vector3(0, 0, 0),
                 ),
         ),
-        share(),
+        shareReplay(),
     );
 
     selectNodesSearchResults$ = this.selectPossibleNodesFromSearch$.pipe(
