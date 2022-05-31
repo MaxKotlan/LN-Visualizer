@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
@@ -18,6 +19,7 @@ import { GraphState } from '../../graph-renderer/reducer';
 import { AnimationTimeService } from '../../graph-renderer/services/animation-timer/animation-time.service';
 import { ChannelThickShader } from '../shaders/channelThickShader';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
@@ -44,52 +46,75 @@ export class ChannelThickMaterial extends LineMaterial {
     }
 
     private handleUpdates() {
-        this.animationTimeService.sinTime$.subscribe(
-            (elapsed) => (this.uniforms['sinTime'] = { value: elapsed }),
-        );
+        this.animationTimeService.sinTime$
+            .pipe(untilDestroyed(this))
+            .subscribe((elapsed) => (this.uniforms['sinTime'] = { value: elapsed }));
 
-        this.animationTimeService.cosTime$.subscribe(
-            (elapsed) => (this.uniforms['cosTime'] = { value: elapsed }),
-        );
+        this.animationTimeService.cosTime$
+            .pipe(untilDestroyed(this))
+            .subscribe((elapsed) => (this.uniforms['cosTime'] = { value: elapsed }));
 
-        this.actions.pipe(ofType(setMouseRay)).subscribe((ray) => {
-            this.uniforms['mouseRayOrigin'] = new Uniform(
-                ray.value.origin || new THREE.Vector3(0, 0, 0),
-            );
-            this.uniforms['mouseRayDirection'] = new Uniform(
-                ray.value.direction || new THREE.Vector3(0, 0, 0),
-            );
-        });
+        this.actions
+            .pipe(ofType(setMouseRay))
+            .pipe(untilDestroyed(this))
+            .subscribe((ray) => {
+                this.uniforms['mouseRayOrigin'] = new Uniform(
+                    ray.value.origin || new THREE.Vector3(0, 0, 0),
+                );
+                this.uniforms['mouseRayDirection'] = new Uniform(
+                    ray.value.direction || new THREE.Vector3(0, 0, 0),
+                );
+            });
 
-        this.nodeSearch.selectFinalPositionFromSearch$.subscribe((position) => {
-            this.uniforms['motionOrigin'] = position;
-            this.dispose();
-        });
+        this.nodeSearch.selectFinalPositionFromSearch$
+            .pipe(untilDestroyed(this))
+            .subscribe((position) => {
+                this.uniforms['motionOrigin'] = position;
+                this.dispose();
+            });
 
-        this.store$.select(selectNodeMotionIntensity).subscribe((intensity) => {
-            const updatedIntensity = intensity / 1000.0;
-            this.uniforms['motionIntensity'] = { value: updatedIntensity };
-        });
+        this.store$
+            .select(selectNodeMotionIntensity)
+            .pipe(untilDestroyed(this))
+            .subscribe((intensity) => {
+                const updatedIntensity = intensity / 1000.0;
+                this.uniforms['motionIntensity'] = { value: updatedIntensity };
+            });
 
-        this.store$.select(selectEdgeDepthTest).subscribe((depthTest) => {
-            this.depthTest = depthTest;
-        });
+        this.store$
+            .select(selectEdgeDepthTest)
+            .pipe(untilDestroyed(this))
+            .subscribe((depthTest) => {
+                this.depthTest = depthTest;
+            });
 
-        this.store$.select(selectEnableChannelFog).subscribe((enableChannelFog) => {
-            this.uniforms['fogEnabled'] = { value: enableChannelFog };
-        });
+        this.store$
+            .select(selectEnableChannelFog)
+            .pipe(untilDestroyed(this))
+            .subscribe((enableChannelFog) => {
+                this.uniforms['fogEnabled'] = { value: enableChannelFog };
+            });
 
-        this.store$.select(selectFogDistance).subscribe((fogDistance) => {
-            this.uniforms['fogDistance'] = { value: fogDistance };
-        });
+        this.store$
+            .select(selectFogDistance)
+            .pipe(untilDestroyed(this))
+            .subscribe((fogDistance) => {
+                this.uniforms['fogDistance'] = { value: fogDistance };
+            });
 
-        this.store$.select(selectChannelWidthForShader).subscribe((width) => {
-            this.linewidth = width;
-        });
+        this.store$
+            .select(selectChannelWidthForShader)
+            .pipe(untilDestroyed(this))
+            .subscribe((width) => {
+                this.linewidth = width;
+            });
 
-        this.store$.select(selectLineAttenuation).subscribe((worldUnits) => {
-            this.worldUnits = worldUnits;
-            this.needsUpdate = true;
-        });
+        this.store$
+            .select(selectLineAttenuation)
+            .pipe(untilDestroyed(this))
+            .subscribe((worldUnits) => {
+                this.worldUnits = worldUnits;
+                this.needsUpdate = true;
+            });
     }
 }
