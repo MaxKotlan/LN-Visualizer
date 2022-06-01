@@ -27,8 +27,6 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
         const b = new Float32Array(a).map((x) => x / 256);
         if (this.channelBufferService.color.data.length > 0) this.setColors(b);
 
-        console.log(this.channelBufferService.thickness.data);
-
         if (this.channelBufferService.thickness.data.length > 0) {
             const c = new InstancedInterleavedBuffer(
                 this.channelBufferService.thickness.data,
@@ -37,7 +35,6 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
             );
             this.setAttribute('channelWidthProperty', new InterleavedBufferAttribute(c, 1, 0));
         }
-        console.log(this);
 
         this.updateGeometry();
     }
@@ -67,6 +64,11 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
             this.setDrawRange(0, currentShouldRender ? Infinity : 0);
             this.instanceCount = drawRange / 2;
             this.initializeGeometry();
+        });
+
+        this.channelBufferService.thickness.onUpdate.subscribe(() => {
+            this.setDrawRange(0, currentShouldRender ? Infinity : 0);
+            this.updateAttributes();
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {
