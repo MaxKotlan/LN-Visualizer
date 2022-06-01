@@ -14,6 +14,7 @@ export interface GraphState {
     nodeCapacityBufferSize: number;
     channelVertexBufferSize: number;
     channelColorBufferSize: number;
+    channelThicknessBufferSize: number;
 
     nodeCount: number;
     channelCount: number;
@@ -35,6 +36,7 @@ const initialState: GraphState = {
     nodeCapacityBufferSize: 0,
     channelVertexBufferSize: 0,
     channelColorBufferSize: 0,
+    channelThicknessBufferSize: 0,
     nodeCount: 0,
     channelCount: 0,
     loadingText: '',
@@ -73,6 +75,7 @@ export const reducer = createReducer(
         nodeCapacityBufferSize: Math.floor(chunkInfo.nodes * bufferOverheadStorage) * 3,
         channelVertexBufferSize: Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
         channelColorBufferSize: Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 3,
+        channelThicknessBufferSize: Math.floor(chunkInfo.edges * 2 * bufferOverheadStorage) * 1,
     })),
     on(graphActions.processGraphNodeChunk, (state) => ({
         ...state,

@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+    <mat-label>Channel Width Property</mat-label>
+    <mat-select [value]="channelWidthProperty$ | async" (valueChange)="valueChanged($event)">
+        <mat-option *ngFor="let option of lineOptions" [value]="option">{{ option }}</mat-option>
+    </mat-select>
+</mat-form-field>

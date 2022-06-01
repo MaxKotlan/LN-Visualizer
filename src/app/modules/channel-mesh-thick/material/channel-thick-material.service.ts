@@ -7,6 +7,7 @@ import { Uniform } from 'three';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import {
     selectChannelWidthForShader,
+    selectChannelWidthIsUniform,
     selectEdgeDepthTest,
     selectEnableChannelFog,
     selectFogDistance,
@@ -41,7 +42,6 @@ export class ChannelThickMaterial extends LineMaterial {
             fog: true,
         });
         this.vertexShader = ChannelThickShader.vertexShader;
-        console.log(this);
         this.handleUpdates();
     }
 
@@ -114,6 +114,14 @@ export class ChannelThickMaterial extends LineMaterial {
             .pipe(untilDestroyed(this))
             .subscribe((worldUnits) => {
                 this.worldUnits = worldUnits;
+                this.needsUpdate = true;
+            });
+
+        this.store$
+            .select(selectChannelWidthIsUniform)
+            .pipe(untilDestroyed(this))
+            .subscribe((isUniform) => {
+                this.uniforms['isUniform'] = { value: isUniform };
                 this.needsUpdate = true;
             });
     }

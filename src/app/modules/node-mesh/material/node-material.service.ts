@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import * as THREE from 'three';
@@ -10,7 +9,6 @@ import {
     selectPointAttenuation,
     selectUniformNodeSize,
 } from '../../controls-node/selectors/node-controls.selectors';
-import { setMouseRay } from '../../controls-renderer/actions';
 import { selectNodeMotionIntensity } from '../../controls-renderer/selectors';
 import { NodeSearchEffects } from '../../graph-renderer/effects/node-search.effects';
 import { GraphState } from '../../graph-renderer/reducer';
@@ -26,7 +24,6 @@ export class NodeMaterial extends THREE.ShaderMaterial {
         private store$: Store<GraphState>,
         private animationTimeService: AnimationTimeService,
         private nodeTextures: NodeTextures,
-        private actions: Actions,
         private nodeSearchEffects: NodeSearchEffects,
     ) {
         super(NodeShader);

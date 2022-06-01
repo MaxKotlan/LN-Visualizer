@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { InstancedInterleavedBuffer, InterleavedBufferAttribute } from 'three';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
 import { shouldRenderEdges } from '../../controls-channel/selectors';
 import { GraphState } from '../../graph-renderer/reducer';
@@ -26,10 +27,22 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
         const b = new Float32Array(a).map((x) => x / 256);
         if (this.channelBufferService.color.data.length > 0) this.setColors(b);
 
+        if (this.channelBufferService.thickness.data.length > 0) {
+            const c = new InstancedInterleavedBuffer(
+                this.channelBufferService.thickness.data,
+                2,
+                1,
+            );
+            this.setAttribute('channelWidthProperty', new InterleavedBufferAttribute(c, 1, 0));
+        }
+
         this.updateGeometry();
     }
 
     public updateAttributes() {
+        if (this.attributes['channelWidthProperty'])
+            this.attributes['channelWidthProperty'].needsUpdate = true;
+
         if (this.attributes['instanceColorEnd'])
             this.attributes['instanceColorEnd'].needsUpdate = true;
         if (this.attributes['instanceColorStart'])
@@ -51,6 +64,11 @@ export class ChannelThickGeometry extends LineSegmentsGeometry {
             this.setDrawRange(0, currentShouldRender ? Infinity : 0);
             this.instanceCount = drawRange / 2;
             this.initializeGeometry();
+        });
+
+        this.channelBufferService.thickness.onUpdate.subscribe(() => {
+            this.setDrawRange(0, currentShouldRender ? Infinity : 0);
+            this.updateAttributes();
         });
 
         this.store$.select(shouldRenderEdges).subscribe((shouldRender) => {

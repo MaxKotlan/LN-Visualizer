@@ -17,6 +17,9 @@ export const ChannelThickShader = {
 
     uniform float linewidth;
     uniform vec2 resolution;
+    uniform bool isUniform;
+
+    attribute float channelWidthProperty;
 
     attribute vec3 instanceStart;
     attribute vec3 instanceEnd;
@@ -36,7 +39,6 @@ export const ChannelThickShader = {
     uniform vec3 mouseRayDirection;
     uniform float cosTime;
 
-
     #ifdef USE_DASH
 
         uniform float dashScale;
@@ -45,6 +47,8 @@ export const ChannelThickShader = {
         varying float vLineDistance;
 
     #endif
+
+    float displaylinewidth;
 
     void trimSegment( const in vec4 start, inout vec4 end ) {
 
@@ -62,6 +66,9 @@ export const ChannelThickShader = {
     }
 
     void main() {
+
+        displaylinewidth = isUniform ? linewidth : linewidth*channelWidthProperty;
+
 
         #ifdef USE_COLOR
 
@@ -160,8 +167,8 @@ export const ChannelThickShader = {
             #ifndef USE_DASH
 
                 // extend the line bounds to encompass  endcaps
-                start.xyz += - worldDir * linewidth * 0.5;
-                end.xyz += worldDir * linewidth * 0.5;
+                start.xyz += - worldDir * displaylinewidth * 0.5;
+                end.xyz += worldDir * displaylinewidth * 0.5;
 
                 // shift the position of the quad so it hugs the forward edge of the line
                 offset.xy -= dir * forwardOffset;
@@ -177,7 +184,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= linewidth * 0.5;
+            offset *= displaylinewidth * 0.5;
 
             // set the world position
             worldPos = ( position.y < 0.5 ) ? start : end;
@@ -213,7 +220,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= linewidth;
+            offset *= displaylinewidth;
 
             // adjust for clip-space to screen-space conversion // maybe resolution should be based on viewport ...
             offset /= resolution.y;
