@@ -18,6 +18,8 @@ export const ChannelThickShader = {
     uniform float linewidth;
     uniform vec2 resolution;
 
+    attribute float channelWidthProperty;
+
     attribute vec3 instanceStart;
     attribute vec3 instanceEnd;
 
@@ -35,7 +37,6 @@ export const ChannelThickShader = {
     uniform vec3 mouseRayOrigin;
     uniform vec3 mouseRayDirection;
     uniform float cosTime;
-
 
     #ifdef USE_DASH
 
@@ -160,8 +161,8 @@ export const ChannelThickShader = {
             #ifndef USE_DASH
 
                 // extend the line bounds to encompass  endcaps
-                start.xyz += - worldDir * linewidth * 0.5;
-                end.xyz += worldDir * linewidth * 0.5;
+                start.xyz += - worldDir * channelWidthProperty * 0.5;
+                end.xyz += worldDir * channelWidthProperty * 0.5;
 
                 // shift the position of the quad so it hugs the forward edge of the line
                 offset.xy -= dir * forwardOffset;
@@ -177,7 +178,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= linewidth * 0.5;
+            offset *= channelWidthProperty * 0.5;
 
             // set the world position
             worldPos = ( position.y < 0.5 ) ? start : end;
@@ -213,7 +214,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= linewidth;
+            offset *= channelWidthProperty;
 
             // adjust for clip-space to screen-space conversion // maybe resolution should be based on viewport ...
             offset /= resolution.y;

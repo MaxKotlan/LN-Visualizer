@@ -77,3 +77,8 @@ export const selectChannelWidthForShader = createSelector(
     selectLineAttenuation,
     (width, attenuation) => (attenuation ? width / 10 : width / 300),
 );
+
+export const channelWidthMapping = createSelector(
+    channelControlsSelector,
+    (state) => state.channelWidthMapping,
+);

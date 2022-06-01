@@ -15,6 +15,7 @@ import { ChannelColorService, FilteredChannelRegistryService } from '../services
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+import { selectMinMax } from '../../graph-statistics/selectors';
 // import { FilteredStatisticsCalculatorService } from '../../graph-statistics/services';
 
 @Injectable()
@@ -115,6 +116,42 @@ export class ChannelMeshEffects {
                         }
                     });
                     this.channelBufferService.color.onUpdate.next(i * 2);
+                }),
+            ),
+        { dispatch: false },
+    );
+
+    channelThickness$ = createEffect(
+        () =>
+            combineLatest([
+                this.store$.select(filterSelectors.activeChannelFilters),
+                this.actions$.pipe(ofType(setFilteredNodeChannels)),
+                this.actions$.pipe(ofType(setFilteredNodes)),
+                this.store$.select(selectMinMax('capacity')),
+            ]).pipe(
+                sampleTime(this.throttleTimeMs),
+                map(([filters, , , channelMinMax]) => {
+                    if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
+                        return null;
+                    let i = 0;
+                    this.filteredChannelRegistryService.forEach((channel) => {
+                        if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
+                            const node1 = this.filteredNodeRegistry.get(
+                                channel.policies[0].public_key,
+                            );
+                            const node2 = this.filteredNodeRegistry.get(
+                                channel.policies[1].public_key,
+                            );
+                            if (node1 && node2) {
+                                const c = Math.sqrt(channel.capacity / channelMinMax.max);
+
+                                this.channelBufferService.thickness.data[i * 2] = c;
+                                this.channelBufferService.thickness.data[i * 2 + 1] = c;
+                                i++;
+                            }
+                        }
+                    });
+                    this.channelBufferService.thickness.onUpdate.next(i * 2);
                 }),
             ),
         { dispatch: false },

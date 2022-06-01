@@ -58,3 +58,8 @@ export const selectChannelColorBufferSize = createSelector(
     graphSelector,
     (state) => state.channelColorBufferSize,
 );
+
+export const selectChannelThicknessBufferSize = createSelector(
+    graphSelector,
+    (state) => state.channelThicknessBufferSize,
+);

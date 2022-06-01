@@ -16,6 +16,7 @@ export interface ChannelControlState {
     lineBackend: 'gl-line' | 'line-mesh';
     channelWidth: number;
     attenuation: boolean;
+    channelWidthMapping: 'uniform' | 'channel capacity';
 }
 
 const initialState: ChannelControlState = {
@@ -31,6 +32,7 @@ const initialState: ChannelControlState = {
     channelWidth: 0.3,
     lineBackend: 'gl-line',
     attenuation: false,
+    channelWidthMapping: 'uniform',
 };
 
 export const reducer = createReducer(

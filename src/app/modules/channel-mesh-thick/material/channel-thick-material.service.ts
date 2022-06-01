@@ -41,7 +41,6 @@ export class ChannelThickMaterial extends LineMaterial {
             fog: true,
         });
         this.vertexShader = ChannelThickShader.vertexShader;
-        console.log(this);
         this.handleUpdates();
     }
 
