@@ -17,6 +17,7 @@ export const ChannelThickShader = {
 
     uniform float linewidth;
     uniform vec2 resolution;
+    uniform bool isUniform;
 
     attribute float channelWidthProperty;
 
@@ -47,6 +48,8 @@ export const ChannelThickShader = {
 
     #endif
 
+    float displaylinewidth;
+
     void trimSegment( const in vec4 start, inout vec4 end ) {
 
         // trim end segment so it terminates between the camera plane and the near plane
@@ -63,6 +66,9 @@ export const ChannelThickShader = {
     }
 
     void main() {
+
+        displaylinewidth = isUniform ? linewidth : linewidth*channelWidthProperty;
+
 
         #ifdef USE_COLOR
 
@@ -161,8 +167,8 @@ export const ChannelThickShader = {
             #ifndef USE_DASH
 
                 // extend the line bounds to encompass  endcaps
-                start.xyz += - worldDir * channelWidthProperty * 0.5;
-                end.xyz += worldDir * channelWidthProperty * 0.5;
+                start.xyz += - worldDir * displaylinewidth * 0.5;
+                end.xyz += worldDir * displaylinewidth * 0.5;
 
                 // shift the position of the quad so it hugs the forward edge of the line
                 offset.xy -= dir * forwardOffset;
@@ -178,7 +184,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= channelWidthProperty * 0.5;
+            offset *= displaylinewidth * 0.5;
 
             // set the world position
             worldPos = ( position.y < 0.5 ) ? start : end;
@@ -214,7 +220,7 @@ export const ChannelThickShader = {
             }
 
             // adjust for linewidth
-            offset *= channelWidthProperty;
+            offset *= displaylinewidth;
 
             // adjust for clip-space to screen-space conversion // maybe resolution should be based on viewport ...
             offset /= resolution.y;

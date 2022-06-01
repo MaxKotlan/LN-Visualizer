@@ -82,3 +82,8 @@ export const selectChannelWidthMapping = createSelector(
     channelControlsSelector,
     (state) => state.channelWidthMapping,
 );
+
+export const selectChannelWidthIsUniform = createSelector(
+    channelControlsSelector,
+    (state) => state.channelWidthMapping === 'uniform',
+);
