@@ -20,6 +20,7 @@
         <app-line-backed-dropdown></app-line-backed-dropdown>
         <ng-container *ngIf="(selectLineBackend$ | async) === 'line-mesh'">
             <app-channel-attenuation></app-channel-attenuation>
+            <app-channel-width-property></app-channel-width-property>
             <app-channel-width></app-channel-width>
         </ng-container>
     </ng-container>

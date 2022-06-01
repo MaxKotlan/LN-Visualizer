@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { setChannelWidthMapping } from '../../actions';
+import { selectChannelWidthMapping } from '../../selectors';
 
 @Component({
-  selector: 'app-channel-width-property',
-  templateUrl: './channel-width-property.component.html',
-  styleUrls: ['./channel-width-property.component.scss']
+    selector: 'app-channel-width-property',
+    templateUrl: './channel-width-property.component.html',
+    styleUrls: ['./channel-width-property.component.scss'],
 })
-export class ChannelWidthPropertyComponent implements OnInit {
+export class ChannelWidthPropertyComponent {
+    constructor(private store$: Store) {}
 
-  constructor() { }
+    lineOptions = ['uniform', 'channel capacity'];
 
-  ngOnInit(): void {
-  }
+    public channelWidthProperty$ = this.store$.select(selectChannelWidthMapping);
 
+    valueChanged(event) {
+        this.store$.dispatch(setChannelWidthMapping({ value: event }));
+    }
 }
