@@ -85,12 +85,12 @@ export const reducer = createReducer(
         ...state,
         lineBackend: value,
     })),
-    on(channelControlsActions.setLineAttenuation, (state, { value }) => ({
-        ...state,
-        attenuation: value,
-    })),
     on(channelControlsActions.setChannelAttenuation, (state, { value }) => ({
         ...state,
         attenuation: value,
+    })),
+    on(channelControlsActions.setChannelWidthMapping, (state, { value }) => ({
+        ...state,
+        channelWidthMapping: value,
     })),
 );

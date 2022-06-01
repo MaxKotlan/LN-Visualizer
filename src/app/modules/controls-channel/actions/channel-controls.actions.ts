@@ -44,14 +44,14 @@ export const setLineBackend = createAction(
     props<{ value: 'gl-line' | 'line-mesh' }>(),
 );
 
-export const setLineAttenuation = createAction(
-    '[controls] setLineAttenuation',
-    props<{ value: boolean }>(),
-);
-
 export const setChannelAttenuation = createAction(
     '[controls] setChannelAttenuation',
     props<{ value: boolean }>(),
+);
+
+export const setChannelWidthMapping = createAction(
+    '[controls] setChannelWidthMapping',
+    props<{ value: 'uniform' | 'channel capacity' }>(),
 );
 
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());
