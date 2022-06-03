@@ -8,6 +8,16 @@ LnVisualizer or Lightning Network Visualizer, is a graph visualization tool spec
 
 Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my nodes perspective.
 
+
+## Running on Umbrel with Docker
+
+  ```
+  docker run -d --rm --network=umbrel_main_network --name=lnvisapi -e LND_SOCKET=10.21.21.9:10009 -e LND_MACAROON_FILE=/lnd/data/chain/bitcoin/mainnet/readonly.macaroon -e LND_CERT_FILE=/lnd/tls.cert -v /home/umbrel/umbrel/lnd:/lnd maxkotlan/ln-visualizer-api:v0.0.19 &&
+docker run -d --rm --network=umbrel_main_network --name=lnvisweb -e LN_VISUALIZER_API_URL=http://lnvisapi:5647 -p 0.0.0.0:5646:80 maxkotlan/ln-visualizer-web:v0.0.19
+```
+
+After executing this command, two additional containers should run on your umbrel node and you should be able to access the app at http://umbrel.local:5646
+
 ## Running with Docker Compose
 
 1.  Install docker and docker-compose
@@ -30,7 +40,7 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
      ```
      ...
      lnvisweb:
-       image: maxkotlan/ln-visualizer-web:v0.0.17
+       image: maxkotlan/ln-visualizer-web:v0.0.19
        restart: on-failure
      ...
      ```
@@ -49,7 +59,7 @@ Visit [lnvisualizer.com](http://lnvisualizer.com/) to see the network from my no
     ```
     ...
     lnvisapi:
-      image: maxkotlan/ln-visualizer-api:v0.0.17
+      image: maxkotlan/ln-visualizer-api:v0.0.19
       restart: on-failure
       ...
     ```
