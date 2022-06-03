@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AnimationService } from 'atft';
@@ -16,6 +17,7 @@ import { NodeSearchEffects } from '../../effects/node-search.effects';
 import { GraphState } from '../../reducer';
 import { OrbitControllerService } from '../orbit-controller';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
@@ -29,7 +31,9 @@ export class CameraControllerService {
     ) {
         this.handleUpdates();
         this.animate = this.animate.bind(this);
-        this.animation = this.animationService.animate.subscribe(this.animate);
+        this.animation = this.animationService.animate
+            .pipe(untilDestroyed(this))
+            .subscribe(this.animate);
         this.animationService.start();
     }
 
@@ -41,7 +45,7 @@ export class CameraControllerService {
     }
 
     handleUpdates() {
-        this.selectCameraFov$.subscribe((fov) => {
+        this.selectCameraFov$.pipe(untilDestroyed(this)).subscribe((fov) => {
             if (this.camera) {
                 this.camera.fov = fov;
                 this.camera.updateProjectionMatrix();
@@ -49,6 +53,7 @@ export class CameraControllerService {
         });
         this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$
             .pipe(
+                untilDestroyed(this),
                 withLatestFrom(this.store$.select(selectCameraFocusMode)),
                 filter(([finalNode]) => !!finalNode?.position),
             )
