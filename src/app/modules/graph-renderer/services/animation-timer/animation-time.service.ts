@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import {
     animationFrames,
@@ -16,6 +17,7 @@ import {
     selectShowGraphAnimation,
 } from 'src/app/modules/controls-renderer/selectors';
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
@@ -30,6 +32,7 @@ export class AnimationTimeService {
             },
         };
         this.sinTime$ = this.store$.select(selectShowGraphAnimation).pipe(
+            untilDestroyed(this),
             switchMap((shouldShow) =>
                 shouldShow
                     ? animationFrames(this.customTSProvider).pipe(
@@ -41,6 +44,7 @@ export class AnimationTimeService {
             shareReplay(1),
         );
         this.cosTime$ = this.store$.select(selectShowGraphAnimation).pipe(
+            untilDestroyed(this),
             switchMap((shouldShow) =>
                 shouldShow
                     ? animationFrames(this.customTSProvider).pipe(

@@ -18,7 +18,6 @@ import {
 import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
 import { pilotThickLinesEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
-import * as THREE from 'three';
 import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { CameraControllerService, OrbitControllerService } from '../../services';
@@ -64,12 +63,15 @@ export class GraphSceneComponent implements AfterViewInit {
                 this.cameraComponent.camera.updateProjectionMatrix();
             });
 
-        this.store$.select(selectRenderResolution).subscribe((renderResolution) => {
-            this.renderResolution = renderResolution;
-            this.renderer
-                .getWebGlRenderer()
-                .setPixelRatio(devicePixelRatio * this.renderResolution);
-        });
+        this.store$
+            .select(selectRenderResolution)
+            .pipe(untilDestroyed(this))
+            .subscribe((renderResolution) => {
+                this.renderResolution = renderResolution;
+                this.renderer
+                    .getWebGlRenderer()
+                    .setPixelRatio(devicePixelRatio * this.renderResolution);
+            });
     }
 
     public renderResolution: number;
