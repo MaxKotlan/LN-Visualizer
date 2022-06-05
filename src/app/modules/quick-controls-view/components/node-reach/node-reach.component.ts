@@ -8,6 +8,7 @@ import {
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { FilteredChannelRegistryService } from 'src/app/modules/graph-renderer/services';
+import { ChannelRegistryService } from 'src/app/modules/graph-renderer/services/channel-registry/channel-registry.service';
 import { NodeRegistryService } from 'src/app/modules/graph-renderer/services/node-registry/node-registry.service';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
@@ -20,7 +21,7 @@ import * as filterActions from '../../../controls-graph-filter/actions';
 export class NodeReachComponent {
     constructor(
         private store$: Store<any>,
-        private filteredChannelRegistryService: FilteredChannelRegistryService,
+        private channelRegistryService: ChannelRegistryService,
         private nodeRegistryService: NodeRegistryService,
         private nodeSearchEffects: NodeSearchEffects,
     ) {}
@@ -30,6 +31,7 @@ export class NodeReachComponent {
             this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(take(1)),
         );
 
+        this.resetDepthMask();
         this.applyDepthMask(activeNode);
 
         this.store$.dispatch(
@@ -38,36 +40,43 @@ export class NodeReachComponent {
                     interpreter: 'javascript',
                     issueId: 'min-cut-range',
                     source: 'test',
-                    function: (channel: LndChannel) =>
-                        channel.policies.some((p) => {
-                            const a = p['node'];
-                            return a && p['node']['depth'];
-                        }),
+                    function: (channel: LndChannel) => channel['depth'] === 2,
+                    // channel.policies.some((p) => {
+                    //     const a = p['node'];
+                    //     return a && ['deppth'] === 2;
+                    // }),
                 } as Filter<ChannelEvaluationFunction>,
             }),
         );
     }
 
+    resetDepthMask() {
+        this.nodeRegistryService.forEach((node) => {
+            node['depth'] = undefined;
+            node['visited'] = undefined;
+        });
+    }
+
     applyDepthMask(root: LndNodeWithPosition) {
         const queue: LndNodeWithPosition[] = [root];
-        const visited: string[] = [];
         const a = performance.now();
-        let depth = 0;
         root['depth'] = 0;
+        let depth = 1;
         while (queue.length > 0) {
             const v = queue.pop();
-            depth += 1;
             v.connected_channels?.forEach((w) => {
                 const otherNodePubKey = this.selectOtherNodeInChannel(v.public_key, w);
                 const w_n: LndNodeWithPosition = this.nodeRegistryService.get(otherNodePubKey);
-                if (w_n?.public_key && !visited.includes(w_n.public_key) && depth < 64) {
+                if (w_n?.public_key && !w_n['visited']) {
+                    w['depth'] = depth;
                     w_n['depth'] = depth;
                     queue.push(w_n);
-                    visited.push(w_n.public_key);
+                    w_n['visited'] = true;
                 }
             });
             depth += 1;
         }
+        console.log(depth);
         console.log('done', performance.now() - a);
     }
 
