@@ -87,12 +87,12 @@ export class NetworkEffects {
         { dispatch: true },
     );
 
-    public retryOnError$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(alertActions.createAlert),
-            filter((action) => action.alert.id === 'websocket-connection-error'),
-            delay(1000),
-            map(() => graphActions.initializeGraphSyncProcess()),
-        ),
-    );
+    // public retryOnError$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(alertActions.createAlert),
+    //         filter((action) => action.alert.id === 'websocket-connection-error'),
+    //         delay(1000),
+    //         map(() => graphActions.initializeGraphSyncProcess()),
+    //     ),
+    // );
 }
