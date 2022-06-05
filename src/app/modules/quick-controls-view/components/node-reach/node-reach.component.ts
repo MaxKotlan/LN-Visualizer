@@ -26,7 +26,7 @@ export class NodeReachComponent {
         private nodeSearchEffects: NodeSearchEffects,
     ) {}
 
-    async applyNodeReach() {
+    async applyNodeReach(depth: number) {
         let activeNode = await lastValueFrom(
             this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(take(1)),
         );
@@ -40,7 +40,7 @@ export class NodeReachComponent {
                     interpreter: 'javascript',
                     issueId: 'min-cut-range',
                     source: 'test',
-                    function: (channel: LndChannel) => channel['depth'] === 2,
+                    function: (channel: LndChannel) => channel['depth'] === depth,
                     // channel.policies.some((p) => {
                     //     const a = p['node'];
                     //     return a && ['deppth'] === 2;
@@ -61,22 +61,23 @@ export class NodeReachComponent {
         const queue: LndNodeWithPosition[] = [root];
         const a = performance.now();
         root['depth'] = 0;
-        let depth = 1;
+        let maxDepth = 0;
         while (queue.length > 0) {
             const v = queue.pop();
             v.connected_channels?.forEach((w) => {
                 const otherNodePubKey = this.selectOtherNodeInChannel(v.public_key, w);
                 const w_n: LndNodeWithPosition = this.nodeRegistryService.get(otherNodePubKey);
                 if (w_n?.public_key && !w_n['visited']) {
-                    w['depth'] = depth;
-                    w_n['depth'] = depth;
+                    w['depth'] = v['depth'] + 1;
+                    w_n['depth'] = v['depth'] + 1;
+                    if (w_n['depth'] > maxDepth) maxDepth = w_n['depth'];
                     queue.push(w_n);
                     w_n['visited'] = true;
                 }
             });
-            depth += 1;
+            // depth += 1;
         }
-        console.log(depth);
+        console.log(maxDepth);
         console.log('done', performance.now() - a);
     }
 
