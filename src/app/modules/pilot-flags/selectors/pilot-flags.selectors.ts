@@ -12,3 +12,8 @@ export const pilotThickLinesEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.thickLines,
 );
+
+export const pilotDepthFilterEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.depthFilter,
+);

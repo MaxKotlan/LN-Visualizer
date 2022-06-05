@@ -1,4 +1,5 @@
 {
     "unitConversions": false,
-    "thickLines": true
+    "thickLines": true,
+    "depthFilter": false
 }

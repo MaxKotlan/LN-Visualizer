@@ -7,7 +7,7 @@
 </mat-toolbar>
 <div class="app-sidenav">
     <app-quick-controls></app-quick-controls>
-    <app-node-reach></app-node-reach>
+    <app-node-reach *ngIf="depthFilterPilot$ | async"></app-node-reach>
     <app-quick-slider
         [isNodeScript]="true"
         [isPolicyScript]="false"
