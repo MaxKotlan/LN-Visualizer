@@ -5,6 +5,7 @@ import { lastValueFrom, take } from 'rxjs';
 import {
     ChannelEvaluationFunction,
     Filter,
+    NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
 import { FilteredChannelRegistryService } from 'src/app/modules/graph-renderer/services';
@@ -30,22 +31,36 @@ export class NodeReachComponent {
         let activeNode = await lastValueFrom(
             this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(take(1)),
         );
-
         this.resetDepthMask();
         this.applyDepthMask(activeNode);
 
+        // this.store$.dispatch(
+        //     filterActions.updateChannelFilterByIssueId({
+        //         value: {
+        //             interpreter: 'javascript',
+        //             issueId: 'min-cut-range',
+        //             source: 'test',
+        //             function: (channel: LndChannel) => channel['depth'] === depth,
+        //             // channel.policies.some((p) => {
+        //             //     const a = p['node'];
+        //             //     return a && ['deppth'] === 2;
+        //             // }),
+        //         } as Filter<ChannelEvaluationFunction>,
+        //     }),
+        // );
+
         this.store$.dispatch(
-            filterActions.updateChannelFilterByIssueId({
+            filterActions.updateNodeFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
-                    issueId: 'min-cut-range',
-                    source: 'test',
-                    function: (channel: LndChannel) => channel['depth'] === depth,
+                    issueId: 'min-cut-range-node',
+                    source: `(node: LndNodeWithPosition) => node.depth <= ${depth} //depth from ${activeNode.alias}`,
+                    function: (node: LndNodeWithPosition) => node['depth'] <= depth,
                     // channel.policies.some((p) => {
                     //     const a = p['node'];
                     //     return a && ['deppth'] === 2;
                     // }),
-                } as Filter<ChannelEvaluationFunction>,
+                } as Filter<NodeEvaluationFunction>,
             }),
         );
     }
@@ -58,9 +73,9 @@ export class NodeReachComponent {
     }
 
     applyDepthMask(root: LndNodeWithPosition) {
+        root['depth'] = 0;
         const queue: LndNodeWithPosition[] = [root];
         const a = performance.now();
-        root['depth'] = 0;
         let maxDepth = 0;
         while (queue.length > 0) {
             const v = queue.pop();
