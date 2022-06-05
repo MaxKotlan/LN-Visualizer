@@ -80,15 +80,17 @@ export class NodeReachComponent {
         while (queue.length > 0) {
             const v = queue.pop();
             v.connected_channels?.forEach((w) => {
-                const otherNodePubKey = this.selectOtherNodeInChannel(v.public_key, w);
-                const w_n: LndNodeWithPosition = this.nodeRegistryService.get(otherNodePubKey);
-                if (w_n?.public_key && !w_n['visited']) {
-                    w['depth'] = v['depth'] + 1;
-                    w_n['depth'] = v['depth'] + 1;
-                    if (w_n['depth'] > maxDepth) maxDepth = w_n['depth'];
-                    queue.push(w_n);
-                    w_n['visited'] = true;
-                }
+                w.policies.forEach((p) => {
+                    // const otherNodePubKey = this.selectOtherNodeInChannel(v.public_key, w);
+                    const w_n: LndNodeWithPosition = this.nodeRegistryService.get(p.public_key);
+                    if (w_n?.public_key && !w_n['visited']) {
+                        w['depth'] = v['depth'] + 1;
+                        w_n['depth'] = v['depth'] + 1;
+                        if (w_n['depth'] > maxDepth) maxDepth = w_n['depth'];
+                        queue.push(w_n);
+                        w_n['visited'] = true;
+                    }
+                });
             });
             // depth += 1;
         }
