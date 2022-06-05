@@ -109,6 +109,6 @@ export class NodeSearchEffects {
                     ]);
                 }),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 }
