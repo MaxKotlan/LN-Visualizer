@@ -169,7 +169,7 @@ export class NodeReachComponent {
                 if (!!n?.connected_channels && !n['visited']) {
                     n?.connected_channels.forEach((w) => {
                         if (v.id === w.id) w['depth'] = v['depth'] || 0;
-                        else w['depth'] = (v['depth'] || 0) + 1;
+                        else w['depth'] = v['depth'] + 1;
                         if (w['depth'] > maxDepth) maxDepth = w['depth'];
                         // console.log(maxDepth);
                         if (w['depth'] < mDepth) queue2.enqueue(w);
