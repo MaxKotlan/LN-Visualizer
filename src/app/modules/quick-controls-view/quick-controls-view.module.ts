@@ -8,6 +8,7 @@ import { QuickControlsViewComponent } from './components';
 import { QuickSliderComponent } from './components/quick-slider/quick-slider.component';
 import { LinearToLogPipe, LogToLinearPipe } from './pipes/log-to-linear.pipe';
 import { MiniInputComponent } from './components/mini-input/mini-input.component';
+import { NodeReachComponent } from './components/node-reach/node-reach.component';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,7 @@ import { MiniInputComponent } from './components/mini-input/mini-input.component
         LogToLinearPipe,
         LinearToLogPipe,
         MiniInputComponent,
+        NodeReachComponent,
     ],
     imports: [CommonModule, MaterialModule, FormsModule, ControlsModule, UnitConversionsModule],
     exports: [QuickControlsViewComponent],
