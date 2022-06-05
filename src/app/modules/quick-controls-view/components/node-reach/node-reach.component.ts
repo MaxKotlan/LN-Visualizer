@@ -1,20 +1,59 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { MaxPriorityQueue } from 'api/node_modules/@datastructures-js/priority-queue';
 import { LndChannel } from 'api/src/models';
 import { lastValueFrom, take } from 'rxjs';
 import {
     ChannelEvaluationFunction,
     Filter,
-    NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
-import { FilteredChannelRegistryService } from 'src/app/modules/graph-renderer/services';
 import { ChannelRegistryService } from 'src/app/modules/graph-renderer/services/channel-registry/channel-registry.service';
 import { NodeRegistryService } from 'src/app/modules/graph-renderer/services/node-registry/node-registry.service';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import PriorityQueue from 'ts-priority-queue';
 import * as filterActions from '../../../controls-graph-filter/actions';
+
+function Node(data) {
+    this.data = data;
+    this.next = null;
+}
+
+// Queue implemented using LinkedList
+function Queue() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+}
+
+Queue.prototype.enqueue = function (data) {
+    var newNode = new Node(data);
+
+    if (this.head === null) {
+        this.head = newNode;
+        this.tail = newNode;
+    } else {
+        this.tail.next = newNode;
+        this.tail = newNode;
+    }
+    this.length = this.length + 1;
+};
+
+Queue.prototype.dequeue = function () {
+    var newNode;
+    if (this.head !== null) {
+        newNode = this.head.data;
+        this.head = this.head.next;
+    }
+    this.length = this.length - 1;
+    return newNode;
+};
+
+Queue.prototype.print = function () {
+    var curr = this.head;
+    while (curr) {
+        console.log(curr.data);
+        curr = curr.next;
+    }
+};
 
 @Component({
     selector: 'app-node-reach',
@@ -106,6 +145,8 @@ export class NodeReachComponent {
 
     applyDepthMaskChannel(root: LndNodeWithPosition, mDepth: number = Infinity) {
         let queue: LndChannel[] = [];
+        const queue2 = new Queue();
+
         // let queue2: MaxPriorityQueue<any> = new MaxPriorityQueue<LndChannel>(
 
         //     {
@@ -113,13 +154,14 @@ export class NodeReachComponent {
         //     }
         // );
         root.connected_channels.forEach((c) => {
-            queue.push(c);
+            queue2.enqueue(c);
         });
         // let queue: LndChannel[] = Array.from(root.connected_channels.values());
         const a = performance.now();
         let maxDepth = 0;
-        while (queue.length > 0) {
-            const v = queue.shift();
+        console.log(queue2);
+        while (queue2.length > 0) {
+            const v = queue2.dequeue();
             // if (v['depth'] === undefined) v['depth'] = 0;
             //const p = v.policies[0];
             v.policies.forEach((p) => {
@@ -130,7 +172,7 @@ export class NodeReachComponent {
                         else w['depth'] = (v['depth'] || 0) + 1;
                         if (w['depth'] > maxDepth) maxDepth = w['depth'];
                         // console.log(maxDepth);
-                        if (w['depth'] < mDepth) queue.push(w);
+                        if (w['depth'] < mDepth) queue2.enqueue(w);
                     });
                     n['visited'] = true;
                 }
