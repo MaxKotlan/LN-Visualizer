@@ -32,43 +32,47 @@ export class NodeReachComponent {
             this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(take(1)),
         );
         this.resetDepthMask();
-        this.applyDepthMask(activeNode);
-
-        // this.store$.dispatch(
-        //     filterActions.updateChannelFilterByIssueId({
-        //         value: {
-        //             interpreter: 'javascript',
-        //             issueId: 'min-cut-range',
-        //             source: 'test',
-        //             function: (channel: LndChannel) => channel['depth'] === depth,
-        //             // channel.policies.some((p) => {
-        //             //     const a = p['node'];
-        //             //     return a && ['deppth'] === 2;
-        //             // }),
-        //         } as Filter<ChannelEvaluationFunction>,
-        //     }),
-        // );
+        this.applyDepthMaskChannel(activeNode);
 
         this.store$.dispatch(
-            filterActions.updateNodeFilterByIssueId({
+            filterActions.updateChannelFilterByIssueId({
                 value: {
                     interpreter: 'javascript',
-                    issueId: 'min-cut-range-node',
-                    source: `(node: LndNodeWithPosition) => node.depth <= ${depth} //depth from ${activeNode.alias}`,
-                    function: (node: LndNodeWithPosition) => node['depth'] <= depth,
+                    issueId: 'min-cut-range',
+                    source: 'test',
+                    function: (channel: LndChannel) => channel['depth'] <= depth,
                     // channel.policies.some((p) => {
                     //     const a = p['node'];
                     //     return a && ['deppth'] === 2;
                     // }),
-                } as Filter<NodeEvaluationFunction>,
+                } as Filter<ChannelEvaluationFunction>,
             }),
         );
+
+        // this.store$.dispatch(
+        //     filterActions.updateNodeFilterByIssueId({
+        //         value: {
+        //             interpreter: 'javascript',
+        //             issueId: 'min-cut-range-node',
+        //             source: `(node: LndNodeWithPosition) => node.depth <= ${depth} //depth from ${activeNode.alias}`,
+        //             function: (node: LndNodeWithPosition) => node['depth'] <= depth,
+        //             // channel.policies.some((p) => {
+        //             //     const a = p['node'];
+        //             //     return a && ['deppth'] === 2;
+        //             // }),
+        //         } as Filter<NodeEvaluationFunction>,
+        //     }),
+        // );
     }
 
     resetDepthMask() {
         this.nodeRegistryService.forEach((node) => {
             node['depth'] = undefined;
             node['visited'] = undefined;
+        });
+        this.channelRegistryService.forEach((channel) => {
+            channel['depth'] = undefined;
+            channel['visited'] = undefined;
         });
     }
 
@@ -98,9 +102,30 @@ export class NodeReachComponent {
         console.log('done', performance.now() - a);
     }
 
-    private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {
-        if (channel.policies[0].public_key === selfPubkey) return channel.policies[1].public_key;
-        if (channel.policies[1].public_key === selfPubkey) return channel.policies[0].public_key;
-        throw new Error('Public Key is not either of the nodes in the channel');
+    applyDepthMaskChannel(root: LndNodeWithPosition) {
+        const queue: LndChannel[] = Array.from(root.connected_channels.values()).map((x) => ({
+            ...x,
+            depth: 0,
+        }));
+        const a = performance.now();
+        let maxDepth = 0;
+        while (queue.length > 0) {
+            const v = queue.pop();
+            const p = v.policies[0];
+            //v.policies.forEach((p) => {
+            const n = this.nodeRegistryService.get(p.public_key);
+            n?.connected_channels.forEach((w) => {
+                if (!w['visited']) {
+                    w['depth'] = v['depth'] + 1;
+                    if (w['depth'] > maxDepth) maxDepth = w['depth'];
+                    // console.log(maxDepth);
+                    queue.push(w);
+                    w['visited'] = true;
+                }
+            });
+            //});
+        }
+        console.log(maxDepth);
+        console.log('done', performance.now() - a);
     }
 }
