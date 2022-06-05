@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { LndNode } from 'api/src/models';
 import { map } from 'rxjs/operators';
+import { LndChannel } from 'src/app/types/channels.interface';
 import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
@@ -15,6 +17,12 @@ export class ChannelEffects {
         private channelRegistry: ChannelRegistryService,
     ) {}
 
+    private linkNodeToChannel(channel: LndChannel) {
+        channel.policies.forEach((p) => {
+            p['node'] = this.nodeRegistry.get(p.public_key);
+        });
+    }
+
     concatinateChannelChunk$ = createEffect(
         () =>
             this.actions$.pipe(
@@ -22,6 +30,7 @@ export class ChannelEffects {
                 map((action) => {
                     action.chunk.data.forEach((channel) => {
                         this.globalStatisticsCalculator.checkChannel(channel);
+                        this.linkNodeToChannel(channel);
                         this.channelRegistry.set(channel.id, channel);
                     });
                     this.globalStatisticsCalculator.updateStore();

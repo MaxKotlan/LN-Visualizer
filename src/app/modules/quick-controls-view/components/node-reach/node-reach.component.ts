@@ -38,7 +38,11 @@ export class NodeReachComponent {
                     interpreter: 'javascript',
                     issueId: 'min-cut-range',
                     source: 'test',
-                    function: (channel: LndChannel) => channel['capacity'] === 0,
+                    function: (channel: LndChannel) =>
+                        channel.policies.some((p) => {
+                            const a = p['node'];
+                            return a && p['node']['depth'];
+                        }),
                 } as Filter<ChannelEvaluationFunction>,
             }),
         );
@@ -49,14 +53,14 @@ export class NodeReachComponent {
         const visited: string[] = [];
         const a = performance.now();
         let depth = 0;
+        root['depth'] = 0;
         while (queue.length > 0) {
             const v = queue.pop();
+            depth += 1;
             v.connected_channels?.forEach((w) => {
                 const otherNodePubKey = this.selectOtherNodeInChannel(v.public_key, w);
                 const w_n: LndNodeWithPosition = this.nodeRegistryService.get(otherNodePubKey);
-                if (w_n?.public_key && !visited.includes(w_n.public_key)) {
-                    // if (!this.depth[v.public_key]) this.depth[v.public_key] = 1;
-                    // this.depth[w.public_key] = this.depth[v.public_key] + 1
+                if (w_n?.public_key && !visited.includes(w_n.public_key) && depth < 64) {
                     w_n['depth'] = depth;
                     queue.push(w_n);
                     visited.push(w_n.public_key);
@@ -65,7 +69,6 @@ export class NodeReachComponent {
             depth += 1;
         }
         console.log('done', performance.now() - a);
-        console.log(this.nodeRegistryService);
     }
 
     private selectOtherNodeInChannel(selfPubkey: string, channel: LndChannel): string {

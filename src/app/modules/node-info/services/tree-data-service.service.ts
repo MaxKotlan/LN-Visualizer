@@ -26,7 +26,10 @@ export class TreeDataServiceService {
     private mapObject(object: Object) {
         const o = Object.entries(object);
         return o
-            .filter(([, v]) => v !== null && v !== undefined && v.length !== 0 && v.size !== 0)
+            .filter(
+                ([k, v]) =>
+                    v !== null && v !== undefined && v.length !== 0 && v.size !== 0 && k !== 'node',
+            )
             .map((kv) => this.mapKeys(kv))
             .sort((a, b) => {
                 if (!Number.isNaN(a) && !Number.isNaN(b)) return a - b;
