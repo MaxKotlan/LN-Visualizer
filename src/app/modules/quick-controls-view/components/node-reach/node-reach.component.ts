@@ -172,6 +172,8 @@ export class NodeReachComponent {
                         else w['depth'] = v['depth'] + 1;
                         if (w['depth'] > maxDepth) maxDepth = w['depth'];
                         // console.log(maxDepth);
+                        w['max_flow'] =
+                            w.capacity < (v['max_flow'] || Infinity) ? w.capacity : v['max_flow'];
                         if (w['depth'] < mDepth) queue2.enqueue(w);
                     });
                     n['visited'] = true;
