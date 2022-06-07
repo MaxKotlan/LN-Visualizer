@@ -1,4 +1,10 @@
-<button style="height: 52.063px" (click)="applyNodeReach(input._val)" mat-button color="primary">
+<button
+    style="height: 52.063px"
+    (click)="applyNodeReach(depth._val, payment._val)"
+    mat-button
+    color="primary"
+>
     Apply
 </button>
-<app-mini-input #input></app-mini-input>
+<app-mini-input #depth></app-mini-input>
+<app-mini-input #payment></app-mini-input>

@@ -68,7 +68,7 @@ export class NodeReachComponent {
         private nodeSearchEffects: NodeSearchEffects,
     ) {}
 
-    async applyNodeReach(depth: number) {
+    async applyNodeReach(depth: number, payment: number) {
         let activeNode = await lastValueFrom(
             this.nodeSearchEffects.selectFinalMatcheNodesFromSearch$.pipe(take(1)),
         );
@@ -81,7 +81,8 @@ export class NodeReachComponent {
                     interpreter: 'javascript',
                     issueId: 'min-cut-range',
                     source: 'test',
-                    function: (channel: LndChannel) => channel['depth'] <= depth,
+                    function: (channel: LndChannel) =>
+                        channel['depth'] <= depth && channel['max_flow'] >= payment,
                     // channel.policies.some((p) => {
                     //     const a = p['node'];
                     //     return a && ['deppth'] === 2;
@@ -114,6 +115,7 @@ export class NodeReachComponent {
         this.channelRegistryService.forEach((channel) => {
             channel['depth'] = undefined;
             channel['visited'] = undefined;
+            channel['max_flow'] = undefined;
         });
     }
 
@@ -167,15 +169,24 @@ export class NodeReachComponent {
             v.policies.forEach((p) => {
                 const n = this.nodeRegistryService.get(p.public_key);
                 if (!!n?.connected_channels && !n['visited']) {
+                    let maxflow = Infinity;
                     n?.connected_channels.forEach((w) => {
                         if (v.id === w.id) w['depth'] = v['depth'] || 0;
-                        else w['depth'] = v['depth'] + 1;
+                        else {
+                            w['depth'] = v['depth'] + 1;
+                        }
+                        if (w.capacity < maxflow) maxflow = w.capacity;
+
                         if (w['depth'] > maxDepth) maxDepth = w['depth'];
                         // console.log(maxDepth);
-                        w['max_flow'] =
-                            w.capacity < (v['max_flow'] || Infinity) ? w.capacity : v['max_flow'];
                         if (w['depth'] < mDepth) queue2.enqueue(w);
                     });
+                    n['max_flow'] = maxflow;
+                    n?.connected_channels.forEach((w) => {
+                        w['max_flow'] =
+                            w.capacity < (n['max_flow'] || Infinity) ? w.capacity : n['max_flow'];
+                    });
+
                     n['visited'] = true;
                 }
             });
