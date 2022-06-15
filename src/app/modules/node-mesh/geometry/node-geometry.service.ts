@@ -45,9 +45,8 @@ export class NodeGeometry extends THREE.BufferGeometry {
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
-            this.setDrawRange(0, currentShouldRender ? drawRange : 0);
             this.initializeGeometry();
-            this.updateGeometry();
+            this.setDrawRange(0, currentShouldRender ? drawRange : 0);
         });
 
         this.store$.select(shouldRenderNodes).subscribe((shouldRender) => {
