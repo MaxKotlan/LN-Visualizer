@@ -211,9 +211,14 @@ export class GradientDescentPositionAlgorithm extends PositionAlgorithm {
     }
 
     public save() {
+        let bufferIndex = 0;
         this.posData.forEach((pos, key) => {
             const n = this.graphRegistryService.nodeMap.get(key);
-            if (n) n['position'] = pos;
+            if (n) {
+                n['buffer_index'] = bufferIndex;
+                n['position'] = pos;
+                bufferIndex++;
+            }
         });
         let nocount = 0;
         this.graphRegistryService.nodeMap.forEach((c) => {

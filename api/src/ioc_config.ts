@@ -13,6 +13,7 @@ import { GraphRegistryService } from './services/graph-registry.service';
 import { ConfigService } from './services/config.service';
 import { ServerStatusService } from './services/server-status.service';
 import { HealthCheckServerService } from './services/health-check-server';
+import { BinaryModelConverter } from './services/binary-model-converter.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -27,4 +28,5 @@ container.bind<GraphRegistryService>(GraphRegistryService).toSelf().inSingletonS
 container.bind<ConfigService>(ConfigService).toSelf().inSingletonScope();
 container.bind<ServerStatusService>(ServerStatusService).toSelf().inSingletonScope();
 container.bind<HealthCheckServerService>(HealthCheckServerService).toSelf().inSingletonScope();
+container.bind<BinaryModelConverter>(BinaryModelConverter).toSelf().inSingletonScope();
 export default container;
