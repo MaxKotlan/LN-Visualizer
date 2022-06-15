@@ -4,11 +4,13 @@ import * as pilotFlagActions from '../actions';
 export interface PilotFlags {
     unitConversions: boolean;
     thickLines: boolean;
+    fastModelDownload: boolean;
 }
 
 const initialState: PilotFlags = {
     unitConversions: false,
     thickLines: true,
+    fastModelDownload: false,
 };
 
 export const reducer = createReducer(

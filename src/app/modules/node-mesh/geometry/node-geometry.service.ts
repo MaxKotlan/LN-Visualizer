@@ -16,25 +16,25 @@ export class NodeGeometry extends THREE.BufferGeometry {
     }
 
     public initializeGeometry() {
-        // this.setAttribute(
-        //     'nodeColor',
-        //     new THREE.BufferAttribute(this.nodeBuffersService.color.data, 3, true),
-        // );
+        this.setAttribute(
+            'nodeColor',
+            new THREE.BufferAttribute(this.nodeBuffersService.color.data, 3, true),
+        );
         this.setAttribute(
             'position',
             new THREE.BufferAttribute(this.nodeBuffersService.vertex.data, 3),
         );
-        // this.setAttribute(
-        //     'averageCapacityRatio',
-        //     new THREE.BufferAttribute(this.nodeBuffersService.capacity.data, 1, false),
-        // );
+        this.setAttribute(
+            'averageCapacityRatio',
+            new THREE.BufferAttribute(this.nodeBuffersService.capacity.data, 1, false),
+        );
         this.updateGeometry();
     }
 
     public updateGeometry() {
         this.attributes['position'].needsUpdate = true;
-        // this.attributes['nodeColor'].needsUpdate = true;
-        // this.attributes['averageCapacityRatio'].needsUpdate = true;
+        this.attributes['nodeColor'].needsUpdate = true;
+        this.attributes['averageCapacityRatio'].needsUpdate = true;
         this.computeBoundingBox();
         this.computeBoundingSphere();
     }

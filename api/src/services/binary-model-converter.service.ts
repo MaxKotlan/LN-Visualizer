@@ -5,14 +5,39 @@ import { GraphRegistryService } from './graph-registry.service';
 export class BinaryModelConverter {
     constructor(private graphRegistryService: GraphRegistryService) {}
 
-    public getBinaryNodePosBuffer(): Float32Array {
-        let buff = new Float32Array(this.graphRegistryService.nodeMap.size);
+    private fromHexString = (hexString: string) => [
+        parseInt(hexString[1] + hexString[2], 16),
+        parseInt(hexString[3] + hexString[4], 16),
+        parseInt(hexString[5] + hexString[6], 16),
+    ];
+
+    public header(a: number, b: number) {
+        let headerBuf = new Uint8Array(4 * 3);
+        headerBuf.set(new Uint32Array([0, a, b]));
+        console.log(headerBuf);
+        return headerBuf;
+    }
+
+    public getBinaryNodePosBuffer(): Uint8Array {
+        let posBuf = new Float32Array(this.graphRegistryService.nodeMap.size);
+        let colorBuf = new Uint8Array(this.graphRegistryService.nodeMap.size);
         this.graphRegistryService.nodeMap.forEach((m) => {
-            buff[m['buffer_index'] * 3 + 0] = (m as any).position.x;
-            buff[m['buffer_index'] * 3 + 1] = (m as any).position.y;
-            buff[m['buffer_index'] * 3 + 2] = (m as any).position.z;
+            posBuf[m['buffer_index'] * 3 + 0] = (m as any).position.x;
+            posBuf[m['buffer_index'] * 3 + 1] = (m as any).position.y;
+            posBuf[m['buffer_index'] * 3 + 2] = (m as any).position.z;
+            const col = this.fromHexString(m.color);
+            colorBuf[m['buffer_index'] * 3 + 0] = col[0];
+            colorBuf[m['buffer_index'] * 3 + 1] = col[1];
+            colorBuf[m['buffer_index'] * 3 + 2] = col[2];
         });
-        return buff;
+        const header = this.header(posBuf.buffer.byteLength, colorBuf.buffer.byteLength);
+        const t: Uint8Array = new Uint8Array(
+            header.buffer.byteLength + posBuf.buffer.byteLength + colorBuf.buffer.byteLength,
+        );
+        t.set(new Uint8Array(header.buffer));
+        t.set(new Uint8Array(posBuf.buffer), header.buffer.byteLength);
+        t.set(colorBuf, posBuf.buffer.byteLength + header.buffer.byteLength);
+        return t;
     }
 
     public getBinaryChannelBuffer(): Float32Array {

@@ -9,6 +9,7 @@ import moment from 'moment';
 import { GraphDatabaseService } from '../graph-renderer/services/graph-database/graph-database.service';
 import { loadGraphFromStorage } from '../graph-renderer/actions/graph-database.actions';
 import { BinaryMeshApiService } from './services/binary-mesh-api.service';
+import { fastModelDownloadEnabled$ } from '../pilot-flags/selectors/pilot-flags.selectors';
 
 @NgModule({
     declarations: [],
@@ -25,16 +26,20 @@ export class GraphNetworkingModule {
     }
 
     async getData() {
-        this.binaryMeshApiService.getNodePositions();
-        this.binaryMeshApiService.getChannelBuffer();
-
-        // const lastInitSync = localStorage.getItem('database-sync-time');
-        // const initialSyncDays = moment().diff(lastInitSync, 'days');
-        // const dataBaseExists = await this.graphDatabaseService.databaseExists();
-        // if (!lastInitSync || initialSyncDays >= 1 || !dataBaseExists) {
-        //     this.store$.dispatch(initializeGraphSyncProcess());
-        // } else {
-        //     this.store$.dispatch(loadGraphFromStorage());
-        // }
+        this.store$.select(fastModelDownloadEnabled$).subscribe(async (isEnabled) => {
+            if (isEnabled) {
+                this.binaryMeshApiService.getNodePositions();
+                this.binaryMeshApiService.getChannelBuffer();
+            } else {
+                const lastInitSync = localStorage.getItem('database-sync-time');
+                const initialSyncDays = moment().diff(lastInitSync, 'days');
+                const dataBaseExists = await this.graphDatabaseService.databaseExists();
+                if (!lastInitSync || initialSyncDays >= 1 || !dataBaseExists) {
+                    this.store$.dispatch(initializeGraphSyncProcess());
+                } else {
+                    this.store$.dispatch(loadGraphFromStorage());
+                }
+            }
+        });
     }
 }

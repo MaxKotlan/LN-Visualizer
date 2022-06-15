@@ -12,3 +12,8 @@ export const pilotThickLinesEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.thickLines,
 );
+
+export const fastModelDownloadEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.fastModelDownload,
+);
