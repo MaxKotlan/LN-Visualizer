@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { lastValueFrom, take } from 'rxjs';
 import { WebSocketServer } from 'ws';
+import { BinaryModelConverter } from './binary-model-converter.service';
 import { ConfigService } from './config.service';
 import { InitialSyncService } from './initial-sync.service';
 import { ServerStatusService } from './server-status.service';
@@ -15,6 +16,7 @@ export class WebSocketService {
         // private channelUpdatedService: ChannelUpdatedService,
         private configService: ConfigService,
         private serverStatusService: ServerStatusService,
+        private binaryModelConverter: BinaryModelConverter,
     ) {
         this.initServer();
     }
@@ -49,6 +51,24 @@ export class WebSocketService {
                     this.initialSyncService.performInitialNodeSync(ws);
                     this.initialSyncService.performInitialChannelSync(ws);
                     this.initialSyncService.sendRequestComplete(ws);
+                    ws.close();
+                }
+                if (data.toString() === '"binNodePos"') {
+                    console.log(
+                        req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+                        'requesting binNodePos',
+                    );
+                    await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
+                    ws.send(this.binaryModelConverter.getBinaryNodePosBuffer());
+                    ws.close();
+                }
+                if (data.toString() === '"binChannelPos"') {
+                    console.log(
+                        req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+                        'requesting binChannelPos',
+                    );
+                    await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
+                    ws.send(this.binaryModelConverter.getBinaryChannelBuffer());
                     ws.close();
                 }
             });

@@ -12,8 +12,11 @@ export abstract class PositionAlgorithm {
     public abstract calculatePositions();
 
     public updateNodePositions() {
-        this.graphRegistryService.nodeMap.forEach(
-            (n) => (n['position'] = this.positionRegistry[n.public_key]),
-        );
+        let bufferIndex = 0;
+        this.graphRegistryService.nodeMap.forEach((n) => {
+            n['buffer_index'] = bufferIndex;
+            n['position'] = this.positionRegistry[n.public_key];
+            bufferIndex++;
+        });
     }
 }
