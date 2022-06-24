@@ -21,6 +21,10 @@ const initialState: GraphFilterState = {
 
 export const reducer = createReducer(
     initialState,
+    on(filterActions.addNodeFilter, (state, { value }) => ({
+        ...state,
+        activeNodeFilters: [...state.activeNodeFilters.filter((f) => !_.isEqual(f, value)), value],
+    })),
     on(filterActions.addChannelFilter, (state, { value }) => ({
         ...state,
         activeChannelFilters: [
