@@ -6,7 +6,7 @@ import {
     GenericChannelFilter,
     PolicyMinMaxFilter,
 } from './channel-filters';
-import { NodeMinMaxFilter } from './node-filters';
+import { GenericNodeFilter, NodeMinMaxFilter } from './node-filters';
 
 @NgModule({
     providers: [
@@ -15,6 +15,7 @@ import { NodeMinMaxFilter } from './node-filters';
         ChannelMinMaxFilter,
         NodeMinMaxFilter,
         GenericChannelFilter,
+        GenericNodeFilter,
     ],
     imports: [CommonModule],
 })

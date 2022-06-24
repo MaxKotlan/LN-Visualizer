@@ -17,15 +17,33 @@ export class GenericChannelFilter extends FilterFactory {
     }
 
     protected readonly mockLndChannel = {
-        capacity: 32,
-        policies: [
+        'id': '714127x882x1',
+        'capacity': 503347,
+        'policies': [
             {
-                public_key: '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
+                'base_fee_mtokens': '0',
+                'cltv_delta': 40,
+                'fee_rate': 100,
+                'is_disabled': false,
+                'max_htlc_mtokens': '498314000',
+                'min_htlc_mtokens': '1000',
+                'public_key': '02159f4a5a9204cceb648e7a051864fafb1b42d7e4a09102e6667bb726618c80a0',
+                'updated_at': '2022-06-24T08:56:16.000Z',
             },
             {
-                public_key: '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025',
+                'base_fee_mtokens': '1000',
+                'cltv_delta': 40,
+                'fee_rate': 1,
+                'is_disabled': false,
+                'max_htlc_mtokens': '498314000',
+                'min_htlc_mtokens': '1000',
+                'public_key': '0364356cf136034814e9f7a0c542286d65d94b20c72afaca9cfb1811656de609b8',
+                'updated_at': '2022-06-22T20:39:36.000Z',
             },
         ],
+        'transaction_id': '071325915315d80da1986905c0dc9c62d2784c6d9ad557151bde0d7e7f90a0cb',
+        'transaction_vout': 1,
+        'updated_at': '2022-06-24T08:56:16.000Z',
     } as LndChannel;
 
     public async expressionEval(sourceCode: string) {
