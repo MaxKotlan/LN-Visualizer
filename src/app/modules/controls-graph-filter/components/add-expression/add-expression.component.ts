@@ -1,11 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Store } from '@ngrx/store';
-import { LndChannel } from 'src/app/types/channels.interface';
+import { GenericChannelFilter } from 'src/app/modules/filter-templates';
 import * as filterActions from '../../actions/filter.actions';
 import { GraphFilterState } from '../../reducer';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
-import { ChannelEvaluationFunction } from '../../types/filter.interface';
+
+const demoSource = `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
+.then(response => response.json())
+.then(data => data.data.amount);
+
+const satPrice = btcPrice / 100000000;
+
+return (channel) =>
+channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
+`;
 
 @Component({
     selector: 'app-add-expression',
@@ -13,82 +22,33 @@ import { ChannelEvaluationFunction } from '../../types/filter.interface';
     styleUrls: ['./add-expression.component.scss'],
 })
 export class AddExpressionComponent {
-    @ViewChild('codeMirror') private codeEditorCmp: CodemirrorComponent;
-
     constructor(
         public filterEval: FilterEvaluatorService,
         private store$: Store<GraphFilterState>,
+        private genericChannelFilter: GenericChannelFilter,
     ) {}
 
-    public scriptLanguage: 'lnscript' | 'javascript' = 'javascript';
     public evalMode: 'add' | 'type' = 'add';
     public scriptType: 'node' | 'channel' = 'channel';
     public error: Error | undefined = undefined;
-    public expression: string =
-        this.scriptLanguage === 'javascript'
-            ? `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
-    .then(response => response.json())
-    .then(data => data.data.amount);
-    
-const satPrice = btcPrice / 100000000;
-
-return (channel) =>
-    channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
-`
-            : undefined;
-    public rpnExpression: string[];
-
-    protected readonly mockLndChannel = {
-        capacity: 32,
-        policies: [
-            {
-                public_key: '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
-            },
-            {
-                public_key: '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025',
-            },
-        ],
-    } as LndChannel;
-
-    public jsFunction: ChannelEvaluationFunction = (channel) =>
-        channel.capacity < 1000000 &&
-        channel.policies.some(
-            (p) =>
-                p.public_key ===
-                '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
-        );
-    public source: string = this.expression;
+    public source: string = demoSource;
 
     public async expressionEval(input: string) {
-        if (this.scriptLanguage === 'javascript') {
-            try {
-                this.jsFunction = await eval(`(async () => { ${input} })()`);
-                if (typeof this.jsFunction !== 'function')
-                    throw new Error('Script must return a function');
-                if (typeof this.jsFunction(this.mockLndChannel) !== 'boolean')
-                    throw new Error('Function must evaluate to boolean');
-                this.error = undefined;
-                this.source = input;
-            } catch (e) {
-                this.error = e;
-            }
+        try {
+            await this.genericChannelFilter.expressionEval(input);
+            this.error = undefined;
+        } catch (e) {
+            this.error = e;
         }
     }
 
-    public async createExpression() {
-        await this.expressionEval(this.expression);
-        if (!this.error) {
-            if (this.scriptLanguage === 'javascript') {
-                this.store$.dispatch(
-                    filterActions.addChannelFilter({
-                        value: {
-                            interpreter: 'javascript',
-                            function: this.jsFunction,
-                            source: this.source,
-                        },
-                    }),
-                );
-            }
+    public async createFilter() {
+        try {
+            const filter = await this.genericChannelFilter.createFilter(this.source);
+            this.store$.dispatch(filterActions.addChannelFilter({ value: filter }));
+            this.error = undefined;
+        } catch (e) {
+            this.error = e;
         }
     }
 }

@@ -3,12 +3,19 @@ import { NgModule } from '@angular/core';
 import {
     ChannelMinMaxFilter,
     ConnectedChannelsFilter,
+    GenericChannelFilter,
     PolicyMinMaxFilter,
 } from './channel-filters';
 import { NodeMinMaxFilter } from './node-filters';
 
 @NgModule({
-    providers: [ConnectedChannelsFilter, PolicyMinMaxFilter, ChannelMinMaxFilter, NodeMinMaxFilter],
+    providers: [
+        ConnectedChannelsFilter,
+        PolicyMinMaxFilter,
+        ChannelMinMaxFilter,
+        NodeMinMaxFilter,
+        GenericChannelFilter,
+    ],
     imports: [CommonModule],
 })
 export class FilterTemplatesModule {}

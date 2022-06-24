@@ -7,5 +7,7 @@ import {
 export abstract class FilterFactory {
     public abstract createFilter(
         ...params: any
-    ): Filter<ChannelEvaluationFunction | NodeEvaluationFunction>;
+    ):
+        | Filter<ChannelEvaluationFunction | NodeEvaluationFunction>
+        | Promise<Filter<ChannelEvaluationFunction | NodeEvaluationFunction>>;
 }

@@ -18,7 +18,7 @@
 <div style="display: flex">
     <ngx-codemirror
         style="width: 100%"
-        [(ngModel)]="expression"
+        [(ngModel)]="source"
         (ngModelChange)="evalMode === 'type' ? expressionEval($event) : ''"
         [options]="{
             lineNumbers: true,
@@ -30,7 +30,7 @@
     ></ngx-codemirror>
     <button
         class="not-inline"
-        (click)="createExpression()"
+        (click)="createFilter()"
         style="transform: scale(0.6)"
         mat-mini-fab
         color="primary"
