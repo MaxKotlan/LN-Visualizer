@@ -7,7 +7,7 @@ import {
 import { FilterFactory } from '../filter-factory';
 
 @Injectable()
-export class PolicyScriptFilter extends FilterFactory {
+export class PolicyMinMaxFilter extends FilterFactory {
     public createFilter(
         policyProperty: string,
         minVal: number,

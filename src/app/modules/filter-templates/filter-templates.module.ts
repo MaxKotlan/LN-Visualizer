@@ -1,10 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ConnectedChannelsFilter } from './channel-filters/connected-channels.filter';
-import { PolicyScriptFilter } from './channel-filters/policy-script.filter';
+import {
+    ChannelMinMaxFilter,
+    ConnectedChannelsFilter,
+    PolicyMinMaxFilter,
+} from './channel-filters';
+import { NodeMinMaxFilter } from './node-filters';
 
 @NgModule({
-    providers: [ConnectedChannelsFilter, PolicyScriptFilter],
+    providers: [ConnectedChannelsFilter, PolicyMinMaxFilter, ChannelMinMaxFilter, NodeMinMaxFilter],
     imports: [CommonModule],
 })
 export class FilterTemplatesModule {}

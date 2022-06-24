@@ -8,7 +8,11 @@ import {
     Filter,
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
-import { PolicyScriptFilter } from 'src/app/modules/filter-templates/channel-filters/policy-script.filter';
+import {
+    ChannelMinMaxFilter,
+    NodeMinMaxFilter,
+    PolicyMinMaxFilter,
+} from 'src/app/modules/filter-templates';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
@@ -27,7 +31,9 @@ export class QuickSliderComponent {
     constructor(
         public store$: Store<GraphState>,
         public finalConverterWrapper: FinalConverterWrapper,
-        private policyScriptFilter: PolicyScriptFilter,
+        private policyMinMaxFilter: PolicyMinMaxFilter,
+        private channelMinMaxFilter: ChannelMinMaxFilter,
+        private nodeMinMaxFilter: NodeMinMaxFilter,
     ) {}
 
     public isPilotFlagEnabled$ = this.store$.select(pilotIsUnitConversionsEnabled$);
@@ -93,12 +99,11 @@ export class QuickSliderComponent {
     public updateNodeScript() {
         this.store$.dispatch(
             filterActions.updateNodeFilterByIssueId({
-                value: {
-                    interpreter: 'javascript',
-                    issueId: this.scriptName,
-                    source: this.createNodeScriptSource(this.logValue),
-                    function: this.createNodeScript(),
-                } as Filter<NodeEvaluationFunction>,
+                value: this.nodeMinMaxFilter.createFilter(
+                    this.objectKey,
+                    this.logToLinear(this.logValue[0]),
+                    this.logToLinear(this.logValue[1]),
+                ),
             }),
         );
     }
@@ -106,65 +111,20 @@ export class QuickSliderComponent {
     public updateChannelScript() {
         this.store$.dispatch(
             filterActions.updateChannelFilterByIssueId({
-                value: {
-                    interpreter: 'javascript',
-                    issueId: this.scriptName,
-                    source: this.isPolicyScript
-                        ? this.createPolicyScriptSource(this.logValue)
-                        : this.createNonPolicyScriptSource(this.logValue),
-                    function: this.isPolicyScript
-                        ? this.createPolicyScript()
-                        : this.createNonPolicyScript(),
-                } as Filter<ChannelEvaluationFunction>,
+                value: this.isPolicyScript
+                    ? this.policyMinMaxFilter.createFilter(
+                          this.objectKey,
+                          this.logToLinear(this.logValue[0]),
+                          this.logToLinear(this.logValue[1]),
+                      )
+                    : this.channelMinMaxFilter.createFilter(
+                          this.objectKey,
+                          this.logToLinear(this.logValue[0]),
+                          this.logToLinear(this.logValue[1]),
+                      ),
             }),
         );
     }
-
-    public createNonPolicyScript() {
-        return (channel: LndChannel) =>
-            channel[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-            channel[this.objectKey] <= this.logToLinear(this.logValue[1]);
-    }
-
-    // public createPolicyScript() {
-    //     return (channel: LndChannel) =>
-    //         channel.policies.some(
-    //             (p) =>
-    //                 p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-    //                 p[this.objectKey] <= this.logToLinear(this.logValue[1]),
-    //         );
-    // }
-
-    public createNodeScript() {
-        return (node: LndNodeWithPosition) =>
-            node[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-            node[this.objectKey] <= this.logToLinear(this.logValue[1]);
-    }
-
-    public createNodeScriptSource(value: number[]) {
-        return `return (node) =>
-    node.${this.objectKey} >= ${this.logToLinear(value[0])} && node.${
-            this.objectKey
-        } <= ${this.logToLinear(value[1])}                     
-`;
-    }
-
-    public createNonPolicyScriptSource(value: number[]) {
-        return `return (channel) =>
-    channel.${this.objectKey} >= ${this.logToLinear(value[0])} && channel.${
-            this.objectKey
-        } <= ${this.logToLinear(value[1])}                     
-`;
-    }
-
-    //     public createPolicyScriptSource(value: number[]) {
-    //         return `return (channel) =>
-    //   channel.policies.some(p =>
-    //     p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${
-    //             this.objectKey
-    //         } <= ${this.logToLinear(value[1])} )
-    // `;
-    //     }
 
     public logToLinear(value: number) {
         return Math.round(Math.pow(10, value) - 1);
