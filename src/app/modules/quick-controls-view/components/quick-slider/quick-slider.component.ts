@@ -8,6 +8,7 @@ import {
     Filter,
     NodeEvaluationFunction,
 } from 'src/app/modules/controls-graph-filter/types/filter.interface';
+import { PolicyScriptFilter } from 'src/app/modules/filter-templates/channel-filters/policy-script.filter';
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
@@ -26,6 +27,7 @@ export class QuickSliderComponent {
     constructor(
         public store$: Store<GraphState>,
         public finalConverterWrapper: FinalConverterWrapper,
+        private policyScriptFilter: PolicyScriptFilter,
     ) {}
 
     public isPilotFlagEnabled$ = this.store$.select(pilotIsUnitConversionsEnabled$);
@@ -124,14 +126,14 @@ export class QuickSliderComponent {
             channel[this.objectKey] <= this.logToLinear(this.logValue[1]);
     }
 
-    public createPolicyScript() {
-        return (channel: LndChannel) =>
-            channel.policies.some(
-                (p) =>
-                    p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
-                    p[this.objectKey] <= this.logToLinear(this.logValue[1]),
-            );
-    }
+    // public createPolicyScript() {
+    //     return (channel: LndChannel) =>
+    //         channel.policies.some(
+    //             (p) =>
+    //                 p[this.objectKey] >= this.logToLinear(this.logValue[0]) &&
+    //                 p[this.objectKey] <= this.logToLinear(this.logValue[1]),
+    //         );
+    // }
 
     public createNodeScript() {
         return (node: LndNodeWithPosition) =>
@@ -155,14 +157,14 @@ export class QuickSliderComponent {
 `;
     }
 
-    public createPolicyScriptSource(value: number[]) {
-        return `return (channel) =>
-  channel.policies.some(p =>
-    p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${
-            this.objectKey
-        } <= ${this.logToLinear(value[1])} )                        
-`;
-    }
+    //     public createPolicyScriptSource(value: number[]) {
+    //         return `return (channel) =>
+    //   channel.policies.some(p =>
+    //     p.${this.objectKey} >= ${this.logToLinear(value[0])} && p.${
+    //             this.objectKey
+    //         } <= ${this.logToLinear(value[1])} )
+    // `;
+    //     }
 
     public logToLinear(value: number) {
         return Math.round(Math.pow(10, value) - 1);

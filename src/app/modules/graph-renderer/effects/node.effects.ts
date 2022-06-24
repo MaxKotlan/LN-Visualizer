@@ -9,6 +9,7 @@ import { LndNode } from 'src/app/types/node.interface';
 import { Vector3 } from 'three';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
+import { ConnectedChannelsFilter } from '../../filter-templates/channel-filters/connected-channels.filter';
 import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
@@ -23,7 +24,6 @@ export class NodeEffects {
         private actions$: Actions,
         private store$: Store<GraphState>,
         private globalStatisticsCaluclator: GlobalStatisticsCalculatorService,
-        // private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
         private evaluationService: FilterEvaluatorService,
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
