@@ -1,4 +1,3 @@
-<h3 *ngIf="error">{{ error }}</h3>
 <div style="display: flex">
     <mat-form-field style="margin-right: 10px">
         <mat-label>Evaluate Mode</mat-label>
@@ -15,6 +14,14 @@
         </mat-select>
     </mat-form-field>
 </div>
+<mtx-alert
+    *ngIf="error"
+    type="danger"
+    [elevation]="12"
+    style="margin-bottom: 0; margin-right: 40px"
+>
+    {{ error }}
+</mtx-alert>
 <div style="display: flex">
     <ngx-codemirror
         style="width: 100%"
