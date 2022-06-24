@@ -1,13 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LndChannel } from 'api/src/models';
 import { Observable } from 'rxjs';
 import { UnitLabelOrNumber } from 'src/app/constants/display-units.constant';
-import {
-    ChannelEvaluationFunction,
-    Filter,
-    NodeEvaluationFunction,
-} from 'src/app/modules/controls-graph-filter/types/filter.interface';
 import {
     ChannelMinMaxFilter,
     NodeMinMaxFilter,
@@ -17,7 +11,6 @@ import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
 import { MinMax } from 'src/app/types/min-max-total.interface';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 
