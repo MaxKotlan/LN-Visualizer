@@ -19,7 +19,7 @@ const initialState: GraphFilterState = {
     channelFilterKeys: [],
 };
 
-export const reducer = createReducer(
+export const filterReducer = createReducer(
     initialState,
     on(filterActions.addNodeFilter, (state, { value }) => ({
         ...state,
