@@ -21,13 +21,13 @@ export class ChannelMinMaxFilter extends FilterFactory {
         };
     }
 
-    public createChannelScriptSource(channelProperty: string, minVal: number, maxVal: number) {
+    protected createChannelScriptSource(channelProperty: string, minVal: number, maxVal: number) {
         return `return (channel) =>
 channel.${channelProperty} >= ${minVal} && channel.${channelProperty} <= ${maxVal}                     
 `;
     }
 
-    public createChannelScript(channelProperty: string, minVal: number, maxVal: number) {
+    protected createChannelScript(channelProperty: string, minVal: number, maxVal: number) {
         return (channel: LndChannel) =>
             channel[channelProperty] >= minVal && channel[channelProperty] <= maxVal;
     }

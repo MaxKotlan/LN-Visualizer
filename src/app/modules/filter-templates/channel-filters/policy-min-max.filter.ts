@@ -21,14 +21,14 @@ export class PolicyMinMaxFilter extends FilterFactory {
         };
     }
 
-    public createPolicyScriptSource(policyProperty: string, minVal: number, maxVal: number) {
+    protected createPolicyScriptSource(policyProperty: string, minVal: number, maxVal: number) {
         return `return (channel) =>
   channel.policies.some(p =>
     p.${policyProperty} >= ${minVal} && p.${policyProperty} <= ${maxVal} )                        
 `;
     }
 
-    public createPolicyScript(policyProperty: string, minVal: number, maxVal: number) {
+    protected createPolicyScript(policyProperty: string, minVal: number, maxVal: number) {
         return (channel: LndChannel) =>
             channel.policies.some(
                 (p) => p[policyProperty] >= minVal && p[policyProperty] <= maxVal,
