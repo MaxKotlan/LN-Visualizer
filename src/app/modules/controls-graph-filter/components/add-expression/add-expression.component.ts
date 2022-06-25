@@ -1,14 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { GenericChannelFilter, GenericNodeFilter } from 'src/app/modules/filter-templates';
-import { setScriptType } from '../../actions';
+import { setScriptSource, setScriptType } from '../../actions';
 import * as filterActions from '../../actions/filter.actions';
 import { GraphFilterState } from '../../reducer';
-import { scriptType } from '../../selectors/filter-view.selectors';
+import { scriptSource, scriptType } from '../../selectors/filter-view.selectors';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
-const channelDemoSource = `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
+export const channelDemoSource = `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
 .then(response => response.json())
 .then(data => data.data.amount);
 
@@ -18,10 +19,11 @@ return (channel) =>
 channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
 `;
 
-const nodeDemoSource = `return (node) =>
+export const nodeDemoSource = `return (node) =>
 node.channel_count >= 80 && node.channel_count <= 1804  
 `;
 
+@UntilDestroy()
 @Component({
     selector: 'app-add-expression',
     templateUrl: './add-expression.component.html',
@@ -34,19 +36,27 @@ export class AddExpressionComponent {
         private genericChannelFilter: GenericChannelFilter,
         private genericNodeFilter: GenericNodeFilter,
     ) {
-        this.store$.select(scriptType).subscribe((scriptType) => {
-            this._scriptType = scriptType;
-            if (scriptType === 'channel') {
-                this.source = channelDemoSource;
-                this.expressionEval = this.evalChannelExpression;
-                this.createFilter = this.createChannelFilter;
-            }
-            if (scriptType === 'node') {
-                this.source = nodeDemoSource;
-                this.expressionEval = this.evalNodeExpression;
-                this.createFilter = this.createNodeFilter;
-            }
-        });
+        this.store$
+            .select(scriptSource)
+            .pipe(untilDestroyed(this))
+            .subscribe((source) => {
+                this._source = source;
+            });
+
+        this.store$
+            .select(scriptType)
+            .pipe(untilDestroyed(this))
+            .subscribe((scriptType) => {
+                this._scriptType = scriptType;
+                if (scriptType === 'channel') {
+                    this.expressionEval = this.evalChannelExpression;
+                    this.createFilter = this.createChannelFilter;
+                }
+                if (scriptType === 'node') {
+                    this.expressionEval = this.evalNodeExpression;
+                    this.createFilter = this.createNodeFilter;
+                }
+            });
     }
 
     public evalMode: 'add' | 'type' = 'add';
@@ -60,7 +70,14 @@ export class AddExpressionComponent {
     private _scriptType: 'node' | 'channel';
 
     public error: Error | undefined = undefined;
-    public source: string;
+    public _source: string;
+    public get source() {
+        return this._source;
+    }
+
+    public set source(ss: string) {
+        this.store$.dispatch(setScriptSource({ value: ss }));
+    }
 
     public expressionEval: Function;
     public createFilter: Function;
