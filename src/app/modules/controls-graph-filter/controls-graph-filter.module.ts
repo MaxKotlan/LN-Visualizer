@@ -7,9 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './effects/filter.effects';
 import { StoreModule } from '@ngrx/store';
-import { reducer } from './reducer';
+import { filterReducer } from './reducer';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AddExpressionComponent } from './components/add-expression/add-expression.component';
+import { filterViewReducer } from './reducer/filter-view.reducer';
+import { FilterViewEffects } from './effects/filter-view.effects';
 
 @NgModule({
     declarations: [FilterListComponent, FilterModalComponent, AddExpressionComponent],
@@ -18,8 +20,9 @@ import { AddExpressionComponent } from './components/add-expression/add-expressi
         FormsModule,
         MaterialModule,
         CodemirrorModule,
-        EffectsModule.forFeature([FilterEffects]),
-        StoreModule.forFeature('graphFilterState', reducer),
+        EffectsModule.forFeature([FilterEffects, FilterViewEffects]),
+        StoreModule.forFeature('graphFilterState', filterReducer),
+        StoreModule.forFeature('filterViewState', filterViewReducer),
     ],
     exports: [FilterModalComponent],
 })

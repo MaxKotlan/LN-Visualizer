@@ -10,6 +10,11 @@ export const addChannelFilter = createAction(
     props<{ value: Filter<ChannelEvaluationFunction> }>(),
 );
 
+export const addNodeFilter = createAction(
+    '[filter] addNodeFilter',
+    props<{ value: Filter<NodeEvaluationFunction> }>(),
+);
+
 export const removeChannelFilter = createAction(
     '[filter] removeChannelFilter',
     props<{ value: Filter<NodeEvaluationFunction | ChannelEvaluationFunction> }>(),

@@ -5,7 +5,7 @@ export type NodeEvaluationFunction = (n: LndNodeWithPosition) => boolean;
 export type ChannelEvaluationFunction = (n: LndChannel) => boolean;
 
 export interface Filter<T> {
-    interpreter: 'lnscript' | 'javascript';
+    interpreter: 'javascript';
     source?: string;
     function?: T;
     expression?: string[];

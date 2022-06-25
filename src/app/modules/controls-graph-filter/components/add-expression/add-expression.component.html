@@ -1,4 +1,3 @@
-<h3 *ngIf="error">{{ error }}</h3>
 <div style="display: flex">
     <mat-form-field style="margin-right: 10px">
         <mat-label>Evaluate Mode</mat-label>
@@ -9,16 +8,24 @@
     </mat-form-field>
     <mat-form-field>
         <mat-label>Script Type</mat-label>
-        <mat-select disabled [(ngModel)]="scriptType">
+        <mat-select [(ngModel)]="scriptType">
             <mat-option [value]="'channel'">channel</mat-option>
             <mat-option [value]="'node'">node</mat-option>
         </mat-select>
     </mat-form-field>
 </div>
+<mtx-alert
+    *ngIf="error"
+    type="danger"
+    [elevation]="12"
+    style="margin-bottom: 0; margin-right: 40px"
+>
+    {{ error }}
+</mtx-alert>
 <div style="display: flex">
     <ngx-codemirror
         style="width: 100%"
-        [(ngModel)]="expression"
+        [(ngModel)]="source"
         (ngModelChange)="evalMode === 'type' ? expressionEval($event) : ''"
         [options]="{
             lineNumbers: true,
@@ -30,7 +37,7 @@
     ></ngx-codemirror>
     <button
         class="not-inline"
-        (click)="createExpression()"
+        (click)="createFilter()"
         style="transform: scale(0.6)"
         mat-mini-fab
         color="primary"

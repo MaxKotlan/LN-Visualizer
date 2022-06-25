@@ -16,6 +16,7 @@ import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { Uniform, Vector3 } from 'three';
 import * as filterActions from '../../controls-graph-filter/actions';
 import { selectSearchString } from '../../controls/selectors/controls.selectors';
+import { ConnectedChannelsFilter } from '../../filter-templates/channel-filters/connected-channels.filter';
 import { setFilteredNodes } from '../actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
@@ -25,6 +26,7 @@ export class NodeSearchEffects {
         private filteredNodeRegistry: FilteredNodeRegistryService,
         private store$: Store<any>,
         private actions$: Actions,
+        private connectedChannelsFilter: ConnectedChannelsFilter,
     ) {}
 
     public generateSearchSubset$ = this.actions$.pipe(
@@ -90,16 +92,7 @@ export class NodeSearchEffects {
                     if (c)
                         addPubKeyFilter.push(
                             filterActions.addChannelFilter({
-                                value: {
-                                    interpreter: 'javascript',
-                                    source: `return (channel) => 
-    channel.policies.some((p) => 
-        p.public_key === "${c.public_key}")
-`.trim(),
-                                    function: (channel: LndChannel) =>
-                                        channel.policies.some((p) => p.public_key === c.public_key),
-                                    issueId: 'addNodeFilter',
-                                },
+                                value: this.connectedChannelsFilter.createFilter(c.public_key),
                             }),
                         );
 
