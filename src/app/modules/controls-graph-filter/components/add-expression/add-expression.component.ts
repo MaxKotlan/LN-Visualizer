@@ -3,10 +3,10 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { GenericChannelFilter, GenericNodeFilter } from 'src/app/modules/filter-templates';
-import { setScriptSource, setScriptType } from '../../actions';
+import { setEvalMode, setScriptSource, setScriptType } from '../../actions';
 import * as filterActions from '../../actions/filter.actions';
 import { GraphFilterState } from '../../reducer';
-import { scriptSource, scriptType } from '../../selectors/filter-view.selectors';
+import { scriptEvalMode, scriptSource, scriptType } from '../../selectors/filter-view.selectors';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
 export const channelDemoSource = `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
@@ -37,6 +37,13 @@ export class AddExpressionComponent {
         private genericNodeFilter: GenericNodeFilter,
     ) {
         this.store$
+            .select(scriptEvalMode)
+            .pipe(untilDestroyed(this))
+            .subscribe((evalMode) => {
+                this._evalMode = evalMode;
+            });
+
+        this.store$
             .select(scriptSource)
             .pipe(untilDestroyed(this))
             .subscribe((source) => {
@@ -59,7 +66,16 @@ export class AddExpressionComponent {
             });
     }
 
-    public evalMode: 'add' | 'type' = 'add';
+    public _evalMode: 'add' | 'type' = 'add';
+
+    public get evalMode() {
+        return this._evalMode;
+    }
+
+    public set evalMode(evalMode: 'add' | 'type') {
+        this.store$.dispatch(setEvalMode({ value: evalMode }));
+    }
+
     public get scriptType() {
         return this._scriptType;
     }
