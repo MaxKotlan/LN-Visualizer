@@ -2,8 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Store } from '@ngrx/store';
 import { GenericChannelFilter, GenericNodeFilter } from 'src/app/modules/filter-templates';
+import { setScriptType } from '../../actions';
 import * as filterActions from '../../actions/filter.actions';
 import { GraphFilterState } from '../../reducer';
+import { scriptType } from '../../selectors/filter-view.selectors';
 import { FilterEvaluatorService } from '../../services/filter-evaluator.service';
 
 const channelDemoSource = `const btcPrice = await fetch('https://api.coinbase.com/v2/prices/spot?currency=USD')
@@ -32,7 +34,19 @@ export class AddExpressionComponent {
         private genericChannelFilter: GenericChannelFilter,
         private genericNodeFilter: GenericNodeFilter,
     ) {
-        this.scriptType = 'channel';
+        this.store$.select(scriptType).subscribe((scriptType) => {
+            this._scriptType = scriptType;
+            if (scriptType === 'channel') {
+                this.source = channelDemoSource;
+                this.expressionEval = this.evalChannelExpression;
+                this.createFilter = this.createChannelFilter;
+            }
+            if (scriptType === 'node') {
+                this.source = nodeDemoSource;
+                this.expressionEval = this.evalNodeExpression;
+                this.createFilter = this.createNodeFilter;
+            }
+        });
     }
 
     public evalMode: 'add' | 'type' = 'add';
@@ -40,17 +54,7 @@ export class AddExpressionComponent {
         return this._scriptType;
     }
     public set scriptType(scriptType: 'node' | 'channel') {
-        this._scriptType = scriptType;
-        if (scriptType === 'channel') {
-            this.source = channelDemoSource;
-            this.expressionEval = this.evalChannelExpression;
-            this.createFilter = this.createChannelFilter;
-        }
-        if (scriptType === 'node') {
-            this.source = nodeDemoSource;
-            this.expressionEval = this.evalNodeExpression;
-            this.createFilter = this.createNodeFilter;
-        }
+        this.store$.dispatch(setScriptType({ value: scriptType }));
     }
 
     private _scriptType: 'node' | 'channel';
