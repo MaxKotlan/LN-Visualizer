@@ -14,7 +14,6 @@ export class InitialSyncApiService {
 
     constructor(private store$: Store) {
         this.store$.select(selectChunkInitSyncCommand).subscribe((initSyncCommand) => {
-            console.log(initSyncCommand);
             this.initSyncCommand = initSyncCommand;
         });
     }
