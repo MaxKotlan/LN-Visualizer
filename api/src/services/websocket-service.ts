@@ -41,15 +41,26 @@ export class WebSocketService {
                 status.unsubscribe();
             });
             ws.on('message', async (data) => {
-                if (data.toString() === '"initsync"') {
+                //this is so bad...
+                if (data.toString().includes('initsync')) {
+                    let nCount = 0; //parseInt(data.toString().split('_n')[1]);
+                    let cCount = 0; //parseInt(data.toString().split('_c')[1]);
+
+                    if (data.toString().split('_n').length > 1) {
+                        nCount = parseInt(data.toString().split('_n')[1]);
+                    }
+                    if (data.toString().split('_c').length > 1) {
+                        cCount = parseInt(data.toString().split('_c')[1]);
+                    }
+
                     console.log(
                         req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-                        'requesting initsync',
+                        `requesting ${data.toString()}`,
                     );
                     await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);
-                    this.initialSyncService.performInitialNodeSync(ws);
-                    this.initialSyncService.performInitialChannelSync(ws);
+                    this.initialSyncService.performInitialNodeSync(ws, nCount);
+                    this.initialSyncService.performInitialChannelSync(ws, cCount);
                     this.initialSyncService.sendRequestComplete(ws);
                     ws.close();
                 }
