@@ -3,4 +3,7 @@ import { AlertsState } from '../reducers';
 
 export const alertsStateSelector = createFeatureSelector<AlertsState>('alerts');
 
-export const selectTopAlert = createSelector(alertsStateSelector, (state) => state.alerts[0]);
+export const selectTopAlert = createSelector(
+    alertsStateSelector,
+    (state) => state.alerts.filter((a) => a.id !== 'websocket-connection-error')[0],
+);

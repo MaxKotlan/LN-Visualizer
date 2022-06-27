@@ -54,11 +54,10 @@ export const reducer = createReducer(
     //on(graphActions)
     on(alertActions.createAlert, (state) => ({
         ...state,
-        isRequestInitiating: false,
     })),
     on(graphActions.initializeGraphSyncProcess, (state) => ({
         ...state,
-        isRequestInitiating: true,
+        isRequestInitiating: !state.nodeChunksProcessed,
     })),
     on(graphDatabaseActions.loadGraphFromStorage, (state) => ({
         ...state,
