@@ -47,7 +47,7 @@ export class WebSocketService {
 
                     console.log(
                         req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-                        'requesting initsync',
+                        `requesting ${data.toString()}`,
                     );
                     await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);

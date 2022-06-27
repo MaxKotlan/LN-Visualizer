@@ -45,7 +45,7 @@ export const selectChunkInitSyncCommand = createSelector(
                 return `initsync_c${channelsProcessed}`;
             }
         }
-        return 'requestdone';
+        return 'initsync';
     },
 );
 
