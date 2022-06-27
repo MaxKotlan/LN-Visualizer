@@ -23,6 +23,7 @@ export interface GraphState {
     maximumChannelCapacity: number;
     minimumChannelCapacity: number;
     isRequestInitiating: boolean;
+    isRequestComplete: boolean;
     isLoadingFromStorage: boolean;
 }
 
@@ -43,6 +44,7 @@ const initialState: GraphState = {
     totalChannelCapacity: 0,
     maximumChannelCapacity: 0,
     minimumChannelCapacity: Infinity,
+    isRequestComplete: false,
     isLoadingFromStorage: false,
 };
 
@@ -100,6 +102,7 @@ export const reducer = createReducer(
     on(graphActions.cacheProcessedChannelChunk, (state) => ({
         ...state,
         channelChunksProcessed: state.channelChunksProcessed + 1,
+        isRequestComplete: state.channelChunksProcessed + 1 === state.chunkInfo?.edgeChunks,
     })),
     // on(graphActions.cacheProcessedGraphNodeChunk, (state, { nodeSet }) => ({
     //     ...state,

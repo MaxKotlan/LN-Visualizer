@@ -49,6 +49,11 @@ export const selectChunkInitSyncCommand = createSelector(
     },
 );
 
+export const selectIsRequestComplete = createSelector(
+    graphSelector,
+    (state) => state.isRequestComplete,
+);
+
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
 
 export const selectNodeCount = createSelector(graphSelector, (state) => state.nodeCount);

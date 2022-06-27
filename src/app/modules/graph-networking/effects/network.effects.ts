@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { from, of } from 'rxjs';
-import { catchError, delay, filter, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, delay, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as alertActions from '../../alerts/actions/alerts.actions';
 import * as graphActions from '../../graph-renderer/actions/graph.actions';
 import { InitialSyncApiService } from '../services';
+import * as graphSelectors from '../../graph-renderer/selectors';
 
 @Injectable()
 export class NetworkEffects {
-    constructor(private actions$: Actions, private initialSyncApiService: InitialSyncApiService) {}
+    constructor(
+        private actions$: Actions,
+        private initialSyncApiService: InitialSyncApiService,
+        private store: Store,
+    ) {}
 
     retrieveGraph$ = createEffect(
         () =>
@@ -92,6 +98,8 @@ export class NetworkEffects {
         this.actions$.pipe(
             ofType(alertActions.createAlert),
             filter((action) => action.alert.id === 'websocket-connection-error'),
+            withLatestFrom(this.store.select(graphSelectors.selectIsRequestComplete)),
+            filter(([, x]) => !x),
             delay(1000),
             map(() => graphActions.initializeGraphSyncProcess()),
         ),
