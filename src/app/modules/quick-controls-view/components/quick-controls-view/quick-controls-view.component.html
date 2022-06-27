@@ -7,7 +7,7 @@
 </mat-toolbar>
 <div class="app-sidenav">
     <app-quick-controls></app-quick-controls>
-    <app-quick-slider
+    <!-- <app-quick-slider
         [isNodeScript]="true"
         [isPolicyScript]="false"
         [key]="'node_capacity'"
@@ -30,5 +30,10 @@
         [key]="key"
         [minMax]="statsState[key]"
         [baseUnit]="backendUnitFormat[key]"
+    ></app-quick-slider> -->
+    <app-quick-slider
+        *ngFor="let control of controls$ | async"
+        [key]="control.name"
+        [minMax]="statsState['capacity']"
     ></app-quick-slider>
 </div>

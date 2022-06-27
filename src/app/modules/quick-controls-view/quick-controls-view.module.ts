@@ -9,6 +9,9 @@ import { QuickSliderComponent } from './components/quick-slider/quick-slider.com
 import { LinearToLogPipe, LogToLinearPipe } from './pipes/log-to-linear.pipe';
 import { MiniInputComponent } from './components/mini-input/mini-input.component';
 import { FilterTemplatesModule } from '../filter-templates/filter-templates.module';
+import { StoreModule } from '@ngrx/store';
+
+import * as quickControlsReducer from './reducer';
 
 @NgModule({
     declarations: [
@@ -25,6 +28,7 @@ import { FilterTemplatesModule } from '../filter-templates/filter-templates.modu
         ControlsModule,
         UnitConversionsModule,
         FilterTemplatesModule,
+        StoreModule.forFeature('quickControls', quickControlsReducer.reducer),
     ],
     exports: [QuickControlsViewComponent],
 })
