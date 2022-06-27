@@ -47,12 +47,14 @@ export class WebSocketService {
                 if (data.toString().includes('initsync')) {
                     let nCount = 0; //parseInt(data.toString().split('_n')[1]);
                     let cCount = 0; //parseInt(data.toString().split('_c')[1]);
+                    let redownloadNodes = true;
 
                     if (data.toString().split('_n').length > 1) {
                         nCount = parseInt(data.toString().split('_n')[1]);
                     }
                     if (data.toString().split('_c').length > 1) {
                         cCount = parseInt(data.toString().split('_c')[1]);
+                        redownloadNodes = false;
                     }
 
                     console.log(
@@ -61,7 +63,10 @@ export class WebSocketService {
                     );
                     await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);
-                    if (nCount < (this.lndChunkTrackerService.chunkInfo?.nodeChunks || Infinity))
+                    if (
+                        nCount < (this.lndChunkTrackerService.chunkInfo?.nodeChunks || Infinity) &&
+                        redownloadNodes
+                    )
                         this.initialSyncService.performInitialNodeSync(ws, nCount);
                     if (cCount < (this.lndChunkTrackerService.chunkInfo?.edgeChunks || Infinity))
                         this.initialSyncService.performInitialChannelSync(ws, cCount);
