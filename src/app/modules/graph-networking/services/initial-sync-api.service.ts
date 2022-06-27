@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
+import { selectChunkInitSyncCommand } from '../../graph-renderer/selectors';
 
 @Injectable()
 export class InitialSyncApiService {
     private subject: WebSocketSubject<Chunk<LndNode | LndChannel>>;
+
+    constructor(private store$: Store) {
+        this.store$.select(selectChunkInitSyncCommand).subscribe(console.log);
+    }
 
     public createWsSubject() {
         if (environment.production) {

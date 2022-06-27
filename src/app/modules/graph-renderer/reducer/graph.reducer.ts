@@ -92,9 +92,10 @@ export const reducer = createReducer(
     })),
     on(graphActions.cacheProcessedGraphNodeChunk, (state) => ({
         ...state,
-        nodeChunksProcessed: state.isLoadingFromStorage
-            ? state.nodeChunksProcessed
-            : state.nodeChunksProcessed + 1,
+        nodeChunksProcessed:
+            state.isLoadingFromStorage || state.nodeChunksProcessed === state.chunkInfo.nodeChunks
+                ? state.nodeChunksProcessed
+                : state.nodeChunksProcessed + 1,
         isRequestInitiating: false,
     })),
     on(graphActions.cacheProcessedChannelChunk, (state) => ({

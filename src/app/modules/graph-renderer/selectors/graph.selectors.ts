@@ -32,6 +32,23 @@ export const selectChunkRemainingPercentage = createSelector(
     },
 );
 
+export const selectChunkInitSyncCommand = createSelector(
+    selectNodeChunksProcessed,
+    selectChannelChunksProcessed,
+    selectChunkInfo,
+    (nodesProcessed, channelsProcessed, chunkInfo) => {
+        if (chunkInfo) {
+            if (nodesProcessed !== chunkInfo.nodeChunks) {
+                return `initsync_n${nodesProcessed}`;
+            }
+            if (channelsProcessed !== chunkInfo.edgeChunks) {
+                return `initsync_c${channelsProcessed}`;
+            }
+        }
+        return 'requestdone';
+    },
+);
+
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
 
 export const selectNodeCount = createSelector(graphSelector, (state) => state.nodeCount);

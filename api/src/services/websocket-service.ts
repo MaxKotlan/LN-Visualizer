@@ -41,7 +41,7 @@ export class WebSocketService {
                 status.unsubscribe();
             });
             ws.on('message', async (data) => {
-                if (data.toString() === '"initsync"') {
+                if (data.toString().includes('"initsync"')) {
                     console.log(
                         req.headers['x-forwarded-for'] || req.socket.remoteAddress,
                         'requesting initsync',
