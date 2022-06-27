@@ -4,6 +4,7 @@ import { WebSocketServer } from 'ws';
 import { BinaryModelConverter } from './binary-model-converter.service';
 import { ConfigService } from './config.service';
 import { InitialSyncService } from './initial-sync.service';
+import { LndChunkTrackerService } from './lnd-chunk-tracker.service';
 import { ServerStatusService } from './server-status.service';
 
 @injectable()
@@ -17,6 +18,7 @@ export class WebSocketService {
         private configService: ConfigService,
         private serverStatusService: ServerStatusService,
         private binaryModelConverter: BinaryModelConverter,
+        private lndChunkTrackerService: LndChunkTrackerService,
     ) {
         this.initServer();
     }
@@ -59,8 +61,10 @@ export class WebSocketService {
                     );
                     await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);
-                    this.initialSyncService.performInitialNodeSync(ws, nCount);
-                    this.initialSyncService.performInitialChannelSync(ws, cCount);
+                    if (nCount < (this.lndChunkTrackerService.chunkInfo?.nodeChunks || -1))
+                        this.initialSyncService.performInitialNodeSync(ws, nCount);
+                    if (cCount < (this.lndChunkTrackerService.chunkInfo?.edgeChunks || -1))
+                        this.initialSyncService.performInitialChannelSync(ws, cCount);
                     this.initialSyncService.sendRequestComplete(ws);
                     ws.close();
                 }
