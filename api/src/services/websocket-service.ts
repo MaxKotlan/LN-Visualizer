@@ -61,9 +61,9 @@ export class WebSocketService {
                     );
                     await lastValueFrom(this.serverStatusService.serverIsReady$.pipe(take(1)));
                     this.initialSyncService.sendChunkInfo(ws);
-                    if (nCount < (this.lndChunkTrackerService.chunkInfo?.nodeChunks || -1))
+                    if (nCount < (this.lndChunkTrackerService.chunkInfo?.nodeChunks || Infinity))
                         this.initialSyncService.performInitialNodeSync(ws, nCount);
-                    if (cCount < (this.lndChunkTrackerService.chunkInfo?.edgeChunks || -1))
+                    if (cCount < (this.lndChunkTrackerService.chunkInfo?.edgeChunks || Infinity))
                         this.initialSyncService.performInitialChannelSync(ws, cCount);
                     this.initialSyncService.sendRequestComplete(ws);
                     ws.close();
