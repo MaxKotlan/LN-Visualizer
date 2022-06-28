@@ -21,6 +21,11 @@ export const setRequestInitiating = createAction(
     props<{ requestInitiating: boolean }>(),
 );
 
+export const setIsLoadFromStorage = createAction(
+    '[graph] setIsLoadFromStorage',
+    props<{ isLoadFromStorage: boolean }>(),
+);
+
 export const initializeGraphSyncProcess = createAction(
     '[graph] initializeGraphSyncProcess',
     props<{ overrideSync?: string | undefined }>(),

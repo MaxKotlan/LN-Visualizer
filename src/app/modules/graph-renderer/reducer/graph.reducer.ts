@@ -66,6 +66,10 @@ export const reducer = createReducer(
         isRequestInitiating: true,
         isLoadingFromStorage: true,
     })),
+    on(graphActions.setIsLoadFromStorage, (state, { isLoadFromStorage }) => ({
+        ...state,
+        isLoadingFromStorage: isLoadFromStorage,
+    })),
     on(graphActions.setRequestInitiating, (state, { requestInitiating }) => ({
         ...state,
         isRequestInitiating: requestInitiating,

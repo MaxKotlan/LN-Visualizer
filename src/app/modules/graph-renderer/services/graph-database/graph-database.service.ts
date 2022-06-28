@@ -8,6 +8,7 @@ import {
     processChunkInfo,
     processGraphChannelChunk,
     processGraphNodeChunk,
+    setIsLoadFromStorage,
 } from '../../actions';
 import { ChannelRegistryService } from '../channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
@@ -79,6 +80,7 @@ export class GraphDatabaseService {
                 processGraphChannelChunk({ chunk: { data: channels.data } as any }),
             );
         } else {
+            this.store$.dispatch(setIsLoadFromStorage({ isLoadFromStorage: false }));
             this.store$.dispatch(initializeGraphSyncProcess({ overrideSync: 'initsync_c0' }));
         }
 
