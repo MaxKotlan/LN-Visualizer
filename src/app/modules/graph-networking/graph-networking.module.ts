@@ -35,7 +35,7 @@ export class GraphNetworkingModule {
                 const initialSyncDays = moment().diff(lastInitSync, 'days');
                 const dataBaseExists = await this.graphDatabaseService.databaseExists();
                 if (!lastInitSync || initialSyncDays >= 1 || !dataBaseExists) {
-                    this.store$.dispatch(initializeGraphSyncProcess());
+                    this.store$.dispatch(initializeGraphSyncProcess({}));
                 } else {
                     this.store$.dispatch(loadGraphFromStorage());
                 }

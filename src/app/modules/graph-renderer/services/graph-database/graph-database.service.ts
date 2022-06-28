@@ -79,7 +79,7 @@ export class GraphDatabaseService {
                 processGraphChannelChunk({ chunk: { data: channels.data } as any }),
             );
         } else {
-            this.store$.dispatch(initializeGraphSyncProcess());
+            this.store$.dispatch(initializeGraphSyncProcess({ overrideSync: 'initsync_c0' }));
         }
 
         console.log('Loading from cache', performance.now() - start);

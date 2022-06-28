@@ -16,7 +16,15 @@ export const requestGraphSuccess = createAction(
     props<{ graph: LnGraph }>(),
 );
 
-export const initializeGraphSyncProcess = createAction('[graph] initializeGraphSyncProcess');
+export const setRequestInitiating = createAction(
+    '[graph] setRequestInitiating',
+    props<{ requestInitiating: boolean }>(),
+);
+
+export const initializeGraphSyncProcess = createAction(
+    '[graph] initializeGraphSyncProcess',
+    props<{ overrideSync?: string | undefined }>(),
+);
 
 export const requestGraphFailure = createAction(
     '[graph] requestGraphFailure',

@@ -66,6 +66,10 @@ export const reducer = createReducer(
         isRequestInitiating: true,
         isLoadingFromStorage: true,
     })),
+    on(graphActions.setRequestInitiating, (state, { requestInitiating }) => ({
+        ...state,
+        isRequestInitiating: requestInitiating,
+    })),
     on(graphActions.processChunkInfo, (state, { chunkInfo }) => ({
         ...state,
         chunkInfo,

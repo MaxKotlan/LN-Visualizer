@@ -23,7 +23,7 @@ export class NetworkEffects {
         () =>
             this.actions$.pipe(
                 ofType(graphActions.initializeGraphSyncProcess),
-                tap(() => this.initialSyncApiService.sendSyncCommand()),
+                tap(({ overrideSync }) => this.initialSyncApiService.sendSyncCommand(overrideSync)),
                 mergeMap(() =>
                     this.initialSyncApiService.listenToStream().pipe(
                         filter((x) => !((x as unknown) instanceof String)), //commands sent as string so filter out (this will be refactored later)
@@ -102,7 +102,7 @@ export class NetworkEffects {
             withLatestFrom(this.store.select(graphSelectors.selectIsRequestComplete)),
             filter(([, x]) => !x),
             delay(1000),
-            map(() => graphActions.initializeGraphSyncProcess()),
+            map(() => graphActions.initializeGraphSyncProcess({})),
         ),
     );
 }

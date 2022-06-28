@@ -28,9 +28,11 @@ export class InitialSyncApiService {
         }
     }
 
-    public sendSyncCommand() {
+    public sendSyncCommand(overideSync) {
         this.createWsSubject();
-        this.subject.next(this.initSyncCommand as unknown as Chunk<LndNode | LndChannel>);
+        this.subject.next(
+            overideSync || (this.initSyncCommand as unknown as Chunk<LndNode | LndChannel>),
+        );
     }
 
     public completeRequest() {
