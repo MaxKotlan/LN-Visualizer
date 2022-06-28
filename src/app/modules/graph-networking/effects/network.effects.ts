@@ -27,6 +27,7 @@ export class NetworkEffects {
                 mergeMap(() =>
                     this.initialSyncApiService.listenToStream().pipe(
                         filter((x) => !((x as unknown) instanceof String)), //commands sent as string so filter out (this will be refactored later)
+                        filter((x) => !!x?.type),
                         map((data) => {
                             switch (data.type) {
                                 case 'serverStatus':

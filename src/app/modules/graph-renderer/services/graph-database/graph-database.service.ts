@@ -3,7 +3,12 @@ import { Store } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import Dexie from 'dexie';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import { processChunkInfo, processGraphChannelChunk, processGraphNodeChunk } from '../../actions';
+import {
+    initializeGraphSyncProcess,
+    processChunkInfo,
+    processGraphChannelChunk,
+    processGraphNodeChunk,
+} from '../../actions';
 import { ChannelRegistryService } from '../channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../node-registry/node-registry.service';
 
@@ -69,7 +74,13 @@ export class GraphDatabaseService {
         const nodes = await this.loadNodes();
         this.store$.dispatch(processGraphNodeChunk({ chunk: { data: nodes.data } as any }));
         const channels = await this.loadChannels();
-        this.store$.dispatch(processGraphChannelChunk({ chunk: { data: channels.data } as any }));
+        if (!!channels?.data) {
+            this.store$.dispatch(
+                processGraphChannelChunk({ chunk: { data: channels.data } as any }),
+            );
+        } else {
+            this.store$.dispatch(initializeGraphSyncProcess());
+        }
 
         console.log('Loading from cache', performance.now() - start);
     }
