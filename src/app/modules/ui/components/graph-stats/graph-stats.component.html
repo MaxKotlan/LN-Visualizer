@@ -1,4 +1,10 @@
+<mat-toolbar style="height: 3rem">
+    <span style="margin-left: 0.4rem; flex-grow: 1">Statistics</span>
+</mat-toolbar>
 <pre><ng-container *ngFor="let label of statLabels$ | async">{{label}}</ng-container>{{averageCapacity$ | async}} average capacity
 {{ nodeCount$ | async }} nodes 
 {{ channelCount$ | async }} channels
 </pre>
+
+<pre><ng-container *ngFor="let label of filteredStatLabels$ | async">{{label}}</ng-container>
+    </pre>

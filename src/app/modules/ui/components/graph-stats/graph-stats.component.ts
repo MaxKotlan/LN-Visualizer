@@ -12,20 +12,15 @@ import * as graphSelectors from '../../../graph-statistics/selectors';
 export class GraphStatsComponent {
     constructor(private store: Store) {}
 
-    // public minimumCapacity$: Observable<number> = this.store
-    //     .select(graphSelectors.selectMinimumChannelCapacity)
-    //     .pipe(map((c) => (c === Infinity ? 0 : c)));
-    // public maximumCapacity$: Observable<number> = this.store.select(
-    //     graphSelectors.selectMaximumChannelCapacity,
-    // );
-    // public node_capacity$: Observable<number> = this.store.select(
-    //     graphSelectors.selectTotalChannelCapacity,
-    // );
     public averageCapacity$: Observable<number> = this.store.select(
         graphSelectors.selectAverageCapacity,
     );
 
     public statLabels$: Observable<string[]> = this.store.select(graphSelectors.statsLabels);
+    public filteredStatLabels$: Observable<string[]> = this.store.select(
+        graphSelectors.filteredStatsLabels,
+    );
+
     public nodeCount$: Observable<number> = this.store.select(selectNodeCount);
     public channelCount$: Observable<number> = this.store.select(selectChannelCount);
 }
