@@ -9,8 +9,10 @@ import { LndNode } from 'src/app/types/node.interface';
 import { Vector3 } from 'three';
 import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
-import { ConnectedChannelsFilter } from '../../filter-templates/channel-filters/connected-channels.filter';
-import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
+import {
+    FilteredStatisticsCalculatorService,
+    GlobalStatisticsCalculatorService,
+} from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';
@@ -28,6 +30,7 @@ export class NodeEffects {
         private nodeRegistry: NodeRegistryService,
         private filteredNodeRegistryService: FilteredNodeRegistryService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
+        private filteredStatisticsCalculator: FilteredStatisticsCalculatorService,
         private pointTreeService: PointTreeService,
     ) {}
 
@@ -70,14 +73,14 @@ export class NodeEffects {
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
-                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
+                    this.filteredStatisticsCalculator.resetFilterStatistics();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
-                            // this.filteredStatisticsCaluclator.checkNode(node);
+                            this.filteredStatisticsCalculator.checkNode(node);
                         }
                     });
-                    // this.filteredStatisticsCaluclator.updateStore();
+                    this.filteredStatisticsCalculator.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
@@ -94,20 +97,26 @@ export class NodeEffects {
                     // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.filteredNodeRegistryService.forEach((node) => {
                         node.connected_channels.forEach((channel) => {
-                            this.filteredChannelRegistryService.set(
-                                (channel as unknown as LndChannelWithParent)
-                                    .id as unknown as string,
-                                channel as unknown as LndChannel,
-                            );
-                            // this.filteredStatisticsCaluclator.checkChannel(channel);
+                            if (this.areBothNodesInFilteredView(channel)) {
+                                this.filteredChannelRegistryService.set(
+                                    (channel as unknown as LndChannelWithParent)
+                                        .id as unknown as string,
+                                    channel as unknown as LndChannel,
+                                );
+                                this.filteredStatisticsCalculator.checkChannel(channel);
+                            }
                         });
                     });
-                    // this.filteredStatisticsCaluclator.updateStore();
+                    this.filteredStatisticsCalculator.updateStore();
                     return graphActions.setFilteredNodeChannels();
                 }),
             ),
         { dispatch: true },
     );
+
+    public areBothNodesInFilteredView(channel: LndChannel) {
+        return channel.policies.every((p) => this.filteredNodeRegistryService.has(p.public_key));
+    }
 
     // computeFilteredStatistics$ = createEffect(
     //     () =>

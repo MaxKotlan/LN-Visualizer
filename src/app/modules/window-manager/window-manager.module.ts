@@ -11,6 +11,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { WindowManagerEffects } from './effects';
 import { ControlsGraphFilterModule } from '../controls-graph-filter/controls-graph-filter.module';
 import { NodeInfoModule } from '../node-info/node-info.module';
+import { UiModule } from '../ui/ui.module';
 
 @NgModule({
     declarations: [WindowManagerComponent],
@@ -22,6 +23,7 @@ import { NodeInfoModule } from '../node-info/node-info.module';
         ControlsGraphFilterModule,
         GraphViewModule,
         NodeInfoModule,
+        UiModule,
         EffectsModule.forFeature([WindowManagerEffects]),
         StoreModule.forFeature('windowManagement', windowManagementReducer.reducer),
     ],
