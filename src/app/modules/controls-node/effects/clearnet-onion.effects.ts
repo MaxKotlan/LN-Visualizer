@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, tap } from 'rxjs';
+import { filter, map, tap } from 'rxjs';
 import { NodeNetworkFilter } from '../../filter-templates/node-filters/network-filter';
 import { NodeControlState } from '../reducer';
 import { selectNetworkFilter } from '../selectors/node-controls.selectors';
 import * as filterActions from '../../controls-graph-filter/actions';
+import * as nodeActions from '../actions';
+import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 
 @Injectable()
 export class ClearnetOnionEffects {
@@ -22,6 +24,13 @@ export class ClearnetOnionEffects {
                     });
                 }
             }),
+        ),
+    );
+
+    filterChanged$ = createEffect(() =>
+        this.store$.select(filterSelectors.isFilterActive(this.nodeNetworkFilter.issueId)).pipe(
+            filter((isEnabled) => !isEnabled),
+            map(() => nodeActions.setNetworkFilter({ value: 'Clearnet and Tor' })),
         ),
     );
 
