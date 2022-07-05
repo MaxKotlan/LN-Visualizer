@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GraphStatsComponent } from './graph-stats.component';
+import { FilteredGraphStatsComponent } from './filtered-graph-stats.component';
 
-describe('GraphStatsComponent', () => {
-  let component: GraphStatsComponent;
-  let fixture: ComponentFixture<GraphStatsComponent>;
+describe('FilteredGraphStatsComponent', () => {
+  let component: FilteredGraphStatsComponent;
+  let fixture: ComponentFixture<FilteredGraphStatsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GraphStatsComponent ]
+      declarations: [ FilteredGraphStatsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GraphStatsComponent);
+    fixture = TestBed.createComponent(FilteredGraphStatsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

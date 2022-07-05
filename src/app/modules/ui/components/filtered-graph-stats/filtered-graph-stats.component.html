@@ -1,0 +1,5 @@
+<mat-toolbar class="lnvisualizer-pannel-header">
+    <span>Filtered Statistics</span>
+</mat-toolbar>
+<div style="margin-top: 3rem"></div>
+<pre><ng-container *ngFor="let label of filteredStatLabels$ | async">{{label}}</ng-container></pre>

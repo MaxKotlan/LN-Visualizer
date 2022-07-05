@@ -25,8 +25,11 @@
             <mtx-split-pane [order]="0">
                 <app-node-info></app-node-info>
             </mtx-split-pane>
-            <mtx-split-pane [order]="1" [size]="800">
-                <app-graph-stats></app-graph-stats>
+            <mtx-split-pane [order]="1" [size]="300">
+                <app-global-graph-stats></app-global-graph-stats>
+            </mtx-split-pane>
+            <mtx-split-pane [order]="2" [size]="300">
+                <app-filtered-graph-stats></app-filtered-graph-stats>
             </mtx-split-pane>
         </mtx-split>
 

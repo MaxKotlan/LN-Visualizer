@@ -1,12 +1,8 @@
 <mat-toolbar class="lnvisualizer-pannel-header">
-    <span>Statistics</span>
+    <span>Global Statistics</span>
 </mat-toolbar>
-
-<div style="color: #fbc02d; margin-top: 3rem">Global Statistics</div>
+<div style="margin-top: 3rem"></div>
 <pre><ng-container *ngFor="let label of statLabels$ | async">{{label}}</ng-container>{{averageCapacity$ | async}} average capacity
 {{ nodeCount$ | async }} nodes 
 {{ channelCount$ | async }} channels
 </pre>
-
-<div style="color: #fbc02d">Filtered Statistics</div>
-<pre><ng-container *ngFor="let label of filteredStatLabels$ | async">{{label}}</ng-container></pre>

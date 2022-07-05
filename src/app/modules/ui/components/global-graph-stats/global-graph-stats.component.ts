@@ -5,11 +5,11 @@ import { selectChannelCount, selectNodeCount } from 'src/app/modules/graph-rende
 import * as graphSelectors from '../../../graph-statistics/selectors';
 
 @Component({
-    selector: 'app-graph-stats',
-    templateUrl: './graph-stats.component.html',
-    styleUrls: ['./graph-stats.component.scss'],
+    selector: 'app-global-graph-stats',
+    templateUrl: './global-graph-stats.component.html',
+    styleUrls: ['./global-graph-stats.component.scss'],
 })
-export class GraphStatsComponent {
+export class GlobalGraphStatsComponent {
     constructor(private store: Store) {}
 
     public averageCapacity$: Observable<number> = this.store.select(
@@ -17,9 +17,6 @@ export class GraphStatsComponent {
     );
 
     public statLabels$: Observable<string[]> = this.store.select(graphSelectors.statsLabels);
-    public filteredStatLabels$: Observable<string[]> = this.store.select(
-        graphSelectors.filteredStatsLabels,
-    );
 
     public nodeCount$: Observable<number> = this.store.select(selectNodeCount);
     public channelCount$: Observable<number> = this.store.select(selectChannelCount);
