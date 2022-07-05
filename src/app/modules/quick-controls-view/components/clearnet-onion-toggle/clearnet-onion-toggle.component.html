@@ -1,4 +1,4 @@
-<mat-form-field appearance="fill">
+<mat-form-field appearance="fill" style="margin-top: 16px">
     <mat-label>Node Network Address</mat-label>
     <mat-select [value]="networkFilter$ | async" (valueChange)="valueChanged($event)">
         <mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
