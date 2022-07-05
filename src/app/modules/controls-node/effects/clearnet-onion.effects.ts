@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
+import * as filterActions from '../../controls-graph-filter/actions';
+import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { NodeNetworkFilter } from '../../filter-templates/node-filters/network-filter';
+import * as nodeActions from '../actions';
 import { NodeControlState } from '../reducer';
 import { selectNetworkFilter } from '../selectors/node-controls.selectors';
-import * as filterActions from '../../controls-graph-filter/actions';
-import * as nodeActions from '../actions';
-import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 
 @Injectable()
 export class ClearnetOnionEffects {
