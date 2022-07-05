@@ -25,3 +25,8 @@ export const selectUniformNodeSize = createSelector(
     nodeControlsSelector,
     (state) => state.uniformNodeSize,
 );
+
+export const selectNetworkFilter = createSelector(
+    nodeControlsSelector,
+    (state) => state.networkFilter,
+);
