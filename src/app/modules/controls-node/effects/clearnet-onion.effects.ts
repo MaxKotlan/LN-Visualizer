@@ -11,11 +11,17 @@ import * as filterActions from '../../controls-graph-filter/actions';
 export class ClearnetOnionEffects {
     saveControlsState$ = createEffect(() =>
         this.store$.select(selectNetworkFilter).pipe(
-            map((x) =>
-                filterActions.updateNodeFilterByIssueId({
-                    value: this.nodeNetworkFilter.createFilter(x),
-                }),
-            ),
+            map((networkType) => {
+                if (networkType === 'Clearnet and Tor') {
+                    return filterActions.removeChannelFilterByIssueId({
+                        issueId: this.nodeNetworkFilter.issueId,
+                    });
+                } else {
+                    return filterActions.updateNodeFilterByIssueId({
+                        value: this.nodeNetworkFilter.createFilter(networkType),
+                    });
+                }
+            }),
         ),
     );
 

@@ -5,10 +5,12 @@ import { FilterFactory } from '../filter-factory';
 
 @Injectable()
 export class NodeNetworkFilter extends FilterFactory {
+    public issueId = 'node-network';
+
     public createFilter(channelType: string): Filter<NodeEvaluationFunction> {
         return {
             interpreter: 'javascript',
-            issueId: `node-network`,
+            issueId: this.issueId,
             source: this.createNodeNetworkScriptSource(channelType),
             function: this.createNodeNetworkScript(channelType),
         };
