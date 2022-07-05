@@ -20,3 +20,8 @@ export const setUniformNodeSize = createAction(
     '[controls] uniformNodeSize',
     props<{ value: boolean }>(),
 );
+
+export const setNetworkFilter = createAction(
+    '[controls] setNetworkFilter',
+    props<{ value: string }>(),
+);

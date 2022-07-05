@@ -9,6 +9,7 @@ import { QuickSliderComponent } from './components/quick-slider/quick-slider.com
 import { LinearToLogPipe, LogToLinearPipe } from './pipes/log-to-linear.pipe';
 import { MiniInputComponent } from './components/mini-input/mini-input.component';
 import { FilterTemplatesModule } from '../filter-templates/filter-templates.module';
+import { ClearnetOnionToggleComponent } from './components/clearnet-onion-toggle/clearnet-onion-toggle.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { FilterTemplatesModule } from '../filter-templates/filter-templates.modu
         LogToLinearPipe,
         LinearToLogPipe,
         MiniInputComponent,
+        ClearnetOnionToggleComponent,
     ],
     imports: [
         CommonModule,

@@ -3,6 +3,14 @@ import * as controlActions from '../../controls/actions';
 import { initializeDefaultValue } from '../../controls/utils/default-settings-upgrader';
 import * as nodeControlActions from '../actions/node-controls.actions';
 
+export const networkOptions = [
+    'Clearnet and Tor',
+    'Clearnet Only',
+    'Tor Only',
+    'Has Clearnet',
+    'Has Onion Address',
+];
+
 export interface NodeControlState {
     renderNodes: boolean;
     nodeSize: number;
@@ -10,6 +18,7 @@ export interface NodeControlState {
     uniformNodeSize: boolean;
     pointAttenuation: boolean;
     pointUseIcon: boolean;
+    networkFilter: string;
 }
 
 const initialState: NodeControlState = {
@@ -19,6 +28,7 @@ const initialState: NodeControlState = {
     minNodeSize: 5.2,
     pointAttenuation: true,
     pointUseIcon: true,
+    networkFilter: 'Clearnet and Tor',
 };
 
 export const reducer = createReducer(
@@ -48,5 +58,9 @@ export const reducer = createReducer(
     on(nodeControlActions.setUniformNodeSize, (state, { value }) => ({
         ...state,
         uniformNodeSize: value,
+    })),
+    on(nodeControlActions.setNetworkFilter, (state, { value }) => ({
+        ...state,
+        networkFilter: value,
     })),
 );
