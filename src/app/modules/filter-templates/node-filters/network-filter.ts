@@ -19,16 +19,16 @@ export class NodeNetworkFilter extends FilterFactory {
     protected createNodeNetworkScriptSource(networkType: string) {
         switch (networkType) {
             case 'Clearnet Only':
-                return `(node) =>
+                return `return (node) =>
     node.sockets.every((s) => !s.includes('.onion'));`;
             case 'Tor Only':
-                return `(node) =>
+                return `return (node) =>
     node.sockets.every((s) => s.includes('.onion'));`;
             case 'Has Clearnet':
-                return `(node) =>
+                return `return (node) =>
     node.sockets.some((s) => !s.includes('.onion'));`;
             case 'Has Onion Address':
-                return `(node) =>
+                return `return (node) =>
     node.sockets.some((s) => s.includes('.onion'));`;
         }
     }
