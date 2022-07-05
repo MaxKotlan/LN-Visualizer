@@ -95,6 +95,10 @@ label {
     user-select: all;
 }
 
+html {
+    font-size: 12px;
+}
+
 html,
 body {
     min-height: 100vh;
@@ -125,4 +129,11 @@ body {
     overflow-y: hidden !important;
     min-height: 90vh;
     min-height: -webkit-fill-available;
+}
+
+.mat-body,
+.mat-body-1,
+.mat-typography {
+    font: 400 12px / 14px 'Helvetica Neue', sans-serif;
+    letter-spacing: normal;
 }
