@@ -1,0 +1,8 @@
+<mat-toolbar class="lnvisualizer-pannel-header">
+    <span>Global Statistics</span>
+</mat-toolbar>
+<div style="margin-top: 3rem"></div>
+<pre><ng-container *ngFor="let label of statLabels$ | async">{{label}}</ng-container>{{averageCapacity$ | async}} average capacity
+{{ nodeCount$ | async }} nodes 
+{{ channelCount$ | async }} channels
+</pre>

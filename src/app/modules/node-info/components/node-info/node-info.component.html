@@ -1,6 +1,7 @@
-<mat-toolbar style="height: 3rem">
-    <span style="margin-left: 0.4rem; flex-grow: 1">Node Properties</span>
+<mat-toolbar class="lnvisualizer-pannel-header">
+    <span>Node Properties</span>
 </mat-toolbar>
+<div style="margin-top: 3rem"></div>
 <div
     *ngIf="nodeSearchEffects.selectFinalMatcheNodesFromSearch$ | async; else noNode"
     style="margin-left: 0.2rem; margin-top: 0.2rem; width: calc(100% - 0.8rem)"

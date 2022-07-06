@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     ColorScaleComponent,
-    GraphStatsComponent,
+    GlobalGraphStatsComponent,
+    FilteredGraphStatsComponent,
     LoadingBarComponent,
     TooltipComponent,
 } from './components';
@@ -18,8 +19,9 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
         ErrorComponent,
         LoadingBarComponent,
         TooltipComponent,
-        GraphStatsComponent,
+        GlobalGraphStatsComponent,
         LoadingSpinnerComponent,
+        FilteredGraphStatsComponent,
     ],
     imports: [CommonModule, MaterialModule],
     exports: [
@@ -28,7 +30,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
         ErrorComponent,
         LoadingBarComponent,
         TooltipComponent,
-        GraphStatsComponent,
+        GlobalGraphStatsComponent,
+        FilteredGraphStatsComponent,
         LoadingSpinnerComponent,
     ],
 })

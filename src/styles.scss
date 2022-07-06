@@ -95,6 +95,10 @@ label {
     user-select: all;
 }
 
+html {
+    font-size: 12px;
+}
+
 html,
 body {
     min-height: 100vh;
@@ -125,4 +129,24 @@ body {
     overflow-y: hidden !important;
     min-height: 90vh;
     min-height: -webkit-fill-available;
+}
+
+.mat-body,
+.mat-body-1,
+.mat-typography {
+    font: 400 12px / 14px 'Helvetica Neue', sans-serif;
+    letter-spacing: normal;
+}
+
+.lnvisualizer-pannel-header {
+    height: 3rem;
+    position: absolute;
+    padding-left: 1rem !important;
+    z-index: 100;
+    font-size: 14px;
+
+    span {
+        margin-left: 0.1rem;
+        flex-grow: 1;
+    }
 }
