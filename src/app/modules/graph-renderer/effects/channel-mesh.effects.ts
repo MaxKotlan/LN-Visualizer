@@ -34,43 +34,41 @@ export class ChannelMeshEffects {
 
     channelVertices$ = createEffect(
         () =>
-            combineLatest([
-                this.store$.select(filterSelectors.activeChannelFilters),
-                this.actions$.pipe(ofType(setFilteredNodeChannels)),
-                this.actions$.pipe(ofType(setFilteredNodes)),
-            ]).pipe(
+            //combineLatest([
+            // this.store$.select(filterSelectors.activeChannelFilters),
+            this.actions$.pipe(
+                ofType(setFilteredNodeChannels),
+                // this.actions$.pipe(ofType(setFilteredNodes)),
+                //])
+                //.pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([filters, ,]) => {
+                map(() => {
                     if (!this.channelBufferService.vertex || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
                     // this.filteredStatisticsCaluclator.resetFilterStatistics();
                     this.filteredChannelRegistryService.forEach((channel) => {
-                        if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
-                            const node1 = this.filteredNodeRegistry.get(
-                                channel.policies[0].public_key,
-                            );
-                            const node2 = this.filteredNodeRegistry.get(
-                                channel.policies[1].public_key,
-                            );
-                            if (node1 && node2) {
-                                this.channelBufferService.vertex.data[i * 6] =
-                                    node1.position.x * meshScale;
-                                this.channelBufferService.vertex.data[i * 6 + 1] =
-                                    node1.position.y * meshScale;
-                                this.channelBufferService.vertex.data[i * 6 + 2] =
-                                    node1.position.z * meshScale;
-                                this.channelBufferService.vertex.data[i * 6 + 3] =
-                                    node2.position.x * meshScale;
-                                this.channelBufferService.vertex.data[i * 6 + 4] =
-                                    node2.position.y * meshScale;
-                                this.channelBufferService.vertex.data[i * 6 + 5] =
-                                    node2.position.z * meshScale;
-                                i++;
+                        //if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
+                        const node1 = this.filteredNodeRegistry.get(channel.policies[0].public_key);
+                        const node2 = this.filteredNodeRegistry.get(channel.policies[1].public_key);
+                        if (node1 && node2) {
+                            this.channelBufferService.vertex.data[i * 6] =
+                                node1.position.x * meshScale;
+                            this.channelBufferService.vertex.data[i * 6 + 1] =
+                                node1.position.y * meshScale;
+                            this.channelBufferService.vertex.data[i * 6 + 2] =
+                                node1.position.z * meshScale;
+                            this.channelBufferService.vertex.data[i * 6 + 3] =
+                                node2.position.x * meshScale;
+                            this.channelBufferService.vertex.data[i * 6 + 4] =
+                                node2.position.y * meshScale;
+                            this.channelBufferService.vertex.data[i * 6 + 5] =
+                                node2.position.z * meshScale;
+                            i++;
 
-                                // this.filteredStatisticsCaluclator.checkChannel(channel);
-                            }
+                            // this.filteredStatisticsCaluclator.checkChannel(channel);
                         }
+                        // }
                     });
                     // this.filteredStatisticsCaluclator.updateStore();
                     this.channelBufferService.vertex.onUpdate.next(i * 2);
@@ -82,38 +80,34 @@ export class ChannelMeshEffects {
     channelColors$ = createEffect(
         () =>
             combineLatest([
-                this.store$.select(filterSelectors.activeChannelFilters),
+                // this.store$.select(filterSelectors.activeChannelFilters),
                 this.actions$.pipe(ofType(setFilteredNodeChannels)),
-                this.actions$.pipe(ofType(setFilteredNodes)),
+                // this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(channelColor),
                 this.store$.select(channelColorMap),
                 this.store$.select(selectUseLogColorScale),
             ]).pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([filters, ,]) => {
+                map(([,]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
                     this.filteredChannelRegistryService.forEach((channel) => {
-                        if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
-                            const node1 = this.filteredNodeRegistry.get(
-                                channel.policies[0].public_key,
-                            );
-                            const node2 = this.filteredNodeRegistry.get(
-                                channel.policies[1].public_key,
-                            );
-                            if (node1 && node2) {
-                                const color = this.channelColorService.map(node1, node2, channel);
+                        //if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
+                        const node1 = this.filteredNodeRegistry.get(channel.policies[0].public_key);
+                        const node2 = this.filteredNodeRegistry.get(channel.policies[1].public_key);
+                        if (node1 && node2) {
+                            const color = this.channelColorService.map(node1, node2, channel);
 
-                                this.channelBufferService.color.data[i * 6] = color[0];
-                                this.channelBufferService.color.data[i * 6 + 1] = color[1];
-                                this.channelBufferService.color.data[i * 6 + 2] = color[2];
-                                this.channelBufferService.color.data[i * 6 + 3] = color[3];
-                                this.channelBufferService.color.data[i * 6 + 4] = color[4];
-                                this.channelBufferService.color.data[i * 6 + 5] = color[5];
-                                i++;
-                            }
+                            this.channelBufferService.color.data[i * 6] = color[0];
+                            this.channelBufferService.color.data[i * 6 + 1] = color[1];
+                            this.channelBufferService.color.data[i * 6 + 2] = color[2];
+                            this.channelBufferService.color.data[i * 6 + 3] = color[3];
+                            this.channelBufferService.color.data[i * 6 + 4] = color[4];
+                            this.channelBufferService.color.data[i * 6 + 5] = color[5];
+                            i++;
                         }
+                        //}
                     });
                     this.channelBufferService.color.onUpdate.next(i * 2);
                 }),
@@ -124,32 +118,28 @@ export class ChannelMeshEffects {
     channelThickness$ = createEffect(
         () =>
             combineLatest([
-                this.store$.select(filterSelectors.activeChannelFilters),
+                // this.store$.select(filterSelectors.activeChannelFilters),
                 this.actions$.pipe(ofType(setFilteredNodeChannels)),
-                this.actions$.pipe(ofType(setFilteredNodes)),
+                // this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(selectMinMax('capacity')),
             ]).pipe(
                 sampleTime(this.throttleTimeMs),
-                map(([filters, , , channelMinMax]) => {
+                map(([, channelMinMax]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
                     this.filteredChannelRegistryService.forEach((channel) => {
-                        if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
-                            const node1 = this.filteredNodeRegistry.get(
-                                channel.policies[0].public_key,
-                            );
-                            const node2 = this.filteredNodeRegistry.get(
-                                channel.policies[1].public_key,
-                            );
-                            if (node1 && node2) {
-                                const c = Math.sqrt(channel.capacity / channelMinMax.max);
+                        //if (this.filterEvaluationService.evaluateFilters(channel, filters)) {
+                        const node1 = this.filteredNodeRegistry.get(channel.policies[0].public_key);
+                        const node2 = this.filteredNodeRegistry.get(channel.policies[1].public_key);
+                        if (node1 && node2) {
+                            const c = Math.sqrt(channel.capacity / channelMinMax.max);
 
-                                this.channelBufferService.thickness.data[i * 2] = c;
-                                this.channelBufferService.thickness.data[i * 2 + 1] = c;
-                                i++;
-                            }
+                            this.channelBufferService.thickness.data[i * 2] = c;
+                            this.channelBufferService.thickness.data[i * 2 + 1] = c;
+                            i++;
                         }
+                        //}
                     });
                     this.channelBufferService.thickness.onUpdate.next(i * 2);
                 }),
