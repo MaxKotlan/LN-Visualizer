@@ -31,6 +31,7 @@ export class NodeEffects {
         private filteredNodeRegistryService: FilteredNodeRegistryService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
         private filteredStatisticsCalculator: FilteredStatisticsCalculatorService,
+        private filterEvaluationService: FilterEvaluatorService,
         private pointTreeService: PointTreeService,
     ) {}
 
@@ -90,14 +91,22 @@ export class NodeEffects {
 
     filterNodesChannelCache$ = createEffect(
         () =>
-            this.actions$.pipe(
-                ofType(graphActions.setFilteredNodes),
-                map(() => {
+            combineLatest([
+                this.store$
+                    .select(filterSelectors.activeChannelFilters)
+                    .pipe(distinctUntilChanged(_.isEqual), debounceTime(100)),
+                this.actions$.pipe(ofType(graphActions.setFilteredNodes)),
+                // this.actions$.pipe(ofType(setFilteredNodes)),
+            ]).pipe(
+                map(([filters]) => {
                     this.filteredChannelRegistryService.clear();
-                    // this.filteredStatisticsCaluclator.resetFilterStatistics();
+                    this.filteredStatisticsCalculator.resetFilterStatistics();
                     this.filteredNodeRegistryService.forEach((node) => {
                         node.connected_channels.forEach((channel) => {
-                            if (this.areBothNodesInFilteredView(channel)) {
+                            if (
+                                this.areBothNodesInFilteredView(channel) &&
+                                this.filterEvaluationService.evaluateFilters(channel, filters)
+                            ) {
                                 this.filteredChannelRegistryService.set(
                                     (channel as unknown as LndChannelWithParent)
                                         .id as unknown as string,
@@ -118,19 +127,19 @@ export class NodeEffects {
         return channel.policies.every((p) => this.filteredNodeRegistryService.has(p.public_key));
     }
 
-    // computeFilteredStatistics$ = createEffect(
-    //     () =>
-    //         this.actions$.pipe(
-    //             ofType(graphActions.setFilteredNodeChannels),
-    //             map(() => {
-    //                 this.filteredNodeRegistryService.forEach((node) => {
-    //                     this.filteredStatisticsCaluclator.checkNode(node);
-    //                 });
-    //                 this.filteredStatisticsCaluclator.updateStore();
-    //             }),
-    //         ),
-    //     { dispatch: false },
-    // );
+    computeFilteredStatistics$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.setFilteredNodeChannels),
+                map(() => {
+                    this.filteredNodeRegistryService.forEach((node) => {
+                        this.filteredStatisticsCalculator.checkNode(node);
+                    });
+                    this.filteredStatisticsCalculator.updateStore();
+                }),
+            ),
+        { dispatch: false },
+    );
 
     positionNodes$ = createEffect(
         () =>
