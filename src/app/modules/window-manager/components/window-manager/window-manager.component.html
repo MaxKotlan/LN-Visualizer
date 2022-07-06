@@ -22,13 +22,21 @@
     </mtx-split-pane>
     <mtx-split-pane [order]="2" [minSize]="280" [maxSize]="750" [size]="280">
         <mtx-split direction="vertical" unit="pixel">
-            <mtx-split-pane [order]="0">
+            <!-- <mtx-split-pane
+                style="position: absolute"
+                [order]="1"
+                [size]="0"
+                [minSize]="0"
+                [maxSize]="0"
+            >
+            </mtx-split-pane> -->
+            <mtx-split-pane [order]="2" [size]="500" [minSize]="40">
                 <app-node-info></app-node-info>
             </mtx-split-pane>
-            <mtx-split-pane [order]="1" [size]="200" [minSize]="40">
+            <mtx-split-pane [order]="3" [size]="200" [minSize]="40">
                 <app-global-graph-stats></app-global-graph-stats>
             </mtx-split-pane>
-            <mtx-split-pane [order]="2" [size]="200" [minSize]="40">
+            <mtx-split-pane [order]="4" [size]="200" [minSize]="40">
                 <app-filtered-graph-stats></app-filtered-graph-stats>
             </mtx-split-pane>
         </mtx-split>
