@@ -74,14 +74,14 @@ export class NodeEffects {
             ]).pipe(
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
-                    // this.filteredStatisticsCalculator.resetFilterStatistics();
+                    this.filteredStatisticsCalculator.resetFilterStatistics();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
-                            //this.filteredStatisticsCalculator.checkNode(node);
+                            this.filteredStatisticsCalculator.checkNode(node);
                         }
                     });
-                    // this.filteredStatisticsCalculator.updateStore();
+                    this.filteredStatisticsCalculator.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
