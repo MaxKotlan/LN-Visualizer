@@ -45,10 +45,7 @@ export const selectMinMax = (property: keyof GraphStatisticsState) =>
 export const statsLabels = createSelector(globalStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>
         Object.keys(state[key]).map(
-            (key2) =>
-                `${
-                    state[key][key2] === Infinity ? 0 : totalDivider(key2, state[key][key2])
-                } ${key2} ${key}\n`,
+            (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,
         ),
     ),
 );
