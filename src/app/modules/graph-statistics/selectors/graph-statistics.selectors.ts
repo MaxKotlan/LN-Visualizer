@@ -9,7 +9,7 @@ export const filteredStatisticsSelector =
     createFeatureSelector<GraphStatisticsState>('filteredStatistics');
 
 export const selectChannelMinMaxTotal = createSelector(
-    globalStatisticsSelector,
+    filteredStatisticsSelector,
     (state) => state.capacity,
 );
 
