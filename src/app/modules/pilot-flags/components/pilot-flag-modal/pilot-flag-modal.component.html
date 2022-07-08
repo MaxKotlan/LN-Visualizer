@@ -6,6 +6,10 @@
     </button>
 </mat-toolbar>
 <div class="modal-content">
+    <p>
+        You have enabled developer mode. These features are either expiremental or still under
+        development.
+    </p>
     <mat-slide-toggle
         *ngFor="let pilotFlag of pilotFlags"
         [ngModel]="pilotFlag[1]"
