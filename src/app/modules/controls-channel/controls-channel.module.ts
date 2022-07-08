@@ -13,9 +13,10 @@ import { ChannelWidthComponent } from './components/channel-width/channel-width.
 import { LineBackedDropdownComponent } from './components/line-backed-dropdown/line-backed-dropdown.component';
 import { ChannelAttenuationComponent } from './components/channel-attenuation/channel-attenuation.component';
 import { ChannelWidthPropertyComponent } from './components/channel-width-property/channel-width-property.component';
+import { ColorRangeMinMaxSelectorComponent } from './components/color-range-min-max-selector/color-range-min-max-selector.component';
 
 @NgModule({
-    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent, EnableChannelFogComponent, FogDistanceComponent, ChannelWidthComponent, LineBackedDropdownComponent, ChannelAttenuationComponent, ChannelWidthPropertyComponent],
+    declarations: [ChannelSettingsComponent, ChannelColorDropdownComponent, ChannelColorMapDropdownComponent, EnableChannelFogComponent, FogDistanceComponent, ChannelWidthComponent, LineBackedDropdownComponent, ChannelAttenuationComponent, ChannelWidthPropertyComponent, ColorRangeMinMaxSelectorComponent],
     imports: [
         CommonModule,
         MaterialModule,
