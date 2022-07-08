@@ -5,10 +5,12 @@ import { MaterialModule } from '../material';
 import {
     FilterButtonComponent,
     FloatingButtonsComponent,
+    PilotFlagButtonComponent,
     SettingsButtonComponent,
     SidenavOpenButtonComponent,
 } from './components';
 import { StatsButtonComponent } from './components/stats-button/stats-button.component';
+import { PilotFlagsModule } from '../pilot-flags/pilot-flags.module';
 
 @NgModule({
     declarations: [
@@ -17,8 +19,9 @@ import { StatsButtonComponent } from './components/stats-button/stats-button.com
         FilterButtonComponent,
         SidenavOpenButtonComponent,
         StatsButtonComponent,
+        PilotFlagButtonComponent,
     ],
-    imports: [CommonModule, UiModule, MaterialModule],
+    imports: [CommonModule, UiModule, MaterialModule, PilotFlagsModule],
     exports: [FloatingButtonsComponent, SidenavOpenButtonComponent],
 })
 export class FloatingButtonMenuModule {}
