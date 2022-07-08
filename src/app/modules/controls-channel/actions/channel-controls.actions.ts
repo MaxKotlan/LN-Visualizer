@@ -54,4 +54,9 @@ export const setChannelWidthMapping = createAction(
     props<{ value: 'uniform' | 'channel capacity' }>(),
 );
 
+export const setColorRangeMinMax = createAction(
+    '[controls] setColorRangeMinMax',
+    props<{ value: 'global' | 'filtered' }>(),
+);
+
 export const setFogDistance = createAction('[controls] setFogDistance', props<{ value: number }>());

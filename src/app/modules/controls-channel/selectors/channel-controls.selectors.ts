@@ -87,3 +87,8 @@ export const selectChannelWidthIsUniform = createSelector(
     channelControlsSelector,
     (state) => state.channelWidthMapping === 'uniform',
 );
+
+export const selectColorRangeMinMax = createSelector(
+    channelControlsSelector,
+    (state) => state.colorRangeMinMax,
+);
