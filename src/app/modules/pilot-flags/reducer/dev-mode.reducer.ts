@@ -6,7 +6,7 @@ export interface DevModeState {
 }
 
 const initialState: DevModeState = {
-    devModeEnabled: true,
+    devModeEnabled: false,
 };
 
 export const reducer = createReducer(
