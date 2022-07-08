@@ -19,7 +19,6 @@ export class PilotFlagModalComponent {
     ) {
         this.pilotFlag$.pipe(take(1)).subscribe((pilotFlags) => {
             this.pilotFlags = pilotFlags;
-            console.log(this.pilotFlags);
         });
     }
 
