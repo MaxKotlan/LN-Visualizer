@@ -17,6 +17,7 @@ export interface ChannelControlState {
     channelWidth: number;
     attenuation: boolean;
     channelWidthMapping: 'uniform' | 'channel capacity';
+    colorRangeMinMax: 'global' | 'filtered';
 }
 
 const initialState: ChannelControlState = {
@@ -33,6 +34,7 @@ const initialState: ChannelControlState = {
     lineBackend: 'gl-line',
     attenuation: false,
     channelWidthMapping: 'uniform',
+    colorRangeMinMax: 'global',
 };
 
 export const reducer = createReducer(
@@ -92,5 +94,9 @@ export const reducer = createReducer(
     on(channelControlsActions.setChannelWidthMapping, (state, { value }) => ({
         ...state,
         channelWidthMapping: value,
+    })),
+    on(channelControlsActions.setColorRangeMinMax, (state, { value }) => ({
+        ...state,
+        colorRangeMinMax: value,
     })),
 );

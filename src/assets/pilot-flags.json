@@ -1,5 +1,6 @@
 {
     "unitConversions": false,
     "thickLines": true,
-    "fastModelDownload": false
+    "fastModelDownload": false,
+    "colorRangeMinMax": false
 }

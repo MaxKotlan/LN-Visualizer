@@ -5,12 +5,14 @@ export interface PilotFlags {
     unitConversions: boolean;
     thickLines: boolean;
     fastModelDownload: boolean;
+    colorRangeMinMax: boolean;
 }
 
 const initialState: PilotFlags = {
     unitConversions: false,
     thickLines: true,
     fastModelDownload: false,
+    colorRangeMinMax: false,
 };
 
 export const reducer = createReducer(

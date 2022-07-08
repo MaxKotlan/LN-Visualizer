@@ -24,4 +24,7 @@
             <app-channel-width></app-channel-width>
         </ng-container>
     </ng-container>
+    <app-color-range-min-max-selector
+        *ngIf="colorRangeMinMaxEnabled$ | async"
+    ></app-color-range-min-max-selector>
 </section>

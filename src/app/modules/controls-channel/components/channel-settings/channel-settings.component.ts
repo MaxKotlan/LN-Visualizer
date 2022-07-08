@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Store } from '@ngrx/store';
-import { pilotThickLinesEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
+import {
+    colorRangeMinMaxEnabled$,
+    pilotThickLinesEnabled$,
+} from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { GenericControlsState } from '../../../controls/reducers';
 import {
     renderEdges,
@@ -34,6 +37,8 @@ export class ChannelSettingsComponent {
 
     public thickLinesEnabled$ = this.store.select(pilotThickLinesEnabled$);
     public selectLineBackend$ = this.store.select(selectLineBackend);
+
+    public colorRangeMinMaxEnabled$ = this.store.select(colorRangeMinMaxEnabled$);
 
     setShouldRenderEdges(event: MatCheckboxChange) {
         this.store.dispatch(renderEdges({ value: event.checked }));
