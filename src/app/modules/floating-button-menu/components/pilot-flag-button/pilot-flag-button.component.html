@@ -1,0 +1,20 @@
+<button
+    class="not-inline"
+    *ngIf="!inline"
+    (click)="openDialog()"
+    mat-mini-fab
+    color="primary"
+    aria-label="Example icon button with a delete icon"
+>
+    <mat-icon>developer_mode</mat-icon>
+</button>
+<button
+    *ngIf="inline"
+    (click)="openDialog()"
+    color="primary"
+    style="margin-bottom: 1.34375em; height: 46.063px; margin-left: 0.4rem"
+    mat-button
+    aria-label="Example icon button with a delete icon"
+>
+    <mat-icon>developer_mode</mat-icon>
+</button>

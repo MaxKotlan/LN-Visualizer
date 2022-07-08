@@ -6,6 +6,7 @@ import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
 import * as controlsActions from '../modules/controls/actions';
 import { NodeSearchEffects } from '../modules/graph-renderer/effects/node-search.effects';
 import { GraphState } from '../modules/graph-renderer/reducer';
+import * as devModeActions from '../modules/pilot-flags/actions/dev-mode.actions';
 
 @Injectable()
 export class RouteEffects {
@@ -34,6 +35,17 @@ export class RouteEffects {
                 tap(() => this.router.navigate(['/'])),
             ),
         { dispatch: false },
+    );
+
+    isDevModeParam$ = createEffect(
+        () =>
+            this.router.events.pipe(
+                filter((e) => e instanceof NavigationEnd),
+                map(() => this.router.routerState.snapshot.root?.queryParams['devMode'] === 'true'),
+                filter((x) => x === true),
+                map(() => devModeActions.enableDevMode()),
+            ),
+        { dispatch: true },
     );
 
     routerChange$ = createEffect(

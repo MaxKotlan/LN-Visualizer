@@ -22,3 +22,5 @@ export const colorRangeMinMaxEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.colorRangeMinMax,
 );
+
+export const allPilotFlags$ = createSelector(pilotFlagSelector, (state) => ({ ...state }));
