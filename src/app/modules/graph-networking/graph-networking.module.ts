@@ -33,7 +33,6 @@ export class GraphNetworkingModule {
             .select(fastModelDownloadEnabled$)
             .pipe(untilDestroyed(this))
             .subscribe(async (isEnabled) => {
-                console.log('iajsdjklbnfsakjhfsajkhfsakj');
                 if (isEnabled) {
                     this.binaryMeshApiService.getNodePositions();
                     this.binaryMeshApiService.getChannelBuffer();
