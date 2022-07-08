@@ -1,5 +1,16 @@
-<ng-container *ngFor="let pilotFlag of pilotFlags">
-    <mat-slide-toggle [ngModel]="pilotFlag[1]" (change)="updatePilotFlag(pilotFlag[0], $event)">
+<mat-toolbar color="primary">
+    <mat-icon>developer_mode</mat-icon>
+    <span style="margin-left: 0.4rem; flex-grow: 1">Pilot Flags</span>
+    <button (click)="dialogRef.close()" mat-icon-button aria-label="Close Dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+</mat-toolbar>
+<div class="modal-content">
+    <mat-slide-toggle
+        *ngFor="let pilotFlag of pilotFlags"
+        [ngModel]="pilotFlag[1]"
+        (change)="updatePilotFlag(pilotFlag[0], $event)"
+    >
         {{ pilotFlag[0] }}
     </mat-slide-toggle>
-</ng-container>
+</div>

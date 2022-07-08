@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import * as pilotFlagActions from '../../actions/pilot-flags.actions';
 import { allPilotFlags$ } from '../../selectors';
 import { take } from 'rxjs';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-pilot-flag-modal',
@@ -12,7 +13,10 @@ import { take } from 'rxjs';
     styleUrls: ['./pilot-flag-modal.component.scss'],
 })
 export class PilotFlagModalComponent {
-    constructor(private store$: Store<any>) {
+    constructor(
+        private store$: Store<any>,
+        public dialogRef: MatDialogRef<PilotFlagModalComponent>,
+    ) {
         this.pilotFlag$.pipe(take(1)).subscribe((pilotFlags) => {
             this.pilotFlags = pilotFlags;
             console.log(this.pilotFlags);
