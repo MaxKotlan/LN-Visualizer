@@ -10,6 +10,7 @@ import { GraphDatabaseService } from '../graph-renderer/services/graph-database/
 import { loadGraphFromStorage } from '../graph-renderer/actions/graph-database.actions';
 import { BinaryMeshApiService } from './services/binary-mesh-api.service';
 import { fastModelDownloadEnabled$ } from '../pilot-flags/selectors/pilot-flags.selectors';
+import { take } from 'rxjs';
 
 @NgModule({
     declarations: [],
@@ -26,20 +27,23 @@ export class GraphNetworkingModule {
     }
 
     async getData() {
-        this.store$.select(fastModelDownloadEnabled$).subscribe(async (isEnabled) => {
-            if (isEnabled) {
-                this.binaryMeshApiService.getNodePositions();
-                this.binaryMeshApiService.getChannelBuffer();
-            } else {
-                const lastInitSync = localStorage.getItem('database-sync-time');
-                const initialSyncDays = moment().diff(lastInitSync, 'days');
-                const dataBaseExists = await this.graphDatabaseService.databaseExists();
-                if (!lastInitSync || initialSyncDays >= 1 || !dataBaseExists) {
-                    this.store$.dispatch(initializeGraphSyncProcess({}));
+        this.store$
+            .select(fastModelDownloadEnabled$)
+            .pipe(take(1))
+            .subscribe(async (isEnabled) => {
+                if (isEnabled) {
+                    this.binaryMeshApiService.getNodePositions();
+                    this.binaryMeshApiService.getChannelBuffer();
                 } else {
-                    this.store$.dispatch(loadGraphFromStorage());
+                    const lastInitSync = localStorage.getItem('database-sync-time');
+                    const initialSyncDays = moment().diff(lastInitSync, 'days');
+                    const dataBaseExists = await this.graphDatabaseService.databaseExists();
+                    if (!lastInitSync || initialSyncDays >= 1 || !dataBaseExists) {
+                        this.store$.dispatch(initializeGraphSyncProcess({}));
+                    } else {
+                        this.store$.dispatch(loadGraphFromStorage());
+                    }
                 }
-            }
-        });
+            });
     }
 }

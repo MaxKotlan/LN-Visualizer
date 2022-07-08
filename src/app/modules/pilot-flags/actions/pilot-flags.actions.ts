@@ -7,6 +7,6 @@ export const setPilotFlag = createAction(
 );
 
 export const setAllPilotFlags = createAction(
-    '[pilot flags] setPilotFlag',
+    '[pilot flags] setAllPilotFlag',
     props<{ value: PilotFlags }>(),
 );

@@ -1,1 +1,5 @@
-<p>pilot-flag-modal works!</p>
+<ng-container *ngFor="let pilotFlag of pilotFlags">
+    <mat-slide-toggle [ngModel]="pilotFlag[1]" (change)="updatePilotFlag(pilotFlag[0], $event)">
+        {{ pilotFlag[0] }}
+    </mat-slide-toggle>
+</ng-container>
