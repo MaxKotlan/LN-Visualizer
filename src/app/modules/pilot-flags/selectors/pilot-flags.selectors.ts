@@ -17,3 +17,8 @@ export const fastModelDownloadEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.fastModelDownload,
 );
+
+export const colorRangeMinMaxEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.colorRangeMinMax,
+);
