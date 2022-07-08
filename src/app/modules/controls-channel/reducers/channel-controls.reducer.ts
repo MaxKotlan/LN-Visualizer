@@ -34,7 +34,7 @@ const initialState: ChannelControlState = {
     lineBackend: 'gl-line',
     attenuation: false,
     channelWidthMapping: 'uniform',
-    colorRangeMinMax: 'filtered',
+    colorRangeMinMax: 'global',
 };
 
 export const reducer = createReducer(
