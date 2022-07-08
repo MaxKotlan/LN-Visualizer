@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { selectColorRangeMinMax } from '../../controls-channel/selectors';
 import { selectChannelCount } from '../../graph-renderer/selectors/graph.selectors';
 import { GraphStatisticsState } from '../models';
 
@@ -9,8 +10,11 @@ export const filteredStatisticsSelector =
     createFeatureSelector<GraphStatisticsState>('filteredStatistics');
 
 export const selectChannelMinMaxTotal = createSelector(
+    globalStatisticsSelector,
     filteredStatisticsSelector,
-    (state) => state.capacity,
+    selectColorRangeMinMax,
+    (globalStatisticsState, filteredStatisticsState, type) =>
+        type === 'global' ? globalStatisticsState.capacity : filteredStatisticsState.capacity,
 );
 
 export const selectChannelFeesMinMaxTotal = createSelector(
