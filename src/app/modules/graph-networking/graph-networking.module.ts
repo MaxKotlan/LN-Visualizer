@@ -1,17 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { EffectsModule } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import moment from 'moment';
+import { take } from 'rxjs';
+import { initializeGraphSyncProcess } from '../graph-renderer/actions';
+import { loadGraphFromStorage } from '../graph-renderer/actions/graph-database.actions';
+import { GraphDatabaseService } from '../graph-renderer/services/graph-database/graph-database.service';
+import { fastModelDownloadEnabled$ } from '../pilot-flags/selectors/pilot-flags.selectors';
 import { NetworkEffects } from './effects';
 import { InitialSyncApiService } from './services';
-import { Store } from '@ngrx/store';
-import { initializeGraphSyncProcess } from '../graph-renderer/actions';
-import moment from 'moment';
-import { GraphDatabaseService } from '../graph-renderer/services/graph-database/graph-database.service';
-import { loadGraphFromStorage } from '../graph-renderer/actions/graph-database.actions';
 import { BinaryMeshApiService } from './services/binary-mesh-api.service';
-import { fastModelDownloadEnabled$ } from '../pilot-flags/selectors/pilot-flags.selectors';
-import { take } from 'rxjs';
 
+@UntilDestroy()
 @NgModule({
     declarations: [],
     imports: [CommonModule, EffectsModule.forFeature([NetworkEffects])],
@@ -29,8 +31,9 @@ export class GraphNetworkingModule {
     async getData() {
         this.store$
             .select(fastModelDownloadEnabled$)
-            .pipe(take(1))
+            .pipe(untilDestroyed(this))
             .subscribe(async (isEnabled) => {
+                console.log('iajsdjklbnfsakjhfsajkhfsakj');
                 if (isEnabled) {
                     this.binaryMeshApiService.getNodePositions();
                     this.binaryMeshApiService.getChannelBuffer();
