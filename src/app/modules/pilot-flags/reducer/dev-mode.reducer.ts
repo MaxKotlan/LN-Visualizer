@@ -1,12 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import * as devModeActions from '../actions';
 
-export interface DevMode {
+export interface DevModeState {
     devModeEnabled: boolean;
 }
 
-const initialState: DevMode = {
-    devModeEnabled: false,
+const initialState: DevModeState = {
+    devModeEnabled: true,
 };
 
 export const reducer = createReducer(
