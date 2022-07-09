@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, sampleTime, map } from 'rxjs';
+import { combineLatest, map, debounceTime } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import {
     channelColor,
     channelColorMap,
     selectUseLogColorScale,
 } from '../../controls-channel/selectors';
-import { FilterEvaluatorService } from '../../controls-graph-filter/services/filter-evaluator.service';
-import { setFilteredNodeChannels, setFilteredNodes } from '../actions';
+import { selectMinMax } from '../../graph-statistics/selectors';
+import { setFilteredNodeChannels } from '../actions';
 import { GraphState } from '../reducer';
 import { ChannelColorService, FilteredChannelRegistryService } from '../services';
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
-import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-import { selectMinMax } from '../../graph-statistics/selectors';
-// import { FilteredStatisticsCalculatorService } from '../../graph-statistics/services';
 
 @Injectable()
 export class ChannelMeshEffects {
@@ -24,10 +21,9 @@ export class ChannelMeshEffects {
         private store$: Store<GraphState>,
         private actions$: Actions,
         private channelColorService: ChannelColorService,
-        private filterEvaluationService: FilterEvaluatorService,
         private channelBufferService: ChannelBuffersService,
         private filteredChannelRegistryService: FilteredChannelRegistryService,
-        private filteredNodeRegistry: FilteredNodeRegistryService, // private filteredStatisticsCaluclator: FilteredStatisticsCalculatorService,
+        private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
     readonly throttleTimeMs: number = 500;
@@ -41,7 +37,7 @@ export class ChannelMeshEffects {
                 // this.actions$.pipe(ofType(setFilteredNodes)),
                 //])
                 //.pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(() => {
                     if (!this.channelBufferService.vertex || !this.filteredChannelRegistryService)
                         return null;
@@ -87,7 +83,7 @@ export class ChannelMeshEffects {
                 this.store$.select(channelColorMap),
                 this.store$.select(selectUseLogColorScale),
             ]).pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(([,]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
@@ -123,7 +119,7 @@ export class ChannelMeshEffects {
                 // this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(selectMinMax('capacity')),
             ]).pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(([, channelMinMax]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
