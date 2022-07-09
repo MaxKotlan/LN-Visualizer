@@ -8,4 +8,7 @@ export const reducer = createReducer(
         ...state,
         [property]: newStatState,
     })),
+    on(globalStatisticActions.updateAllGlobalMinMaxStatistic, (state, { newState }) => ({
+        ...newState,
+    })),
 );
