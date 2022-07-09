@@ -58,14 +58,6 @@ export class FilteredStatisticsCalculatorService {
                 newState: this.currentStatisticsState,
             }),
         );
-        // this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
-        //     this.store$.dispatch(
-        //         filteredStatisticActions.updateFilteredMinMaxStatistic({
-        //             property,
-        //             newStatState: this.currentStatisticsState[property],
-        //         }),
-        //     );
-        // });
     }
 
     public resetFilterStatistics() {
