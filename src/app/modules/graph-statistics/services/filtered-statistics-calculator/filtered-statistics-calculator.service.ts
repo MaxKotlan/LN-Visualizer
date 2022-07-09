@@ -53,14 +53,11 @@ export class FilteredStatisticsCalculatorService {
     }
 
     public updateStore() {
-        this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
-            this.store$.dispatch(
-                filteredStatisticActions.updateFilteredMinMaxStatistic({
-                    property,
-                    newStatState: this.currentStatisticsState[property],
-                }),
-            );
-        });
+        this.store$.dispatch(
+            filteredStatisticActions.updateAllFilteredMinMaxStatistic({
+                newState: this.currentStatisticsState,
+            }),
+        );
     }
 
     public resetFilterStatistics() {

@@ -7,6 +7,11 @@ export const updateFilteredMinMaxStatistic = createAction(
     props<{ property: keyof GraphStatisticsState; newStatState: MinMaxTotal | MinMax }>(),
 );
 
+export const updateAllFilteredMinMaxStatistic = createAction(
+    '[statistics] updateAllFilteredMinMaxStatistic',
+    props<{ newState: GraphStatisticsState }>(),
+);
+
 export const clearFilteredMinMaxStatistic = createAction(
     '[statistics] clearFilteredMinMaxStatistic',
 );

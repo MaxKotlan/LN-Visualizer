@@ -11,6 +11,9 @@ export const reducer = createReducer(
             [property]: newStatState,
         }),
     ),
+    on(filteredStatisticActions.updateAllFilteredMinMaxStatistic, (state, { newState }) => ({
+        ...newState,
+    })),
     on(filteredStatisticActions.clearFilteredMinMaxStatistic, () => ({
         ...initialStatisticsState,
     })),

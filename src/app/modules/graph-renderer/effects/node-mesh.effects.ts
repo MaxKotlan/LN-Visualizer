@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { sampleTime, map, combineLatest } from 'rxjs';
+import { combineLatest, debounceTime, map } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectMinMax } from '../../graph-statistics/selectors';
@@ -19,12 +19,12 @@ export class NodeMeshEffects {
         private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
-    readonly throttleTimeMs: number = 500;
+    readonly throttleTimeMs: number = 250;
 
     nodeVertices$ = createEffect(
         () =>
             this.actions$.pipe(ofType(setFilteredNodes)).pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(() => {
                     if (!this.nodeBuffersService.vertex || !this.filteredNodeRegistry) return null;
 
@@ -54,7 +54,7 @@ export class NodeMeshEffects {
     nodeColors$ = createEffect(
         () =>
             this.actions$.pipe(ofType(setFilteredNodes)).pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(() => {
                     if (!this.nodeBuffersService.color || !this.filteredNodeRegistry) return null;
 
@@ -79,7 +79,7 @@ export class NodeMeshEffects {
                 this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(selectMinMax('node_capacity')),
             ]).pipe(
-                sampleTime(this.throttleTimeMs),
+                debounceTime(this.throttleTimeMs),
                 map(([, minMaxNodeCapacity]) => {
                     if (!this.nodeBuffersService.capacity || !this.filteredNodeRegistry)
                         return null;

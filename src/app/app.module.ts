@@ -14,6 +14,19 @@ import { ControlsEffects } from './modules/controls/effects/controls.effects';
 import { PilotFlagsModule } from './modules/pilot-flags/pilot-flags.module';
 import { WindowManagerModule } from './modules/window-manager/window-manager.module';
 
+let dev = [];
+
+if (!environment.production || window?.location?.toString()?.includes('devMode=true')) {
+    dev = [
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+            logOnly: environment.production, // Restrict extension to log-only mode
+            autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+            name: 'LnVisualizer',
+        }),
+    ];
+}
+
 @NgModule({
     declarations: [AppComponent],
     imports: [
@@ -33,11 +46,7 @@ import { WindowManagerModule } from './modules/window-manager/window-manager.mod
                 },
             },
         ),
-        StoreDevtoolsModule.instrument({
-            maxAge: 25, // Retains last 25 states
-            logOnly: environment.production, // Restrict extension to log-only mode
-            autoPause: true, // Pauses recording actions and state changes when the extension window is not open
-        }),
+        ...dev,
         BrowserAnimationsModule,
     ],
     bootstrap: [AppComponent],

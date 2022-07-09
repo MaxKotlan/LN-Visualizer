@@ -53,13 +53,10 @@ export class GlobalStatisticsCalculatorService {
     }
 
     public updateStore() {
-        this.keysToCheck.forEach((property: keyof GraphStatisticsState) => {
-            this.store$.dispatch(
-                globalStatisticActions.updateGlobalMinMaxStatistic({
-                    property,
-                    newStatState: this.currentStatisticsState[property],
-                }),
-            );
-        });
+        this.store$.dispatch(
+            globalStatisticActions.updateAllGlobalMinMaxStatistic({
+                newState: this.currentStatisticsState,
+            }),
+        );
     }
 }

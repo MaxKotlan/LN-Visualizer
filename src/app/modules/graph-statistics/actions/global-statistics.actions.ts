@@ -6,3 +6,8 @@ export const updateGlobalMinMaxStatistic = createAction(
     '[statistics] updateGlobalMinMaxStatistic',
     props<{ property: keyof GraphStatisticsState; newStatState: MinMaxTotal | MinMax }>(),
 );
+
+export const updateAllGlobalMinMaxStatistic = createAction(
+    '[statistics] updateAllGlobalMinMaxStatistic',
+    props<{ newState: GraphStatisticsState }>(),
+);
