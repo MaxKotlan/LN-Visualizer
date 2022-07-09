@@ -69,7 +69,7 @@ export class NodeEffects {
         () =>
             combineLatest([
                 this.actions$.pipe(
-                    ofType(graphActions.cacheProcessedGraphNodeChunk),
+                    ofType(graphActions.nodeStatisticsComputationFinished),
                     debounceTime(250),
                 ),
                 this.store$
