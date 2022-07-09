@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { debounceTime } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GlobalStatisticsCalculatorService } from '../../graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
@@ -21,14 +22,30 @@ export class ChannelEffects {
                 ofType(graphActions.processGraphChannelChunk),
                 map((action) => {
                     action.chunk.data.forEach((channel) => {
-                        this.globalStatisticsCalculator.checkChannel(channel);
+                        // this.globalStatisticsCalculator.checkChannel(channel);
                         this.channelRegistry.set(channel.id, channel);
                     });
-                    this.globalStatisticsCalculator.updateStore();
+                    // this.globalStatisticsCalculator.updateStore();
                     return graphActions.cacheProcessedChannelChunk();
                 }),
             ),
         { dispatch: true },
+    );
+
+    computeGlobalChannelStatistics$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(graphActions.processGraphChannelChunk),
+                debounceTime(250),
+                map(() => {
+                    this.channelRegistry.forEach((channel) => {
+                        this.globalStatisticsCalculator.checkChannel(channel);
+                    });
+                    this.globalStatisticsCalculator.updateStore();
+                    // return graphActions.computeNodeStatistics();
+                }),
+            ),
+        { dispatch: false },
     );
 
     recalculatePosition$ = createEffect(

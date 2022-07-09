@@ -19,7 +19,7 @@ export class NodeMeshEffects {
         private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
-    readonly throttleTimeMs: number = 500;
+    readonly throttleTimeMs: number = 250;
 
     nodeVertices$ = createEffect(
         () =>

@@ -26,7 +26,7 @@ export class ChannelMeshEffects {
         private filteredNodeRegistry: FilteredNodeRegistryService,
     ) {}
 
-    readonly throttleTimeMs: number = 500;
+    readonly throttleTimeMs: number = 250;
 
     channelVertices$ = createEffect(
         () =>

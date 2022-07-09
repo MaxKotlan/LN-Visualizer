@@ -49,10 +49,11 @@ export class NodeEffects {
         { dispatch: true },
     );
 
-    computeGlobalStatistics$ = createEffect(
+    computeGlobalNodeStatistics$ = createEffect(
         () =>
             this.actions$.pipe(
                 ofType(graphActions.cacheProcessedGraphNodeChunk),
+                debounceTime(250),
                 map(() => {
                     this.nodeRegistry.forEach((node) => {
                         this.globalStatisticsCaluclator.checkNode(node);
@@ -61,13 +62,16 @@ export class NodeEffects {
                     return graphActions.computeNodeStatistics();
                 }),
             ),
-        { dispatch: true },
+        { dispatch: false },
     );
 
     filterNodesCache$ = createEffect(
         () =>
             combineLatest([
-                this.actions$.pipe(ofType(graphActions.computeNodeStatistics)),
+                this.actions$.pipe(
+                    ofType(graphActions.cacheProcessedGraphNodeChunk),
+                    debounceTime(250),
+                ),
                 this.store$
                     .select(filterSelectors.activeNodeFilters)
                     .pipe(distinctUntilChanged(_.isEqual), debounceTime(100)),
