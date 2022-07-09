@@ -9,8 +9,6 @@ import {
     map,
     switchMap,
     takeUntil,
-    takeWhile,
-    throttleTime,
     timer,
 } from 'rxjs';
 import { FilterModalComponent } from '../../controls-graph-filter/components/filter-modal/filter-modal.component';
@@ -37,7 +35,6 @@ export class WindowManagerEffects {
                     switchMap(() =>
                         animationFrames().pipe(
                             takeUntil(timer(250)),
-                            throttleTime(10),
                             map(graphActions.recomputeCanvasSize),
                         ),
                     ),
@@ -50,7 +47,6 @@ export class WindowManagerEffects {
             switchMap((isBeingDragged) =>
                 animationFrames().pipe(
                     filter(() => isBeingDragged),
-                    throttleTime(10),
                     map(graphActions.recomputeCanvasSize),
                 ),
             ),

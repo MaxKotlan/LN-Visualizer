@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { sampleTime, map, combineLatest, debounceTime } from 'rxjs';
+import { combineLatest, debounceTime, map } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectMinMax } from '../../graph-statistics/selectors';
