@@ -46,7 +46,9 @@ export const concatinateNodeChunk = createAction(
     props<{ nodeSubSet: LndNodeWithPosition[] }>(),
 );
 
-export const computeNodeStatistics = createAction('[graph] computeNodeStatistics');
+export const nodeStatisticsComputationFinished = createAction(
+    '[graph] nodeStatisticsComputationFinished',
+);
 
 export const cacheProcessedGraphNodeChunk = createAction('[graph] cacheProcessedGraphNodeChunk');
 

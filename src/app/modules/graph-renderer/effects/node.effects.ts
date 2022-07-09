@@ -59,10 +59,10 @@ export class NodeEffects {
                         this.globalStatisticsCaluclator.checkNode(node);
                     });
                     this.globalStatisticsCaluclator.updateStore();
-                    return graphActions.computeNodeStatistics();
+                    return graphActions.nodeStatisticsComputationFinished();
                 }),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 
     filterNodesCache$ = createEffect(
