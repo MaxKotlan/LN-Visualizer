@@ -15,12 +15,17 @@ export class FilterEvaluatorService {
         entity: LndChannel | LndNodeWithPosition,
         filters: Filter<ChannelEvaluationFunction>[] | Filter<NodeEvaluationFunction>[],
     ): boolean {
-        let resultAccumulator = true;
-        filters.forEach((filter) => {
-            let result = null;
-            if (filter.interpreter === 'javascript') result = filter.function(entity);
-            resultAccumulator = resultAccumulator && result;
-        });
-        return resultAccumulator;
+        // let resultAccumulator = true;
+        // filters.forEach((filter) => {
+        //     let result = null;
+        //     if (filter.interpreter === 'javascript') result = filter.function(entity);
+        //     resultAccumulator = resultAccumulator && result;
+        // });
+        for (let i = 0; i < filters.length; i++) {
+            //if (filter.interpreter === 'javascript')
+            if (!filters[i].function(entity as any)) return false;
+        }
+
+        return true;
     }
 }
