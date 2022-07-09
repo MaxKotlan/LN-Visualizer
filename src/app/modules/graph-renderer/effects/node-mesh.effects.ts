@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, map, take, skip, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, map } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectMinMax } from '../../graph-statistics/selectors';
 import { setFilteredNodes } from '../actions';
-import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { NodeBuffersService } from '../services/node-buffers/node-buffers.service';
@@ -77,15 +76,7 @@ export class NodeMeshEffects {
     nodeCapacity$ = createEffect(
         () =>
             combineLatest([
-                this.actions$.pipe(
-                    ofType(graphActions.nodeStatisticsComputationFinished),
-                    skip(1),
-                    take(1),
-                    switchMap(() => this.actions$.pipe(ofType(setFilteredNodes))),
-                ),
-                // this.actions$.pipe(
-                //     ofType(setFilteredNodes),
-                // ),
+                this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(selectMinMax('node_capacity')),
             ]).pipe(
                 debounceTime(this.throttleTimeMs),
