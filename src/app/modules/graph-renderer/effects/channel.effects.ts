@@ -42,10 +42,10 @@ export class ChannelEffects {
                         this.globalStatisticsCalculator.checkChannel(channel);
                     });
                     this.globalStatisticsCalculator.updateStore();
-                    // return graphActions.computeNodeStatistics();
+                    return graphActions.channelStatisticsDoneComputing();
                 }),
             ),
-        { dispatch: false },
+        { dispatch: true },
     );
 
     recalculatePosition$ = createEffect(

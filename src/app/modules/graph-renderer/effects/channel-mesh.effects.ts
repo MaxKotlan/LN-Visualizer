@@ -14,6 +14,7 @@ import { GraphState } from '../reducer';
 import { ChannelColorService, FilteredChannelRegistryService } from '../services';
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
+import * as graphActions from '../actions/graph.actions';
 
 @Injectable()
 export class ChannelMeshEffects {
@@ -116,11 +117,12 @@ export class ChannelMeshEffects {
             combineLatest([
                 // this.store$.select(filterSelectors.activeChannelFilters),
                 this.actions$.pipe(ofType(setFilteredNodeChannels)),
+                this.actions$.pipe(ofType(graphActions.channelStatisticsDoneComputing)),
                 // this.actions$.pipe(ofType(setFilteredNodes)),
                 this.store$.select(selectMinMax('capacity')),
             ]).pipe(
                 debounceTime(this.throttleTimeMs),
-                map(([, channelMinMax]) => {
+                map(([, , channelMinMax]) => {
                     if (!this.channelBufferService.color || !this.filteredChannelRegistryService)
                         return null;
                     let i = 0;
