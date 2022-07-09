@@ -16,7 +16,7 @@ export class FilterEvaluatorService {
         filters: Filter<ChannelEvaluationFunction>[] | Filter<NodeEvaluationFunction>[],
     ): boolean {
         for (let i = 0; i < filters.length; i++)
-            if (!filters[i].function(entity as any)) return false;
+            if (filters[i].function(entity as any) === false) return false;
         return true;
     }
 }
