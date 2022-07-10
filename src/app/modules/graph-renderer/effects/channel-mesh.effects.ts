@@ -7,6 +7,7 @@ import {
     channelColor,
     channelColorMap,
     selectUseLogColorScale,
+    selectColorRangeMinMax,
 } from '../../controls-channel/selectors';
 import { selectMinMax } from '../../graph-statistics/selectors';
 import { setFilteredNodeChannels } from '../actions';
@@ -80,6 +81,7 @@ export class ChannelMeshEffects {
                 // this.store$.select(filterSelectors.activeChannelFilters),
                 this.actions$.pipe(ofType(setFilteredNodeChannels)),
                 // this.actions$.pipe(ofType(setFilteredNodes)),
+                this.store$.select(selectColorRangeMinMax),
                 this.store$.select(channelColor),
                 this.store$.select(channelColorMap),
                 this.store$.select(selectUseLogColorScale),

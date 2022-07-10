@@ -71,8 +71,8 @@ export class ChannelColorService {
                 const maxLog = Math.log10(this.minMaxCap.max + 1);
                 const minLog = Math.log10(this.minMaxCap.min + 1);
                 const capLog = Math.log10(channel.capacity + 1);
-
-                normalizedValue = (capLog - minLog) / (maxLog - minLog);
+                if (maxLog - minLog !== 0) normalizedValue = (capLog - minLog) / (maxLog - minLog);
+                else normalizedValue = 0;
             } else {
                 normalizedValue =
                     (channel.capacity - this.minMaxCap.min) /
