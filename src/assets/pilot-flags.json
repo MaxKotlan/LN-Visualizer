@@ -1,7 +1,7 @@
 {
     "unitConversions": false,
     "thickLines": true,
-    "sphereNodes": true,
+    "sphereNodes": false,
     "fastModelDownload": false,
     "colorRangeMinMax": false
 }
