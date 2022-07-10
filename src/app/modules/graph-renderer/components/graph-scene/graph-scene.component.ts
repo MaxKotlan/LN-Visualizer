@@ -16,7 +16,10 @@ import {
     selectShowGrid,
 } from 'src/app/modules/controls-renderer/selectors';
 import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
-import { pilotThickLinesEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
+import {
+    pilotThickLinesEnabled$,
+    sphereNodesEnabled$,
+} from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
@@ -49,6 +52,7 @@ export class GraphSceneComponent implements AfterViewInit {
 
     public thickLinesEnabled$ = this.store$.select(pilotThickLinesEnabled$);
     public lineBackend$ = this.store$.select(selectLineBackend);
+    public sphereNodes$ = this.store$.select(sphereNodesEnabled$);
 
     public ngAfterViewInit() {
         // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);

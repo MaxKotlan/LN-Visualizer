@@ -1,19 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
 import * as pilotFlagActions from '../actions';
+import pilotFlagJson from '../../../../assets/pilot-flags.json';
 
 export interface PilotFlags {
     unitConversions: boolean;
     thickLines: boolean;
+    sphereNodes: boolean;
     fastModelDownload: boolean;
     colorRangeMinMax: boolean;
 }
 
-const initialState: PilotFlags = {
-    unitConversions: false,
-    thickLines: true,
-    fastModelDownload: false,
-    colorRangeMinMax: false,
-};
+const initialState: PilotFlags = pilotFlagJson;
 
 export const reducer = createReducer(
     initialState,

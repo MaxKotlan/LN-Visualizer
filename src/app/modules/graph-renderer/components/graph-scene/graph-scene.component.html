@@ -27,7 +27,12 @@
                 [divisions]="100"
             ></atft-grid-helper>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
-            <app-nodes-object></app-nodes-object>
+            <app-nodes-sphere-object
+                *ngIf="sphereNodes$ | async; else pointNodes"
+            ></app-nodes-sphere-object>
+            <ng-template #pointNodes>
+                <app-nodes-object></app-nodes-object>
+            </ng-template>
             <app-channel-thick-object
                 *ngIf="
                     (thickLinesEnabled$ | async) && (lineBackend$ | async) === 'line-mesh';
