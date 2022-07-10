@@ -4,6 +4,7 @@ import * as pilotFlagActions from '../actions';
 export interface PilotFlags {
     unitConversions: boolean;
     thickLines: boolean;
+    sphereNodes: boolean;
     fastModelDownload: boolean;
     colorRangeMinMax: boolean;
 }
@@ -11,6 +12,7 @@ export interface PilotFlags {
 const initialState: PilotFlags = {
     unitConversions: false,
     thickLines: true,
+    sphereNodes: false,
     fastModelDownload: false,
     colorRangeMinMax: false,
 };

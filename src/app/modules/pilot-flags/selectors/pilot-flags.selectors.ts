@@ -13,6 +13,8 @@ export const pilotThickLinesEnabled$ = createSelector(
     (state) => state.thickLines,
 );
 
+export const sphereNodesEnabled$ = createSelector(pilotFlagSelector, (state) => state.sphereNodes);
+
 export const fastModelDownloadEnabled$ = createSelector(
     pilotFlagSelector,
     (state) => state.fastModelDownload,
