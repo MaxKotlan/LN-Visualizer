@@ -20,7 +20,7 @@ channel.capacity * satPrice > 23 && channel.capacity * satPrice < 25
 `;
 
 export const nodeDemoSource = `return (node) =>
-node.channel_count >= 80 && node.channel_count <= 1804  
+node.node_channel_count >= 80 && node.node_channel_count <= 1804  
 `;
 
 @UntilDestroy()

@@ -1,6 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { selectColorRangeMinMax } from '../../controls-channel/selectors';
-import { selectChannelCount } from '../../graph-renderer/selectors/graph.selectors';
 import { GraphStatisticsState } from '../models';
 
 export const globalStatisticsSelector =
@@ -37,12 +36,6 @@ export const selectMinimumChannelCapacity = createSelector(
     (state) => state.min,
 );
 
-export const selectAverageCapacity = createSelector(
-    selectTotalChannelCapacity,
-    selectChannelCount,
-    (node_capacity, channelCount) => Math.floor(node_capacity / channelCount) || 0,
-);
-
 export const selectMinMax = (property: keyof GraphStatisticsState) =>
     createSelector(globalStatisticsSelector, (graphState) => graphState[property]);
 
@@ -54,19 +47,10 @@ export const statsLabels = createSelector(globalStatisticsSelector, (state) =>
     ),
 );
 
-//ummm.... i guess totals are being added twice... will fix later
-const totalDivider = (prop, val) => {
-    if (prop === 'total') return Math.round(val / 2);
-    return val;
-};
-
 export const filteredStatsLabels = createSelector(filteredStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>
         Object.keys(state[key]).map(
-            (key2) =>
-                `${
-                    state[key][key2] === Infinity ? 0 : totalDivider(key2, state[key][key2])
-                } ${key2} ${key}\n`,
+            (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,
         ),
     ),
 );

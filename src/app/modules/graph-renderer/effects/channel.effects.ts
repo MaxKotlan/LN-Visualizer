@@ -57,7 +57,7 @@ export class ChannelEffects {
                         channel.policies.forEach((policy) => {
                             const node = this.nodeRegistry.get(policy.public_key);
                             if (node && !node.connected_channels.has(channel.id)) {
-                                node.channel_count += 1;
+                                node.node_channel_count += 1;
                                 node.node_capacity += channel.capacity;
                                 node.connected_channels.set(channel.id, channel);
                             }

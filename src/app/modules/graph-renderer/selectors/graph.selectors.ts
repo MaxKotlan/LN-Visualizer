@@ -56,9 +56,6 @@ export const selectIsRequestComplete = createSelector(
 
 export const selectLoadingText = createSelector(graphSelector, (state) => state.loadingText);
 
-export const selectNodeCount = createSelector(graphSelector, (state) => state.nodeCount);
-export const selectChannelCount = createSelector(graphSelector, (state) => state.channelCount);
-
 export const selectNodeVertexBufferSize = createSelector(
     graphSelector,
     (state) => state.nodeVertexBufferSize,

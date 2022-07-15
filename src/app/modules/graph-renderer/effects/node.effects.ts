@@ -109,7 +109,8 @@ export class NodeEffects {
                         node.connected_channels.forEach((channel) => {
                             if (
                                 this.areBothNodesInFilteredView(channel) &&
-                                this.filterEvaluationService.evaluateFilters(channel, filters)
+                                this.filterEvaluationService.evaluateFilters(channel, filters) &&
+                                !this.filteredChannelRegistryService.has(channel.id)
                             ) {
                                 this.filteredChannelRegistryService.set(
                                     (channel as unknown as LndChannelWithParent)
@@ -160,7 +161,7 @@ export class NodeEffects {
                             ),
                             connected_channels: new Map(),
                             node_capacity: 0,
-                            channel_count: 0,
+                            node_channel_count: 0,
                         } as LndNodeWithPosition;
                     });
                 }),

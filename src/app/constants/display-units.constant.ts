@@ -6,7 +6,7 @@ export const displayUnits: string[] = ['btc', 'sat', 'msat'];
 export type UnitLabelOrNumber = UnitLabel | 'number';
 
 export const backendUnitFormat: Record<keyof GraphStatisticsState, UnitLabelOrNumber> = {
-    channel_count: 'number',
+    node_channel_count: 'number',
     node_capacity: 'sat',
     capacity: 'sat',
     base_fee_mtokens: 'msat',
