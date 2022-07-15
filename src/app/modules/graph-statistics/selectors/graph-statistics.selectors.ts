@@ -54,19 +54,10 @@ export const statsLabels = createSelector(globalStatisticsSelector, (state) =>
     ),
 );
 
-//ummm.... i guess totals are being added twice... will fix later
-const totalDivider = (prop, val) => {
-    if (prop === 'total') return Math.round(val / 2);
-    return val;
-};
-
 export const filteredStatsLabels = createSelector(filteredStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>
         Object.keys(state[key]).map(
-            (key2) =>
-                `${
-                    state[key][key2] === Infinity ? 0 : totalDivider(key2, state[key][key2])
-                } ${key2} ${key}\n`,
+            (key2) => `${state[key][key2] === Infinity ? 0 : state[key][key2]} ${key2} ${key}\n`,
         ),
     ),
 );
