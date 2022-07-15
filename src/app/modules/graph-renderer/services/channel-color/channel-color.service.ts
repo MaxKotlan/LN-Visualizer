@@ -8,7 +8,7 @@ import {
     selectUseLogColorScale,
 } from 'src/app/modules/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
-import { MinMax, MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import {
     selectChannelFeesMinMaxTotal,
@@ -50,7 +50,7 @@ export class ChannelColorService {
     }
 
     private colorArray: number[][];
-    private minMaxFee: MinMax;
+    private minMaxFee: MinMaxTotal;
     private minMaxCap: MinMaxTotal;
     private channelColorCache: string;
     private useLogColorScale: boolean;

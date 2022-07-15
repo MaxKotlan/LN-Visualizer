@@ -1,9 +1,4 @@
-import {
-    initMinMax,
-    initMinMaxTotal,
-    MinMax,
-    MinMaxTotal,
-} from 'src/app/types/min-max-total.interface';
+import { initMinMaxTotal, MinMaxTotal } from 'src/app/types/min-max-total.interface';
 
 export interface GraphStatisticsState {
     node_channel_count: MinMaxTotal;

@@ -10,7 +10,7 @@ import {
 import { GraphState } from 'src/app/modules/graph-renderer/reducer';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
-import { MinMax } from 'src/app/types/min-max-total.interface';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import * as filterActions from '../../../controls-graph-filter/actions';
 import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
 
@@ -38,7 +38,7 @@ export class QuickSliderComponent {
         this.isEnabled$ = this.store$.select(filterSelectors.isFilterActive(this.scriptName));
     }
 
-    @Input() set minMax(minMax: MinMax) {
+    @Input() set minMax(minMax: MinMaxTotal) {
         this.minMaxLinear = minMax;
         this.minLog = Math.log10(this.minMaxLinear.min + 1);
         this.maxLog = Math.log10(this.minMaxLinear.max + 1);
@@ -52,7 +52,7 @@ export class QuickSliderComponent {
     public minLog = 0;
     public maxLog = 1;
 
-    public minMaxLinear: MinMax;
+    public minMaxLinear: MinMaxTotal;
     public logStep: number;
     public logValue: number[];
 
