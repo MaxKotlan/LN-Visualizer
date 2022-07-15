@@ -20,7 +20,7 @@ export class QuickControlsViewComponent {
             .pipe(untilDestroyed(this))
             .subscribe((newStatsState) => {
                 this.statsKeys = Object.keys(newStatsState).filter(
-                    (f) => f !== 'capacity' && f !== 'node_capacity' && f !== 'channel_count',
+                    (f) => f !== 'capacity' && f !== 'node_capacity' && f !== 'node_channel_count',
                 );
                 this.statsState = newStatsState;
             });

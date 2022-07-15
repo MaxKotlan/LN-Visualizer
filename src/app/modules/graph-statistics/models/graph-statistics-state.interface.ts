@@ -6,8 +6,8 @@ import {
 } from 'src/app/types/min-max-total.interface';
 
 export interface GraphStatisticsState {
-    channel_count: MinMax;
-    node_capacity: MinMax;
+    node_channel_count: MinMaxTotal;
+    node_capacity: MinMaxTotal;
     capacity: MinMaxTotal;
     base_fee_mtokens: MinMaxTotal;
     cltv_delta: MinMaxTotal;
@@ -17,8 +17,8 @@ export interface GraphStatisticsState {
 }
 
 export const initialStatisticsState: GraphStatisticsState = {
-    channel_count: initMinMax,
-    node_capacity: initMinMax,
+    node_channel_count: initMinMaxTotal,
+    node_capacity: initMinMaxTotal,
     capacity: initMinMaxTotal,
     base_fee_mtokens: initMinMaxTotal,
     cltv_delta: initMinMaxTotal,

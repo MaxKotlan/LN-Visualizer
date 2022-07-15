@@ -53,7 +53,7 @@ export class GraphDatabaseService {
             ...n,
             connected_channels: undefined,
             node_capacity: undefined,
-            channel_count: undefined,
+            node_channel_count: undefined,
         }));
         this.db['nodes'].add({ id: 0, data: nReg }).catch((e) => {
             if (e.message.contains('QuotaExceededError'))

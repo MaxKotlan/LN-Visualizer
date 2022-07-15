@@ -91,7 +91,7 @@ export class GenericNodeFilter extends FilterFactory {
         },
         'connected_channels': {},
         'node_capacity': 70721795,
-        'channel_count': 48,
+        'node_channel_count': 48,
     };
 
     public async expressionEval(sourceCode: string) {

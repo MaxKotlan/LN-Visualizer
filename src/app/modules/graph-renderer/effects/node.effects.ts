@@ -161,7 +161,7 @@ export class NodeEffects {
                             ),
                             connected_channels: new Map(),
                             node_capacity: 0,
-                            channel_count: 0,
+                            node_channel_count: 0,
                         } as LndNodeWithPosition;
                     });
                 }),

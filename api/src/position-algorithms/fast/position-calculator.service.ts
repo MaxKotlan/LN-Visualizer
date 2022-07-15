@@ -121,7 +121,7 @@ export class FastPositionAlgorithm extends PositionAlgorithm {
 
         // lndPar.parent = otherNode;
         // lndNode.node_capacity += channel.capacity;
-        // lndNode.channel_count += 1;
+        // lndNode.node_channel_count += 1;
 
         this.checkAndInitializePriorityQueue(lndNode.public_key, this.connectedChannels);
         this.connectedChannels[lndNode.public_key].enqueue(lndPar);
