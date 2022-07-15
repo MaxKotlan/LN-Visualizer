@@ -11,6 +11,7 @@ import { MaterialModule } from '../material';
 import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
 import { ErrorComponent } from './components/error';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { AppKeyValueStatsComponent } from './components/app-key-value-stats/app-key-value-stats.component';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
         GlobalGraphStatsComponent,
         LoadingSpinnerComponent,
         FilteredGraphStatsComponent,
+        AppKeyValueStatsComponent,
     ],
     imports: [CommonModule, MaterialModule],
     exports: [
