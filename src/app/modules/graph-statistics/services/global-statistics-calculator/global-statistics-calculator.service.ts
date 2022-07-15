@@ -43,10 +43,12 @@ export class GlobalStatisticsCalculatorService {
                 ) as MinMaxTotal;
             } else {
                 channel.policies.forEach((p) => {
-                    this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
-                        this.currentStatisticsState[property],
-                        p[property],
-                    ) as MinMaxTotal;
+                    if (p[property] !== undefined) {
+                        this.currentStatisticsState[property] = updateCurrentMinMaxTotalStats(
+                            this.currentStatisticsState[property],
+                            p[property],
+                        ) as MinMaxTotal;
+                    }
                 });
             }
         });

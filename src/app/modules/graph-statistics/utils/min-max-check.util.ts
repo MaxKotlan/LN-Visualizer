@@ -1,3 +1,4 @@
+import { count } from 'console';
 import { MinMax, MinMaxTotal } from 'src/app/types/min-max-total.interface';
 
 export const updateCurrentMinMaxTotalStats = (
@@ -12,6 +13,10 @@ export const updateCurrentMinMaxTotalStats = (
             min: property < currentState.min ? property : currentState.min,
             max: property > currentState.max ? property : currentState.max,
             total: (currentState as MinMaxTotal).total + property,
+            count: (currentState as MinMaxTotal).count + 1,
+            average:
+                ((currentState as MinMaxTotal).total + property) /
+                ((currentState as MinMaxTotal).count + 1),
         };
     } else {
         return {

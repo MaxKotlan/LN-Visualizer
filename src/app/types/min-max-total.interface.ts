@@ -6,6 +6,8 @@ export const initMinMax: MinMax = {
 export const initMinMaxTotal: MinMaxTotal = {
     ...initMinMax,
     total: 0,
+    count: 0,
+    average: NaN,
 };
 
 export interface MinMax {
@@ -17,4 +19,6 @@ export interface MinMaxTotal {
     min: number;
     max: number;
     total: number;
+    count: number;
+    average: number;
 }
