@@ -29,8 +29,8 @@
         </div>
 
         <div
-            *ngIf="treeControl.isExpanded(node)"
-            [class.example-tree-invisible]="!treeControl.isExpanded(node)"
+            *ngIf="treeControl.isExpanded(node) || true"
+            [class.example-tree-invisible]="!(treeControl.isExpanded(node) || true)"
             role="group"
         >
             <ng-container matTreeNodeOutlet></ng-container>
