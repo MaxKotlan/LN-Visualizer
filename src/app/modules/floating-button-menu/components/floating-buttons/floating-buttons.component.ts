@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectDevModeEnabled } from 'src/app/modules/pilot-flags/selectors';
+import {
+    nodeTableSearchEnabled$,
+    selectDevModeEnabled,
+} from 'src/app/modules/pilot-flags/selectors';
 
 @Component({
     selector: 'app-floating-buttons',
@@ -11,4 +14,5 @@ export class FloatingButtonsComponent {
     constructor(private store$: Store<any>) {}
 
     public isDeveloperMode$ = this.store$.select(selectDevModeEnabled);
+    public nodeTableSearch$ = this.store$.select(nodeTableSearchEnabled$);
 }
