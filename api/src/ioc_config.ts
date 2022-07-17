@@ -14,6 +14,7 @@ import { ConfigService } from './services/config.service';
 import { ServerStatusService } from './services/server-status.service';
 import { HealthCheckServerService } from './services/health-check-server';
 import { BinaryModelConverter } from './services/binary-model-converter.service';
+import { BenchmarkDataGeneratorService } from './services/benchmark-data-generator.service';
 
 let container = new Container();
 container.bind<App>(App).toSelf().inSingletonScope();
@@ -29,4 +30,8 @@ container.bind<ConfigService>(ConfigService).toSelf().inSingletonScope();
 container.bind<ServerStatusService>(ServerStatusService).toSelf().inSingletonScope();
 container.bind<HealthCheckServerService>(HealthCheckServerService).toSelf().inSingletonScope();
 container.bind<BinaryModelConverter>(BinaryModelConverter).toSelf().inSingletonScope();
+container
+    .bind<BenchmarkDataGeneratorService>(BenchmarkDataGeneratorService)
+    .toSelf()
+    .inSingletonScope();
 export default container;

@@ -18,6 +18,11 @@
         "invertConnectedRange": true,
         "shouldLog": true
     },
+    "benchmarkMode": {
+        "enabled": true,
+        "nodeCount": 270000,
+        "channelCount": 1000000
+    },
     "port": 5647,
     "host": "0.0.0.0"
 }
