@@ -11,6 +11,7 @@ import {
 } from './components';
 import { StatsButtonComponent } from './components/stats-button/stats-button.component';
 import { PilotFlagsModule } from '../pilot-flags/pilot-flags.module';
+import { TableSearchButtonComponent } from './components/table-search-button/table-search-button.component';
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import { PilotFlagsModule } from '../pilot-flags/pilot-flags.module';
         SidenavOpenButtonComponent,
         StatsButtonComponent,
         PilotFlagButtonComponent,
+        TableSearchButtonComponent,
     ],
     imports: [CommonModule, UiModule, MaterialModule, PilotFlagsModule],
     exports: [FloatingButtonsComponent, SidenavOpenButtonComponent],
