@@ -57,7 +57,7 @@ const initConfig: Config = {
         shouldLog: true,
     } as GradientDescentSettings,
     benchmarkMode: {
-        enabled: true,
+        enabled: false,
         nodeCount: 18000,
         channelCount: 90000,
     } as BenchmarkMode,

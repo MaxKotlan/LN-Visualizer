@@ -19,9 +19,9 @@
         "shouldLog": true
     },
     "benchmarkMode": {
-        "enabled": true,
-        "nodeCount": 270000,
-        "channelCount": 1000000
+        "enabled": false,
+        "nodeCount": 18000,
+        "channelCount": 90000
     },
     "port": 5647,
     "host": "0.0.0.0"
