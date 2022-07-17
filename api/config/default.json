@@ -9,6 +9,7 @@
         "macaroon_file": ""
     },
     "positionAlgorithm": "gradient-descent",
+    "initSyncChunkSize": 4096,
     "gradientDescentSettings": {
         "iterations": 50,
         "learningRate": 1.0,

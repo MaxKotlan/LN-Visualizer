@@ -24,6 +24,7 @@ export interface Config {
     lndConfig: LndConfig;
     podStatusServer: PodStatusServer;
     positionAlgorithm: string;
+    initSyncChunkSize: number;
     gradientDescentSettings: GradientDescentSettings;
     benchmarkMode: BenchmarkMode;
     resyncTimer: string;
@@ -47,6 +48,7 @@ const initConfig: Config = {
         port: 3000,
     } as PodStatusServer,
     positionAlgorithm: 'gradient-descent',
+    initSyncChunkSize: 4096,
     gradientDescentSettings: {
         iterations: 50,
         learningRate: 1.0,
