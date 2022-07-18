@@ -8,7 +8,9 @@ import { nodeFeatures } from 'src/app/modules/node-features/selectors/node-featu
     styleUrls: ['./node-features-toggle.component.scss'],
 })
 export class NodeFeaturesToggleComponent {
-    constructor(private store: Store) {}
+    constructor(private store: Store) {
+        this.features.subscribe((x) => console.log(x.map((y) => y.bit)));
+    }
 
     public features = this.store.select(nodeFeatures);
 }

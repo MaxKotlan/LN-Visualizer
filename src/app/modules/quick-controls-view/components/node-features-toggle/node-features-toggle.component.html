@@ -1,2 +1,4 @@
-<mat-slide-toggle *ngFor="let feature of features | async"> {{ feature | json }} </mat-slide-toggle>
+<mat-slide-toggle *ngFor="let feature of features | async">
+    bit: {{ feature.bit }} {{ feature.type ? 'type' : '' }} {{ feature.type }}
+</mat-slide-toggle>
 <mat-divider></mat-divider>
