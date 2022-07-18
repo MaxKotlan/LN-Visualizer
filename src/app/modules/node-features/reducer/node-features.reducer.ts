@@ -1,6 +1,7 @@
-import { createReducer } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
+import * as nodeFeatureActions from '../actions/node-feature.actions';
 
-interface NodeFeature {
+export interface NodeFeature {
     bit: number;
     is_known: boolean;
     is_required: boolean;
@@ -15,4 +16,14 @@ const nodeFeaturesInitialState: NodeFeaturesState = {
     nodeFeatures: [],
 };
 
-export const reducer = createReducer(nodeFeaturesInitialState);
+export const reducer = createReducer(
+    nodeFeaturesInitialState,
+    on(nodeFeatureActions.updateFeaturesInView, (state, { newNodeFeatures }) => ({
+        ...state,
+        nodeFeatures: newNodeFeatures,
+    })),
+    on(nodeFeatureActions.clearFeaturesInView, (state) => ({
+        ...state,
+        nodeFeatures: [],
+    })),
+);
