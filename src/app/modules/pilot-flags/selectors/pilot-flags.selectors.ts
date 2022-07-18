@@ -25,4 +25,9 @@ export const colorRangeMinMaxEnabled$ = createSelector(
     (state) => state.colorRangeMinMax,
 );
 
+export const nodeTableSearchEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.nodeTableSearch,
+);
+
 export const allPilotFlags$ = createSelector(pilotFlagSelector, (state) => ({ ...state }));

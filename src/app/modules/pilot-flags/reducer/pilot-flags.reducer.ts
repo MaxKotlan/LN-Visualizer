@@ -8,6 +8,7 @@ export interface PilotFlags {
     sphereNodes: boolean;
     fastModelDownload: boolean;
     colorRangeMinMax: boolean;
+    nodeTableSearch: boolean;
 }
 
 const initialState: PilotFlags = pilotFlagJson;

@@ -14,11 +14,19 @@ export interface PodStatusServer {
     port: number;
 }
 
+export interface BenchmarkMode {
+    enabled: boolean;
+    nodeCount: number;
+    channelCount: number;
+}
+
 export interface Config {
     lndConfig: LndConfig;
     podStatusServer: PodStatusServer;
     positionAlgorithm: string;
+    initSyncChunkSize: number;
     gradientDescentSettings: GradientDescentSettings;
+    benchmarkMode: BenchmarkMode;
     resyncTimer: string;
     port: number;
     host: string;
@@ -40,6 +48,7 @@ const initConfig: Config = {
         port: 3000,
     } as PodStatusServer,
     positionAlgorithm: 'gradient-descent',
+    initSyncChunkSize: 4096,
     gradientDescentSettings: {
         iterations: 50,
         learningRate: 1.0,
@@ -49,6 +58,11 @@ const initConfig: Config = {
         invertConnectedRange: true,
         shouldLog: true,
     } as GradientDescentSettings,
+    benchmarkMode: {
+        enabled: false,
+        nodeCount: 18000,
+        channelCount: 90000,
+    } as BenchmarkMode,
     resyncTimer: '0 0 * * *',
     port: 5647,
     host: '0.0.0.0',

@@ -3,5 +3,6 @@
     "thickLines": true,
     "sphereNodes": false,
     "fastModelDownload": false,
-    "colorRangeMinMax": true
+    "colorRangeMinMax": true,
+    "nodeTableSearch": false
 }

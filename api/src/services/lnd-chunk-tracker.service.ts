@@ -1,12 +1,16 @@
 import { injectable } from 'inversify';
 import { GetNetworkGraphResult } from 'lightning';
 import { ChunkInfo } from '../models/chunkInfo.interface';
+import { ConfigService } from './config.service';
 
 @injectable()
 export class LndChunkTrackerService {
-    public readonly chunkSize: number = 4096;
-
+    public chunkSize: number;
     public chunkInfo: ChunkInfo | null = null;
+
+    constructor(config: ConfigService) {
+        this.chunkSize = config.getConfig().initSyncChunkSize;
+    }
 
     public calculateChunkInfo(graph: GetNetworkGraphResult) {
         this.chunkInfo = {

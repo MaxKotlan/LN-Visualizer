@@ -9,6 +9,7 @@
         "macaroon_file": ""
     },
     "positionAlgorithm": "gradient-descent",
+    "initSyncChunkSize": 4096,
     "gradientDescentSettings": {
         "iterations": 50,
         "learningRate": 1.0,
@@ -17,6 +18,11 @@
         "minConnectedNodeDistance": 0.04,
         "invertConnectedRange": true,
         "shouldLog": true
+    },
+    "benchmarkMode": {
+        "enabled": false,
+        "nodeCount": 18000,
+        "channelCount": 90000
     },
     "port": 5647,
     "host": "0.0.0.0"

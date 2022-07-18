@@ -3,6 +3,7 @@ import * as lightning from 'lightning';
 import schedule from 'node-schedule';
 import { fromEvent } from 'rxjs';
 import { Worker } from 'worker_threads';
+import { BenchmarkDataGeneratorService } from './benchmark-data-generator.service';
 import { ConfigService } from './config.service';
 import { GraphRegistryService } from './graph-registry.service';
 import { HealthCheckServerService } from './health-check-server';
@@ -18,7 +19,7 @@ export class LndGraphManagerService {
         private graphRegistryService: GraphRegistryService,
         private serverStatusService: ServerStatusService,
         private configService: ConfigService,
-        private healthCheckServerService: HealthCheckServerService,
+        private benchmarkDataGeneratorService: BenchmarkDataGeneratorService,
     ) {}
 
     public async init() {
@@ -28,12 +29,17 @@ export class LndGraphManagerService {
         );
     }
 
+    protected async getLightningData() {
+        if (this.configService.getConfig().benchmarkMode.enabled) {
+            return await this.benchmarkDataGeneratorService.getNetworkGraph();
+        }
+        return await lightning.getNetworkGraph(this.lndAuthService.authenticatedLnd);
+    }
+
     protected async graphSync(isInitialSync: boolean) {
         if (isInitialSync) console.log('Starting Graph Sync');
         try {
-            const graphState = await lightning.getNetworkGraph(
-                this.lndAuthService.authenticatedLnd,
-            );
+            const graphState = await this.getLightningData();
             this.graphRegistryService.mapToRegistry(graphState);
             this.chunkTrackerService.calculateChunkInfo(graphState);
             if (isInitialSync) console.log('CHUNK INFO:', this.chunkTrackerService.chunkInfo);
