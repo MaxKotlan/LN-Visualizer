@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { backendUnitFormat } from 'src/app/constants/display-units.constant';
+import { nodeFeaturesFilterEnabled$ } from 'src/app/modules/pilot-flags/selectors';
 import { setModalClose } from 'src/app/modules/window-manager/actions';
 import { quickControlsId } from 'src/app/modules/window-manager/constants/windowIds';
 import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
@@ -28,6 +29,8 @@ export class QuickControlsViewComponent {
 
     public statsKeys;
     public statsState;
+
+    public nodeFeaturesFilterEnabled$ = this.store$.select(nodeFeaturesFilterEnabled$);
 
     public closeModal() {
         this.store$.dispatch(setModalClose({ modalId: quickControlsId }));

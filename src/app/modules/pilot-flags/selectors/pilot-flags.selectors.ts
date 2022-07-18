@@ -30,4 +30,9 @@ export const nodeTableSearchEnabled$ = createSelector(
     (state) => state.nodeTableSearch,
 );
 
+export const nodeFeaturesFilterEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.nodeFeaturesFilter,
+);
+
 export const allPilotFlags$ = createSelector(pilotFlagSelector, (state) => ({ ...state }));
