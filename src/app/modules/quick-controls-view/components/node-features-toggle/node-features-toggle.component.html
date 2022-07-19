@@ -1,4 +1,9 @@
-<mat-slide-toggle *ngFor="let feature of features | async">
-    bit: {{ feature.bit }} {{ feature.type ? 'type' : '' }} {{ feature.type }}
-</mat-slide-toggle>
+<mat-slide-toggle #val>Node Features</mat-slide-toggle>
+<ng-container *ngIf="val.checked">
+    <mat-slide-toggle *ngFor="let feature of features | async">
+        <span style="color: #fbc02d">bit:</span>{{ feature.bit }}
+        <span style="color: #fbc02d">{{ feature.type ? 'type: ' : '' }}</span>
+        {{ feature.type }}
+    </mat-slide-toggle>
+</ng-container>
 <mat-divider></mat-divider>
