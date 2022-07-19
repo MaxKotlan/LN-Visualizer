@@ -13,6 +13,7 @@ import {
     FilteredStatisticsCalculatorService,
     GlobalStatisticsCalculatorService,
 } from '../../graph-statistics/services';
+import { NodeFeatureCheckerService } from '../../node-features/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';
@@ -32,6 +33,7 @@ export class NodeEffects {
         private filteredChannelRegistryService: FilteredChannelRegistryService,
         private filteredStatisticsCalculator: FilteredStatisticsCalculatorService,
         private filterEvaluationService: FilterEvaluatorService,
+        private nodeFeatureCheckerService: NodeFeatureCheckerService,
         private pointTreeService: PointTreeService,
     ) {}
 
@@ -79,13 +81,16 @@ export class NodeEffects {
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
                     this.filteredStatisticsCalculator.resetFilterStatistics();
+                    this.nodeFeatureCheckerService.reset();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
                             this.filteredStatisticsCalculator.checkNode(node);
+                            this.nodeFeatureCheckerService.checkNodeForNewFeatures(node);
                         }
                     });
                     this.filteredStatisticsCalculator.updateStore();
+                    this.nodeFeatureCheckerService.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),

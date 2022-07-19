@@ -32,6 +32,7 @@ import { GraphStatisticsModule } from '../graph-statistics';
 import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick.module';
 import { FilterTemplatesModule } from '../filter-templates/filter-templates.module';
 import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.module';
+import { NodeFeaturesModule } from '../node-features/node-features.module';
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.modul
         ChannelThickMeshModule,
         GraphStatisticsModule,
         FilterTemplatesModule,
+        NodeFeaturesModule,
         EffectsModule.forFeature([
             NodeEffects,
             ChannelEffects,
