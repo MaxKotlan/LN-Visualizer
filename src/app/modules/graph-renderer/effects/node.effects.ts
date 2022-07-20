@@ -59,8 +59,10 @@ export class NodeEffects {
                 map(() => {
                     this.nodeRegistry.forEach((node) => {
                         this.globalStatisticsCaluclator.checkNode(node);
+                        this.nodeFeatureCheckerService.checkNodeForNewFeatures(node);
                     });
                     this.globalStatisticsCaluclator.updateStore();
+                    this.nodeFeatureCheckerService.updateStore();
                     return graphActions.nodeStatisticsComputationFinished();
                 }),
             ),
@@ -81,16 +83,16 @@ export class NodeEffects {
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
                     this.filteredStatisticsCalculator.resetFilterStatistics();
-                    this.nodeFeatureCheckerService.reset();
+                    // this.nodeFeatureCheckerService.reset();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
                             this.filteredStatisticsCalculator.checkNode(node);
-                            this.nodeFeatureCheckerService.checkNodeForNewFeatures(node);
+                            // this.nodeFeatureCheckerService.checkNodeForNewFeatures(node);
                         }
                     });
                     this.filteredStatisticsCalculator.updateStore();
-                    this.nodeFeatureCheckerService.updateStore();
+                    // this.nodeFeatureCheckerService.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
