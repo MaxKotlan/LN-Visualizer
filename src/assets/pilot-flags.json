@@ -5,5 +5,5 @@
     "fastModelDownload": false,
     "colorRangeMinMax": true,
     "nodeTableSearch": false,
-    "nodeFeaturesFilter": true
+    "nodeFeaturesFilter": false
 }

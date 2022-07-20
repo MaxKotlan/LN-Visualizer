@@ -21,7 +21,7 @@ export const reducer = createReducer(
     nodeFeaturesInitialState,
     on(nodeFeatureActions.updateFeaturesInView, (state, { newNodeFeatures }) => ({
         ...state,
-        nodeFeatures: newNodeFeatures.map((x) => ({ ...x, filterEnabled: true })),
+        nodeFeatures: newNodeFeatures.map((x) => ({ ...x, filterEnabled: false })),
     })),
     on(nodeFeatureActions.updateFeatureFilter, (state, { bit, newValue }) => ({
         ...state,

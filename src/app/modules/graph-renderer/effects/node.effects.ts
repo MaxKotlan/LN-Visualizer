@@ -83,16 +83,13 @@ export class NodeEffects {
                 map(([, activeNodeFilters]) => {
                     this.filteredNodeRegistryService.clear();
                     this.filteredStatisticsCalculator.resetFilterStatistics();
-                    // this.nodeFeatureCheckerService.reset();
                     this.nodeRegistry.forEach((node) => {
                         if (this.evaluationService.evaluateFilters(node, activeNodeFilters)) {
                             this.filteredNodeRegistryService.set(node.public_key, node);
                             this.filteredStatisticsCalculator.checkNode(node);
-                            // this.nodeFeatureCheckerService.checkNodeForNewFeatures(node);
                         }
                     });
                     this.filteredStatisticsCalculator.updateStore();
-                    // this.nodeFeatureCheckerService.updateStore();
                     this.pointTreeService.buildKDTree();
                     return graphActions.setFilteredNodes();
                 }),
@@ -107,7 +104,6 @@ export class NodeEffects {
                     .select(filterSelectors.activeChannelFilters)
                     .pipe(distinctUntilChanged(_.isEqual), debounceTime(100)),
                 this.actions$.pipe(ofType(graphActions.setFilteredNodes)),
-                // this.actions$.pipe(ofType(setFilteredNodes)),
             ]).pipe(
                 map(([filters]) => {
                     this.filteredChannelRegistryService.clear();
