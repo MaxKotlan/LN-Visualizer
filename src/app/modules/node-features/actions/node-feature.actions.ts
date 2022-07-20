@@ -6,4 +6,9 @@ export const updateFeaturesInView = createAction(
     props<{ newNodeFeatures: NodeFeature[] }>(),
 );
 
+export const updateFeatureFilter = createAction(
+    '[node-features] updateFeatureFilter',
+    props<{ bit: number; newValue: boolean }>(),
+);
+
 export const clearFeaturesInView = createAction('[node-features] clearFeaturesInView');

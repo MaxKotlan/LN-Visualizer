@@ -1,6 +1,10 @@
 <mat-slide-toggle #val>Filter Node Features</mat-slide-toggle>
 <ng-container *ngIf="val.checked">
-    <mat-slide-toggle *ngFor="let feature of features | async">
+    <mat-slide-toggle
+        (change)="updateFeature(feature.bit, $event)"
+        [ngModel]="feature.filterEnabled"
+        *ngFor="let feature of features | async"
+    >
         <span style="color: #fbc02d">bit:</span>{{ feature.bit }}
         <span style="color: #fbc02d">{{ feature.type ? 'type: ' : '' }}</span>
         {{ feature.type }}

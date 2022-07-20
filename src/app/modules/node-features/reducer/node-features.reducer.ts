@@ -6,6 +6,7 @@ export interface NodeFeature {
     is_known: boolean;
     is_required: boolean;
     type: string;
+    filterEnabled: boolean;
 }
 
 export interface NodeFeaturesState {
@@ -20,7 +21,14 @@ export const reducer = createReducer(
     nodeFeaturesInitialState,
     on(nodeFeatureActions.updateFeaturesInView, (state, { newNodeFeatures }) => ({
         ...state,
-        nodeFeatures: newNodeFeatures,
+        nodeFeatures: newNodeFeatures.map((x) => ({ ...x, filterEnabled: true })),
+    })),
+    on(nodeFeatureActions.updateFeatureFilter, (state, { bit, newValue }) => ({
+        ...state,
+        nodeFeatures: state.nodeFeatures.map((x) => {
+            if (x.bit === bit) return { ...x, filterEnabled: newValue };
+            return x;
+        }),
     })),
     on(nodeFeatureActions.clearFeaturesInView, (state) => ({
         ...state,
