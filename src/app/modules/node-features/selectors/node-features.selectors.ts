@@ -9,5 +9,10 @@ export const nodeFeatures = createSelector(nodeFeaturesStateSelector, (state) =>
 );
 
 export const disabledFeatureBits = createSelector(nodeFeaturesStateSelector, (state) =>
-    state.nodeFeatures.filter((f) => f.filterEnabled).map((f) => f.bit),
+    state.nodeFeatures.filter((f) => !f.filterEnabled).map((f) => f.bit),
+);
+
+export const isNodeFeatureFilterEnabled = createSelector(
+    nodeFeaturesStateSelector,
+    (state) => state.enableFilter,
 );

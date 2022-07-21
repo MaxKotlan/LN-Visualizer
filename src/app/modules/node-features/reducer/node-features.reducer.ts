@@ -10,10 +10,12 @@ export interface NodeFeature {
 }
 
 export interface NodeFeaturesState {
+    enableFilter: boolean;
     nodeFeatures: NodeFeature[];
 }
 
 const nodeFeaturesInitialState: NodeFeaturesState = {
+    enableFilter: false,
     nodeFeatures: [],
 };
 
@@ -29,6 +31,10 @@ export const reducer = createReducer(
             if (x.bit === bit) return { ...x, filterEnabled: newValue };
             return x;
         }),
+    })),
+    on(nodeFeatureActions.enableNodeFeaturesFilter, (state, { isEnabled }) => ({
+        ...state,
+        enableFilter: isEnabled,
     })),
     on(nodeFeatureActions.clearFeaturesInView, (state) => ({
         ...state,

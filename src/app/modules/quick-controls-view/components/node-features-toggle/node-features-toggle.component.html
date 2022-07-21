@@ -1,4 +1,6 @@
-<mat-slide-toggle #val>Filter Node Features</mat-slide-toggle>
+<mat-slide-toggle (change)="enableFilter($event)" [ngModel]="filterEnabled | async" #val
+    >Filter Node Features</mat-slide-toggle
+>
 <ng-container *ngIf="val.checked">
     <mat-slide-toggle
         (change)="updateFeature(feature.bit, $event)"

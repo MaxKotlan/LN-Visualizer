@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
-import { updateNodeFilterByIssueId } from 'src/app/modules/controls-graph-filter/actions';
-import { NodeFeatureFilter } from 'src/app/modules/filter-templates';
-import { nodeFeatures } from 'src/app/modules/node-features/selectors/node-features.selectors';
+import {
+    isNodeFeatureFilterEnabled,
+    nodeFeatures,
+} from 'src/app/modules/node-features/selectors/node-features.selectors';
 import * as nodeFeatureActions from '../../../node-features/actions/node-feature.actions';
 
 @Component({
@@ -13,12 +13,19 @@ import * as nodeFeatureActions from '../../../node-features/actions/node-feature
     styleUrls: ['./node-features-toggle.component.scss'],
 })
 export class NodeFeaturesToggleComponent {
-    constructor(private store: Store, private nodeFeatureFilter: NodeFeatureFilter) {}
+    constructor(private store: Store) {}
     public features = this.store.select(nodeFeatures);
+    public filterEnabled = this.store.select(isNodeFeatureFilterEnabled);
 
     public updateFeature(bit: number, slideEvent: MatSlideToggleChange) {
         this.store.dispatch(
             nodeFeatureActions.updateFeatureFilter({ bit, newValue: slideEvent.checked }),
+        );
+    }
+
+    public enableFilter(slideEvent: MatSlideToggleChange) {
+        this.store.dispatch(
+            nodeFeatureActions.enableNodeFeaturesFilter({ isEnabled: slideEvent.checked }),
         );
     }
 }
