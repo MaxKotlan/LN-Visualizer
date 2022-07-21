@@ -16,14 +16,14 @@ export class NodeFeatureFilter extends FilterFactory {
         };
     }
 
-    protected createNodeFeatureScriptSource(bitsDisabled: number[]) {
-        return `const disabledFeatures = [${bitsDisabled.join(', ')}];
+    protected createNodeFeatureScriptSource(bitsEnabled: number[]) {
+        return `const enabledFeatureBits = [${bitsEnabled.join(', ')}];
 return (node) =>
-    node.features.some((feature) => !disabledFeatures.includes(feature.bit));`;
+    node.features.some((feature) => enabledFeatureBits.includes(feature.bit));`;
     }
 
-    protected createNodeFeatureScript(bitsDisabled: number[]) {
+    protected createNodeFeatureScript(bitsEnabled: number[]) {
         return (node: LndNodeWithPosition) =>
-            node.features.some((feature) => !bitsDisabled.includes(feature.bit));
+            node.features.some((feature) => bitsEnabled.includes(feature.bit));
     }
 }

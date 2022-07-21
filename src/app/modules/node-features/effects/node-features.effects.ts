@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, combineLatest, filter, tap } from 'rxjs';
+import { combineLatest, filter, map, tap } from 'rxjs';
 import * as filterActions from '../../controls-graph-filter/actions';
+import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import { NodeFeatureFilter } from '../../filter-templates';
 import { nodeFeaturesFilterEnabled$ } from '../../pilot-flags/selectors';
-import {
-    disabledFeatureBits,
-    isNodeFeatureFilterEnabled,
-} from '../selectors/node-features.selectors';
-import * as filterSelectors from '../../controls-graph-filter/selectors/filter.selectors';
 import * as nodeFeatureActions from '../actions/node-feature.actions';
+import { enabledFeatureBits } from '../selectors/node-features.selectors';
 
 @Injectable()
 export class NodeFeaturesEffects {
@@ -38,7 +35,7 @@ export class NodeFeaturesEffects {
     nodeFeatureScript$ = createEffect(
         () =>
             combineLatest([
-                this.store$.select(disabledFeatureBits),
+                this.store$.select(enabledFeatureBits),
                 this.actions$.pipe(ofType(nodeFeatureActions.enableNodeFeaturesFilter)),
                 this.store$.select(nodeFeaturesFilterEnabled$),
             ]).pipe(
@@ -46,9 +43,9 @@ export class NodeFeaturesEffects {
                     ([, switchEnabled, pilotFlagEnabled]) =>
                         switchEnabled.isEnabled && pilotFlagEnabled,
                 ),
-                map(([disabledFeatureBits]) => {
+                map(([enabledFeatureBits]) => {
                     return filterActions.updateNodeFilterByIssueId({
-                        value: this.nodeFeatureFilter.createFilter(disabledFeatureBits),
+                        value: this.nodeFeatureFilter.createFilter(enabledFeatureBits),
                     });
                 }),
             ),

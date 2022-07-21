@@ -10,6 +10,6 @@ export class PilotFlagApiService {
     constructor(private http: HttpClient) {}
 
     public getApiConfig(): Observable<PilotFlags> {
-        return this.http.get<PilotFlags>('/assets/pilot-flags.json');
+        return this.http.get<PilotFlags>('/assets/pilots.json');
     }
 }

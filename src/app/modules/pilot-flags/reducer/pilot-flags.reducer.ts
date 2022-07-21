@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as pilotFlagActions from '../actions';
-import pilotFlagJson from '../../../../assets/pilot-flags.json';
+import pilotFlagJson from '../../../../assets/pilots.json';
 
 export interface PilotFlags {
     unitConversions: boolean;

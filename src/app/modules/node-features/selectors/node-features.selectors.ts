@@ -8,8 +8,8 @@ export const nodeFeatures = createSelector(nodeFeaturesStateSelector, (state) =>
     state.nodeFeatures.sort((a, b) => a.bit - b.bit),
 );
 
-export const disabledFeatureBits = createSelector(nodeFeaturesStateSelector, (state) =>
-    state.nodeFeatures.filter((f) => !f.filterEnabled).map((f) => f.bit),
+export const enabledFeatureBits = createSelector(nodeFeaturesStateSelector, (state) =>
+    state.nodeFeatures.filter((f) => f.filterEnabled).map((f) => f.bit),
 );
 
 export const isNodeFeatureFilterEnabled = createSelector(
