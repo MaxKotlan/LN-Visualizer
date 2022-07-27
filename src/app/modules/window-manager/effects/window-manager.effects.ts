@@ -11,8 +11,8 @@ import {
     takeUntil,
     timer,
 } from 'rxjs';
-import { FilterModalComponent } from '../../controls-graph-filter/components/filter-modal/filter-modal.component';
-import * as graphActions from '../../graph-renderer/actions';
+import { FilterModalComponent } from 'src/app/filter-engine/controls-graph-filter/components/filter-modal/filter-modal.component';
+import * as graphActions from 'src/app/renderer/graph-renderer/actions';
 import { ScreenSizeService } from '../../screen-size/services';
 import * as windowManagementActions from '../actions';
 import { quickControlsId } from '../constants/windowIds';

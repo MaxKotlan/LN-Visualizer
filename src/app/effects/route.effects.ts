@@ -4,8 +4,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
 import * as controlsActions from '../modules/controls/actions';
-import { NodeSearchEffects } from '../modules/graph-renderer/effects/node-search.effects';
-import { GraphState } from '../modules/graph-renderer/reducer';
+import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import * as devModeActions from '../modules/pilot-flags/actions/dev-mode.actions';
 
 @Injectable()

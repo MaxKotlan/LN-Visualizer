@@ -8,9 +8,9 @@ import { QuickControlsViewComponent } from './components';
 import { QuickSliderComponent } from './components/quick-slider/quick-slider.component';
 import { LinearToLogPipe, LogToLinearPipe } from './pipes/log-to-linear.pipe';
 import { MiniInputComponent } from './components/mini-input/mini-input.component';
-import { FilterTemplatesModule } from '../filter-templates/filter-templates.module';
 import { ClearnetOnionToggleComponent } from './components/clearnet-onion-toggle/clearnet-onion-toggle.component';
 import { NodeFeaturesToggleComponent } from './components/node-features-toggle/node-features-toggle.component';
+import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
 
 @NgModule({
     declarations: [

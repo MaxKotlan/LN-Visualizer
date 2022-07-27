@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { filteredStatisticsSelector, globalStatisticsSelector } from '../selectors';
 import { createEffect } from '@ngrx/effects';
 import { filter, map, tap } from 'rxjs';
-import { FilteredChannelRegistryService } from '../../graph-renderer/services';
+import { FilteredChannelRegistryService } from 'src/app/renderer/graph-renderer/services';
 import { GraphStatisticsState } from '../models';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 

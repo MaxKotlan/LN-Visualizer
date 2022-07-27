@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { gotoNode } from 'src/app/modules/controls-node/actions';
-import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 
 @Component({
     selector: 'app-search-and-go',

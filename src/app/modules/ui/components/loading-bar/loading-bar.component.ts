@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import {
     selectLoadingText,
     selectChunkRemainingPercentage,
-} from 'src/app/modules/graph-renderer/selectors';
+} from 'src/app/renderer/graph-renderer/selectors';
 
 @Component({
     selector: 'app-loading-bar',

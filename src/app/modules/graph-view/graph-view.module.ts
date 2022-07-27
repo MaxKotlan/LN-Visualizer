@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FloatingButtonMenuModule } from '../floating-button-menu/floating-button-menu.module';
-import { GraphRendererModule } from '../graph-renderer';
+import { GraphRendererModule } from 'src/app/renderer/graph-renderer';
 import { UiModule } from '../ui/ui.module';
 import { GraphViewComponent } from './components';
 import { DonateModule } from '../donate/donate.module';

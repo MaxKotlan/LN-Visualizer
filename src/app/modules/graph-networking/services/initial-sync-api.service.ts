@@ -4,7 +4,7 @@ import { Chunk, LndChannel, LndNode } from 'api/src/models';
 import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
-import { selectChunkInitSyncCommand } from '../../graph-renderer/selectors';
+import { selectChunkInitSyncCommand } from 'src/app/renderer/graph-renderer/selectors';
 
 @Injectable()
 export class InitialSyncApiService {

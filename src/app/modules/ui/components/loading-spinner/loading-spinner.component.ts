@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
-import { isRequestInitiating } from 'src/app/modules/graph-renderer/selectors';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
+import { isRequestInitiating } from 'src/app/renderer/graph-renderer/selectors';
 
 @Component({
     selector: 'app-loading-spinner',

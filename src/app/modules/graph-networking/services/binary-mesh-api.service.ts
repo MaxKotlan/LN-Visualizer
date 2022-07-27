@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
 import { take, skip } from 'rxjs';
-import { NodeBuffersService } from '../../graph-renderer/services/node-buffers/node-buffers.service';
+import { NodeBuffersService } from 'src/app/renderer/graph-renderer/services/node-buffers/node-buffers.service';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 
 export type Command = string;

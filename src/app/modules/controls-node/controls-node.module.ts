@@ -7,7 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducer } from './reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClearnetOnionEffects } from './effects/clearnet-onion.effects';
-import { FilterTemplatesModule } from '../filter-templates/filter-templates.module';
+import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
 
 @NgModule({
     declarations: [NodeSettingsComponent],

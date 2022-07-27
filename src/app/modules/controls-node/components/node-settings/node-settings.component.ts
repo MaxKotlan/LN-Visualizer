@@ -1,24 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSliderChange } from '@angular/material/slider';
 import { Store } from '@ngrx/store';
 import { renderLabels } from 'src/app/modules/controls/actions';
 import { GenericControlsState } from 'src/app/modules/controls/reducers';
 import {
-    setNodeSize,
-    setMinimumNodeSize,
     renderNodes,
+    setMinimumNodeSize,
+    setNodeSize,
     setPointAttenuation,
     setPointUseIcon,
     setUniformNodeSize,
 } from '../../actions';
 import {
-    selectNodeSize,
     selectMinimumNodeSize,
-    shouldRenderNodes,
+    selectNodeSize,
     selectPointAttenuation,
     selectPointUseIcon,
     selectUniformNodeSize,
+    shouldRenderNodes,
 } from '../../selectors/node-controls.selectors';
 
 @Component({

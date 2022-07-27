@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, filter, map, tap } from 'rxjs';
 import { shouldUpdateSearchBar } from 'src/app/modules/controls/selectors/controls.selectors';
-import { NodeSearchEffects } from 'src/app/modules/graph-renderer/effects/node-search.effects';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { searchGraph } from '../../../controls/actions';
 
 @Component({

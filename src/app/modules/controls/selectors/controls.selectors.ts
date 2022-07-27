@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { channelControlsSelector } from '../../controls-channel/selectors';
+import { channelControlsSelector } from 'src/app/modules/controls-channel/selectors';
 import { miscControlsSelector } from '../../controls-misc/selectors/misc-controls.selectors';
 import { nodeControlsSelector } from '../../controls-node/selectors/node-controls.selectors';
 import { renderControlsSelector } from '../../controls-renderer/selectors';

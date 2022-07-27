@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { requestGraph } from 'src/app/modules/graph-renderer/actions';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { requestGraph } from 'src/app/renderer/graph-renderer/actions';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 
 @Component({
     selector: 'app-error',

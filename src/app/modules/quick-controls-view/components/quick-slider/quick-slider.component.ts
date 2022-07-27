@@ -6,13 +6,13 @@ import {
     ChannelMinMaxFilter,
     NodeMinMaxFilter,
     PolicyMinMaxFilter,
-} from 'src/app/modules/filter-templates';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+} from 'src/app/filter-engine/filter-templates';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/modules/unit-conversions/service';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
-import * as filterActions from '../../../controls-graph-filter/actions';
-import * as filterSelectors from '../../../controls-graph-filter/selectors/filter.selectors';
+import * as filterActions from 'src/app/filter-engine/controls-graph-filter/actions';
+import * as filterSelectors from 'src/app/filter-engine/controls-graph-filter/selectors/filter.selectors';
 
 @Component({
     selector: 'app-quick-slider',

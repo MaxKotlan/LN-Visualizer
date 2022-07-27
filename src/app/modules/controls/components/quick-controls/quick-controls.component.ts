@@ -5,7 +5,7 @@ import { renderEdges } from 'src/app/modules/controls-channel/actions';
 import { shouldRenderEdges } from 'src/app/modules/controls-channel/selectors';
 import { renderNodes } from 'src/app/modules/controls-node/actions';
 import { shouldRenderNodes } from 'src/app/modules/controls-node/selectors/node-controls.selectors';
-import { GraphState } from 'src/app/modules/graph-renderer/reducer';
+import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { ScreenSizeService } from 'src/app/modules/screen-size/services';
 
 @Component({

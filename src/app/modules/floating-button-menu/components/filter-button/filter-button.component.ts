@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { FilterModalComponent } from 'src/app/modules/controls-graph-filter/components/filter-modal/filter-modal.component';
-import { setModalOpen } from 'src/app/modules/window-manager/actions';
-import { filterScriptsId } from 'src/app/modules/window-manager/constants/windowIds';
+import { FilterModalComponent } from 'src/app/filter-engine/controls-graph-filter/components/filter-modal/filter-modal.component';
 import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
 
 @Component({
