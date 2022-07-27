@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
-import { ChannelControlState } from 'src/app/ui/controls-channel/reducers';
-import { channelColorMap, selectUseLogColorScale } from 'src/app/ui/controls-channel/selectors';
+import { ChannelControlState } from 'src/app/ui/settings/controls-channel/reducers';
+import {
+    channelColorMap,
+    selectUseLogColorScale,
+} from 'src/app/ui/settings/controls-channel/selectors';
 import {
     selectMaximumChannelCapacity,
     selectMinimumChannelCapacity,

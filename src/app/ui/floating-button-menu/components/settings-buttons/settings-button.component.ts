@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsModalComponent } from '../../../controls/components/settings-modal/settings-modal.component';
+import { SettingsModalComponent } from '../../../settings/controls/components/settings-modal/settings-modal.component';
 
 @Component({
     selector: 'app-settings',

@@ -8,7 +8,7 @@ import {
     channelColorMap,
     selectUseLogColorScale,
     selectColorRangeMinMax,
-} from 'src/app/ui/controls-channel/selectors';
+} from 'src/app/ui/settings/controls-channel/selectors';
 import { selectMinMax } from 'src/app/ui/graph-statistics/selectors';
 import { setFilteredNodeChannels } from '../actions';
 import { GraphState } from '../reducer';

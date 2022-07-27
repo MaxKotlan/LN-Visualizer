@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { InstancedInterleavedBuffer, InterleavedBufferAttribute } from 'three';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
-import { shouldRenderEdges } from 'src/app/ui/controls-channel/selectors';
+import { shouldRenderEdges } from 'src/app/ui/settings/controls-channel/selectors';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { ChannelBuffersService } from 'src/app/renderer/graph-renderer/services/channel-buffers/channel-buffers.service';
 

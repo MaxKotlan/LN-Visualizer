@@ -12,9 +12,9 @@ import {
     selectEnableChannelFog,
     selectFogDistance,
     selectLineAttenuation,
-} from 'src/app/ui/controls-channel/selectors';
-import { setMouseRay } from 'src/app/ui/controls-renderer/actions';
-import { selectNodeMotionIntensity } from 'src/app/ui/controls-renderer/selectors';
+} from 'src/app/ui/settings/controls-channel/selectors';
+import { setMouseRay } from 'src/app/ui/settings/controls-renderer/actions';
+import { selectNodeMotionIntensity } from 'src/app/ui/settings/controls-renderer/selectors';
 import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { AnimationTimeService } from 'src/app/renderer/graph-renderer/services/animation-timer/animation-time.service';

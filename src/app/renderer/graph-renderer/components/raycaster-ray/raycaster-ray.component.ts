@@ -1,7 +1,7 @@
 import { Component, Optional, SkipSelf } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { AbstractObject3D, provideParent, RendererService, SphereMeshComponent } from 'atft';
-import { setMouseRay } from 'src/app/ui/controls-renderer/actions';
+import { setMouseRay } from 'src/app/ui/settings/controls-renderer/actions';
 import * as THREE from 'three';
 import { BufferAttribute, Ray, Vector3 } from 'three';
 

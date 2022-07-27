@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as THREE from 'three';
-import { shouldRenderNodes } from 'src/app/ui/controls-node/selectors/node-controls.selectors';
+import { shouldRenderNodes } from 'src/app/ui/settings/controls-node/selectors/node-controls.selectors';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { NodeBuffersService } from 'src/app/renderer/graph-renderer/services/node-buffers/node-buffers.service';
 

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { displayUnit } from '../../controls-misc/selectors/misc-controls.selectors';
+import { displayUnit } from '../../settings/controls-misc/selectors/misc-controls.selectors';
 
 @UntilDestroy()
 @Pipe({

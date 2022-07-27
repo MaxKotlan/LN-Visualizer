@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { selectColorRangeMinMax } from 'src/app/ui/controls-channel/selectors';
+import { selectColorRangeMinMax } from 'src/app/ui/settings/controls-channel/selectors';
 import { GraphStatisticsState } from '../models';
 
 export const globalStatisticsSelector =

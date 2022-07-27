@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ControlsModule } from '../controls/controls.module';
 import { MaterialModule } from '../material';
 import { UnitConversionsModule } from '../unit-conversions/unit-conversions.module';
 import { QuickControlsViewComponent } from './components';
@@ -11,6 +10,7 @@ import { MiniInputComponent } from './components/mini-input/mini-input.component
 import { ClearnetOnionToggleComponent } from './components/clearnet-onion-toggle/clearnet-onion-toggle.component';
 import { NodeFeaturesToggleComponent } from './components/node-features-toggle/node-features-toggle.component';
 import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
+import { ControlsModule } from '../settings/controls/controls.module';
 
 @NgModule({
     declarations: [

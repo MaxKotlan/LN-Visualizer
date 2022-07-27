@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouteEffects } from './effects/route.effects';
 import { FilterEngineModule } from './filter-engine/filter-engine.module';
-import { ControlsEffects } from './ui/controls/effects/controls.effects';
+import { ControlsEffects } from './ui/settings/controls/effects/controls.effects';
 import { PilotFlagsModule } from './ui/pilot-flags/pilot-flags.module';
 import { UiModule } from './ui/ui.module';
 import { RendererModule } from './renderer/renderer.module';

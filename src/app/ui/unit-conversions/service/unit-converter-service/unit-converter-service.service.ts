@@ -2,7 +2,7 @@ import { Injectable, Pipe } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, filter, map, Subject } from 'rxjs';
-import { displayUnit } from 'src/app/ui/controls-misc/selectors/misc-controls.selectors';
+import { displayUnit } from 'src/app/ui/settings/controls-misc/selectors/misc-controls.selectors';
 
 /*This file is terrible. I'm sorry I just wanted it to work*/
 

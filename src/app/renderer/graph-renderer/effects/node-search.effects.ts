@@ -15,7 +15,7 @@ import {
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { Uniform, Vector3 } from 'three';
 import * as filterActions from 'src/app/filter-engine/controls-graph-filter/actions';
-import { selectSearchString } from 'src/app/ui/controls/selectors/controls.selectors';
+import { selectSearchString } from 'src/app/ui/settings/controls/selectors/controls.selectors';
 import { ConnectedChannelsFilter } from 'src/app/filter-engine/filter-templates/channel-filters/connected-channels.filter';
 import { setFilteredNodes } from '../actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';

@@ -9,13 +9,13 @@ import {
     RendererService,
     SceneComponent,
 } from 'atft';
-import { selectLineBackend } from 'src/app/ui/controls-channel/selectors';
+import { selectLineBackend } from 'src/app/ui/settings/controls-channel/selectors';
 import {
     selectRenderResolution,
     selectShowAxis,
     selectShowGrid,
-} from 'src/app/ui/controls-renderer/selectors';
-import { selectCameraFov } from 'src/app/ui/controls/selectors/controls.selectors';
+} from 'src/app/ui/settings/controls-renderer/selectors';
+import { selectCameraFov } from 'src/app/ui/settings/controls/selectors/controls.selectors';
 import {
     pilotThickLinesEnabled$,
     sphereNodesEnabled$,

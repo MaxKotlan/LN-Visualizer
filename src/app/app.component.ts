@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as controlsActions from './ui/controls/actions';
+import * as controlsActions from './ui/settings/controls/actions';
 
 @Component({
     selector: 'app-root',

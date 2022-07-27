@@ -8,8 +8,8 @@ import {
     selectNodeSize,
     selectPointAttenuation,
     selectUniformNodeSize,
-} from 'src/app/ui/controls-node/selectors/node-controls.selectors';
-import { selectNodeMotionIntensity } from 'src/app/ui/controls-renderer/selectors';
+} from 'src/app/ui/settings/controls-node/selectors/node-controls.selectors';
+import { selectNodeMotionIntensity } from 'src/app/ui/settings/controls-renderer/selectors';
 import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { AnimationTimeService } from 'src/app/renderer/graph-renderer/services/animation-timer/animation-time.service';

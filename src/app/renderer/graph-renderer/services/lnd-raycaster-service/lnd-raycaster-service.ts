@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AbstractCamera, AbstractObject3D, RaycasterEvent, RendererService } from 'atft';
 import { combineLatest, fromEvent, map, sampleTime, Subject, takeUntil, tap } from 'rxjs';
-import { setMouseRay } from 'src/app/ui/controls-renderer/actions';
+import { setMouseRay } from 'src/app/ui/settings/controls-renderer/actions';
 import * as THREE from 'three';
 import { Camera, Intersection, Ray, Vector3 } from 'three';
 import { AnimationTimeService } from '../animation-timer/animation-time.service';

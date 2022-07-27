@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
-import * as controlsActions from '../ui/controls/actions';
+import * as controlsActions from '../ui/settings/controls/actions';
 import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import * as devModeActions from '../ui/pilot-flags/actions/dev-mode.actions';

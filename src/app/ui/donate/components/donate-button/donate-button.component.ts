@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { donateLinkVisible } from 'src/app/ui/controls-misc/selectors/misc-controls.selectors';
+import { donateLinkVisible } from 'src/app/ui/settings/controls-misc/selectors/misc-controls.selectors';
 import { DonateModalComponent } from '../donate-modal/donate-modal.component';
 
 @Component({
