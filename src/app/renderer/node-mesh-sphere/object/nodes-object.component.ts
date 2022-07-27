@@ -17,7 +17,7 @@ import {
     RendererService,
     SphereMeshComponent,
 } from 'atft';
-import { searchGraph } from 'src/app/modules/controls/actions/controls.actions';
+import { searchGraph } from 'src/app/ui/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/services/tooltip.service';
 import * as THREE from 'three';
 import { Vector3 } from 'three';

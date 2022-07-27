@@ -3,9 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, map, skip, tap, withLatestFrom } from 'rxjs';
-import * as controlsActions from '../modules/controls/actions';
-import { GraphState } from '../modules/src/app/renderer/graph-renderer/reducer';
-import { selectFinalMatcheNodesFromSearch } from '../modules/src/app/renderer/graph-renderer/selectors';
+import * as controlsActions from '../ui/controls/actions';
+import { GraphState } from '../ui/src/app/renderer/graph-renderer/reducer';
+import { selectFinalMatcheNodesFromSearch } from '../ui/src/app/renderer/graph-renderer/selectors';
 
 @Injectable()
 export class RouteEffects {

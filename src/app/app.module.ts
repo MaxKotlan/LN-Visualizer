@@ -10,9 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouteEffects } from './effects/route.effects';
 import { FilterEngineModule } from './filter-engine/filter-engine.module';
-import { ControlsEffects } from './modules/controls/effects/controls.effects';
-import { PilotFlagsModule } from './modules/pilot-flags/pilot-flags.module';
-import { WindowManagerModule } from './modules/window-manager/window-manager.module';
+import { ControlsEffects } from './ui/controls/effects/controls.effects';
+import { PilotFlagsModule } from './ui/pilot-flags/pilot-flags.module';
+import { UiModule } from './ui/ui.module';
 import { RendererModule } from './renderer/renderer.module';
 
 let dev = [];
@@ -37,7 +37,7 @@ if (!environment.production || window?.location?.toString()?.includes('devMode=t
         FilterEngineModule,
         PilotFlagsModule,
         RendererModule,
-        WindowManagerModule,
+        UiModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         StoreModule.forRoot(
             {},

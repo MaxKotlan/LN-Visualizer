@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import {
     selectMinimumNodeSize,
     selectNodeSize,
-} from 'src/app/modules/controls-node/selectors/node-controls.selectors';
+} from 'src/app/ui/controls-node/selectors/node-controls.selectors';
 
 @Injectable({
     providedIn: 'root',

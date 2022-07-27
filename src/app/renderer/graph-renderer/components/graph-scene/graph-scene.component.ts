@@ -9,18 +9,18 @@ import {
     RendererService,
     SceneComponent,
 } from 'atft';
-import { selectLineBackend } from 'src/app/modules/controls-channel/selectors';
+import { selectLineBackend } from 'src/app/ui/controls-channel/selectors';
 import {
     selectRenderResolution,
     selectShowAxis,
     selectShowGrid,
-} from 'src/app/modules/controls-renderer/selectors';
-import { selectCameraFov } from 'src/app/modules/controls/selectors/controls.selectors';
+} from 'src/app/ui/controls-renderer/selectors';
+import { selectCameraFov } from 'src/app/ui/controls/selectors/controls.selectors';
 import {
     pilotThickLinesEnabled$,
     sphereNodesEnabled$,
-} from 'src/app/modules/pilot-flags/selectors/pilot-flags.selectors';
-import { ScreenSizeService } from 'src/app/modules/screen-size/services';
+} from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
+import { ScreenSizeService } from 'src/app/ui/screen-size/services';
 import * as graphActions from '../../actions';
 import { GraphState } from '../../reducer';
 import { CameraControllerService, OrbitControllerService } from '../../services';

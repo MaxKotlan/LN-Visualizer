@@ -6,11 +6,11 @@ import { AnimationService } from 'atft';
 import { filter, map, Observable, Subscription, throttleTime, withLatestFrom } from 'rxjs';
 import { gotodistance, zoomTiming } from 'src/app/constants/gotodistance.constant';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import { gotoNode } from 'src/app/modules/controls-node/actions';
+import { gotoNode } from 'src/app/ui/controls-node/actions';
 import {
     selectCameraFocusMode,
     selectCameraFov,
-} from 'src/app/modules/controls/selectors/controls.selectors';
+} from 'src/app/ui/controls/selectors/controls.selectors';
 import * as THREE from 'three';
 import { Camera, PerspectiveCamera, Vector3 } from 'three';
 import { NodeSearchEffects } from '../../effects/node-search.effects';

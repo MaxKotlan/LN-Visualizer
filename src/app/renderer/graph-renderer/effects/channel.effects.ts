@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { debounceTime } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GlobalStatisticsCalculatorService } from 'src/app/modules/graph-statistics/services';
+import { GlobalStatisticsCalculatorService } from 'src/app/ui/graph-statistics/services';
 import * as graphActions from '../actions/graph.actions';
 import { ChannelRegistryService } from '../services/channel-registry/channel-registry.service';
 import { NodeRegistryService } from '../services/node-registry/node-registry.service';

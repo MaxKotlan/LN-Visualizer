@@ -15,7 +15,7 @@ import {
 import {
     selectNodeTimeIntensity,
     selectShowGraphAnimation,
-} from 'src/app/modules/controls-renderer/selectors';
+} from 'src/app/ui/controls-renderer/selectors';
 
 @UntilDestroy()
 @Injectable({

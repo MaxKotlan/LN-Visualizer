@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import * as graphActions from '../actions/graph.actions';
 import * as graphDatabaseActions from '../actions/graph-database.actions';
-import * as alertActions from 'src/app/modules/alerts/actions/alerts.actions';
+import * as alertActions from 'src/app/ui/alerts/actions/alerts.actions';
 
 export interface GraphState {
     chunkInfo: ChunkInfo | null;

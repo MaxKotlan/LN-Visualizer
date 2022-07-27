@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectNodeMotionIntensity } from 'src/app/modules/controls-renderer/selectors';
+import { selectNodeMotionIntensity } from 'src/app/ui/controls-renderer/selectors';
 import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
 import { AnimationTimeService } from 'src/app/renderer/graph-renderer/services/animation-timer/animation-time.service';
 import { Vector3 } from 'three';

@@ -2,10 +2,10 @@ import { Component, Optional } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { setModalClose, toggleModalPreference } from 'src/app/modules/window-manager/actions';
-import { filterScriptsId } from 'src/app/modules/window-manager/constants/windowIds';
-import { WindowManagerState } from 'src/app/modules/window-manager/reducers';
-import { selectModalPreference } from 'src/app/modules/window-manager/selectors';
+import { setModalClose, toggleModalPreference } from 'src/app/ui/window-manager/actions';
+import { filterScriptsId } from 'src/app/ui/window-manager/constants/windowIds';
+import { WindowManagerState } from 'src/app/ui/window-manager/reducers';
+import { selectModalPreference } from 'src/app/ui/window-manager/selectors';
 import * as filterSelectors from '../../selectors/filter.selectors';
 
 @Component({

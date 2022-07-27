@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { ChannelControlState } from 'src/app/modules/controls-channel/reducers';
+import { ChannelControlState } from 'src/app/ui/controls-channel/reducers';
 import {
     channelColor,
     channelColorMapRgb,
     selectUseLogColorScale,
-} from 'src/app/modules/controls-channel/selectors';
+} from 'src/app/ui/controls-channel/selectors';
 import { LndChannel } from 'src/app/types/channels.interface';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import {
     selectChannelFeesMinMaxTotal,
     selectChannelMinMaxTotal,
-} from 'src/app/modules/graph-statistics/selectors/graph-statistics.selectors';
+} from 'src/app/ui/graph-statistics/selectors/graph-statistics.selectors';
 
 @UntilDestroy()
 @Injectable({

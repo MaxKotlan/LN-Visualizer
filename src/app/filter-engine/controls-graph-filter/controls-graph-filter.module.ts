@@ -11,7 +11,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AddExpressionComponent } from './components/add-expression/add-expression.component';
 import { filterViewReducer } from './reducer/filter-view.reducer';
 import { FilterViewEffects } from './effects/filter-view.effects';
-import { MaterialModule } from 'src/app/modules/material';
+import { MaterialModule } from 'src/app/ui/material';
 
 @NgModule({
     declarations: [FilterListComponent, FilterModalComponent, AddExpressionComponent],

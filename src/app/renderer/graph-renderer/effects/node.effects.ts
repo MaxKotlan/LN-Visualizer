@@ -12,8 +12,8 @@ import { FilterEvaluatorService } from 'src/app/filter-engine/controls-graph-fil
 import {
     FilteredStatisticsCalculatorService,
     GlobalStatisticsCalculatorService,
-} from 'src/app/modules/graph-statistics/services';
-import { NodeFeatureCheckerService } from 'src/app/modules/node-features/services';
+} from 'src/app/ui/graph-statistics/services';
+import { NodeFeatureCheckerService } from 'src/app/ui/node-features/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';
 import { FilteredChannelRegistryService } from '../services';

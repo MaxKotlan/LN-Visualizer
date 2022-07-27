@@ -30,9 +30,9 @@ import { NodeBuffersService } from './services/node-buffers/node-buffers.service
 import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick.module';
 import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.module';
 import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
-import { NodeFeaturesModule } from 'src/app/modules/node-features/node-features.module';
-import { GraphStatisticsModule } from 'src/app/modules/graph-statistics';
-import { GraphNetworkingModule } from 'src/app/modules/graph-networking/graph-networking.module';
+import { NodeFeaturesModule } from 'src/app/ui/node-features/node-features.module';
+import { GraphStatisticsModule } from 'src/app/ui/graph-statistics';
+import { GraphNetworkingModule } from 'src/app/ui/graph-networking/graph-networking.module';
 
 @NgModule({
     declarations: [
