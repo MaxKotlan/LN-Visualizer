@@ -37,4 +37,4 @@ import { AppKeyValueStatsComponent } from './components/app-key-value-stats/app-
         LoadingSpinnerComponent,
     ],
 })
-export class UiModule {}
+export class MiscModule {}

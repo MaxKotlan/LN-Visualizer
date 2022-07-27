@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import * as windowManagementReducer from './reducers';
-import { WindowManagerComponent } from './components/window-manager/window-manager.component';
-import { MaterialModule } from '../material';
-import { ScreenSizeModule } from '../screen-size/screen-size.module';
-import { QuickControlsViewModule } from '../quick-controls-view/quick-controls-view.module';
-import { GraphViewModule } from '../graph-view/graph-view.module';
+import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { WindowManagerEffects } from './effects';
-import { NodeInfoModule } from '../node-info/node-info.module';
-import { UiModule } from '../ui/ui.module';
+import { StoreModule } from '@ngrx/store';
 import { FilterEngineModule } from 'src/app/filter-engine/filter-engine.module';
+import { GraphViewModule } from '../graph-view/graph-view.module';
+import { MaterialModule } from '../material';
+import { MiscModule } from '../misc/misc.module';
+import { NodeInfoModule } from '../node-info/node-info.module';
+import { QuickControlsViewModule } from '../quick-controls-view/quick-controls-view.module';
+import { ScreenSizeModule } from '../screen-size/screen-size.module';
+import { WindowManagerComponent } from './components/window-manager/window-manager.component';
+import { WindowManagerEffects } from './effects';
+import * as windowManagementReducer from './reducers';
 
 @NgModule({
     declarations: [WindowManagerComponent],
@@ -22,7 +22,7 @@ import { FilterEngineModule } from 'src/app/filter-engine/filter-engine.module';
         QuickControlsViewModule,
         GraphViewModule,
         NodeInfoModule,
-        UiModule,
+        MiscModule,
         FilterEngineModule,
         EffectsModule.forFeature([WindowManagerEffects]),
         StoreModule.forFeature('windowManagement', windowManagementReducer.reducer),

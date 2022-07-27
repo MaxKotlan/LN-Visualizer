@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UiModule } from '../ui/ui.module';
+import { NgModule } from '@angular/core';
 import { MaterialModule } from '../material';
+import { MiscModule } from '../misc/misc.module';
+import { PilotFlagsModule } from '../pilot-flags/pilot-flags.module';
 import {
     FilterButtonComponent,
     FloatingButtonsComponent,
@@ -10,7 +11,6 @@ import {
     SidenavOpenButtonComponent,
 } from './components';
 import { StatsButtonComponent } from './components/stats-button/stats-button.component';
-import { PilotFlagsModule } from '../pilot-flags/pilot-flags.module';
 import { TableSearchButtonComponent } from './components/table-search-button/table-search-button.component';
 
 @NgModule({
@@ -23,7 +23,7 @@ import { TableSearchButtonComponent } from './components/table-search-button/tab
         PilotFlagButtonComponent,
         TableSearchButtonComponent,
     ],
-    imports: [CommonModule, UiModule, MaterialModule, PilotFlagsModule],
+    imports: [CommonModule, MiscModule, MaterialModule, PilotFlagsModule],
     exports: [FloatingButtonsComponent, SidenavOpenButtonComponent],
 })
 export class FloatingButtonMenuModule {}
