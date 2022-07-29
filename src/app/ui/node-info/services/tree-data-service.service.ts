@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import moment from 'moment';
 import { combineLatest, filter, map } from 'rxjs';
-import { graphNodePositionRecalculate } from 'src/app/renderer/graph-renderer/actions';
+import { graphNodePositionRecalculate } from 'src/app/graph-data/graph-process-data/actions';
 import { NodeSearchEffects } from 'src/app/renderer/graph-renderer/effects/node-search.effects';
 import { KeyValueNode } from '../components';
 

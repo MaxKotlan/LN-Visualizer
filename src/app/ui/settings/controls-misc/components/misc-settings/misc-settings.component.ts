@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { deleteGraphDatabase } from 'src/app/renderer/graph-renderer/actions/graph-database.actions';
+import { deleteGraphDatabase } from 'src/app/graph-data/graph-indexdb/actions/graph-database.actions';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
 import { resetControlsToDefault } from '../../../controls/actions';
 import { GenericControlsState } from '../../../controls/reducers';

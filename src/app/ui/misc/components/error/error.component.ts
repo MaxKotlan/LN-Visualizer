@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { requestGraph } from 'src/app/renderer/graph-renderer/actions';
+import { requestGraph } from 'src/app/graph-data/graph-process-data/actions';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 
 @Component({

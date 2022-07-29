@@ -17,7 +17,7 @@ import { Uniform, Vector3 } from 'three';
 import * as filterActions from 'src/app/filter-engine/controls-graph-filter/actions';
 import { selectSearchString } from 'src/app/ui/settings/controls/selectors/controls.selectors';
 import { ConnectedChannelsFilter } from 'src/app/filter-engine/filter-templates/channel-filters/connected-channels.filter';
-import { setFilteredNodes } from '../actions';
+import { setFilteredNodes } from '../../../graph-data/graph-process-data/actions';
 import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 
 @Injectable()

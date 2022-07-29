@@ -14,12 +14,12 @@ import {
     GlobalStatisticsCalculatorService,
 } from 'src/app/graph-data/graph-statistics/services';
 import { NodeFeatureCheckerService } from 'src/app/ui/node-features/services';
-import * as graphActions from '../actions/graph.actions';
-import { GraphState } from '../reducer';
-import { FilteredChannelRegistryService } from '../services';
-import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-import { NodeRegistryService } from '../services/node-registry/node-registry.service';
-import { PointTreeService } from '../services/point-tree/point-tree.service';
+import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
+import { GraphState } from '../../../renderer/graph-renderer/reducer';
+import { FilteredChannelRegistryService } from '../../../renderer/graph-renderer/services';
+import { FilteredNodeRegistryService } from '../../../renderer/graph-renderer/services/filtered-node-registry/filtered-node-registry.service';
+import { NodeRegistryService } from '../../../renderer/graph-renderer/services/node-registry/node-registry.service';
+import { PointTreeService } from '../../../renderer/graph-renderer/services/point-tree/point-tree.service';
 
 @Injectable()
 export class NodeEffects {

@@ -1,2 +1,2 @@
-export * from './channel.effects';
-export * from './node.effects';
+export * from '../../../graph-data/graph-process-data/effects/channel.effects';
+export * from '../../../graph-data/graph-process-data/effects/node.effects';

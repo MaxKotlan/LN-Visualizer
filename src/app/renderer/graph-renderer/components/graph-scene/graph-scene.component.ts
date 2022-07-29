@@ -21,7 +21,7 @@ import {
     sphereNodesEnabled$,
 } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
 import { ScreenSizeService } from 'src/app/ui/screen-size/services';
-import * as graphActions from '../../actions';
+import * as graphActions from '../../../../graph-data/graph-process-data/actions';
 import { GraphState } from '../../reducer';
 import { CameraControllerService, OrbitControllerService } from '../../services';
 

@@ -3,7 +3,13 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AtftModule } from 'atft';
+import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
+import { GraphNetworkingModule } from 'src/app/graph-data/graph-networking/graph-networking.module';
+import { GraphStatisticsModule } from 'src/app/graph-data/graph-statistics';
+import { NodeFeaturesModule } from 'src/app/ui/node-features/node-features.module';
+import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick.module';
 import { ChannelMeshModule } from '../channel-mesh/channel-mesh.module';
+import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.module';
 import { NodeMeshModule } from '../node-mesh/node-mesh.module';
 import { GraphFontMeshComponent } from './components/graph-font-mesh/graph-font-mesh.component';
 import { GraphSceneComponent } from './components/graph-scene/graph-scene.component';
@@ -13,9 +19,7 @@ import {
     LndRaycasterEnableDirective,
     LndRaycasterSceneDirective,
 } from './directives';
-import { ChannelEffects, NodeEffects } from './effects';
 import { ChannelMeshEffects } from './effects/channel-mesh.effects';
-import { GraphDatabaseEffects } from './effects/graph-database.effects';
 import { NodeMeshEffects } from './effects/node-mesh.effects';
 import { NodeSearchEffects } from './effects/node-search.effects';
 import { reducer } from './reducer';
@@ -27,12 +31,6 @@ import {
 } from './services';
 import { ChannelBuffersService } from './services/channel-buffers/channel-buffers.service';
 import { NodeBuffersService } from './services/node-buffers/node-buffers.service';
-import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick.module';
-import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.module';
-import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
-import { NodeFeaturesModule } from 'src/app/ui/node-features/node-features.module';
-import { GraphStatisticsModule } from 'src/app/graph-data/graph-statistics';
-import { GraphNetworkingModule } from 'src/app/graph-data/graph-networking/graph-networking.module';
 
 @NgModule({
     declarations: [
@@ -62,14 +60,7 @@ import { GraphNetworkingModule } from 'src/app/graph-data/graph-networking/graph
         GraphStatisticsModule,
         FilterTemplatesModule,
         NodeFeaturesModule,
-        EffectsModule.forFeature([
-            NodeEffects,
-            ChannelEffects,
-            NodeMeshEffects,
-            ChannelMeshEffects,
-            NodeSearchEffects,
-            GraphDatabaseEffects,
-        ]),
+        EffectsModule.forFeature([NodeMeshEffects, ChannelMeshEffects, NodeSearchEffects]),
         StoreModule.forFeature('graphState', reducer),
     ],
     exports: [GraphSceneComponent],

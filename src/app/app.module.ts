@@ -14,6 +14,7 @@ import { ControlsEffects } from './ui/settings/controls/effects/controls.effects
 import { PilotFlagsModule } from './ui/pilot-flags/pilot-flags.module';
 import { UiModule } from './ui/ui.module';
 import { RendererModule } from './renderer/renderer.module';
+import { GraphDataModule } from './graph-data/graph-data.module';
 
 let dev = [];
 
@@ -34,6 +35,7 @@ if (!environment.production || window?.location?.toString()?.includes('devMode=t
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
+        GraphDataModule,
         FilterEngineModule,
         PilotFlagsModule,
         RendererModule,

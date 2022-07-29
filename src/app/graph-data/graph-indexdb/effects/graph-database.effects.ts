@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, mergeMap, tap } from 'rxjs';
-import * as graphActions from '../actions/graph.actions';
+import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
 import * as graphDatabaseActions from '../actions/graph-database.actions';
 import { GraphDatabaseService } from '../services/graph-database/graph-database.service';
 
