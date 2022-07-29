@@ -31,8 +31,8 @@ import { ChannelThickMeshModule } from '../channel-mesh-thick/channel-mesh-thick
 import { NodeMeshSphereModule } from '../node-mesh-sphere/node-mesh-sphere.module';
 import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
 import { NodeFeaturesModule } from 'src/app/ui/node-features/node-features.module';
-import { GraphStatisticsModule } from 'src/app/ui/graph-statistics';
-import { GraphNetworkingModule } from 'src/app/ui/graph-networking/graph-networking.module';
+import { GraphStatisticsModule } from 'src/app/graph-data/graph-statistics';
+import { GraphNetworkingModule } from 'src/app/graph-data/graph-networking/graph-networking.module';
 
 @NgModule({
     declarations: [

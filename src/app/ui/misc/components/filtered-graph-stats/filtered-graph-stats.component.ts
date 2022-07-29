@@ -5,7 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { filter, map } from 'rxjs';
 import { KeyValueNode } from 'src/app/ui/node-info/components';
-import * as graphSelectors from '../../../graph-statistics/selectors';
+import * as graphSelectors from 'src/app/graph-data/graph-statistics/selectors';
 
 @Injectable({
     providedIn: 'root',

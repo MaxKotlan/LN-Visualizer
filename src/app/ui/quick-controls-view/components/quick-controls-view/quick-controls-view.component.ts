@@ -6,7 +6,7 @@ import { nodeFeaturesFilterEnabled$ } from 'src/app/ui/pilot-flags/selectors';
 import { setModalClose } from 'src/app/ui/window-manager/actions';
 import { quickControlsId } from 'src/app/ui/window-manager/constants/windowIds';
 import { WindowManagerState } from 'src/app/ui/window-manager/reducers';
-import * as graphStatisticsSelector from '../../../graph-statistics/selectors';
+import * as graphStatisticsSelector from 'src/app/graph-data/graph-statistics/selectors';
 
 @UntilDestroy()
 @Component({

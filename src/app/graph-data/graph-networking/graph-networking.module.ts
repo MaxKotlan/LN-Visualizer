@@ -7,7 +7,7 @@ import moment from 'moment';
 import { initializeGraphSyncProcess } from 'src/app/renderer/graph-renderer/actions';
 import { loadGraphFromStorage } from 'src/app/renderer/graph-renderer/actions/graph-database.actions';
 import { GraphDatabaseService } from 'src/app/renderer/graph-renderer/services/graph-database/graph-database.service';
-import { fastModelDownloadEnabled$ } from '../pilot-flags/selectors/pilot-flags.selectors';
+import { fastModelDownloadEnabled$ } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
 import { NetworkEffects } from './effects';
 import { InitialSyncApiService } from './services';
 import { BinaryMeshApiService } from './services/binary-mesh-api.service';

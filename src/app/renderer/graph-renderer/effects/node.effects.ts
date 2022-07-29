@@ -12,7 +12,7 @@ import { FilterEvaluatorService } from 'src/app/filter-engine/controls-graph-fil
 import {
     FilteredStatisticsCalculatorService,
     GlobalStatisticsCalculatorService,
-} from 'src/app/ui/graph-statistics/services';
+} from 'src/app/graph-data/graph-statistics/services';
 import { NodeFeatureCheckerService } from 'src/app/ui/node-features/services';
 import * as graphActions from '../actions/graph.actions';
 import { GraphState } from '../reducer';

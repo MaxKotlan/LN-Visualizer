@@ -13,7 +13,7 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import {
     selectChannelFeesMinMaxTotal,
     selectChannelMinMaxTotal,
-} from 'src/app/ui/graph-statistics/selectors/graph-statistics.selectors';
+} from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
 
 @UntilDestroy()
 @Injectable({

@@ -6,7 +6,7 @@ import { ChannelCloseEvent } from 'api/src/models/channel-close-event.interface'
 import { ChunkInfo } from 'api/src/models/chunkInfo.interface';
 import { from, of } from 'rxjs';
 import { catchError, delay, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
-import * as alertActions from '../../alerts/actions/alerts.actions';
+import * as alertActions from 'src/app/ui/alerts/actions/alerts.actions';
 import * as graphActions from 'src/app/renderer/graph-renderer/actions/graph.actions';
 import { InitialSyncApiService } from '../services';
 import * as graphSelectors from 'src/app/renderer/graph-renderer/selectors';

@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { KeyValueNode } from 'src/app/ui/node-info/components';
 import { TreeDataServiceService } from 'src/app/ui/node-info/services/tree-data-service.service';
-import * as graphSelectors from '../../../graph-statistics/selectors';
+import * as graphSelectors from 'src/app/graph-data/graph-statistics/selectors';
 
 @Injectable({
     providedIn: 'root',

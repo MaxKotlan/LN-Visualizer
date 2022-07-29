@@ -1,4 +1,4 @@
-import { GraphStatisticsState } from '../ui/graph-statistics/models';
+import { GraphStatisticsState } from 'src/app/graph-data/graph-statistics/models';
 import { UnitLabel } from '../ui/unit-conversions/service';
 
 export const displayUnits: string[] = ['btc', 'sat', 'msat'];

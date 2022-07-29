@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { EffectsFeatureModule, EffectsModule } from '@ngrx/effects';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { GraphStatisticsEffects } from './effects/graph-statistics.effects';
 import { filteredStatisticsReducer, globalStatisticsReducer } from './reducer';
