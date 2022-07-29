@@ -16,10 +16,12 @@ import {
 import { NodeFeatureCheckerService } from 'src/app/ui/node-features/services';
 import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
 import { GraphState } from '../../../renderer/graph-renderer/reducer';
-import { FilteredChannelRegistryService } from '../../../renderer/graph-renderer/services';
-import { FilteredNodeRegistryService } from '../../../renderer/graph-renderer/services/filtered-node-registry/filtered-node-registry.service';
-import { NodeRegistryService } from '../../../renderer/graph-renderer/services/node-registry/node-registry.service';
-import { PointTreeService } from '../../../renderer/graph-renderer/services/point-tree/point-tree.service';
+import {
+    FilteredChannelRegistryService,
+    FilteredNodeRegistryService,
+    NodeRegistryService,
+    PointTreeService,
+} from 'src/app/graph-data/data-registries/services';
 
 @Injectable()
 export class NodeEffects {

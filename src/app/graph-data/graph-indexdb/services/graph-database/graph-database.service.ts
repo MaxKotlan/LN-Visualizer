@@ -10,8 +10,10 @@ import {
     processGraphNodeChunk,
     setIsLoadFromStorage,
 } from '../../../graph-process-data/actions';
-import { ChannelRegistryService } from '../../../../renderer/graph-renderer/services/channel-registry/channel-registry.service';
-import { NodeRegistryService } from '../../../../renderer/graph-renderer/services/node-registry/node-registry.service';
+import {
+    ChannelRegistryService,
+    NodeRegistryService,
+} from 'src/app/graph-data/data-registries/services';
 
 @Injectable({
     providedIn: 'root',

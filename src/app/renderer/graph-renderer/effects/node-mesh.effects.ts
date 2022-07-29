@@ -7,8 +7,8 @@ import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { selectMinMax } from 'src/app/graph-data/graph-statistics/selectors';
 import { setFilteredNodes } from '../../../graph-data/graph-process-data/actions';
 import { GraphState } from '../reducer';
-import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import { NodeBuffersService } from '../services/node-buffers/node-buffers.service';
+import { FilteredNodeRegistryService } from 'src/app/graph-data/data-registries/services';
 
 @Injectable()
 export class NodeMeshEffects {

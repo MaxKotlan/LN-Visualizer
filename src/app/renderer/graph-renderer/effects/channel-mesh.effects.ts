@@ -12,10 +12,13 @@ import {
 import { selectMinMax } from 'src/app/graph-data/graph-statistics/selectors';
 import { setFilteredNodeChannels } from '../../../graph-data/graph-process-data/actions';
 import { GraphState } from '../reducer';
-import { ChannelColorService, FilteredChannelRegistryService } from '../services';
+import { ChannelColorService } from '../services';
 import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
-import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
 import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
+import {
+    FilteredChannelRegistryService,
+    FilteredNodeRegistryService,
+} from 'src/app/graph-data/data-registries/services';
 
 @Injectable()
 export class ChannelMeshEffects {

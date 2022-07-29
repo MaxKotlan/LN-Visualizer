@@ -23,7 +23,7 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { LndRaycasterService } from 'src/app/renderer/graph-renderer/services';
-import { PointTreeService } from 'src/app/renderer/graph-renderer/services/point-tree/point-tree.service';
+import { PointTreeService } from 'src/app/graph-data/data-registries/services/point-tree/point-tree.service';
 import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';

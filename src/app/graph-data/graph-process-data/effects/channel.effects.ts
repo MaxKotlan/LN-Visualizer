@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { debounceTime } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GlobalStatisticsCalculatorService } from 'src/app/graph-data/graph-statistics/services';
+import {
+    ChannelRegistryService,
+    NodeRegistryService,
+} from 'src/app/graph-data/data-registries/services';
 import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
-import { ChannelRegistryService } from '../../../renderer/graph-renderer/services/channel-registry/channel-registry.service';
-import { NodeRegistryService } from '../../../renderer/graph-renderer/services/node-registry/node-registry.service';
+import { GlobalStatisticsCalculatorService } from 'src/app/graph-data/graph-statistics/services';
 
 @Injectable()
 export class ChannelEffects {

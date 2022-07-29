@@ -18,8 +18,7 @@ import * as filterActions from 'src/app/filter-engine/controls-graph-filter/acti
 import { selectSearchString } from 'src/app/ui/settings/controls/selectors/controls.selectors';
 import { ConnectedChannelsFilter } from 'src/app/filter-engine/filter-templates/channel-filters/connected-channels.filter';
 import { setFilteredNodes } from '../../../graph-data/graph-process-data/actions';
-import { FilteredNodeRegistryService } from '../services/filtered-node-registry/filtered-node-registry.service';
-
+import { FilteredNodeRegistryService } from 'src/app/graph-data/data-registries/services';
 @Injectable()
 export class NodeSearchEffects {
     constructor(

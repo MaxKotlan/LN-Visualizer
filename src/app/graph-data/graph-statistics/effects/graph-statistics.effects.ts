@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { filteredStatisticsSelector, globalStatisticsSelector } from '../selectors';
 import { createEffect } from '@ngrx/effects';
-import { filter, map, tap } from 'rxjs';
-import { FilteredChannelRegistryService } from 'src/app/renderer/graph-renderer/services';
-import { GraphStatisticsState } from '../models';
+import { Store } from '@ngrx/store';
+import { filter, map } from 'rxjs';
+import { FilteredChannelRegistryService } from 'src/app/graph-data/data-registries/services';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { GraphStatisticsState } from '../models';
+import { filteredStatisticsSelector } from '../selectors';
 
 @Injectable()
 export class GraphStatisticsEffects {

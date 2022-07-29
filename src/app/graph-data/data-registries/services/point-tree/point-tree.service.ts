@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import * as kdTree from 'kd-tree-javascript';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
 import { Vector3 } from 'three';
-import { FilteredNodeRegistryService } from '../filtered-node-registry/filtered-node-registry.service';
-import { NodeRegistryService } from '../node-registry/node-registry.service';
+import { FilteredNodeRegistryService } from '../filtered-node-registry';
 
 const tempA = new Vector3(0, 0, 0);
 const tempB = new Vector3(0, 0, 0);
