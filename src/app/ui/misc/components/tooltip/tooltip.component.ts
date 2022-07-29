@@ -8,7 +8,7 @@ import {
 import { matTooltipAnimations, _TooltipComponentBase } from '@angular/material/tooltip';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
-import { ToolTipService } from 'src/app/services/tooltip.service';
+import { ToolTipService } from 'src/app/ui/misc/services/tooltip.service';
 
 @Component({
     selector: 'app-tooltip',
