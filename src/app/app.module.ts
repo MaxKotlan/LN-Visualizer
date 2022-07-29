@@ -9,10 +9,12 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouteEffects } from './effects/route.effects';
-import { ControlsGraphFilterModule } from './modules/controls-graph-filter/controls-graph-filter.module';
-import { ControlsEffects } from './modules/controls/effects/controls.effects';
-import { PilotFlagsModule } from './modules/pilot-flags/pilot-flags.module';
-import { WindowManagerModule } from './modules/window-manager/window-manager.module';
+import { FilterEngineModule } from './filter-engine/filter-engine.module';
+import { ControlsEffects } from './ui/settings/controls/effects/controls.effects';
+import { PilotFlagsModule } from './ui/pilot-flags/pilot-flags.module';
+import { UiModule } from './ui/ui.module';
+import { RendererModule } from './renderer/renderer.module';
+import { GraphDataModule } from './graph-data/graph-data.module';
 
 let dev = [];
 
@@ -33,9 +35,11 @@ if (!environment.production || window?.location?.toString()?.includes('devMode=t
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        ControlsGraphFilterModule,
+        GraphDataModule,
+        FilterEngineModule,
         PilotFlagsModule,
-        WindowManagerModule,
+        RendererModule,
+        UiModule,
         EffectsModule.forRoot([ControlsEffects, RouteEffects]),
         StoreModule.forRoot(
             {},
