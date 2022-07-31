@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { selectChannelFeesMinMaxTotal } from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
+import { LndChannel } from 'src/app/types/channels.interface';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { ChannelControlState } from 'src/app/ui/settings/controls-channel/reducers';
 import {
     channelColor,
     channelColorMapRgb,
     selectUseLogColorScale,
 } from 'src/app/ui/settings/controls-channel/selectors';
-import { LndChannel } from 'src/app/types/channels.interface';
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import {
-    selectChannelFeesMinMaxTotal,
-    selectChannelMinMaxTotal,
-} from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
 import { CapacityColorServiceService } from '../capacity-color/capacity-color-service.service';
 
 @UntilDestroy()
@@ -29,11 +26,6 @@ export class ChannelColorService {
             .select(channelColor)
             .pipe(untilDestroyed(this))
             .subscribe((channelColor) => (this.channelColorCache = channelColor));
-
-        this.store$
-            .select(selectChannelMinMaxTotal)
-            .pipe(untilDestroyed(this))
-            .subscribe((minMax) => (this.minMaxCap = minMax));
 
         this.store$
             .select(selectChannelFeesMinMaxTotal)
@@ -55,7 +47,6 @@ export class ChannelColorService {
 
     private colorArray: number[][];
     private minMaxFee: MinMaxTotal;
-    private minMaxCap: MinMaxTotal;
     private channelColorCache: string;
     private useLogColorScale: boolean;
 
