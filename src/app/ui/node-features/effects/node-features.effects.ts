@@ -17,7 +17,6 @@ export class NodeFeaturesEffects {
                 this.actions$.pipe(ofType(nodeFeatureActions.enableNodeFeaturesFilter)),
                 this.store$.select(nodeFeaturesFilterEnabled$),
             ]).pipe(
-                tap((x) => console.log(x)),
                 filter(
                     ([switchEnabled, pilotFlagEnabled]) =>
                         !switchEnabled.isEnabled || !pilotFlagEnabled,
@@ -27,7 +26,6 @@ export class NodeFeaturesEffects {
                         issueId: this.nodeFeatureFilter.issueId,
                     }),
                 ),
-                tap((x) => console.log(x)),
             ),
         { dispatch: true },
     );
