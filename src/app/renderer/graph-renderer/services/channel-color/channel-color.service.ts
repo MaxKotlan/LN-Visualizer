@@ -14,13 +14,17 @@ import {
     selectChannelFeesMinMaxTotal,
     selectChannelMinMaxTotal,
 } from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
+import { CapacityColorServiceService } from '../capacity-color/capacity-color-service.service';
 
 @UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
 export class ChannelColorService {
-    constructor(private store$: Store<ChannelControlState>) {
+    constructor(
+        private store$: Store<ChannelControlState>,
+        private capacityColorServiceService: CapacityColorServiceService,
+    ) {
         this.store$
             .select(channelColor)
             .pipe(untilDestroyed(this))
@@ -65,31 +69,10 @@ export class ChannelColorService {
         channel: LndChannel,
     ) {
         if (this.channelColorCache === 'channel-capacity') {
-            let normalizedValue;
-
-            if (this.useLogColorScale) {
-                const maxLog = Math.log10(this.minMaxCap.max + 1);
-                const minLog = Math.log10(this.minMaxCap.min + 1);
-                const capLog = Math.log10(channel.capacity + 1);
-                if (maxLog - minLog !== 0) normalizedValue = (capLog - minLog) / (maxLog - minLog);
-                else normalizedValue = 0;
-            } else {
-                normalizedValue =
-                    (channel.capacity - this.minMaxCap.min) /
-                    (this.minMaxCap.max - this.minMaxCap.min);
-            }
-            if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
-            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndex = Math.round(normalizedValue * 499);
-            // console.log(toColorIndex);
-
-            // if (normalizedCap < 2) console.log(normalizedCap);
-            // console.log(toColorIndex);
-            // console.log(toColorIndex);
-
-            return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
-
-            //return [255 - toByte, toByte, 0, 255 - toByte, toByte, 0];
+            return this.capacityColorServiceService.getColorMap(
+                this.useLogColorScale,
+                channel.capacity,
+            );
         }
         if (this.channelColorCache === 'channel-fees') {
             let normalizedValueA;
