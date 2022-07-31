@@ -92,7 +92,7 @@ export class ChannelColorService {
             return this.feeColorService.getColorMap(
                 this.useLogColorScale,
                 Number.parseInt(channel.policies[0].max_htlc_mtokens),
-                Number.parseInt(channel.policies[1].min_htlc_mtokens),
+                Number.parseInt(channel.policies[1].max_htlc_mtokens),
             );
         }
         if (this.channelColorCache === 'min_htlc_mtokens') {
