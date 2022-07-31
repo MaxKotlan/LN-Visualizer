@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { switchMap } from 'rxjs';
 import { selectMinMaxFiltered } from 'src/app/graph-data/graph-statistics/selectors';
 import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { ChannelControlState } from 'src/app/ui/settings/controls-channel/reducers';
-import { channelColorMapRgb } from 'src/app/ui/settings/controls-channel/selectors';
+import {
+    channelColorMapRgb,
+    channelColorToStat,
+} from 'src/app/ui/settings/controls-channel/selectors';
 
 @UntilDestroy()
 @Injectable({
@@ -18,8 +22,11 @@ export class FeeColorService {
             .subscribe((arr) => (this.colorArray = arr));
 
         this.store$
-            .select(selectMinMaxFiltered('fee_rate'))
-            .pipe(untilDestroyed(this))
+            .select(channelColorToStat)
+            .pipe(
+                switchMap((propName) => this.store$.select(selectMinMaxFiltered(propName))),
+                untilDestroyed(this),
+            )
             .subscribe((minMax) => (this.minMaxCap = minMax));
     }
 

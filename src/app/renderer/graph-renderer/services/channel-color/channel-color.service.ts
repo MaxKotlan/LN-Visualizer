@@ -73,53 +73,6 @@ export class ChannelColorService {
                 channel.policies[0].fee_rate,
                 channel.policies[1].fee_rate,
             );
-
-            // let normalizedValueA;
-            // let normalizedValueB;
-
-            // if (this.useLogColorScale) {
-            //     normalizedValueA =
-            //         Math.log10(
-            //             channel.policies[0].fee_rate -
-            //                 //Number.parseInt(channel.policies[0].base_fee_mtokens) -
-            //                 this.minMaxFee.min,
-            //         ) / Math.log10(this.minMaxFee.max - this.minMaxFee.min);
-            //     normalizedValueB =
-            //         Math.log10(
-            //             channel.policies[1].fee_rate -
-            //                 //Number.parseInt(channel.policies[0].base_fee_mtokens) -
-            //                 this.minMaxFee.min,
-            //         ) / Math.log10(this.minMaxFee.max - this.minMaxFee.min);
-            // } else {
-            //     normalizedValueA =
-            //         (channel.policies[0].fee_rate - this.minMaxFee.min) /
-            //         (this.minMaxFee.max - this.minMaxFee.min);
-            //     normalizedValueB =
-            //         (channel.policies[1].fee_rate - this.minMaxFee.min) /
-            //         (this.minMaxFee.max - this.minMaxFee.min);
-            // }
-            // //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            // const toColorIndexA = Math.round(normalizedValueA * 499) || undefined;
-            // const toColorIndexB = Math.round(normalizedValueB * 499) || undefined;
-
-            // const noDataAvailableColor = [255, 0, 0];
-
-            // try {
-            //     const colorArrA =
-            //         toColorIndexA >= 0 && toColorIndexA < 500
-            //             ? this.colorArray[toColorIndexA]
-            //             : noDataAvailableColor;
-            //     const colorArrB =
-            //         toColorIndexB >= 0 && toColorIndexB < 500
-            //             ? this.colorArray[toColorIndexB]
-            //             : noDataAvailableColor;
-
-            //     const result = [...colorArrA, ...colorArrB];
-            //     return result;
-            // } catch (e) {
-            //     console.log(toColorIndexA, e);
-            //     return [255, 255, 255, 255, 255, 255];
-            // }
         }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];
