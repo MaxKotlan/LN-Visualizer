@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { GraphStatisticsState } from 'src/app/graph-data/graph-statistics/models';
 let colormap = require('colormap');
 import { ChannelControlState } from '../reducers';
 
@@ -20,6 +21,17 @@ export const selectEdgeDottedLine = createSelector(
 );
 
 export const channelColor = createSelector(channelControlsSelector, (state) => state.channelColor);
+
+export const shouldShowColorRange = createSelector(channelControlsSelector, (state) => {
+    if (state.channelColor === 'interpolate-node-color') return false;
+    return true;
+});
+
+export const channelColorToStat = createSelector(channelColor, (colorProp) => {
+    if (colorProp === 'channel-capacity') return 'capacity' as keyof GraphStatisticsState;
+    if (colorProp === 'channel-fees') return 'fee_rate' as keyof GraphStatisticsState;
+    return colorProp as keyof GraphStatisticsState;
+});
 
 export const channelColorMap = createSelector(
     channelControlsSelector,

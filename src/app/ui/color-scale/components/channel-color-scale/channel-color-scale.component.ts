@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
+import { selectMinMaxFiltered } from 'src/app/graph-data/graph-statistics/selectors';
 import { ChannelControlState } from 'src/app/ui/settings/controls-channel/reducers';
 import {
     channelColorMap,
+    channelColorToStat,
     selectUseLogColorScale,
+    shouldShowColorRange,
 } from 'src/app/ui/settings/controls-channel/selectors';
-import {
-    selectMaximumChannelCapacity,
-    selectMinimumChannelCapacity,
-} from 'src/app/graph-data/graph-statistics/selectors';
 
 @Component({
     selector: 'app-channel-color-scale',
@@ -18,11 +17,14 @@ import {
 })
 export class ChannelColorScaleComponent {
     constructor(private store$: Store<ChannelControlState>) {}
-
+    public shouldShowColorRange$ = this.store$.select(shouldShowColorRange);
+    public label$ = this.store$.select(channelColorToStat);
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
-    public minCapacity$ = this.store$
-        .select(selectMinimumChannelCapacity)
-        .pipe(map((c) => (c === Infinity ? 0 : c)));
-    public maxCapacity$ = this.store$.select(selectMaximumChannelCapacity);
+    public minMax$ = this.label$.pipe(
+        filter((x) => (x as string) !== 'interpolate-node-color'),
+        switchMap((propName) => this.store$.select(selectMinMaxFiltered(propName))),
+    );
+    public minCapacity$ = this.minMax$.pipe(map((x) => x.min));
+    public maxCapacity$ = this.minMax$.pipe(map((x) => x.max));
     public isLogScale$ = this.store$.select(selectUseLogColorScale);
 }

@@ -8,36 +8,22 @@ export const globalStatisticsSelector =
 export const filteredStatisticsSelector =
     createFeatureSelector<GraphStatisticsState>('filteredStatistics');
 
-export const selectChannelMinMaxTotal = createSelector(
-    globalStatisticsSelector,
-    filteredStatisticsSelector,
-    selectColorRangeMinMax,
-    (globalStatisticsState, filteredStatisticsState, type) =>
-        type === 'global' ? globalStatisticsState.capacity : filteredStatisticsState.capacity,
-);
-
 export const selectChannelFeesMinMaxTotal = createSelector(
     globalStatisticsSelector,
     (state) => state.fee_rate,
 );
 
-export const selectTotalChannelCapacity = createSelector(
-    selectChannelMinMaxTotal,
-    (state) => state.total,
-);
-
-export const selectMaximumChannelCapacity = createSelector(
-    selectChannelMinMaxTotal,
-    (state) => state.max,
-);
-
-export const selectMinimumChannelCapacity = createSelector(
-    selectChannelMinMaxTotal,
-    (state) => state.min,
-);
-
 export const selectMinMax = (property: keyof GraphStatisticsState) =>
     createSelector(globalStatisticsSelector, (graphState) => graphState[property]);
+
+export const selectMinMaxFiltered = (property: keyof GraphStatisticsState) =>
+    createSelector(
+        globalStatisticsSelector,
+        filteredStatisticsSelector,
+        selectColorRangeMinMax,
+        (globalStats, filteredStats, type) =>
+            type === 'global' ? globalStats[property] : filteredStats[property],
+    );
 
 export const statsLabels = createSelector(globalStatisticsSelector, (state) =>
     Object.keys(state).flatMap((key) =>

@@ -1,22 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ColorScaleModule } from '../color-scale/color-scale.module';
+import { MaterialModule } from '../material';
 import {
-    ColorScaleComponent,
-    GlobalGraphStatsComponent,
     FilteredGraphStatsComponent,
+    GlobalGraphStatsComponent,
     LoadingBarComponent,
     TooltipComponent,
 } from './components';
-import { MaterialModule } from '../material';
-import { ChannelColorScaleComponent } from './components/channel-color-scale/channel-color-scale.component';
+import { AppKeyValueStatsComponent } from './components/app-key-value-stats/app-key-value-stats.component';
 import { ErrorComponent } from './components/error';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-import { AppKeyValueStatsComponent } from './components/app-key-value-stats/app-key-value-stats.component';
 
 @NgModule({
     declarations: [
-        ColorScaleComponent,
-        ChannelColorScaleComponent,
         ErrorComponent,
         LoadingBarComponent,
         TooltipComponent,
@@ -25,16 +22,15 @@ import { AppKeyValueStatsComponent } from './components/app-key-value-stats/app-
         FilteredGraphStatsComponent,
         AppKeyValueStatsComponent,
     ],
-    imports: [CommonModule, MaterialModule],
+    imports: [CommonModule, MaterialModule, ColorScaleModule],
     exports: [
-        ColorScaleComponent,
-        ChannelColorScaleComponent,
         ErrorComponent,
         LoadingBarComponent,
         TooltipComponent,
         GlobalGraphStatsComponent,
         FilteredGraphStatsComponent,
         LoadingSpinnerComponent,
+        ColorScaleModule,
     ],
 })
 export class MiscModule {}

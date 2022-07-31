@@ -1,35 +1,33 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { selectChannelFeesMinMaxTotal } from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
+import { LndChannel } from 'src/app/types/channels.interface';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
+import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
 import { ChannelControlState } from 'src/app/ui/settings/controls-channel/reducers';
 import {
     channelColor,
     channelColorMapRgb,
     selectUseLogColorScale,
 } from 'src/app/ui/settings/controls-channel/selectors';
-import { LndChannel } from 'src/app/types/channels.interface';
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
-import { LndNodeWithPosition } from 'src/app/types/node-position.interface';
-import {
-    selectChannelFeesMinMaxTotal,
-    selectChannelMinMaxTotal,
-} from 'src/app/graph-data/graph-statistics/selectors/graph-statistics.selectors';
+import { CapacityColorServiceService } from '../capacity-color/capacity-color-service.service';
+import { FeeColorService } from '../fee-color/fee-color.service';
 
 @UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
 export class ChannelColorService {
-    constructor(private store$: Store<ChannelControlState>) {
+    constructor(
+        private store$: Store<ChannelControlState>,
+        private capacityColorServiceService: CapacityColorServiceService,
+        private feeColorService: FeeColorService,
+    ) {
         this.store$
             .select(channelColor)
             .pipe(untilDestroyed(this))
             .subscribe((channelColor) => (this.channelColorCache = channelColor));
-
-        this.store$
-            .select(selectChannelMinMaxTotal)
-            .pipe(untilDestroyed(this))
-            .subscribe((minMax) => (this.minMaxCap = minMax));
 
         this.store$
             .select(selectChannelFeesMinMaxTotal)
@@ -51,7 +49,6 @@ export class ChannelColorService {
 
     private colorArray: number[][];
     private minMaxFee: MinMaxTotal;
-    private minMaxCap: MinMaxTotal;
     private channelColorCache: string;
     private useLogColorScale: boolean;
 
@@ -65,79 +62,45 @@ export class ChannelColorService {
         channel: LndChannel,
     ) {
         if (this.channelColorCache === 'channel-capacity') {
-            let normalizedValue;
-
-            if (this.useLogColorScale) {
-                const maxLog = Math.log10(this.minMaxCap.max + 1);
-                const minLog = Math.log10(this.minMaxCap.min + 1);
-                const capLog = Math.log10(channel.capacity + 1);
-                if (maxLog - minLog !== 0) normalizedValue = (capLog - minLog) / (maxLog - minLog);
-                else normalizedValue = 0;
-            } else {
-                normalizedValue =
-                    (channel.capacity - this.minMaxCap.min) /
-                    (this.minMaxCap.max - this.minMaxCap.min);
-            }
-            if (normalizedValue > 1) return [255, 255, 255, 255, 255, 255];
-            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndex = Math.round(normalizedValue * 499);
-            // console.log(toColorIndex);
-
-            // if (normalizedCap < 2) console.log(normalizedCap);
-            // console.log(toColorIndex);
-            // console.log(toColorIndex);
-
-            return [...this.colorArray[toColorIndex], ...this.colorArray[toColorIndex]];
-
-            //return [255 - toByte, toByte, 0, 255 - toByte, toByte, 0];
+            return this.capacityColorServiceService.getColorMap(
+                this.useLogColorScale,
+                channel.capacity,
+            );
         }
         if (this.channelColorCache === 'channel-fees') {
-            let normalizedValueA;
-            let normalizedValueB;
-
-            if (this.useLogColorScale) {
-                normalizedValueA =
-                    Math.log10(
-                        channel.policies[0].fee_rate -
-                            //Number.parseInt(channel.policies[0].base_fee_mtokens) -
-                            this.minMaxFee.min,
-                    ) / Math.log10(this.minMaxFee.max - this.minMaxFee.min);
-                normalizedValueB =
-                    Math.log10(
-                        channel.policies[1].fee_rate -
-                            //Number.parseInt(channel.policies[0].base_fee_mtokens) -
-                            this.minMaxFee.min,
-                    ) / Math.log10(this.minMaxFee.max - this.minMaxFee.min);
-            } else {
-                normalizedValueA =
-                    (channel.policies[0].fee_rate - this.minMaxFee.min) /
-                    (this.minMaxFee.max - this.minMaxFee.min);
-                normalizedValueB =
-                    (channel.policies[1].fee_rate - this.minMaxFee.min) /
-                    (this.minMaxFee.max - this.minMaxFee.min);
-            }
-            //const normalizedCap = Math.sqrt(channel.capacity / this.maximumChannelCapacity);
-            const toColorIndexA = Math.round(normalizedValueA * 499) || undefined;
-            const toColorIndexB = Math.round(normalizedValueB * 499) || undefined;
-
-            const noDataAvailableColor = [255, 0, 0];
-
-            try {
-                const colorArrA =
-                    toColorIndexA >= 0 && toColorIndexA < 500
-                        ? this.colorArray[toColorIndexA]
-                        : noDataAvailableColor;
-                const colorArrB =
-                    toColorIndexB >= 0 && toColorIndexB < 500
-                        ? this.colorArray[toColorIndexB]
-                        : noDataAvailableColor;
-
-                const result = [...colorArrA, ...colorArrB];
-                return result;
-            } catch (e) {
-                console.log(toColorIndexA, e);
-                return [255, 255, 255, 255, 255, 255];
-            }
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                channel.policies[0].fee_rate,
+                channel.policies[1].fee_rate,
+            );
+        }
+        if (this.channelColorCache === 'base_fee_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].base_fee_mtokens),
+                Number.parseInt(channel.policies[1].base_fee_mtokens),
+            );
+        }
+        if (this.channelColorCache === 'cltv_delta') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                channel.policies[0].cltv_delta,
+                channel.policies[1].cltv_delta,
+            );
+        }
+        if (this.channelColorCache === 'max_htlc_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].max_htlc_mtokens),
+                Number.parseInt(channel.policies[1].max_htlc_mtokens),
+            );
+        }
+        if (this.channelColorCache === 'min_htlc_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].min_htlc_mtokens),
+                Number.parseInt(channel.policies[1].min_htlc_mtokens),
+            );
         }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];
