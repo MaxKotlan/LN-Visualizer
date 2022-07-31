@@ -22,6 +22,11 @@ export const selectEdgeDottedLine = createSelector(
 
 export const channelColor = createSelector(channelControlsSelector, (state) => state.channelColor);
 
+export const shouldShowColorRange = createSelector(channelControlsSelector, (state) => {
+    if (state.channelColor === 'interpolate-node-color') return false;
+    return true;
+});
+
 export const channelColorToStat = createSelector(channelColor, (colorProp) => {
     if (colorProp === 'channel-capacity') return 'capacity' as keyof GraphStatisticsState;
     if (colorProp === 'channel-fees') return 'fee_rate' as keyof GraphStatisticsState;
