@@ -74,6 +74,34 @@ export class ChannelColorService {
                 channel.policies[1].fee_rate,
             );
         }
+        if (this.channelColorCache === 'base_fee_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].base_fee_mtokens),
+                Number.parseInt(channel.policies[1].base_fee_mtokens),
+            );
+        }
+        if (this.channelColorCache === 'cltv_delta') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                channel.policies[0].cltv_delta,
+                channel.policies[1].cltv_delta,
+            );
+        }
+        if (this.channelColorCache === 'max_htlc_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].max_htlc_mtokens),
+                Number.parseInt(channel.policies[1].min_htlc_mtokens),
+            );
+        }
+        if (this.channelColorCache === 'min_htlc_mtokens') {
+            return this.feeColorService.getColorMap(
+                this.useLogColorScale,
+                Number.parseInt(channel.policies[0].min_htlc_mtokens),
+                Number.parseInt(channel.policies[1].min_htlc_mtokens),
+            );
+        }
         if (this.channelColorCache === 'interpolate-node-color') {
             return [...this.fromHexString(node1.color), ...this.fromHexString(node2.color)];
         }
