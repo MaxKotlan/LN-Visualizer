@@ -15,10 +15,7 @@ import {
     styleUrls: ['./channel-color-scale.component.scss'],
 })
 export class ChannelColorScaleComponent {
-    constructor(private store$: Store<ChannelControlState>) {
-        this.minMax$.subscribe((x) => console.log(x));
-    }
-
+    constructor(private store$: Store<ChannelControlState>) {}
     public label$ = this.store$.select(channelColorToStat);
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
     public minMax$ = this.label$.pipe(
