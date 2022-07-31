@@ -18,7 +18,7 @@ export class ChannelColorScaleComponent {
 
     public currentChannelMapColor$ = this.store$.select(channelColorMap);
 
-    public minMax$ = this.store$.select(selectMinMaxFiltered('capacity'));
+    public minMax$ = this.store$.select(selectMinMaxFiltered('fee_rate'));
     public minCapacity$ = this.minMax$.pipe(map((x) => x.min));
     public maxCapacity$ = this.minMax$.pipe(map((x) => x.max));
     public isLogScale$ = this.store$.select(selectUseLogColorScale);
