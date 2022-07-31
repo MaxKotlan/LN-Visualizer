@@ -39,7 +39,7 @@ export class ColorScaleComponent implements OnInit {
     @Input() useLogScale$: Observable<boolean>;
 
     ngOnInit(): void {
-        combineLatest(this.minRange$, this.maxRange$, this.useLogScale$)
+        combineLatest([this.minRange$, this.maxRange$, this.useLogScale$])
             .pipe(untilDestroyed(this))
             .subscribe(([min, max, isLogScale]) => {
                 this.divisions = [];

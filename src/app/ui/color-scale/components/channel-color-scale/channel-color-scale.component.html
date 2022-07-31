@@ -1,5 +1,5 @@
 <app-color-scale
-    label="Capacity"
+    [label]="label$ | async"
     [minRange$]="minCapacity$"
     [maxRange$]="maxCapacity$"
     [useLogScale$]="isLogScale$"
