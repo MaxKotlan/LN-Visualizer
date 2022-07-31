@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, debounceTime } from 'rxjs';
+import { combineLatest, debounceTime, map } from 'rxjs';
 import { meshScale } from 'src/app/constants/mesh-scale.constant';
-import {
-    channelColor,
-    channelColorMap,
-    selectUseLogColorScale,
-    selectColorRangeMinMax,
-} from 'src/app/ui/settings/controls-channel/selectors';
-import { selectMinMax, selectMinMaxFiltered } from 'src/app/graph-data/graph-statistics/selectors';
-import { setFilteredNodeChannels } from '../../../graph-data/graph-process-data/actions';
-import { GraphState } from '../reducer';
-import { ChannelColorService } from '../services';
-import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
-import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
 import {
     FilteredChannelRegistryService,
     FilteredNodeRegistryService,
 } from 'src/app/graph-data/data-registries/services';
+import * as graphActions from 'src/app/graph-data/graph-process-data/actions';
+import { selectMinMax } from 'src/app/graph-data/graph-statistics/selectors';
+import {
+    channelColor,
+    channelColorMap,
+    selectColorRangeMinMax,
+    selectUseLogColorScale,
+} from 'src/app/ui/settings/controls-channel/selectors';
+import { setFilteredNodeChannels } from '../../../graph-data/graph-process-data/actions';
+import { GraphState } from '../reducer';
+import { ChannelColorService } from '../services';
+import { ChannelBuffersService } from '../services/channel-buffers/channel-buffers.service';
 
 @Injectable()
 export class ChannelMeshEffects {

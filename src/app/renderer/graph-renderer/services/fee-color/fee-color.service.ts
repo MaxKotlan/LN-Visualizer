@@ -32,8 +32,8 @@ export class FeeColorService {
         const ci1 = Math.floor(n1 * 499);
         const ci2 = Math.floor(n2 * 499);
 
-        const a = Number.isNaN(ci1) ? [255, 0, 0] : this.colorArray[ci1];
-        const b = Number.isNaN(ci2) ? [255, 0, 0] : this.colorArray[ci2];
+        const a = Number.isNaN(ci1) ? [0, 0, 0] : this.colorArray[ci1];
+        const b = Number.isNaN(ci2) ? [0, 0, 0] : this.colorArray[ci2];
 
         return [...a, ...b];
     }
