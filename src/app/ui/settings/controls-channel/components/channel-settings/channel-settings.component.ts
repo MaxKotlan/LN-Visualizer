@@ -6,19 +6,13 @@ import {
     pilotThickLinesEnabled$,
 } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
 import { GenericControlsState } from '../../../controls/reducers';
+import { renderEdges, setEdgeUseDepthTest, setEdgeUseDottedLine } from '../../actions';
 import {
-    renderEdges,
-    setEdgeUseDepthTest,
-    setEdgeUseDottedLine,
-    useLogColorScale,
-} from '../../actions';
-import {
-    shouldRenderEdges,
     selectEdgeDepthTest,
     selectEdgeDottedLine,
-    selectUseLogColorScale,
     selectEnableChannelFog,
     selectLineBackend,
+    shouldRenderEdges,
 } from '../../selectors';
 
 @Component({
@@ -32,7 +26,6 @@ export class ChannelSettingsComponent {
     public shouldRenderEdges$ = this.store.select(shouldRenderEdges);
     public selectEdgeDepthTest$ = this.store.select(selectEdgeDepthTest);
     public selectEdgeDottedLine$ = this.store.select(selectEdgeDottedLine);
-    public selectUseLogColorScale$ = this.store.select(selectUseLogColorScale);
     public selectEnabledFog$ = this.store.select(selectEnableChannelFog);
 
     public thickLinesEnabled$ = this.store.select(pilotThickLinesEnabled$);
@@ -50,9 +43,5 @@ export class ChannelSettingsComponent {
 
     setDottedLines(event: MatCheckboxChange) {
         this.store.dispatch(setEdgeUseDottedLine({ value: event.checked }));
-    }
-
-    setUseLogColorScale(event: MatCheckboxChange) {
-        this.store.dispatch(useLogColorScale({ value: event.checked }));
     }
 }

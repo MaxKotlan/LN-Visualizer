@@ -1,5 +1,16 @@
-<div class="axis-label">{{ label }}</div>
-<div style="display: flex">
+<div style="display: flex; align-items: center">
+    <div class="axis-label">{{ label }}</div>
+    <button
+        style="transform: scale(0.6); pointer-events: all"
+        mat-mini-fab
+        color="primary"
+        aria-label="Example icon button with a menu icon"
+        (click)="openSettings()"
+    >
+        <mat-icon>settings</mat-icon>
+    </button>
+</div>
+<div style="display: flex" *ngIf="shouldShowColorRange">
     <mat-card [style]="backgrounColor"></mat-card>
     <div class="numberScale">
         <div *ngFor="let divisions of divisions">- {{ divisions }}</div>

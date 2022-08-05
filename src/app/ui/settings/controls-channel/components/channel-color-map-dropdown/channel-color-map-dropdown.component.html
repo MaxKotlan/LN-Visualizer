@@ -1,6 +1,8 @@
 <mat-form-field appearance="fill">
     <mat-label>Channel Color Map</mat-label>
     <mat-select [value]="chanelColorDropDown$ | async" (valueChange)="valueChanged($event)">
-        <mat-option *ngFor="let option of colorMap" [value]="option">{{ option }}</mat-option>
+        <mat-option *ngFor="let option of colorMap" [value]="option">{{
+            option | titlecase
+        }}</mat-option>
     </mat-select>
 </mat-form-field>
