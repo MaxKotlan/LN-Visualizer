@@ -9,7 +9,13 @@ import { selectColorRangeMinMax } from '../../selectors';
     styleUrls: ['./color-range-min-max-selector.component.scss'],
 })
 export class ColorRangeMinMaxSelectorComponent {
-    options = ['global', 'filtered'];
+    options = [
+        {
+            label: 'Global Min/Max',
+            value: 'global',
+        },
+        { label: 'Filtered Min/Max', value: 'filtered' },
+    ];
 
     constructor(private store$: Store) {}
 

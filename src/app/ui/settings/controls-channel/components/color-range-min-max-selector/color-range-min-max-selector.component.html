@@ -1,6 +1,8 @@
 <mat-form-field appearance="fill">
-    <mat-label>Color Range Min Max</mat-label>
+    <mat-label>Color Range</mat-label>
     <mat-select [value]="channelWidthProperty$ | async" (valueChange)="valueChanged($event)">
-        <mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
+        <mat-option *ngFor="let option of options" [value]="option.value">{{
+            option.label
+        }}</mat-option>
     </mat-select>
 </mat-form-field>
