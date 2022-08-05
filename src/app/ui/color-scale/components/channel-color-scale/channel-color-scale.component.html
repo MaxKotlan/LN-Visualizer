@@ -1,5 +1,5 @@
 <app-color-scale
-    *ngIf="shouldShowColorRange$ | async"
+    [shouldShowColorRange]="shouldShowColorRange$ | async"
     [label]="label$ | async"
     [minRange$]="minCapacity$"
     [maxRange$]="maxCapacity$"

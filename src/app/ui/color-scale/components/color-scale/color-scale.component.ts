@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, Observable } from 'rxjs';
+import { ColorScaleSettingsModalComponent } from '../color-scale-settings-modal/color-scale-settings-modal.component';
 const colormap = require('colormap');
 
 @UntilDestroy()
@@ -10,13 +12,14 @@ const colormap = require('colormap');
     styleUrls: ['./color-scale.component.scss'],
 })
 export class ColorScaleComponent implements OnInit {
-    constructor() {}
+    constructor(private modalDialog: MatDialog) {}
 
     public currentColorMapHex: string[];
     public backgrounColor: string;
     public divisions: number[];
 
     @Input() label: string;
+    @Input() shouldShowColorRange: boolean;
 
     @Input() public intervals: number = 10;
     public shades: number = 20;
@@ -60,5 +63,9 @@ export class ColorScaleComponent implements OnInit {
                     this.divisions.push(computed);
                 }
             });
+    }
+
+    public openSettings() {
+        this.modalDialog.open(ColorScaleSettingsModalComponent);
     }
 }

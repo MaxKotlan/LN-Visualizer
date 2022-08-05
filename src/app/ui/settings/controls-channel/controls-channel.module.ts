@@ -14,6 +14,7 @@ import { LineBackedDropdownComponent } from './components/line-backed-dropdown/l
 import { ChannelAttenuationComponent } from './components/channel-attenuation/channel-attenuation.component';
 import { ChannelWidthPropertyComponent } from './components/channel-width-property/channel-width-property.component';
 import { ColorRangeMinMaxSelectorComponent } from './components/color-range-min-max-selector/color-range-min-max-selector.component';
+import { LogScaleComponent } from './components/log-scale/log-scale.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { ColorRangeMinMaxSelectorComponent } from './components/color-range-min-
         ChannelAttenuationComponent,
         ChannelWidthPropertyComponent,
         ColorRangeMinMaxSelectorComponent,
+        LogScaleComponent,
     ],
     imports: [
         CommonModule,
@@ -34,6 +36,12 @@ import { ColorRangeMinMaxSelectorComponent } from './components/color-range-min-
         FormsModule,
         StoreModule.forFeature('channelControls', reducer),
     ],
-    exports: [ChannelSettingsComponent],
+    exports: [
+        ChannelSettingsComponent,
+        ColorRangeMinMaxSelectorComponent,
+        ChannelColorDropdownComponent,
+        ChannelColorMapDropdownComponent,
+        LogScaleComponent,
+    ],
 })
 export class ControlsChannelModule {}
