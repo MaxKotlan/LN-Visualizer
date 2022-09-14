@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Store } from '@ngrx/store';
+import { strictPolicyScriptsEnabled$ } from 'src/app/ui/pilot-flags/selectors';
 import { setStrictPolicyFilters } from 'src/app/ui/settings/controls-node/actions';
 import { selectStrictPolicyFilters } from 'src/app/ui/settings/controls-node/selectors/node-controls.selectors';
 
@@ -11,6 +12,8 @@ import { selectStrictPolicyFilters } from 'src/app/ui/settings/controls-node/sel
 })
 export class StrictPolicyFiltersComponent {
     constructor(private store$: Store) {}
+
+    public isPilotFlagEnabled$ = this.store$.select(strictPolicyScriptsEnabled$);
 
     public isStrictPolicyEnabled$ = this.store$.select(selectStrictPolicyFilters);
 
