@@ -25,3 +25,8 @@ export const setNetworkFilter = createAction(
     '[controls] setNetworkFilter',
     props<{ value: string }>(),
 );
+
+export const setStrictPolicyFilters = createAction(
+    '[controls] setStrictPolicyFilters',
+    props<{ value: boolean }>(),
+);

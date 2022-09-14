@@ -19,6 +19,7 @@ export interface NodeControlState {
     pointAttenuation: boolean;
     pointUseIcon: boolean;
     networkFilter: string;
+    strictPolicyFilters: boolean;
 }
 
 const initialState: NodeControlState = {
@@ -29,6 +30,7 @@ const initialState: NodeControlState = {
     pointAttenuation: true,
     pointUseIcon: true,
     networkFilter: 'Clearnet and Tor',
+    strictPolicyFilters: false,
 };
 
 export const reducer = createReducer(
@@ -62,5 +64,9 @@ export const reducer = createReducer(
     on(nodeControlActions.setNetworkFilter, (state, { value }) => ({
         ...state,
         networkFilter: value,
+    })),
+    on(nodeControlActions.setStrictPolicyFilters, (state, { value }) => ({
+        ...state,
+        strictPolicyFilters: value,
     })),
 );
