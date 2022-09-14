@@ -30,3 +30,8 @@ export const selectNetworkFilter = createSelector(
     nodeControlsSelector,
     (state) => state.networkFilter,
 );
+
+export const selectStrictPolicyFilters = createSelector(
+    nodeControlsSelector,
+    (state) => state.strictPolicyFilters,
+);

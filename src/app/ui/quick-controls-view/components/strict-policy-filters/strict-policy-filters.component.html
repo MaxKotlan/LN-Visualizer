@@ -1,0 +1,6 @@
+<mat-slide-toggle
+    *ngIf="isPilotFlagEnabled$ | async"
+    [ngModel]="isStrictPolicyEnabled$ | async"
+    (change)="updateStrictPolicyMode($event)"
+    >Strict Policy Scripts</mat-slide-toggle
+>

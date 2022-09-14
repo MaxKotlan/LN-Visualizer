@@ -11,6 +11,7 @@ import { ClearnetOnionToggleComponent } from './components/clearnet-onion-toggle
 import { NodeFeaturesToggleComponent } from './components/node-features-toggle/node-features-toggle.component';
 import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
 import { ControlsModule } from '../settings/controls/controls.module';
+import { StrictPolicyFiltersComponent } from './components/strict-policy-filters/strict-policy-filters.component';
 
 @NgModule({
     declarations: [
@@ -21,6 +22,7 @@ import { ControlsModule } from '../settings/controls/controls.module';
         MiniInputComponent,
         ClearnetOnionToggleComponent,
         NodeFeaturesToggleComponent,
+        StrictPolicyFiltersComponent,
     ],
     imports: [
         CommonModule,

@@ -5,5 +5,6 @@
     "fastModelDownload": false,
     "colorRangeMinMax": true,
     "nodeTableSearch": false,
-    "nodeFeaturesFilter": true
+    "nodeFeaturesFilter": true,
+    "strictPolicyScripts": false
 }
