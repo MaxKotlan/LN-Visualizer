@@ -10,6 +10,7 @@ export interface PilotFlags {
     colorRangeMinMax: boolean;
     nodeTableSearch: boolean;
     nodeFeaturesFilter: boolean;
+    strictPolicyScripts: boolean;
 }
 
 const initialState: PilotFlags = pilotFlagJson;

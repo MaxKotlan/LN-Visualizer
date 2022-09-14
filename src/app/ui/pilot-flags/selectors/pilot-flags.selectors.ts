@@ -35,4 +35,9 @@ export const nodeFeaturesFilterEnabled$ = createSelector(
     (state) => state.nodeFeaturesFilter,
 );
 
+export const strictPolicyScriptsEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.strictPolicyScripts,
+);
+
 export const allPilotFlags$ = createSelector(pilotFlagSelector, (state) => ({ ...state }));
