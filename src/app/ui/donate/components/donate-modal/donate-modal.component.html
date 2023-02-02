@@ -1,11 +1,16 @@
 <div>
-    <app-payment-complete
-        *ngIf="paymentIsSettled$ | async; else paymentPending"
-    ></app-payment-complete>
-    <ng-template #paymentPending>
-        <app-invoice-error></app-invoice-error>
-        <app-enter-invoice-amount></app-enter-invoice-amount>
-        <app-donate-loading></app-donate-loading>
-        <app-invoice-pending></app-invoice-pending>
-    </ng-template>
+    <p>
+        Hopefully this software has provided some value to you. Please consider donating some sats
+        to help with future development.
+    </p>
+    <p>
+        If you do not want to donate, you can hide this donation menu here ( or in the settings menu
+        ):
+    </p>
+    <app-show-donate-link-checkbox
+        style="margin-top: 20px; margin-bottom: 20px"
+    ></app-show-donate-link-checkbox>
+    <mat-divider></mat-divider>
+    <p style="margin-top: 20px">⚡: donate@donate.lnvisualizer.com</p>
+    <app-donate-btcpay></app-donate-btcpay>
 </div>
