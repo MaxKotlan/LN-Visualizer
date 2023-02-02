@@ -17,6 +17,7 @@ import { InvoicePendingComponent } from './components/invoice-pending/invoice-pe
 import { InvoiceErrorComponent } from './components/invoice-error/invoice-error.component';
 import { PaymentCompleteComponent } from './components/payment-complete/payment-complete.component';
 import { ControlsMiscModule } from '../settings/controls-misc/controls-misc.module';
+import { DonateBtcpayComponent } from './components/donate-btcpay/donate-btcpay.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { ControlsMiscModule } from '../settings/controls-misc/controls-misc.modu
         InvoicePendingComponent,
         InvoiceErrorComponent,
         PaymentCompleteComponent,
+        DonateBtcpayComponent,
     ],
     imports: [
         CommonModule,
