@@ -1,11 +1,20 @@
 import { createReducer } from '@ngrx/store';
 
+interface QuickControl {
+    filterId: string;
+    lowerBound: number;
+    upperBound: number;
+    lowerVal: number;
+    upperVal: number;
+    scriptType: 'Node' | 'Channel' | 'Policy';
+}
+
 export interface QuickControlsState {
-    enableFilter: boolean;
+    controlState: Record<string, QuickControl>;
 }
 
 const quickControlsStateInitialState: QuickControlsState = {
-    enableFilter: false,
+    controlState: {},
 };
 
-export const reducer = createReducer(quickControlsStateInitialState);
+export const quickControlsReducer = createReducer(quickControlsStateInitialState);
