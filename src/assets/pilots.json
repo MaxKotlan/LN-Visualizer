@@ -1,5 +1,5 @@
 {
-    "unitConversions": false,
+    "unitConversions": true,
     "thickLines": true,
     "sphereNodes": false,
     "fastModelDownload": false,

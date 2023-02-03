@@ -12,6 +12,8 @@ import { NodeFeaturesToggleComponent } from './components/node-features-toggle/n
 import { FilterTemplatesModule } from 'src/app/filter-engine/filter-templates/filter-templates.module';
 import { ControlsModule } from '../settings/controls/controls.module';
 import { StrictPolicyFiltersComponent } from './components/strict-policy-filters/strict-policy-filters.component';
+import { StoreModule } from '@ngrx/store';
+import { quickControlsReducer } from './reducers/quick-controls.reducer';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,7 @@ import { StrictPolicyFiltersComponent } from './components/strict-policy-filters
         ControlsModule,
         UnitConversionsModule,
         FilterTemplatesModule,
+        StoreModule.forFeature('quickControls', quickControlsReducer),
     ],
     exports: [QuickControlsViewComponent],
 })

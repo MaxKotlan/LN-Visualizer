@@ -2,31 +2,27 @@ import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { UnitLabelOrNumber } from 'src/app/constants/display-units.constant';
-import {
-    ChannelMinMaxFilter,
-    NodeMinMaxFilter,
-    PolicyMinMaxFilter,
-} from 'src/app/filter-engine/filter-templates';
+import * as filterSelectors from 'src/app/filter-engine/controls-graph-filter/selectors/filter.selectors';
+import * as filterActions from 'src/app/filter-engine/controls-graph-filter/actions';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
+import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
 import { pilotIsUnitConversionsEnabled$ } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
 import { FinalConverterWrapper } from 'src/app/ui/unit-conversions/service';
-import { MinMaxTotal } from 'src/app/types/min-max-total.interface';
-import * as filterActions from 'src/app/filter-engine/controls-graph-filter/actions';
-import * as filterSelectors from 'src/app/filter-engine/controls-graph-filter/selectors/filter.selectors';
+import { ScriptManagerService } from '../../services/script-manager.service';
+import { MinMaxControlValueService } from '../../services/min-max-control-value.service';
 
 @Component({
     selector: 'app-quick-slider',
     templateUrl: './quick-slider.component.html',
     styleUrls: ['./quick-slider.component.scss'],
-    providers: [FinalConverterWrapper],
+    providers: [FinalConverterWrapper, MinMaxControlValueService],
 })
 export class QuickSliderComponent {
     constructor(
         public store$: Store<GraphState>,
         public finalConverterWrapper: FinalConverterWrapper,
-        private policyMinMaxFilter: PolicyMinMaxFilter,
-        private channelMinMaxFilter: ChannelMinMaxFilter,
-        private nodeMinMaxFilter: NodeMinMaxFilter,
+        public scriptManagerService: ScriptManagerService,
+        public minMaxControlValueService: MinMaxControlValueService,
     ) {}
 
     public isPilotFlagEnabled$ = this.store$.select(pilotIsUnitConversionsEnabled$);
@@ -39,22 +35,8 @@ export class QuickSliderComponent {
     }
 
     @Input() set minMax(minMax: MinMaxTotal) {
-        this.minMaxLinear = minMax;
-        this.minLog = Math.log10(this.minMaxLinear.min + 1);
-        this.maxLog = Math.log10(this.minMaxLinear.max + 1);
-        this.logStep = (this.maxLog - this.minLog) / 100;
-        this.logValue = [
-            (this.maxLog - this.minLog) / 4 + this.minLog,
-            (3 * (this.maxLog - this.minLog)) / 4 + this.minLog,
-        ];
+        this.minMaxControlValueService.calculateMinMax(minMax);
     }
-
-    public minLog = 0;
-    public maxLog = 1;
-
-    public minMaxLinear: MinMaxTotal;
-    public logStep: number;
-    public logValue: number[];
 
     @Input() public isNodeScript: boolean = false;
     @Input() public isPolicyScript: boolean = true;
@@ -85,41 +67,18 @@ export class QuickSliderComponent {
     }
 
     public nodeOrChannelScript() {
-        if (this.isNodeScript) this.updateNodeScript();
-        else this.updateChannelScript();
-    }
-
-    public updateNodeScript() {
-        this.store$.dispatch(
-            filterActions.updateNodeFilterByIssueId({
-                value: this.nodeMinMaxFilter.createFilter(
-                    this.objectKey,
-                    this.logToLinear(this.logValue[0]),
-                    this.logToLinear(this.logValue[1]),
-                ),
-            }),
-        );
-    }
-
-    public updateChannelScript() {
-        this.store$.dispatch(
-            filterActions.updateChannelFilterByIssueId({
-                value: this.isPolicyScript
-                    ? this.policyMinMaxFilter.createFilter(
-                          this.objectKey,
-                          this.logToLinear(this.logValue[0]),
-                          this.logToLinear(this.logValue[1]),
-                      )
-                    : this.channelMinMaxFilter.createFilter(
-                          this.objectKey,
-                          this.logToLinear(this.logValue[0]),
-                          this.logToLinear(this.logValue[1]),
-                      ),
-            }),
-        );
-    }
-
-    public logToLinear(value: number) {
-        return Math.round(Math.pow(10, value) - 1);
+        if (this.isNodeScript)
+            this.scriptManagerService.updateNodeScript(
+                this.objectKey,
+                this.minMaxControlValueService.logValue[0],
+                this.minMaxControlValueService.logValue[1],
+            );
+        else
+            this.scriptManagerService.updateChannelScript(
+                this.objectKey,
+                this.minMaxControlValueService.logValue[0],
+                this.minMaxControlValueService.logValue[1],
+                this.isPolicyScript,
+            );
     }
 }

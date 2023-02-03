@@ -16,16 +16,24 @@
     >
         <ng-container *ngIf="isPilotFlagEnabled$ | async">
             <app-mini-input
-                [value]="finalConverterWrapper.forwardConvert$ | async"
-                (valueChanged$)="finalConverterWrapper.setUnit($event)"
+                [value]="minMaxControlValueService.logValue[0] | logToLinear"
+                (valueChanged$)="
+                    minMaxControlValueService.updateValue($event, 'min'); updateScript()
+                "
             ></app-mini-input>
             -
             <app-mini-input
-                [value]="finalConverterWrapper.backwardsConvert$ | async"
-                (valueChanged$)="finalConverterWrapper.setUnit($event)"
+                [value]="minMaxControlValueService.logValue[1] | logToLinear"
+                (valueChanged$)="
+                    minMaxControlValueService.updateValue($event, 'max'); updateScript()
+                "
             ></app-mini-input>
         </ng-container>
-        {{ logValue[0] | logToLinear }}-{{ logValue[1] | logToLinear }}
+        <ng-container *ngIf="(isPilotFlagEnabled$ | async) === false">
+            {{ minMaxControlValueService.logValue[0] | logToLinear }}-{{
+                minMaxControlValueService.logValue[1] | logToLinear
+            }}
+        </ng-container>
     </p>
 </div>
 <div style="display: flex; align-items: center; gap: 0.2rem">
@@ -36,11 +44,11 @@
     ></mat-slide-toggle>
 
     <mtx-slider
-        [min]="this.minLog"
-        [max]="this.maxLog"
-        [step]="logStep"
+        [min]="this.minMaxControlValueService.minLog"
+        [max]="this.minMaxControlValueService.maxLog"
+        [step]="minMaxControlValueService.logStep"
         style="width: 100%"
-        [(ngModel)]="logValue"
+        [(ngModel)]="minMaxControlValueService.logValue"
         (ngModelChange)="finalConverterWrapper.setUnit($event)"
         (ngModelChange)="updateScript()"
         [disabled]="(isEnabled$ | async) === false"
