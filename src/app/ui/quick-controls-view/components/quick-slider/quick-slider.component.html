@@ -16,12 +16,12 @@
     >
         <ng-container *ngIf="isPilotFlagEnabled$ | async">
             <app-mini-input
-                [value]="finalConverterWrapper.forwardConvert$ | async"
+                [value]="logValue[0] | logToLinear"
                 (valueChanged$)="finalConverterWrapper.setUnit($event)"
             ></app-mini-input>
             -
             <app-mini-input
-                [value]="finalConverterWrapper.backwardsConvert$ | async"
+                [value]="logValue[1] | logToLinear"
                 (valueChanged$)="finalConverterWrapper.setUnit($event)"
             ></app-mini-input>
         </ng-container>
