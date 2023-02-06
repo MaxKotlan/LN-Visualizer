@@ -26,6 +26,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import { MatIconRegistry } from '@angular/material/icon';
         MatTreeModule,
         ScrollingModule,
         RouterModule,
+        MatTableModule,
     ],
     exports: [
         MatInputModule,
@@ -80,6 +82,7 @@ import { MatIconRegistry } from '@angular/material/icon';
         MatTreeModule,
         ScrollingModule,
         RouterModule,
+        MatTableModule,
     ],
 })
 export class MaterialModule {

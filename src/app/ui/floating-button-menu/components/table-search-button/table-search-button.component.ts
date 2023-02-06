@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PilotFlagModalComponent } from 'src/app/ui/pilot-flags/components';
+import { TableViewComponent } from 'src/app/ui/table-view/components/table-view/table-view.component';
 
 @Component({
     selector: 'app-table-search-button',
@@ -13,7 +13,7 @@ export class TableSearchButtonComponent {
     @Input() public inline: boolean = false;
 
     openDialog(): void {
-        this.dialog.open(PilotFlagModalComponent, {
+        this.dialog.open(TableViewComponent, {
             maxWidth: null,
             panelClass: 'custom-pannel',
             height: '90vh',
