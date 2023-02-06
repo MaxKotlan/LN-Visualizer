@@ -34,7 +34,7 @@ export class TableViewComponent implements OnInit {
             this.recalc();
         });
     }
-    public count: number;
+    public count: number = this.filteredNodeRegistry.size;
 
     recalc() {
         const filtered = Array.from(this.filteredNodeRegistry.values()).filter((x) =>
