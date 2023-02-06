@@ -26,6 +26,9 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MtxGridModule } from '@ng-matero/extensions/grid';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
     imports: [
@@ -51,9 +54,12 @@ import { MatIconRegistry } from '@angular/material/icon';
         MtxSplitModule,
         MtxPopoverModule,
         MtxAlertModule,
+        MtxGridModule,
         MatTreeModule,
         ScrollingModule,
         RouterModule,
+        MatTableModule,
+        MatPaginatorModule,
     ],
     exports: [
         MatInputModule,
@@ -77,9 +83,12 @@ import { MatIconRegistry } from '@angular/material/icon';
         MtxSplitModule,
         MtxPopoverModule,
         MtxAlertModule,
+        MtxGridModule,
         MatTreeModule,
         ScrollingModule,
         RouterModule,
+        MatTableModule,
+        MatPaginatorModule,
     ],
 })
 export class MaterialModule {
