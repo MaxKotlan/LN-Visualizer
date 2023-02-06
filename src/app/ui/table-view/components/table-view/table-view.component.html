@@ -17,4 +17,4 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<mat-paginator [length]="1000" [pageSize]="10"></mat-paginator>
+<mat-paginator [length]="filteredNodeRegistry.size" [pageSize]="10"></mat-paginator>
