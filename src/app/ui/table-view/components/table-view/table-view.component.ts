@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -34,14 +34,20 @@ export class TableViewComponent implements OnInit {
             this.recalc();
         });
     }
+    public count: number;
 
     recalc() {
-        this.dataSource = Array.from(this.filteredNodeRegistry.values()).slice(
+        const filtered = Array.from(this.filteredNodeRegistry.values()).filter((x) =>
+            x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
+        );
+        this.count = filtered.length;
+        this.dataSource = filtered.slice(
             10 * this.paginator.pageIndex,
             10 * (this.paginator.pageIndex + 1),
         );
     }
 
+    public searchTerm: string;
     public page: number = 0;
 
     displayedColumns: string[] = [

@@ -6,6 +6,23 @@
     </button>
 </mat-toolbar>
 
+<div style="display: flex; margin: 20px">
+    <h2 style="margin-right: 20px">Node Properties</h2>
+    <mat-form-field class="example-form-field">
+        <mat-label>Search</mat-label>
+        <input matInput type="text" (input)="recalc()" [(ngModel)]="searchTerm" />
+        <button
+            *ngIf="searchTerm"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="searchTerm = ''"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+</div>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%">
     <ng-container *ngFor="let colName of displayedColumns" [matColumnDef]="colName">
         <th mat-header-cell *matHeaderCellDef>{{ colName }}</th>
@@ -17,4 +34,4 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<mat-paginator [length]="filteredNodeRegistry.size" [pageSize]="10"></mat-paginator>
+<mat-paginator [length]="count" [pageSize]="10"></mat-paginator>
