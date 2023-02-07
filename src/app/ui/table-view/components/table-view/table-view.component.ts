@@ -17,6 +17,10 @@ export class TableViewComponent implements OnInit {
     }
     @Input() searchTerms = ['public_key'];
 
+    get searchTermsLabel() {
+        return this.searchTerms.join(', ');
+    }
+
     private _dataRegistry: Map<any, any>;
 
     dataSource: Array<any>;

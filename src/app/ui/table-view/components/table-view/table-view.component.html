@@ -1,6 +1,6 @@
 <div style="display: flex; margin: 20px">
     <mat-form-field class="example-form-field">
-        <mat-label>{{ searchLabel }}</mat-label>
+        <mat-label>Search By {{ searchTermsLabel }}</mat-label>
         <input matInput type="text" (input)="recalc()" [(ngModel)]="searchTerm" />
         <button
             *ngIf="searchTerm"
