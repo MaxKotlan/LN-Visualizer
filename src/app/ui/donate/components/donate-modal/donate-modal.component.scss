@@ -1,3 +1,11 @@
 :host ::ng-deep .mat-form-field-infix {
     width: unset;
 }
+a {
+    text-decoration: underline;
+    color: #fbc02d;
+}
+
+:focus {
+    outline: orange 5px auto;
+}
