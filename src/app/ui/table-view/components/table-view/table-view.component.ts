@@ -37,8 +37,10 @@ export class TableViewComponent implements OnInit {
     public count: number = this.filteredNodeRegistry.size;
 
     recalc() {
-        const filtered = Array.from(this.filteredNodeRegistry.values()).filter((x) =>
-            x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
+        const filtered = Array.from(this.filteredNodeRegistry.values()).filter(
+            (x) =>
+                x.public_key.toUpperCase().includes(this.searchTerm.toUpperCase()) ||
+                x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
         );
         this.count = filtered.length;
         const maxPage = Math.ceil(this.count / 10);
