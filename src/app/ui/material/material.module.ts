@@ -29,6 +29,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MtxGridModule } from '@ng-matero/extensions/grid';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         RouterModule,
         MatTableModule,
         MatPaginatorModule,
+        MatTabsModule,
     ],
     exports: [
         MatInputModule,
@@ -89,6 +91,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         RouterModule,
         MatTableModule,
         MatPaginatorModule,
+        MatTabsModule,
     ],
 })
 export class MaterialModule {

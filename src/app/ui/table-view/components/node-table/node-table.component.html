@@ -5,4 +5,18 @@
         <mat-icon>close</mat-icon>
     </button>
 </mat-toolbar>
-<app-table-view [dataRegistry]="filteredNodeRegistry"></app-table-view>
+
+<mat-tab-group>
+    <mat-tab label="Nodes">
+        <app-table-view
+            [displayedColumns]="nodeColumns"
+            [dataRegistry]="filteredNodeRegistry"
+        ></app-table-view>
+    </mat-tab>
+    <mat-tab label="Channels">
+        <app-table-view
+            [displayedColumns]="channelColumns"
+            [dataRegistry]="filteredChannelRegistry"
+        ></app-table-view>
+    </mat-tab>
+</mat-tab-group>
