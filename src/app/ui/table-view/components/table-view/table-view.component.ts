@@ -1,18 +1,6 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-    FilteredNodeRegistryService,
-    NodeRegistryService,
-} from 'src/app/graph-data/data-registries/services';
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
-}
 
 @UntilDestroy()
 @Component({
@@ -21,26 +9,37 @@ export interface PeriodicElement {
     styleUrls: ['./table-view.component.scss'],
 })
 export class TableViewComponent implements OnInit {
-    constructor(
-        public dialogRef: MatDialogRef<TableViewComponent>,
-        private nodeRegistry: NodeRegistryService,
-        public filteredNodeRegistry: FilteredNodeRegistryService,
-    ) {}
-
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
+    @Input() searchLabel;
+    @Input() set dataRegistry(dataRegistry: Map<any, any>) {
+        this._dataRegistry = dataRegistry;
+    }
+    @Input() searchTerms = ['public_key'];
+
+    private _dataRegistry: Map<any, any>;
+
+    dataSource: Array<any>;
+
     ngOnInit(): void {
+        this.dataSource = Array.from(this._dataRegistry?.values()).slice(0, 10);
         this.paginator.page.pipe(untilDestroyed(this)).subscribe(() => {
             this.recalc();
         });
     }
-    public count: number = this.filteredNodeRegistry.size;
+    public count: number = 0;
 
     recalc() {
-        const filtered = Array.from(this.filteredNodeRegistry.values()).filter((x) =>
-            x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
+        const filtered = Array.from(this._dataRegistry?.values()).filter((x) =>
+            this.searchTerms.some((y) =>
+                x[y].toUpperCase().includes(this.searchTerm.toUpperCase()),
+            ),
         );
         this.count = filtered.length;
+        const maxPage = Math.ceil(this.count / 10);
+
+        if (this.paginator.pageIndex > maxPage) this.paginator.pageIndex = 0;
+
         this.dataSource = filtered.slice(
             10 * this.paginator.pageIndex,
             10 * (this.paginator.pageIndex + 1),
@@ -50,7 +49,7 @@ export class TableViewComponent implements OnInit {
     public searchTerm: string;
     public page: number = 0;
 
-    displayedColumns: string[] = [
+    @Input() displayedColumns: string[] = [
         'public_key',
         'alias',
         'color',
@@ -58,6 +57,4 @@ export class TableViewComponent implements OnInit {
         'node_capacity',
         'node_channel_count',
     ];
-
-    dataSource = Array.from(this.filteredNodeRegistry.values()).slice(0, 10);
 }

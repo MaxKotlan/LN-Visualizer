@@ -1,15 +1,6 @@
-<mat-toolbar color="primary">
-    <mat-icon>search</mat-icon>
-    <span style="margin-left: 0.4rem; flex-grow: 1">Search</span>
-    <button (click)="dialogRef.close()" mat-icon-button aria-label="Close Dialog">
-        <mat-icon>close</mat-icon>
-    </button>
-</mat-toolbar>
-
 <div style="display: flex; margin: 20px">
-    <h2 style="margin-right: 20px">Node Properties</h2>
     <mat-form-field class="example-form-field">
-        <mat-label>Search</mat-label>
+        <mat-label>{{ searchLabel }}</mat-label>
         <input matInput type="text" (input)="recalc()" [(ngModel)]="searchTerm" />
         <button
             *ngIf="searchTerm"

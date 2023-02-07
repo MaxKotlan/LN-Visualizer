@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { TableViewComponent } from './components/table-view/table-view.component';
 import { MaterialModule } from '../material';
 import { FormsModule } from '@angular/forms';
+import { NodeTableComponent } from './components/node-table/node-table.component';
 
 @NgModule({
-    declarations: [TableViewComponent],
+    declarations: [TableViewComponent, NodeTableComponent],
     imports: [CommonModule, FormsModule, MaterialModule],
-    exports: [TableViewComponent],
+    exports: [NodeTableComponent],
 })
 export class TableViewModule {}
