@@ -15,6 +15,8 @@ export class TableViewComponent implements OnInit {
     @Input() set dataRegistry(dataRegistry: Map<any, any>) {
         this._dataRegistry = dataRegistry;
     }
+    @Input() searchTerms = ['public_key'];
+
     private _dataRegistry: Map<any, any>;
 
     dataSource: Array<any>;
@@ -28,10 +30,10 @@ export class TableViewComponent implements OnInit {
     public count: number = 0;
 
     recalc() {
-        const filtered = Array.from(this._dataRegistry?.values()).filter(
-            (x) =>
-                x.public_key.toUpperCase().includes(this.searchTerm.toUpperCase()) ||
-                x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
+        const filtered = Array.from(this._dataRegistry?.values()).filter((x) =>
+            this.searchTerms.some((y) =>
+                x[y].toUpperCase().includes(this.searchTerm.toUpperCase()),
+            ),
         );
         this.count = filtered.length;
         const maxPage = Math.ceil(this.count / 10);

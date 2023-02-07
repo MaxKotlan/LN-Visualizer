@@ -16,9 +16,7 @@ export class NodeTableComponent {
         public dialogRef: MatDialogRef<TableViewComponent>,
         public filteredNodeRegistry: FilteredNodeRegistryService,
         public filteredChannelRegistry: FilteredChannelRegistryService,
-    ) {
-        console.log(filteredChannelRegistry);
-    }
+    ) {}
 
     public nodeColumns = [
         'public_key',
@@ -29,5 +27,8 @@ export class NodeTableComponent {
         'node_channel_count',
     ];
 
+    public nodeSearchTerms = ['public_key', 'alias'];
+
     public channelColumns = ['id', 'capacity', 'transaction_id', 'transaction_vout', 'updated_at'];
+    public channelSearchTerms = ['id', 'transaction_id'];
 }
