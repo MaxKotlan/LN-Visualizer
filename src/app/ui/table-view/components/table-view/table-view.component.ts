@@ -41,6 +41,10 @@ export class TableViewComponent implements OnInit {
             x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
         );
         this.count = filtered.length;
+        const maxPage = Math.ceil(this.count / 10);
+
+        if (this.paginator.pageIndex > maxPage) this.paginator.pageIndex = 0;
+
         this.dataSource = filtered.slice(
             10 * this.paginator.pageIndex,
             10 * (this.paginator.pageIndex + 1),
