@@ -1,0 +1,8 @@
+<mat-toolbar color="primary">
+    <mat-icon>search</mat-icon>
+    <span style="margin-left: 0.4rem; flex-grow: 1">Search</span>
+    <button (click)="dialogRef.close()" mat-icon-button aria-label="Close Dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+</mat-toolbar>
+<app-table-view [dataRegistry]="filteredNodeRegistry"></app-table-view>

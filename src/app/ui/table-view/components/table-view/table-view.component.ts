@@ -1,18 +1,6 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-    FilteredNodeRegistryService,
-    NodeRegistryService,
-} from 'src/app/graph-data/data-registries/services';
-
-export interface PeriodicElement {
-    name: string;
-    position: number;
-    weight: number;
-    symbol: string;
-}
 
 @UntilDestroy()
 @Component({
@@ -21,23 +9,26 @@ export interface PeriodicElement {
     styleUrls: ['./table-view.component.scss'],
 })
 export class TableViewComponent implements OnInit {
-    constructor(
-        public dialogRef: MatDialogRef<TableViewComponent>,
-        private nodeRegistry: NodeRegistryService,
-        public filteredNodeRegistry: FilteredNodeRegistryService,
-    ) {}
-
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
+    @Input() searchLabel;
+    @Input() set dataRegistry(dataRegistry: Map<any, any>) {
+        this._dataRegistry = dataRegistry;
+    }
+    private _dataRegistry: Map<any, any>;
+
+    dataSource: Array<any>;
+
     ngOnInit(): void {
+        this.dataSource = Array.from(this._dataRegistry?.values()).slice(0, 10);
         this.paginator.page.pipe(untilDestroyed(this)).subscribe(() => {
             this.recalc();
         });
     }
-    public count: number = this.filteredNodeRegistry.size;
+    public count: number = 0;
 
     recalc() {
-        const filtered = Array.from(this.filteredNodeRegistry.values()).filter(
+        const filtered = Array.from(this._dataRegistry?.values()).filter(
             (x) =>
                 x.public_key.toUpperCase().includes(this.searchTerm.toUpperCase()) ||
                 x.alias.toUpperCase().includes(this.searchTerm.toUpperCase()),
@@ -56,7 +47,7 @@ export class TableViewComponent implements OnInit {
     public searchTerm: string;
     public page: number = 0;
 
-    displayedColumns: string[] = [
+    @Input() displayedColumns: string[] = [
         'public_key',
         'alias',
         'color',
@@ -64,6 +55,4 @@ export class TableViewComponent implements OnInit {
         'node_capacity',
         'node_channel_count',
     ];
-
-    dataSource = Array.from(this.filteredNodeRegistry.values()).slice(0, 10);
 }

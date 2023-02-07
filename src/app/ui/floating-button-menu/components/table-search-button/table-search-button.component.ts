@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TableViewComponent } from 'src/app/ui/table-view/components/table-view/table-view.component';
+import { NodeTableComponent } from 'src/app/ui/table-view/components/node-table/node-table.component';
 
 @Component({
     selector: 'app-table-search-button',
@@ -13,7 +13,7 @@ export class TableSearchButtonComponent {
     @Input() public inline: boolean = false;
 
     openDialog(): void {
-        this.dialog.open(TableViewComponent, {
+        this.dialog.open(NodeTableComponent, {
             maxWidth: null,
             panelClass: 'custom-pannel',
             height: '90vh',
