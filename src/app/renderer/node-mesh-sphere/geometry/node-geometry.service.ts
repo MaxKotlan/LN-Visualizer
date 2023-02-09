@@ -49,8 +49,8 @@ export class NodeGeometry {
                 this.nodeBuffersService.color.data[i + 1],
                 this.nodeBuffersService.color.data[i + 2],
             );
-            this.mesh.setMatrixAt(i, matrix);
-            this.mesh.setColorAt(i, color);
+            this.mesh.setMatrixAt(i / 3, matrix);
+            this.mesh.setColorAt(i / 3, color);
         }
     }
 
@@ -80,13 +80,11 @@ export class NodeGeometry {
 
     public handleUpdates() {
         let currentDrawRange;
-        // let currentShouldRender = true;
+        let currentShouldRender = true;
 
         this.nodeBuffersService.vertex.onUpdate.subscribe((drawRange) => {
             currentDrawRange = drawRange;
             this.initializeMeshInstance();
-            console.log(this.mesh);
-            // this.setDrawRange(0, currentShouldRender ? drawRange : 0);
         });
 
         // this.store$.select(shouldRenderNodes).subscribe((shouldRender) => {
