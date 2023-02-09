@@ -4,7 +4,7 @@
     "sphereNodes": false,
     "fastModelDownload": false,
     "colorRangeMinMax": true,
-    "nodeTableSearch": false,
+    "nodeTableSearch": true,
     "nodeFeaturesFilter": true,
     "strictPolicyScripts": false
 }

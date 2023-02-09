@@ -1,6 +1,9 @@
 <div style="display: flex; margin-right: 0.6rem; margin-top: 0.6rem">
     <app-pilot-flag-button *ngIf="isDeveloperMode$ | async"></app-pilot-flag-button>
-    <app-table-search-button *ngIf="nodeTableSearch$ | async"></app-table-search-button>
+    <app-table-search-button
+        style="margin-left: 0.6rem"
+        *ngIf="nodeTableSearch$ | async"
+    ></app-table-search-button>
     <app-filter-button style="margin-right: 0.6rem"></app-filter-button>
     <app-settings></app-settings>
 </div>

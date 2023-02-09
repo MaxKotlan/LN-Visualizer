@@ -14,6 +14,7 @@ export class TableViewComponent implements OnInit {
     @Input() searchLabel;
     @Input() set dataRegistry(dataRegistry: Map<any, any>) {
         this._dataRegistry = dataRegistry;
+        this.count = dataRegistry.size;
     }
     @Input() searchTerms = ['public_key'];
 
@@ -21,7 +22,7 @@ export class TableViewComponent implements OnInit {
         return this.searchTerms.join(', ');
     }
 
-    private _dataRegistry: Map<any, any>;
+    private _dataRegistry!: Map<any, any>;
 
     dataSource: Array<any>;
 
@@ -31,7 +32,7 @@ export class TableViewComponent implements OnInit {
             this.recalc();
         });
     }
-    public count: number = 0;
+    public count: number;
 
     recalc() {
         const filtered = Array.from(this._dataRegistry?.values()).filter((x) =>
