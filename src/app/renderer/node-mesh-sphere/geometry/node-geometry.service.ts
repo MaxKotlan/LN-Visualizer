@@ -38,7 +38,7 @@ export class NodeGeometry {
         const matrix = new THREE.Matrix4();
         const color = new THREE.Color();
 
-        for (let i = 0; i < this.nodeBuffersService.vertex.data.length / 3; i += 3) {
+        for (let i = 0; i < this.nodeBuffersService.vertex.data.length * 3; i += 3) {
             matrix.setPosition(
                 this.nodeBuffersService.vertex.data[i],
                 this.nodeBuffersService.vertex.data[i + 1],
