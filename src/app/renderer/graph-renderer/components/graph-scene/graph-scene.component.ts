@@ -4,11 +4,18 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
     OrbitControlsComponent,
+    OrthographicCameraComponent,
     PerspectiveCameraComponent,
     RendererCanvasComponent,
     RendererService,
     SceneComponent,
 } from 'atft';
+import {
+    orthagraphicViewEnabled$,
+    pilotThickLinesEnabled$,
+    sphereNodesEnabled$,
+} from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
+import { ScreenSizeService } from 'src/app/ui/screen-size/services';
 import { selectLineBackend } from 'src/app/ui/settings/controls-channel/selectors';
 import {
     selectRenderResolution,
@@ -16,12 +23,6 @@ import {
     selectShowGrid,
 } from 'src/app/ui/settings/controls-renderer/selectors';
 import { selectCameraFov } from 'src/app/ui/settings/controls/selectors/controls.selectors';
-import {
-    orthagraphicViewEnabled$,
-    pilotThickLinesEnabled$,
-    sphereNodesEnabled$,
-} from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
-import { ScreenSizeService } from 'src/app/ui/screen-size/services';
 import * as graphActions from '../../../../graph-data/graph-process-data/actions';
 import { GraphState } from '../../reducer';
 import { CameraControllerService, OrbitControllerService } from '../../services';
@@ -36,6 +37,9 @@ export class GraphSceneComponent implements AfterViewInit {
     @ViewChild(RendererCanvasComponent) renderCanvas!: RendererCanvasComponent;
     @ViewChild(SceneComponent) scene!: SceneComponent;
     @ViewChild(PerspectiveCameraComponent) cameraComponent: PerspectiveCameraComponent | undefined;
+    @ViewChild(OrthographicCameraComponent) orthoCameraComponent:
+        | OrthographicCameraComponent
+        | undefined;
     @ViewChild(OrbitControlsComponent) orbitControlsComponent: OrbitControlsComponent | undefined;
 
     constructor(
@@ -58,6 +62,11 @@ export class GraphSceneComponent implements AfterViewInit {
 
     public ngAfterViewInit() {
         // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
+        this.orthoCameraComponent.camera.far = 20000;
+        this.orthoCameraComponent.camera.position.set(20, 50, 650);
+        this.orthoCameraComponent.camera?.updateProjectionMatrix();
+        console.log(this.orthoCameraComponent.camera);
+
         this.cameraControllerService.setCamera(this.cameraComponent?.camera);
         this.orbitControllerService.setOrbitControlsComponent(this.orbitControlsComponent);
 
@@ -66,7 +75,7 @@ export class GraphSceneComponent implements AfterViewInit {
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 this.renderCanvas.onResize(undefined);
-                this.cameraComponent.camera.updateProjectionMatrix();
+                this.cameraComponent?.camera?.updateProjectionMatrix();
             });
 
         this.store$
