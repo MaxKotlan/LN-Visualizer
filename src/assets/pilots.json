@@ -6,5 +6,6 @@
     "colorRangeMinMax": true,
     "nodeTableSearch": true,
     "nodeFeaturesFilter": true,
-    "strictPolicyScripts": false
+    "strictPolicyScripts": false,
+    "orthographicView": true
 }

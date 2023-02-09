@@ -17,6 +17,7 @@ import {
 } from 'src/app/ui/settings/controls-renderer/selectors';
 import { selectCameraFov } from 'src/app/ui/settings/controls/selectors/controls.selectors';
 import {
+    orthagraphicViewEnabled$,
     pilotThickLinesEnabled$,
     sphereNodesEnabled$,
 } from 'src/app/ui/pilot-flags/selectors/pilot-flags.selectors';
@@ -53,6 +54,7 @@ export class GraphSceneComponent implements AfterViewInit {
     public thickLinesEnabled$ = this.store$.select(pilotThickLinesEnabled$);
     public lineBackend$ = this.store$.select(selectLineBackend);
     public sphereNodes$ = this.store$.select(sphereNodesEnabled$);
+    public orthographicView$ = this.store$.select(orthagraphicViewEnabled$);
 
     public ngAfterViewInit() {
         // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);

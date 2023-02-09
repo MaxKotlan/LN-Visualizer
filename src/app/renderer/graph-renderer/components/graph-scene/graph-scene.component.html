@@ -8,17 +8,25 @@
                 : 'height: 100vh'
         "
     >
-        <atft-perspective-camera
-            [fov]="(selectCameraFov$ | async) || 60"
-            [near]="0.1"
-            [far]="11000"
-            [positionX]="20"
-            [positionY]="50"
-            [positionZ]="650"
+        <atft-orthographic-camera
+            *ngIf="orthographicView$ | async; else perspectiveView"
             lnd-raycaster-enable
             lnd-raycaster-camera
         >
-        </atft-perspective-camera>
+        </atft-orthographic-camera>
+        <ng-template #perspectiveView>
+            <atft-perspective-camera
+                [fov]="(selectCameraFov$ | async) || 60"
+                [near]="0.1"
+                [far]="11000"
+                [positionX]="20"
+                [positionY]="50"
+                [positionZ]="650"
+                lnd-raycaster-enable
+                lnd-raycaster-camera
+            >
+            </atft-perspective-camera>
+        </ng-template>
         <atft-scene [background]="'#111111'">
             <atft-grid-helper
                 *ngIf="showGrid$ | async"
