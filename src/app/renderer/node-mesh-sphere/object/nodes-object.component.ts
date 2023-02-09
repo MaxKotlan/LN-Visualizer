@@ -20,7 +20,7 @@ import {
 import { searchGraph } from 'src/app/ui/settings/controls/actions/controls.actions';
 import { ToolTipService } from 'src/app/ui/misc/services/tooltip.service';
 import * as THREE from 'three';
-import { Vector3 } from 'three';
+import { InstancedMesh, Vector3 } from 'three';
 import { GraphState } from 'src/app/renderer/graph-renderer/reducer';
 import { LndRaycasterService } from 'src/app/renderer/graph-renderer/services';
 import { PointTreeService } from 'src/app/graph-data/data-registries/services/point-tree/point-tree.service';
@@ -28,6 +28,7 @@ import { NodeGeometry } from '../geometry/node-geometry.service';
 import { NodeMaterial } from '../material/node-material.service';
 import { NodePositionOffsetService, NodeSizeOffsetService } from '../services';
 import { NodePoint } from '../three-js-objects/NodePoint';
+import { NodeBuffersService } from '../../graph-renderer/services/node-buffers/node-buffers.service';
 
 @Component({
     selector: 'app-nodes-sphere-object',
@@ -35,7 +36,7 @@ import { NodePoint } from '../three-js-objects/NodePoint';
     template: '<ng-content></ng-content>',
 })
 export class NodesSphereObjectComponent
-    extends AbstractObject3D<NodePoint>
+    extends AbstractObject3D<InstancedMesh>
     implements OnChanges, OnInit, OnDestroy
 {
     @Output() mouseEnter = new EventEmitter<RaycasterEmitEvent>();
@@ -54,6 +55,7 @@ export class NodesSphereObjectComponent
         private pointTreeService: PointTreeService,
         private nodePositionOffsetSevice: NodePositionOffsetService,
         private nodeSizeOffsetService: NodeSizeOffsetService,
+        private nodeBuffersService: NodeBuffersService,
     ) {
         super(rendererService, parent);
     }
@@ -106,15 +108,15 @@ export class NodesSphereObjectComponent
         );
     }
 
-    protected newObject3DInstance(): NodePoint {
-        const mesh = new NodePoint(
-            this.nodePositionOffsetSevice,
-            this.nodeSizeOffsetService,
-            this.nodeGeometry,
-            this.nodeMaterial,
-        );
-        this.object = mesh;
+    protected newObject3DInstance(): InstancedMesh {
+        // const mesh = new NodePoint(
+        //     this.nodePositionOffsetSevice,
+        //     this.nodeSizeOffsetService,
+        //     this.nodeGeometry,
+        //     this.nodeMaterial,
+        // );
+        this.object = this.nodeGeometry.mesh;
         this.nodeMaterial.handleHoverUpdate(new Vector3(0, 0, 0));
-        return mesh;
+        return this.nodeGeometry.mesh;
     }
 }

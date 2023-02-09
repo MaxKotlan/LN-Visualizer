@@ -26,6 +26,14 @@
                 [size]="2000"
                 [divisions]="100"
             ></atft-grid-helper>
+            <atft-ambient-light [intensity]="0.001"> </atft-ambient-light>
+            <atft-directional-light
+                color="#ffffff"
+                [intensity]="0.01"
+                [translateX]="20"
+                [translateY]="-50"
+                [translateZ]="50"
+            ></atft-directional-light>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-nodes-sphere-object
                 *ngIf="sphereNodes$ | async; else pointNodes"
