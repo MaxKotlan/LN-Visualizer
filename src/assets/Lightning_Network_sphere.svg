@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="282"
+   height="282"
+   viewBox="0 0 282 282"
+   fill="none"
+   version="1.1"
+   id="svg15"
+   sodipodi:docname="Lightning_Network_sphere.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:export-filename="S:\LN-Visualizer\src\assets\circl4.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview17"
+     pagecolor="#ffffff"
+     bordercolor="#808080"
+     borderopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="1.4734043"
+     inkscape:cx="64.137184"
+     inkscape:cy="78.050541"
+     inkscape:window-width="2560"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g8" />
+  <g
+     clip-path="url(#clip0)"
+     id="g8">
+    <circle
+       cx="140.983"
+       cy="141.003"
+       r="141"
+       fill="white"
+       id="circle2" />
+    <rect
+       style="fill:#808080;fill-opacity:1;stroke-width:1"
+       id="rect1600"
+       width="285.0506"
+       height="285.05414"
+       x="-0.67515117"
+       y="1.6696647e-07" />
+    <path
+       d="M 53.438681,146.76211 100.43886,65.761709 c 2.048,-2.6231 4.00001,0 2.75001,4.5 L 88.188827,129.26211 H 114.9389 c 0,0 4.25001,0 0,7 l -46.250129,81.5 c -3.250008,5.5 -5.500014,2.5 -3.250008,-6 l 14.500034,-57.5 H 53.438681 c 0,0 -4.250011,0 0,-7.5 z"
+       fill="#ffffff"
+       id="path6"
+       style="stroke-width:0.707108" />
+    <path
+       d="m 178.8564,141.33251 47.00018,-81.000398 c 2.048,-2.6231 4.00001,0 2.75001,4.5 l -15.00004,59.000398 h 26.75007 c 0,0 4.25001,0 0,7 l -46.25013,81.5 c -3.25,5.5 -5.50001,2.5 -3.25,-6 l 14.50003,-57.5 H 178.8564 c 0,0 -4.25001,0 0,-7.5 z"
+       fill="#ffffff"
+       id="path6-4"
+       style="stroke-width:0.707108" />
+  </g>
+  <defs
+     id="defs13">
+    <clipPath
+       id="clip0">
+      <rect
+         width="282"
+         height="282"
+         fill="black"
+         id="rect10" />
+    </clipPath>
+  </defs>
+</svg>

@@ -25,7 +25,7 @@ export class NodeGeometry {
     public initializeMeshInstance() {
         const geometry = new THREE.IcosahedronGeometry(0.5, 3);
         const material = new THREE.MeshPhongMaterial({
-            map: this.nodeTexture.getTexture('lightningIcon'),
+            map: this.nodeTexture.getTexture('lightningIconSphere'),
             color: 0xffffff,
             specular: 0.1,
         } as THREE.MeshPhongMaterialParameters);
