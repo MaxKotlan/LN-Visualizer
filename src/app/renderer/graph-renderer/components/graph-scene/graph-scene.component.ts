@@ -62,31 +62,33 @@ export class GraphSceneComponent implements AfterViewInit {
 
     public ngAfterViewInit() {
         // this.scene.getObject().fog = new THREE.FogExp2(0x000000, 0.1);
-        this.orthoCameraComponent.camera.far = 20000;
-        this.orthoCameraComponent.camera.position.set(20, 50, 650);
-        this.orthoCameraComponent.camera?.updateProjectionMatrix();
-        console.log(this.orthoCameraComponent.camera);
+        if (this.orthoCameraComponent) {
+            this.orthoCameraComponent.camera.far = 20000;
+            this.orthoCameraComponent.camera.position.set(20, 50, 650);
+            this.orthoCameraComponent.camera?.updateProjectionMatrix();
+            console.log(this.orthoCameraComponent.camera);
+        } else {
+            this.cameraControllerService.setCamera(this.cameraComponent?.camera);
+            this.orbitControllerService.setOrbitControlsComponent(this.orbitControlsComponent);
 
-        this.cameraControllerService.setCamera(this.cameraComponent?.camera);
-        this.orbitControllerService.setOrbitControlsComponent(this.orbitControlsComponent);
+            this.actions$
+                .pipe(ofType(graphActions.recomputeCanvasSize))
+                .pipe(untilDestroyed(this))
+                .subscribe(() => {
+                    this.renderCanvas.onResize(undefined);
+                    this.cameraComponent?.camera?.updateProjectionMatrix();
+                });
 
-        this.actions$
-            .pipe(ofType(graphActions.recomputeCanvasSize))
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.renderCanvas.onResize(undefined);
-                this.cameraComponent?.camera?.updateProjectionMatrix();
-            });
-
-        this.store$
-            .select(selectRenderResolution)
-            .pipe(untilDestroyed(this))
-            .subscribe((renderResolution) => {
-                this.renderResolution = renderResolution;
-                this.renderer
-                    .getWebGlRenderer()
-                    .setPixelRatio(devicePixelRatio * this.renderResolution);
-            });
+            this.store$
+                .select(selectRenderResolution)
+                .pipe(untilDestroyed(this))
+                .subscribe((renderResolution) => {
+                    this.renderResolution = renderResolution;
+                    this.renderer
+                        .getWebGlRenderer()
+                        .setPixelRatio(devicePixelRatio * this.renderResolution);
+                });
+        }
     }
 
     public renderResolution: number;
