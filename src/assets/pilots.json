@@ -7,5 +7,5 @@
     "nodeTableSearch": true,
     "nodeFeaturesFilter": true,
     "strictPolicyScripts": false,
-    "orthographicView": true
+    "orthographicView": false
 }
