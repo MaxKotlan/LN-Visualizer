@@ -11,6 +11,7 @@ export interface PilotFlags {
     nodeTableSearch: boolean;
     nodeFeaturesFilter: boolean;
     strictPolicyScripts: boolean;
+    orthographicView: boolean;
 }
 
 const initialState: PilotFlags = pilotFlagJson;

@@ -8,24 +8,43 @@
                 : 'height: 100vh'
         "
     >
-        <atft-perspective-camera
-            [fov]="(selectCameraFov$ | async) || 60"
-            [near]="0.1"
-            [far]="11000"
-            [positionX]="20"
-            [positionY]="50"
-            [positionZ]="650"
-            lnd-raycaster-enable
-            lnd-raycaster-camera
-        >
-        </atft-perspective-camera>
         <atft-scene [background]="'#111111'">
+            <atft-orthographic-camera
+                *ngIf="orthographicView$ | async; else perspectiveView"
+                lnd-raycaster-enable
+                lnd-raycaster-camera
+            >
+            </atft-orthographic-camera>
+            <ng-template #perspectiveView>
+                <atft-perspective-camera
+                    [fov]="(selectCameraFov$ | async) || 60"
+                    [near]="0.1"
+                    [far]="11000"
+                    [positionX]="20"
+                    [positionY]="50"
+                    [positionZ]="650"
+                    lnd-raycaster-enable
+                    lnd-raycaster-camera
+                >
+                </atft-perspective-camera>
+            </ng-template>
             <atft-grid-helper
                 *ngIf="showGrid$ | async"
                 [translateY]="0"
                 [size]="2000"
                 [divisions]="100"
             ></atft-grid-helper>
+            <!--for now only add lighting if using spheres-->
+            <ng-container *ngIf="sphereNodes$ | async">
+                <atft-ambient-light [intensity]="0.001"> </atft-ambient-light>
+                <atft-directional-light
+                    color="#ffffff"
+                    [intensity]="0.01"
+                    [translateX]="20"
+                    [translateY]="-50"
+                    [translateZ]="50"
+                ></atft-directional-light>
+            </ng-container>
             <atft-axes-helper *ngIf="showAxis$ | async" [size]="200"></atft-axes-helper>
             <app-nodes-sphere-object
                 *ngIf="sphereNodes$ | async; else pointNodes"

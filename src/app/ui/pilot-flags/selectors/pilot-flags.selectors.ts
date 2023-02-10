@@ -40,4 +40,9 @@ export const strictPolicyScriptsEnabled$ = createSelector(
     (state) => state.strictPolicyScripts,
 );
 
+export const orthagraphicViewEnabled$ = createSelector(
+    pilotFlagSelector,
+    (state) => state.orthographicView,
+);
+
 export const allPilotFlags$ = createSelector(pilotFlagSelector, (state) => ({ ...state }));

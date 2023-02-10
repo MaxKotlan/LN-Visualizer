@@ -7,6 +7,7 @@ import * as THREE from 'three';
 export class NodeTextures {
     protected registry: Record<string, THREE.Texture> = {
         lightningIcon: new THREE.TextureLoader().load('assets/Lightning_Network_dark.svg'),
+        lightningIconSphere: new THREE.TextureLoader().load('assets/Lightning_Network_sphere.png'),
     };
 
     constructor() {
