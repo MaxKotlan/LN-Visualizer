@@ -5,17 +5,16 @@ import { ConfigService, PodStatusServer } from './config.service';
 
 @injectable()
 export class HealthCheckServerService {
-    private podStatusConfig!: PodStatusServer;
+    private podStatusConfig: PodStatusServer = {
+        enabled: false,
+        port: 3000,
+    };
 
     constructor(private app = express(), private configService: ConfigService) {
         this.init();
     }
 
     private init() {
-        this.podStatusConfig = {
-            enabled: true,
-            port: 3000,
-        }; //this.configService.getConfig().podStatusServer;
         if (!this.podStatusConfig.enabled) return;
         this.healthCheck();
         this.app.listen(this.podStatusConfig.port, () => {
