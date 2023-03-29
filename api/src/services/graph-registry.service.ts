@@ -6,6 +6,8 @@ import 'reflect-metadata';
 @injectable()
 export class GraphRegistryService {
     mapToRegistry(gstate: GetNetworkGraphResult) {
+        this.nodeMap.clear();
+        this.channelMap.clear();
         gstate.nodes.forEach((node) => {
             this.nodeMap.set(node.public_key, node as any);
         });
