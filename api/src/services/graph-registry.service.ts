@@ -3,6 +3,14 @@ import { GetNetworkGraphResult } from 'lightning';
 import { LndChannel, LndNode } from '../models';
 import 'reflect-metadata';
 
+function forceGC(): void{
+   if (global.gc) {
+      global.gc();
+   } else {
+      console.warn('No GC hook! Start your program as `node --expose-gc file.js`.');
+   }
+}
+
 @injectable()
 export class GraphRegistryService {
     mapToRegistry(gstate: GetNetworkGraphResult) {
@@ -16,6 +24,7 @@ export class GraphRegistryService {
         });
         this.recalculateNodeArray();
         this.recalculateChannelArray();
+        forceGC();
     }
 
     public nodeMap: Map<string, LndNode> = new Map();

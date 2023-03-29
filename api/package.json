@@ -4,7 +4,7 @@
     "description": "interfaces with lnd",
     "main": "index.js",
     "scripts": {
-        "start": "npm run build && node build/index.js",
+        "start": "npm run build && node --expose-gc build/index.js",
         "build": "rimraf ./build && tsc",
         "start:dev": "nodemon",
         "test": "echo \"Error: no test specified\" && exit 1"
